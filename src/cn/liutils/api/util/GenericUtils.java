@@ -128,7 +128,7 @@ public class GenericUtils {
 	}
 	
 	public static List<Entity> getEntitiesAround_CheckSight(EntityLivingBase ent, double rad, IEntitySelector selector) {
-		List<Entity> l = getEntitiesAround(ent.worldObj, ent.posX, ent.posY, ent.posZ, rad, null);
+		List<Entity> l = getEntitiesAround(ent.worldObj, ent.posX, ent.posY, ent.posZ, rad, selector);
 		if(l != null)
 			for(int i = 0; i < l.size(); i++) {
 				Entity e = l.get(i);
@@ -172,6 +172,12 @@ public class GenericUtils {
             }  
         }
 		return null; 
+	}
+	
+	public static <T> T safeFetchFrom(List<T> list, int id) {
+		if(id >= 0 && id < list.size())
+			return list.get(id);
+		return null;
 	}
 	
 }

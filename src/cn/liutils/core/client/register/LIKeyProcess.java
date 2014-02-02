@@ -37,7 +37,6 @@ import cpw.mods.fml.common.TickType;
  */
 public final class LIKeyProcess implements ITickHandler {
 	
-	public static LIKeyProcess instance;
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
 	
 	private static Set<LIKeyBinding> bindingSet = new HashSet();
