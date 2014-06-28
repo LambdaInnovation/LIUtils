@@ -54,8 +54,8 @@ public class LISoundRegistry {
 	 * @param name
 	 *            : 声音名字. i.e. "weapons/rocket"
 	 */
-	public static void addSoundPath(String name) {
-		pathSounds.add("lambdacraft:" + name + ".wav");
+	public static void addSoundPath(String namespace, String name) {
+		pathSounds.add(namespace + ":" + name + ".wav");
 	}
 	
 	/**
@@ -64,10 +64,10 @@ public class LISoundRegistry {
 	 * @param absPath
 	 * @param cnt
 	 */
-	public static void addSoundWithVariety(String name, int cnt) {
+	public static void addSoundWithVariety(String namespace, String name, int cnt) {
 		for(int i = 0; i < cnt; i ++) {
 			char ch = (char) ('a' + i);
-			addSoundPath(name + ch);
+			addSoundPath(namespace, name + ch);
 		}
 	}
 

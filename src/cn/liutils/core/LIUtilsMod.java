@@ -99,8 +99,10 @@ public class LIUtilsMod {
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
-		cm.registerCommand(new Command_SetMode());
-		cm.registerCommand(new Command_GetRenderInf());
+		if(DEBUG) {
+			cm.registerCommand(new Command_SetMode());
+			cm.registerCommand(new Command_GetRenderInf());
+		}	
 	}
 	
 }

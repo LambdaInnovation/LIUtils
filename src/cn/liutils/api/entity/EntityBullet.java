@@ -51,14 +51,8 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg, boolean rev) {
-		super(par1World, par2EntityLiving);
-		this.rotationYaw = -par2EntityLiving.rotationYawHead;
-        this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionY = -MathHelper.sin((this.rotationPitch + this.func_70183_g()) / 180.0F * (float)Math.PI) * 0.4F;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.func_70182_d(), 1.0F);
-		this.motion = new Motion3D(this);
-		this.damage = dmg;
+		this(par1World, par2EntityLiving, dmg);
+		if(rev) setRenderFromLeft();
 	}
 	
 	
@@ -84,8 +78,8 @@ public class EntityBullet extends EntityThrowable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		//if (ticksExisted > 50)
-		//	this.setDead();
+		if (ticksExisted > 50)
+			this.setDead();
 	}
 
 	@Override

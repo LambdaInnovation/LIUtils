@@ -23,12 +23,12 @@ public class LIClientRegistry {
 		LIKeyProcess.addKey(s, key, isRep, process);
 	}
 	
-	public static void addSoundPath(String name) {
-		LISoundRegistry.addSoundPath(name);
+	public static void addSoundPath(String namespace, String name) {
+		LISoundRegistry.addSoundPath(namespace, name);
 	}
 	
-	public static void addSoundWithVariety(String name, int cnt) {
-		LISoundRegistry.addSoundWithVariety(name, cnt);
+	public static void addSoundWithVariety(String namespace, String name, int cnt) {
+		LISoundRegistry.addSoundWithVariety(namespace, name, cnt);
 	}
 	
 	public static void addPlayerRenderingHelper(PlayerRenderHelper helper) {

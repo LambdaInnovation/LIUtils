@@ -51,10 +51,18 @@ public class Motion3D {
 		this(a.posX, a.posY, a.posZ, a.motionX, a.motionY, a.motionZ);
 	}
 	
+	/**
+	 * 创建一个以Entity位置和动作方向为基准的Motion3D
+	 * @param ent
+	 */
 	public Motion3D(Entity ent) {
 		this(ent, 0, false);
 	}
 
+	/**
+	 * @param ent
+	 * @param ahr 是否以头部朝向决定旋转方向
+	 */
 	public Motion3D(Entity ent, boolean ahr) {
 		this(ent, 0, ahr);
 	}

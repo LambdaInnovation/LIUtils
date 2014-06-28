@@ -40,6 +40,7 @@ public class RenderIcon extends Render {
 	private float size = 0.5F;
 	protected boolean enableDepth = true;
 	protected boolean hasLight = false;
+	protected float r = 1.0F, g = 1.0F, b = 1.0f;
 
 	public RenderIcon(ResourceLocation ic) {
 		icon = ic;
@@ -65,6 +66,13 @@ public class RenderIcon extends Render {
 	
 	public RenderIcon setEnableDepth(boolean b) {
 		enableDepth = b;
+		return this;
+	}
+	
+	public RenderIcon setColorRGB(float r, float g, float b) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
 		return this;
 	}
 
@@ -117,7 +125,7 @@ public class RenderIcon extends Render {
 		tessllator.startDrawingQuads();
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);
-		tessllator.setColorRGBA_F(1.0F, 1.0F, 1.0F, alpha);
+		tessllator.setColorRGBA_F(r, g, b, alpha);
 		tessllator.setNormal(0.0F, 1.0F, 0.0F);
 		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 0);
 		tessllator.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, 0, 1);
@@ -129,7 +137,6 @@ public class RenderIcon extends Render {
 
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
-		// TODO 自动生成的方法存根
 		return icon;
 	}
 }

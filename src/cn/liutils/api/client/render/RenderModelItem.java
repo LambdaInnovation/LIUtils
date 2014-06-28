@@ -133,7 +133,7 @@ public class RenderModelItem implements IItemRenderer, IItemRenderInfProvider {
 		return this;
 	}
 	
-	public RenderModelItem setEquipOffset(float b0, float b1, float b2) {
+	public RenderModelItem setEquipOffset(double b0, double b1, double b2) {
 		initVec(equipOffset, b0, b1, b2);
 		return this;
 	}

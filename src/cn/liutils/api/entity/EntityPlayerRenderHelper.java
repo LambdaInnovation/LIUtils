@@ -38,7 +38,7 @@ public class EntityPlayerRenderHelper extends Entity {
     @Override
 	public void onUpdate()
     {
-    	setPositionAndRotation(player.posX, player.posY, player.posZ, player.rotationYaw, player.rotationPitch);
+    	setPositionAndRotation(player.posX, player.posY, player.posZ, player.renderYawOffset, player.rotationPitch);
 		rotationYawHead = player.rotationYawHead;
 		for(PlayerRenderHelper p : helpers) {
 			if(p.isActivated(player, worldObj)) {

@@ -31,6 +31,7 @@ public class RenderModel extends Render {
 	private ModelBase model;
 	private float modelScale;
 	private ResourceLocation texture;
+	private float offsetX = 0.0F, offsetY = 0.0F, offsetZ = 0.0F;
 
 	/**
 	 * 
@@ -39,6 +40,13 @@ public class RenderModel extends Render {
 		model = m;
 		modelScale = scale;
 		texture = texturePath;
+	}
+	
+	public RenderModel setOffset(float x, float y, float z) {
+		offsetX = x;
+		offsetY = y;
+		offsetZ = z;
+		return this;
 	}
 
 	@Override
@@ -50,10 +58,12 @@ public class RenderModel extends Render {
 		bindTexture(texture);
 		GL11.glTranslatef((float) par2, (float) par4 + 2 * entity.height,
 				(float) par6);
+		GL11.glTranslatef(offsetX, offsetY, offsetZ);
 		GL11.glRotatef(180.0F - par8, 0.0F, 1.0F, 0.0F);
 		GL11.glScalef(-1.0F, -1.0F, 1.0F);
 		this.model.render(entity, 0.0F, 0.0F, -0.1F, 0.0F, 0.0F,
 				0.0625F * modelScale);
+		
 		GL11.glPopMatrix();
 
 	}
