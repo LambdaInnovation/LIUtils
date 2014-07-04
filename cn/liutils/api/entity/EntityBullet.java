@@ -14,6 +14,7 @@
 package cn.liutils.api.entity;
 
 import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
@@ -33,6 +34,7 @@ public class EntityBullet extends EntityThrowable {
 	protected Motion3D motion;
 	protected int damage;
 	public boolean renderFromLeft = false;
+	private IEntitySelector selector = null;
 	
 	public EntityBullet setRenderFromLeft() {
 		renderFromLeft = true;
@@ -40,8 +42,19 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg) {
+		this(par1World, par2EntityLiving, dmg, 0);
+	}
+	
+	
+	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg, int scatterRadius) {
 		super(par1World, par2EntityLiving);
-		this.rotationYaw = par2EntityLiving.rotationYawHead;
+		int d1 = 0, d2 = 0;
+		if(scatterRadius > 0) {
+			d1 = rand.nextInt(2 * scatterRadius) - scatterRadius;
+			d2 = rand.nextInt(2 * scatterRadius) - scatterRadius;
+		}
+		this.rotationYaw = par2EntityLiving.rotationYawHead + d1;
+		this.rotationPitch += d2;
         this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
         this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
         this.motionY = MathHelper.sin((this.rotationPitch + this.func_70183_g()) / 180.0F * (float)Math.PI) * 0.4F;
@@ -58,10 +71,14 @@ public class EntityBullet extends EntityThrowable {
 	
 	public EntityBullet(World par1World, Entity ent, Entity target, int dmg) {
 		super(par1World);
-		setPosition(ent.posX, ent.posY, ent.posZ);
 		motionX = target.posX  - ent.posX;
-		motionY = (target.posY + target.height / 2.0) - ent.posY - ent.getEyeHeight();
-		motionZ = target.posZ - ent.posZ;	
+		motionY = (target.posY + target.height / 2.0) - (ent.posY + ent.height / 2.0);
+		motionZ = target.posZ - ent.posZ;
+		double d = Math.sqrt(motionX * motionX + motionY + motionY + motionZ * motionZ);
+		motionX /= d;
+		motionY /= d;
+		motionZ /= d;
+		setPosition(ent.posX + motionX * 1.0, ent.posY + ent.height / 2.0, ent.posZ + motionZ * 1.0);
 		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
 		damage = dmg;
 		motion = new Motion3D(this);
@@ -73,6 +90,11 @@ public class EntityBullet extends EntityThrowable {
 		setThrowableHeading(motion.xCoord, motion.yCoord, motion.zCoord, func_70182_d(), 1.0F);
 		this.motion = new Motion3D(this);
 		damage = dmg;
+	}
+	
+	public EntityBullet setEntitySelector(IEntitySelector sel) {
+		selector = sel;
+		return this;
 	}
 
 	@Override
@@ -115,12 +137,11 @@ public class EntityBullet extends EntityThrowable {
 		this.setDead();
 	}
 
-	public void doEntityCollision(MovingObjectPosition result) {
-		if (result.entityHit == null)
+	protected void doEntityCollision(MovingObjectPosition result) {
+		if (selector != null && !selector.isEntityApplicable(result.entityHit))
 			return;
 		result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(getThrower()), damage);
 		result.entityHit.hurtResistantTime = -1;
-
 	}
 
 	public int getBulletDamage(int mode) {
