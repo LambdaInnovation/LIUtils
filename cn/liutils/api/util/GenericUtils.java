@@ -24,10 +24,11 @@ import java.util.Set;
 
 import cn.liutils.api.util.selector.EntitySelectorLiving;
 import cn.liutils.api.util.selector.EntitySelectorPlayer;
-
+import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -71,8 +72,8 @@ public class GenericUtils {
 		for(int x = minX; x <= maxX; x++) {
 			for(int y = minY; y <= maxY; y++) {
 				for(int z = minZ; z <= maxZ; z++) {
-					int id = world.getBlockId(x, y, z);
-					if(id != 0) {
+					Block id = world.getBlock(x, y, z);
+					if(id != Blocks.air) {
 						set.add(new BlockPos(x, y, z, id));
 					}
 				}

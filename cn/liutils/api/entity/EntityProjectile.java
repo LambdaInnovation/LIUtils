@@ -17,9 +17,9 @@ package cn.liutils.api.entity;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.EnumMovingObjectType;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -117,8 +117,8 @@ public abstract class EntityProjectile extends Entity {
 		this.moveEntity(this.motionX, this.motionY, this.motionZ);
 		after = Vec3.createVectorHelper(posX, posY, posZ);
 
-		MovingObjectPosition result = worldObj.clip(pre, after);
-		if (result != null && result.typeOfHit == EnumMovingObjectType.TILE) {
+		MovingObjectPosition result = worldObj.rayTraceBlocks(pre, after);
+		if (result != null && result.typeOfHit == MovingObjectType.BLOCK) {
 			this.onCollide(result);
 		}
 
@@ -184,7 +184,7 @@ public abstract class EntityProjectile extends Entity {
 		nbt.setDouble("motionY", motionY);
 		nbt.setDouble("motionZ", motionZ);
 		if (thrower != null)
-			nbt.setString("thrower", getThrower().getEntityName());
+			nbt.setString("thrower", getThrower().getCommandSenderName());
 	}
 
 }

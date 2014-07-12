@@ -1,7 +1,6 @@
 package cn.liutils.api.client.util;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.Icon;
 
 public class HudUtils {
 
@@ -60,7 +59,7 @@ public class HudUtils {
         tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, (par3 + 0) * f, (par4 + 0) * f1);
         tessellator.draw();
     }
-    
+    /*
     public static void drawTexturedModelRectFromIcon(int par1, int par2, Icon par3Icon, int par4, int par5)
     {
         Tessellator tessellator = Tessellator.instance;
@@ -70,5 +69,5 @@ public class HudUtils {
         tessellator.addVertexWithUV(par1 + par4, par2 + 0, -90, par3Icon.getMaxU(), par3Icon.getMinV());
         tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, par3Icon.getMinU(), par3Icon.getMinV());
         tessellator.draw();
-    }
+    }*/
 }

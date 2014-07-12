@@ -162,7 +162,7 @@ public abstract class LIGuiContainer extends GuiContainer {
 			}
 			int x = (width - xSize) / 2, y = (height - ySize) / 2;
 			list.add(currentTip.getTip());
-			this.func_102021_a(list, par1 - x, par2 - y);
+			this.func_146283_a(list, par1 - x, par2 - y);
 		}
 	}
 
@@ -198,7 +198,7 @@ public abstract class LIGuiContainer extends GuiContainer {
 	}
 
 	protected boolean isPointWithin(LIGuiPart element, int x, int y) {
-		return this.isPointInRegion(element.posX, element.posY, element.width,
+		return this.func_146978_c(element.posX, element.posY, element.width,
 				element.height, x, y);
 	}
 

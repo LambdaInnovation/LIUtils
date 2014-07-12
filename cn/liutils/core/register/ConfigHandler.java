@@ -16,9 +16,8 @@ package cn.liutils.core.register;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraftforge.common.Property;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
 import cn.liutils.api.register.Configurable;
 
 /**
@@ -40,14 +39,13 @@ public class ConfigHandler {
 	 * @param cl
 	 *            类，要注册的参数必须为Static
 	 */
-	public static void loadConfigurableClass(Config conf, Class<?> cl) {
+	public static void loadConfigurableClass(Configuration conf, Class<?> cl) {
 		Property prop;
 		for (Field f : cl.getFields()) {
 			Configurable c = f.getAnnotation(Configurable.class);
 			if (c != null) {
 				try {
-					prop = conf
-							.getProperty(c.category(), c.key(), c.defValue());
+					prop = conf.get(c.category(), c.key(), c.defValue());
 					prop.comment = c.comment();
 					Class<?> type = f.getType();
 					if (type.equals(Integer.TYPE) || type.equals(Integer.class)) {
@@ -71,89 +69,6 @@ public class ConfigHandler {
 				}
 			}
 		}
-	}
-
-	/**
-	 * 获得一个空的物品ID。（调用Config配置）
-	 * 
-	 * @param name
-	 *            物品名字
-	 * @param cat
-	 *            物品分类
-	 * @see cn.lambdacraft.core.proxy.GeneralProps
-	 * @return 获取的ID
-	 */
-	public static int getItemId(Config config, String name, int cat) {
-		try {
-			return config.getItemID(name, getEmptyItemId(cat)) - 256;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
-	/**
-	 * 获得一个空的方块ID。（调用Config配置）
-	 * 
-	 * @param name
-	 *            方块名字
-	 * @param cat
-	 *            方块分类
-	 * @see cn.lambdacraft.core.proxy.GeneralProps
-	 * @return 获取的ID
-	 */
-	public static int getBlockId(Config config, String name, int cat) {
-		try {
-			return config.GetBlockID(name, getEmptyBlockId(cat));
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-	
-	public static int getFixedBlockId(Config config, String name, int def) {
-		try {
-			return config.GetBlockID(name, def);
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-	
-	public static int getFixedBlockId(Config config, String name, int def, int max) {
-		try {
-			int id =  config.getSpecialBlockID(name, def);
-			if(id >= max)
-				throw new IllegalArgumentException("Block id has been set as a value too large : " + name + "as id + " + id + " , it must be below the value of " + max);
-			return id;
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-		return -1;
-	}
-
-	private static int getEmptyItemId(int cat) {
-		int begin = 5200;
-		begin += cat * 50;
-		int theId = 0;
-		for (int i = 0; i < 50; i++) {
-			theId = begin + i;
-			if (Item.itemsList[theId] == null)
-				return theId;
-		}
-		return -1;
-	}
-
-	private static int getEmptyBlockId(int cat) {
-		int begin = 400;
-		begin += cat * 50;
-		int theId = 0;
-		for (int i = 0; i < 50; i++) {
-			theId = begin + i;
-			if (Block.blocksList[theId] == null)
-				return theId;
-		}
-		return -1;
 	}
 
 }

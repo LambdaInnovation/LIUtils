@@ -275,6 +275,7 @@ public class RenderModelItem implements IItemRenderer, IItemRenderInfProvider {
 		if (item.stackTagCompound == null)
 			item.stackTagCompound = new NBTTagCompound();
 		
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix();
 		RenderUtils.loadTexture(texturePath);
 		float sc2 = 0.0625F;

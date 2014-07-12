@@ -34,7 +34,7 @@ public class EntityUtils {
 	public static MovingObjectPosition rayTraceLook(Entity e, float distance) {
 		Motion3D mo = new Motion3D(e, true);
 		Vec3 vec1 = mo.asVec3(e.worldObj), vec32 = mo.move(distance).asVec3(e.worldObj);
-		return e.worldObj.clip(vec1, vec32);
+		return e.worldObj.rayTraceBlocks(vec1, vec32);
 	}
 
 }

@@ -15,11 +15,7 @@ import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
  */
 public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
 
-	/**
-	 * 
-	 */
 	public RenderEmptyBlock() {
-		// TODO Auto-generated constructor stub
 	}
 
 	/* (non-Javadoc)
@@ -28,8 +24,6 @@ public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
 	@Override
 	public void renderInventoryBlock(Block block, int metadata, int modelID,
 			RenderBlocks renderer) {
-		// TODO Auto-generated method stub
-
 	}
 
 	/* (non-Javadoc)
@@ -41,17 +35,11 @@ public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler#shouldRender3DInInventory()
-	 */
 	@Override
-	public boolean shouldRender3DInInventory() {
+	public boolean shouldRender3DInInventory(int modelID) {
 		return false;
 	}
 
-	/* (non-Javadoc)
-	 * @see cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler#getRenderId()
-	 */
 	@Override
 	public int getRenderId() {
 		return LIGeneralProps.RENDER_TYPE_EMPTY;

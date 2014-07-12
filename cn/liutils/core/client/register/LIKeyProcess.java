@@ -14,28 +14,23 @@
  */
 package cn.liutils.core.client.register;
 
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
+import net.minecraft.client.settings.KeyBinding;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import cn.liutils.api.client.register.IKeyProcess;
 
-
-
-import net.minecraft.client.settings.KeyBinding;
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
-
 /**
  * 统一处理按键的实用类。 请使用addKey(...)注册按键绑定。详见函数本身说明
  * @author WeAthFolD
  */
-public final class LIKeyProcess implements ITickHandler {
+public final class LIKeyProcess {
 	
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
 	
@@ -57,31 +52,18 @@ public final class LIKeyProcess implements ITickHandler {
 			process = proc;
 		}
 	}
-
-	@Override
-	public String getLabel() {
-		return "LIUtils Keys";
-	}
 	
-    /**
-     * Not to be overridden - KeyBindings are tickhandlers under the covers
-     */
-    @Override
-    public final void tickStart(EnumSet<TickType> type, Object... tickData)
+	public final void tickStart()
     {
-        keyTick(type, false);
+        keyTick(false);
     }
 
-    /**
-     * Not to be overridden - KeyBindings are tickhandlers under the covers
-     */
-    @Override
-    public final void tickEnd(EnumSet<TickType> type, Object... tickData)
+    public final void tickEnd()
     {
-        keyTick(type, true);
+        keyTick(true);
     }
 
-    private void keyTick(EnumSet<TickType> type, boolean tickEnd)
+    private void keyTick(boolean tickEnd)
     {
         for (LIKeyBinding kb : bindingSet)
         {
@@ -105,14 +87,9 @@ public final class LIKeyProcess implements ITickHandler {
                 }
             }
             KeyBinding binding = associates.get(kb);
-            if(binding != null) kb.keyCode = binding.keyCode;
+            if(binding != null) kb.keyCode = binding.getKeyCode();
         }
     }
-
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.CLIENT);
-	}
 
 	/**
 	 * 在按键处理中添加一个键位。请务必在preInit（Init之前）调用这个函数。
@@ -131,23 +108,9 @@ public final class LIKeyProcess implements ITickHandler {
 	}
 	
 	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyProcess process) {
-		LIKeyBinding bd = addKey(b.keyDescription, b.keyCode, isRep, process);
+		LIKeyBinding bd = addKey(b.getKeyDescription(), b.getKeyCode(), isRep, process);
 		associates.put(bd, b);
 		return bd;
-	}
-	
-	/**
-	 * 用来临时禁用mc中的某个按键。
-	 * 多个类同时操作本方法会引起混乱，请谨慎使用。
-	 * @param kb
-	 */
-	public static void addKeyOverride(KeyBinding kb) {
-		KeyBinding.hash.removeObject(kb.keyCode);
-	}
-	
-	public static void removeKeyOverride(KeyBinding kb) {
-		if(!KeyBinding.hash.containsItem(kb.keyCode))
-			KeyBinding.hash.addKey(kb.keyCode, kb);
 	}
 	
 	public static LIKeyBinding getBindingByName(String s) {
