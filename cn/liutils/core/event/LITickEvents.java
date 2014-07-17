@@ -1,12 +1,15 @@
-package cn.liutils.core.client.event;
+/**
+ * 
+ */
+package cn.liutils.core.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import cn.liutils.api.debug.Debug_MovingProcessor;
 import cn.liutils.api.debug.KeyMoving;
 import cn.liutils.api.debug.command.Command_SetMode;
@@ -18,19 +21,14 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 /**
- * TODO:UNFINISHED
  * @author Administrator
  *
  */
-public class LIClientEvents  {
-	
+public class LITickEvents {
 	public EntityPlayerRenderHelper helper;
 
-	public LIClientEvents() {
-	}
-
 	@SubscribeEvent
-	public void tickStart(ClientTickEvent event) {
+	public void onClientTick(ClientTickEvent event) {
 		if(event.phase == Phase.START) {
 			Minecraft mc = Minecraft.getMinecraft();
 			EntityPlayer player = mc.thePlayer;
@@ -63,5 +61,4 @@ public class LIClientEvents  {
 			} else Command_SetMode.setActiveProcessor(player, null);
 		} else Command_SetMode.setActiveProcessor(player, null);
 	}
-
 }

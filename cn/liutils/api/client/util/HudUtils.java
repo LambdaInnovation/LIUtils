@@ -1,6 +1,7 @@
 package cn.liutils.api.client.util;
 
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.IIcon;
 
 public class HudUtils {
 
@@ -59,15 +60,15 @@ public class HudUtils {
         tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, (par3 + 0) * f, (par4 + 0) * f1);
         tessellator.draw();
     }
-    /*
-    public static void drawTexturedModelRectFromIcon(int par1, int par2, Icon par3Icon, int par4, int par5)
+    
+    public static void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int width, int height)
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(par1 + 0, par2 + par5, -90, par3Icon.getMinU(), par3Icon.getMaxV());
-        tessellator.addVertexWithUV(par1 + par4, par2 + par5, -90, par3Icon.getMaxU(), par3Icon.getMaxV());
-        tessellator.addVertexWithUV(par1 + par4, par2 + 0, -90, par3Icon.getMaxU(), par3Icon.getMinV());
-        tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, par3Icon.getMinU(), par3Icon.getMinV());
+        tessellator.addVertexWithUV(x + 0, y + height, -90, icon.getMinU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y + height, -90, icon.getMaxU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y + 0, -90, icon.getMaxU(), icon.getMinV());
+        tessellator.addVertexWithUV(x + 0, y + 0, -90, icon.getMinU(), icon.getMinV());
         tessellator.draw();
-    }*/
+    }
 }

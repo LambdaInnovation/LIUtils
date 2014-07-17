@@ -14,9 +14,11 @@ import cn.liutils.api.debug.KeyMoving;
 import cn.liutils.api.entity.EntityPlayerRenderHelper;
 import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.LIUtilsMod;
-import cn.liutils.core.client.event.LIClientEvents;
 import cn.liutils.core.client.register.LIKeyProcess;
+import cn.liutils.core.event.LIEventListener;
+import cn.liutils.core.event.LITickEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * @author WeAthFolD
@@ -24,19 +26,20 @@ import cpw.mods.fml.client.registry.RenderingRegistry;
  */
 public class LIClientProxy extends LICommonProxy {
 
-	public static LIClientEvents clientTickHandler = new LIClientEvents();
+	public static LIEventListener clientTickHandler = new LIEventListener();
 	public static LIKeyProcess keyProcess;
 	
 	@Override
 	public void init() {
+		super.init();
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 	}
 	
 	@Override
 	public void preInit() {
-		
-		MinecraftForge.EVENT_BUS.register(new LIClientEvents());
+		super.preInit();	
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRenderHelper.class, new RenderPlayerHelper());
+		FMLCommonHandler.instance().bus().register(new LITickEvents());
 		
 		if(LIUtilsMod.DEBUG) {
 			KeyMoving key = new KeyMoving();
@@ -52,6 +55,7 @@ public class LIClientProxy extends LICommonProxy {
 	
 	@Override
 	public void postInit() {
+		super.postInit();
 		keyProcess = new LIKeyProcess();
 	}
 }
