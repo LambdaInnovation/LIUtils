@@ -15,6 +15,7 @@
 package cn.liutils.api.client.gui;
 
 /**
+ * GUI Button. With the use of CBCGuiContainer
  * GUI按钮类，和CBCGuiContainer配合使用
  * 
  * @author WeAthFolD
@@ -27,11 +28,13 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
+	 * two status ∪ {U, V}
 	 * 两种状态对应贴图的U、V。
 	 */
 	public int downTexU, downTexV, invaildTexU, invaildTexV;
 
-	/*
+	/**
+	 * Current button state.
 	 * 当前的按钮状态。
 	 */
 	public ButtonState buttonState;
@@ -56,6 +59,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
+	 * Set the position of the button (pixel, left-top corner).
 	 * 设置按钮按下时的U、V位置（像素，左上角）
 	 * 
 	 * @param u
@@ -70,6 +74,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
+	 * Set the position of the button (pixel, left-top corner) when invaild.
 	 * 设置按钮无法使用时的U、V位置（像素，左上角）
 	 * 
 	 * @param u
@@ -84,6 +89,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
+	 * Set current button state.
 	 * 设置当前的按钮状态。
 	 * 
 	 * @param a
@@ -94,6 +100,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
+	 * Set current button state. (Forced)
 	 * 强制设置按钮状态。
 	 * 
 	 * @param a
