@@ -24,11 +24,10 @@ import java.util.Set;
 
 import cn.liutils.api.util.selector.EntitySelectorLiving;
 import cn.liutils.api.util.selector.EntitySelectorPlayer;
-import net.minecraft.block.Block;
+
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -72,8 +71,8 @@ public class GenericUtils {
 		for(int x = minX; x <= maxX; x++) {
 			for(int y = minY; y <= maxY; y++) {
 				for(int z = minZ; z <= maxZ; z++) {
-					Block id = world.getBlock(x, y, z);
-					if(id != Blocks.air) {
+					int id = world.getBlockId(x, y, z);
+					if(id != 0) {
 						set.add(new BlockPos(x, y, z, id));
 					}
 				}
@@ -179,6 +178,24 @@ public class GenericUtils {
 		if(id >= 0 && id < list.size())
 			return list.get(id);
 		return null;
+	}
+	
+	public static long minl(long... n) {
+		long min = n[0];
+		for(int i = 1; i < n.length; i++) {
+			if(n[i] < min)
+				min = n[i];
+		}
+		return min;
+	}
+	
+	public static int mini(int... n) {
+		int min = n[0];
+		for(int i = 1; i < n.length; i++) {
+			if(n[i] < min)
+				min = n[i];
+		}
+		return min;
 	}
 	
 }

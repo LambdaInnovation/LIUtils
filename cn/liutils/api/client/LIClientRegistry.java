@@ -7,6 +7,7 @@ import cn.liutils.api.client.register.IKeyProcess;
 import cn.liutils.api.client.render.PlayerRenderHelper;
 import cn.liutils.api.entity.EntityPlayerRenderHelper;
 import cn.liutils.core.client.register.LIKeyProcess;
+import cn.liutils.core.client.register.LISoundRegistry;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -20,6 +21,14 @@ public class LIClientRegistry {
 
 	public static void addKey(String s, int key, boolean isRep, IKeyProcess process) {
 		LIKeyProcess.addKey(s, key, isRep, process);
+	}
+	
+	public static void addSoundPath(String namespace, String name) {
+		LISoundRegistry.addSoundPath(namespace, name);
+	}
+	
+	public static void addSoundWithVariety(String namespace, String name, int cnt) {
+		LISoundRegistry.addSoundWithVariety(namespace, name, cnt);
 	}
 	
 	public static void addPlayerRenderingHelper(PlayerRenderHelper helper) {

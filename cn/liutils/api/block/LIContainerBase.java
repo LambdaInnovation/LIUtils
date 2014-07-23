@@ -29,7 +29,7 @@ public abstract class LIContainerBase extends BlockContainer {
 	 * @param mat
 	 */
 	public LIContainerBase(int id, Material mat, Object mod) {
-		super(mat);
+		super(id, mat);
 	}
 	
 	/**
@@ -38,9 +38,15 @@ public abstract class LIContainerBase extends BlockContainer {
 	 */
 	public void setIAndU(String name) {
 		String realName =  GenericUtils.splitString(name, false);
-		setBlockName(realName);
-		setBlockTextureName(name);
+		setUnlocalizedName(realName);
+		setTextureName(name);
 	}
+
+	/* (non-Javadoc)
+	 * @see net.minecraft.block.ITileEntityProvider#createNewTileEntity(net.minecraft.world.World)
+	 */
+	@Override
+	public abstract TileEntity createNewTileEntity(World world);
 	
 	@Override
 	/**
@@ -48,7 +54,7 @@ public abstract class LIContainerBase extends BlockContainer {
 	 */
 	public boolean onBlockActivated(World world, int x, int y, int z,
 			EntityPlayer player, int idk, float what, float these, float are) {
-		TileEntity tileEntity = world.getTileEntity(x, y, z);
+		TileEntity tileEntity = world.getBlockTileEntity(x, y, z);
 		if (guiId == -1 || tileEntity == null || player.isSneaking()) {
 			return false;
 		}
@@ -76,7 +82,8 @@ public abstract class LIContainerBase extends BlockContainer {
 				float rz = rand.nextFloat() * 0.8F + 0.1F;
 
 				EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z
-						+ rz, new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
+						+ rz, new ItemStack(item.itemID, item.stackSize,
+						item.getItemDamage()));
 
 				if (item.hasTagCompound()) {
 					entityItem.getEntityItem().setTagCompound(
@@ -92,8 +99,5 @@ public abstract class LIContainerBase extends BlockContainer {
 			}
 		}
 	}
-
-	@Override
-	public abstract TileEntity createNewTileEntity(World var1, int var2);
 
 }

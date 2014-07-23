@@ -14,7 +14,7 @@ import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.Icon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
@@ -78,7 +78,8 @@ public class RenderUtils {
 	}
 
 	
-	public static void renderItemIn2d(ItemStack stackToRender, double w) {
+	public static void renderItemIn2d(ItemStack stackToRender,
+			double w) {
 		renderItemIn2d(stackToRender, w, null);
 	}
 
@@ -89,12 +90,12 @@ public class RenderUtils {
 	 * @param t
 	 */
 	public static void renderItemIn2d(ItemStack stackToRender,
-			double w, IIcon specialIcon) {
+			double w, Icon specialIcon) {
 		Vec3 a1 = newV3(0, 0, w), a2 = newV3(1, 0, w), a3 = newV3(1, 1, w), a4 = newV3(
 				0, 1, w), a5 = newV3(0, 0, -w), a6 = newV3(1, 0, -w), a7 = newV3(
 				1, 1, -w), a8 = newV3(0, 1, -w);
 
-		IIcon icon = stackToRender.getIconIndex();
+		Icon icon = stackToRender.getIconIndex();
 		if (specialIcon != null)
 			icon = specialIcon;
 
@@ -268,7 +269,7 @@ public class RenderUtils {
 	 * @param item
 	 */
 	public static void renderItemInventory(ItemStack item) {
-		IIcon icon = item.getIconIndex();
+		Icon icon = item.getIconIndex();
 		renderItemInventory(icon);
 	}
 	
@@ -276,7 +277,7 @@ public class RenderUtils {
 	 * 直接在物品栏渲染物品icon。确认你已经绑定好贴图。
 	 * @param item
 	 */
-	public static void renderItemInventory(IIcon icon) {
+	public static void renderItemInventory(Icon icon) {
 		if(icon != null) {
 			t.startDrawingQuads();
 			t.addVertexWithUV(0.0, 0.0, 0.0, icon.getMinU(), icon.getMinV());

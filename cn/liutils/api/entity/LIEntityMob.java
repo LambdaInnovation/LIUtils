@@ -27,17 +27,17 @@ public abstract class LIEntityMob extends EntityMob {
 	protected void applyEntityAttributes() {
 		super.applyEntityAttributes();
 		this.getEntityAttribute(SharedMonsterAttributes.maxHealth)
-				.setBaseValue(getMaxHealth2()); // Max Health
+				.setAttribute(getMaxHealth2()); // Max Health
 		if (getFollowRange() != 0)
 			this.getEntityAttribute(SharedMonsterAttributes.followRange)
-					.setBaseValue(getFollowRange()); // Follow Range
+					.setAttribute(getFollowRange()); // Follow Range
 		if (getKnockBackResistance() != 0)
 			this.getEntityAttribute(SharedMonsterAttributes.knockbackResistance)
-					.setBaseValue(getKnockBackResistance()); // knockbackResistance
+					.setAttribute(getKnockBackResistance()); // knockbackResistance
 		this.getEntityAttribute(SharedMonsterAttributes.movementSpeed)
-				.setBaseValue(getMoveSpeed()); // Move Speed
+				.setAttribute(getMoveSpeed()); // Move Speed
 		this.getEntityAttribute(SharedMonsterAttributes.attackDamage)
-				.setBaseValue(getAttackDamage()); // Attack Damage
+				.setAttribute(getAttackDamage()); // Attack Damage
 	}
 
 	abstract protected double getMaxHealth2();

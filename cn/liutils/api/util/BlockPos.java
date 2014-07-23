@@ -14,7 +14,6 @@
  */
 package cn.liutils.api.util;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 
 /**
@@ -25,18 +24,17 @@ import net.minecraft.tileentity.TileEntity;
  */
 public class BlockPos {
 
-	public int x, y, z;
-	public Block block;
+	public int x, y, z, blockID;
 
-	public BlockPos(int par1, int par2, int par3, Block bID) {
+	public BlockPos(int par1, int par2, int par3, int bID) {
 		x = par1;
 		y = par2;
 		z = par3;
-		block = bID;
+		blockID = bID;
 	}
 	
 	public BlockPos(TileEntity te) {
-		this(te.xCoord, te.yCoord, te.zCoord, te.getWorldObj().getBlock(te.xCoord, te.yCoord, te.zCoord));
+		this(te.xCoord, te.yCoord, te.zCoord, te.worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord));
 	}
 
 	/**
@@ -56,7 +54,7 @@ public class BlockPos {
 	}
 
 	public BlockPos copy() {
-		return new BlockPos(x, y, z, block);
+		return new BlockPos(x, y, z, blockID);
 	}
 
 }
