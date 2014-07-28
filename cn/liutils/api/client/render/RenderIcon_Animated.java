@@ -7,18 +7,15 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * 渲染时会循环播放ResourceLocation数组所指向的贴图内容。可以手动设置帧率。
+ * Repeatly plays what's inside icons array. the framerate can be set.
  * @author WeAthFolD
  *
  */
 public class RenderIcon_Animated extends RenderIcon {
 
 	private ResourceLocation[] icons;
-	private int frameSpeed = 1; //帧速度：n tick/frame
+	private int frameRate = 1; //tick/frame
 	
-	/**
-	 * @param ic
-	 */
 	public RenderIcon_Animated(ResourceLocation[] ics) {
 		super(ics[0]);
 		icons = ics;
@@ -26,14 +23,14 @@ public class RenderIcon_Animated extends RenderIcon {
 	
 	public RenderIcon_Animated(ResourceLocation[] ics, int fs) {
 		this(ics);
-		this.frameSpeed = fs;
+		this.frameRate = fs;
 	}
 	
 	@Override
 	public void doRender(Entity entity, double par2, double par4,
 			double par6, float par8, float par9) {
-		int delta = (entity.ticksExisted * frameSpeed) % icons.length;
-		delta /= frameSpeed;
+		int delta = (entity.ticksExisted * frameRate) % icons.length;
+		delta /= frameRate;
 		this.icon = icons[delta];
 		super.doRender(entity, par2, par4, par6, par8, par9);
 	}

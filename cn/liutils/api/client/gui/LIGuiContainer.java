@@ -26,12 +26,12 @@ import net.minecraft.inventory.Container;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * @author WeAthFolD LambdaCraft的GUI Container，目前具有： 按钮功能 区域Tip功能
+ * GUIContainer supporting LIGuiPart functions.
  */
 public abstract class LIGuiContainer extends GuiContainer {
 	
 	/**
-	 * GUI元素列表。
+	 * List of all GUI elements
 	 */
 	private HashSet<LIGuiPart> elements;
 
@@ -39,21 +39,9 @@ public abstract class LIGuiContainer extends GuiContainer {
 		super(par1Container);
 		elements = new HashSet<LIGuiPart>();
 	}
-
-	
-	/**绑定贴图 By Rikka0_0*/
-	protected void bindTexture(String texture){
-		mc.renderEngine.bindTexture(new ResourceLocation(texture));
-	}
-	
-	protected void bindTexture(ResourceLocation texture){
-		mc.renderEngine.bindTexture(texture);
-	}
-	
 	
 	/**
-	 * 添加一个按钮。
-	 * 
+	 * Add a GUI part.
 	 * @param part
 	 */
 	public void addElement(LIGuiPart part) {
@@ -66,23 +54,18 @@ public abstract class LIGuiContainer extends GuiContainer {
 	}
 
 	/**
-	 * 处理每个按钮按下时行为的函数，在子类实现它来做些什么。
-	 * 
+	 * A process for each button's pressing movement.
 	 * @param button
-	 *            被按下的按钮
 	 */
 	public abstract void onButtonClicked(LIGuiButton button);
 
 	/**
-	 * 设置某一个按钮的状态。
-	 * 
+	 * Set a state for a given button.
 	 * @param buttonName
-	 *            按钮名称
 	 * @param state
-	 *            状态
 	 */
 	public void setButtonState(String buttonName, ButtonState state) {
-		getButton(buttonName).buttonState = state;
+		getButton(buttonName).state = state;
 	}
 
 	/**
@@ -103,7 +86,8 @@ public abstract class LIGuiContainer extends GuiContainer {
 	 * @return 对应按钮状态
 	 */
 	public ButtonState getButtonState(String name) {
-		return getButton(name).buttonState;
+		LIGuiButton button = getButton(name);
+		return button == null ? null : button.state;
 	}
 
 	/**
@@ -119,13 +103,13 @@ public abstract class LIGuiContainer extends GuiContainer {
 				int y = (height - ySize) / 2;
 				int texU = 0, texV = 0;
 
-				if (b.buttonState == ButtonState.IDLE) {
+				if (b.state == ButtonState.IDLE) {
 					texU = b.texU;
 					texV = b.texV;
-				} else if (b.buttonState == ButtonState.DOWN) {
+				} else if (b.state == ButtonState.DOWN) {
 					texU = b.downTexU;
 					texV = b.downTexV;
-				} else if (b.buttonState == ButtonState.INVAILD) {
+				} else if (b.state == ButtonState.INVAILD) {
 					texU = b.invaildTexU;
 					texV = b.invaildTexV;
 				}
@@ -155,14 +139,14 @@ public abstract class LIGuiContainer extends GuiContainer {
 			}
 		}
 		if (currentTip != null) {
-			boolean drawHead = currentTip.getHeadText() != "";
+			boolean drawHead = currentTip.getHeader() != "";
 			List<String> list = new ArrayList();
 			if (drawHead) {
-				list.add(currentTip.getHeadText());
+				list.add(currentTip.getHeader());
 			}
 			int x = (width - xSize) / 2, y = (height - ySize) / 2;
-			list.add(currentTip.getTip());
-			this.func_102021_a(list, par1 - x, par2 - y);
+			list.add(currentTip.getText());
+			this.func_146283_a(list, par1 - x, par2 - y);
 		}
 	}
 
@@ -174,7 +158,7 @@ public abstract class LIGuiContainer extends GuiContainer {
 				continue;
 			LIGuiButton b = (LIGuiButton) e;
 			if (isPointWithin(b, par1, par2)) {
-				if (b.buttonState != ButtonState.INVAILD) {
+				if (b.state != ButtonState.INVAILD) {
 					b.setButtonState(ButtonState.DOWN);
 					onButtonClicked(b);
 				}
@@ -198,7 +182,7 @@ public abstract class LIGuiContainer extends GuiContainer {
 	}
 
 	protected boolean isPointWithin(LIGuiPart element, int x, int y) {
-		return this.isPointInRegion(element.posX, element.posY, element.width,
+		return this.func_146978_c(element.posX, element.posY, element.width,
 				element.height, x, y);
 	}
 

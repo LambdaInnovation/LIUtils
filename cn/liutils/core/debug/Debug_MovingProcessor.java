@@ -1,7 +1,7 @@
-package cn.liutils.api.debug;
+package cn.liutils.core.debug;
 
 import net.minecraftforge.client.IItemRenderer;
-import cn.liutils.api.debug.KeyMoving.EnumKey;
+import cn.liutils.core.debug.KeyMoving.EnumKey;
 
 public interface Debug_MovingProcessor <T extends IItemRenderer>{
 

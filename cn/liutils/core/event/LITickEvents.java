@@ -1,6 +1,7 @@
-package cn.liutils.core.client.register;
-
-import java.util.EnumSet;
+/**
+ * 
+ */
+package cn.liutils.core.event;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
@@ -9,55 +10,43 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import cn.liutils.api.debug.Debug_MovingProcessor;
-import cn.liutils.api.debug.KeyMoving;
-import cn.liutils.api.debug.command.Command_SetMode;
-import cn.liutils.api.entity.EntityPlayerRenderHelper;
+import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.core.LIUtilsMod;
-
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
+import cn.liutils.core.debug.Debug_MovingProcessor;
+import cn.liutils.core.debug.KeyMoving;
+import cn.liutils.core.debug.command.Command_SetMode;
+import cn.liutils.core.proxy.LIClientProxy;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 /**
- * TODO:UNFINISHED
  * @author Administrator
  *
  */
-public class LIClientTickHandler implements ITickHandler {
-	
-	public EntityPlayerRenderHelper helper;
+public class LITickEvents {
+	public EntityPlayerRender helper;
 
-	public LIClientTickHandler() {
-	}
-
-	@Override
-	public void tickStart(EnumSet<TickType> type, Object... tickData) {
-		Minecraft mc = Minecraft.getMinecraft();
-		EntityPlayer player = mc.thePlayer;
-		if(player == null) return;
-		if(LIUtilsMod.DEBUG)
+	@SubscribeEvent
+	public void onClientTick(ClientTickEvent event) {
+		if(event.phase == Phase.START) {
+			Minecraft mc = Minecraft.getMinecraft();
+			EntityPlayer player = mc.thePlayer;
+			if(player == null) return;
+			if(LIUtilsMod.DEBUG)
 				doDebug(player);
-		playerTick(player);
-	}
-
-	@Override
-	public void tickEnd(EnumSet<TickType> type, Object... tickData) {
-	}
-
-	@Override
-	public EnumSet<TickType> ticks() {
-		return EnumSet.of(TickType.CLIENT);
-	}
-
-	@Override
-	public String getLabel() {
-		return "LIUtils Client Tick Handler";
+			playerTick(player);
+			
+			LIClientProxy.keyProcess.tickStart();
+		} else {
+			LIClientProxy.keyProcess.tickEnd();
+		}
 	}
 	
 	private void playerTick(EntityPlayer player) {
 		World world = player.worldObj;
 		if(helper == null) {
-			helper = new EntityPlayerRenderHelper(player, player.worldObj);
+			helper = new EntityPlayerRender(player, player.worldObj);
 			world.spawnEntityInWorld(helper);
 		}
 	}
@@ -72,5 +61,4 @@ public class LIClientTickHandler implements ITickHandler {
 			} else Command_SetMode.setActiveProcessor(player, null);
 		} else Command_SetMode.setActiveProcessor(player, null);
 	}
-
 }

@@ -1,14 +1,14 @@
 /**
  * 
  */
-package cn.liutils.api.debug.command;
+package cn.liutils.core.debug.command;
 
-import cn.liutils.api.debug.IItemRenderInfProvider;
+import cn.liutils.core.debug.IItemRenderInfProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import net.minecraftforge.client.MinecraftForgeClient;
@@ -47,7 +47,7 @@ public class Command_GetRenderInf extends CommandBase {
 			if(item != null) {
 				IItemRenderer renderer = MinecraftForgeClient.getItemRenderer(item, ItemRenderType.EQUIPPED_FIRST_PERSON);
 				if(renderer != null && renderer instanceof IItemRenderInfProvider) {
-					ics.sendChatToPlayer(ChatMessageComponent.createFromText(((IItemRenderInfProvider)renderer).getFullInformation()));
+					ics.addChatMessage(new ChatComponentTranslation(((IItemRenderInfProvider)renderer).getFullInformation(), new Object[0]));
 				}
 			}
 		}

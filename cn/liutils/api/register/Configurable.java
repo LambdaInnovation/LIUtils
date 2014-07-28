@@ -19,13 +19,11 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
-import cn.liutils.core.register.ConfigHandler;
-
 /**
- * **Inspired by HyperX，将一个变量标记为可以Config设置。 需要在GeneralRegistry中加载标记过的类。
- * 当前只支持static域。
- * 
- * @see ConfigHandler#loadConfigurableClass
+ * **Inspired by HyperX**
+ * Mark a variable so it can be automatically loaded by config.
+ * Currently static fields only.
+ * @see cn.liutils.api.LIGeneralRegistry#loadConfigurableClass
  * @author WeAthFolD
  */
 @Target(ElementType.FIELD)

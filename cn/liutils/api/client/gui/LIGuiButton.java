@@ -27,37 +27,22 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
-	 * 两种状态对应贴图的U、V。
+	 * texture UVs.
 	 */
 	public int downTexU, downTexV, invaildTexU, invaildTexV;
 
 	/*
-	 * 当前的按钮状态。
+	 * Current button state.
 	 */
-	public ButtonState buttonState;
+	public ButtonState state;
 
-	/**
-	 * GUI按钮的构造类。
-	 * 
-	 * @param name
-	 *            按钮名字，用于获取按钮信息。
-	 * @param x
-	 *            渲染位置X坐标
-	 * @param y
-	 *            渲染位置Y坐标
-	 * @param w
-	 *            宽度
-	 * @param h
-	 *            高度
-	 */
-	public LIGuiButton(String name, int x, int y, int w, int h) {
-		super(name, x, y, w, h);
-		buttonState = ButtonState.IDLE;
+	public LIGuiButton(String name, int x, int y, int width, int height) {
+		super(name, x, y, width, height);
+		state = ButtonState.IDLE;
 	}
 
 	/**
-	 * 设置按钮按下时的U、V位置（像素，左上角）
-	 * 
+	 * set texture coords when button is down.
 	 * @param u
 	 * @param v
 	 * @return 当前按钮
@@ -70,8 +55,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 
 	/**
-	 * 设置按钮无法使用时的U、V位置（像素，左上角）
-	 * 
+	 * set texture coords when button is invalid.
 	 * @param u
 	 * @param v
 	 * @return 当前按钮
@@ -83,24 +67,16 @@ public class LIGuiButton extends LIGuiPart {
 		return this;
 	}
 
-	/**
-	 * 设置当前的按钮状态。
-	 * 
-	 * @param a
-	 */
 	public void setButtonState(ButtonState a) {
-		if (this.buttonState != ButtonState.INVAILD)
-			this.buttonState = a;
+		if (this.state != ButtonState.INVAILD)
+			this.state = a;
 	}
 
 	/**
-	 * 强制设置按钮状态。
-	 * 
-	 * @param a
-	 *            按钮状态
+	 * Regardless of button vaildness, set the state
 	 */
 	public void setButtonStateForce(ButtonState a) {
-		this.buttonState = a;
+		this.state = a;
 	}
 
 }

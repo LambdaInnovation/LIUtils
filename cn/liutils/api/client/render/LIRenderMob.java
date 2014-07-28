@@ -1,6 +1,3 @@
-/**
- * Code by Lambda Innovation, 2013.
- */
 package cn.liutils.api.client.render;
 
 import cn.liutils.api.entity.LIEntityMob;
@@ -11,10 +8,6 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-/**
- * @author WeAthFolD
- *
- */
 public class LIRenderMob extends RenderLiving {
 
 	public final static TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
@@ -23,7 +16,6 @@ public class LIRenderMob extends RenderLiving {
 		super(par1ModelBase, par2);
 	}
 
-	// getTexture
 	@Override
 	protected ResourceLocation getEntityTexture(Entity entity) {
 		if (entity == null || !(entity instanceof LIEntityMob)) {
@@ -31,10 +23,6 @@ public class LIRenderMob extends RenderLiving {
 		}
 		LIEntityMob e = (LIEntityMob) entity;
 		return e.getTexture();
-	}
-	
-	protected void loadTexture(ResourceLocation str) {
-		renderEngine.bindTexture(str);
 	}
 
 }

@@ -3,24 +3,22 @@
  */
 package cn.liutils.core.proxy;
 
+import net.minecraftforge.common.MinecraftForge;
+
 import org.lwjgl.input.Keyboard;
 
-import net.minecraftforge.common.MinecraftForge;
-import cn.liutils.api.client.render.RenderEntityBlock;
 import cn.liutils.api.client.render.RenderPlayerHelper;
 import cn.liutils.api.client.render.RenderTrail;
-import cn.liutils.api.debug.Debug_ProcessorModel;
-import cn.liutils.api.debug.KeyMoving;
-import cn.liutils.api.entity.EntityBlock;
-import cn.liutils.api.entity.EntityPlayerRenderHelper;
+import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.LIUtilsMod;
-import cn.liutils.core.client.register.LIClientTickHandler;
 import cn.liutils.core.client.register.LIKeyProcess;
-import cn.liutils.core.client.register.LISoundRegistry;
+import cn.liutils.core.debug.Debug_ProcessorModel;
+import cn.liutils.core.debug.KeyMoving;
+import cn.liutils.core.event.LIEventListener;
+import cn.liutils.core.event.LITickEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * @author WeAthFolD
@@ -28,20 +26,20 @@ import cpw.mods.fml.relauncher.Side;
  */
 public class LIClientProxy extends LICommonProxy {
 
-	public static LIClientTickHandler clientTickHandler = new LIClientTickHandler();
+	public static LIEventListener clientTickHandler = new LIEventListener();
+	public static LIKeyProcess keyProcess;
 	
 	@Override
 	public void init() {
+		super.init();
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 	}
 	
 	@Override
 	public void preInit() {
-		
-		MinecraftForge.EVENT_BUS.register(new LISoundRegistry());
-		TickRegistry.registerTickHandler(clientTickHandler, Side.CLIENT);
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRenderHelper.class, new RenderPlayerHelper());
-		RenderingRegistry.registerEntityRenderingHandler(EntityBlock.class, new RenderEntityBlock());
+		super.preInit();	
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
+		FMLCommonHandler.instance().bus().register(new LITickEvents());
 		
 		if(LIUtilsMod.DEBUG) {
 			KeyMoving key = new KeyMoving();
@@ -57,6 +55,7 @@ public class LIClientProxy extends LICommonProxy {
 	
 	@Override
 	public void postInit() {
-		TickRegistry.registerTickHandler(new LIKeyProcess(), Side.CLIENT);
+		super.postInit();
+		keyProcess = new LIKeyProcess();
 	}
 }

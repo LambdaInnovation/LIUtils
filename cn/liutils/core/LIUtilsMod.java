@@ -1,42 +1,49 @@
-/**
- * 
- */
-package cn.liutils.core;
 
-import java.util.logging.Logger;
+package cn.liutils.core;
 
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
+
+import org.apache.logging.log4j.Logger;
+
+import cn.liutils.core.debug.command.Command_GetRenderInf;
+import cn.liutils.core.debug.command.Command_SetMode;
+import cn.liutils.core.proxy.LICommonProxy;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
 import cpw.mods.fml.common.SidedProxy;
-import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.EntityRegistry;
-import cn.liutils.api.debug.command.Command_GetRenderInf;
-import cn.liutils.api.debug.command.Command_SetMode;
-import cn.liutils.api.entity.EntityBlock;
-import cn.liutils.core.proxy.LICommonProxy;
-import cn.liutils.core.proxy.LIGeneralProps;
 
 /**
- * LIUtils mod的主注册类。
+ * LIUtils is a core support mod, written by Lambda Innovation.
+ * It's contents involve rendering, key listening, debugging and other many stuffs.
+ * #cn.liutils.api is what user should invoke. It contains all the main functions.
+ * #cn.liutils.core is core registration module, and should not be modified or invoked normally.
  * @author WeAthFolD
  */
 @Mod(modid = "LIutils", name = "LIUtils", version = LIUtilsMod.VERSION)
-@NetworkMod(clientSideRequired = true, serverSideRequired = false)
 public class LIUtilsMod {
 	
+	/**
+	 * Version Number.
+	 */
 	public static final String VERSION = "1.3.0";
 	
-	public static final String DEPENDENCY = "required-after:LIutils@" + VERSION;
+	/**
+	 * Does open debug mode. turn to false when compiling.
+	 */
+	public static final boolean DEBUG = false;
 	
-	public static final boolean DEBUG = false; //请在编译时设置为false
+	/**
+	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.
+	 */
+	public static final String DEPENDENCY = "required-after:LIutils@" + VERSION;
 	
 	@Instance("LIutils")
 	public static LIUtilsMod instance;
@@ -44,16 +51,11 @@ public class LIUtilsMod {
 	@SidedProxy(serverSide = "cn.liutils.core.proxy.LICommonProxy", clientSide = "cn.liutils.core.proxy.LIClientProxy")
 	public static LICommonProxy proxy;
 	
-	public static Logger log = Logger.getLogger("LIUtils");
+	public static Logger log = FMLLog.getLogger();
 	
-	/**
-	 * 预加载（设置、世界生成、注册Event）
-	 * @param event
-	 */
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
 
-		log.setParent(FMLLog.getLogger());
 		log.info("Starting LIUtils " + VERSION);
 		log.info("Copyright (c) Lambda Innovation, 2013");
 		log.info("http://www.lambdacraft.cn");
@@ -61,16 +63,9 @@ public class LIUtilsMod {
 		proxy.preInit();
 	}
 	
-	/**
-	 * 加载（方块、物品、网络处理、其他)
-	 * 
-	 * @param Init
-	 */
 	@EventHandler()
 	public void init(FMLInitializationEvent Init) {
 		proxy.init();
-		
-		registerEntity(EntityBlock.class, "entity_block", LIGeneralProps.ENT_ID_BLOCK);
 	}
 	
 	private void registerEntity(Class<? extends Entity> cl, String name, int id) {
@@ -81,21 +76,11 @@ public class LIUtilsMod {
 		EntityRegistry.registerModEntity(cl, name, id, instance, trackRange, freq, updateVel);
 	}
 	
-	/**
-	 * 加载后（保存设置）
-	 * 
-	 * @param event
-	 */
 	@EventHandler()
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
 	}
 	
-	/**
-	 * 服务器加载（注册指令）
-	 * 
-	 * @param event
-	 */
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();

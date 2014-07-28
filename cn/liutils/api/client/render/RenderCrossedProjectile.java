@@ -56,55 +56,56 @@ public class RenderCrossedProjectile extends Render {
 		Motion3D motion = new Motion3D(entity);
 		Tessellator tessellator = Tessellator.instance;
 
-		GL11.glPushMatrix();
+		GL11.glPushMatrix(); {
+			Vec3 v1 = newV3(0, HEIGHT, 0), 
+					v2 = newV3(0, -HEIGHT, 0), 
+					v3 = newV3(LENGTH, -HEIGHT, 0),
+					v4 = newV3(LENGTH, HEIGHT, 0),
+					v5 = newV3(0, 0, -HEIGHT), 
+					v6 = newV3(0, 0, HEIGHT), 
+					v7 = newV3(LENGTH, 0, HEIGHT), 
+					v8 = newV3(LENGTH, 0, -HEIGHT);
 
-		Vec3 v1 = newV3(0, HEIGHT, 0), v2 = newV3(0, -HEIGHT, 0), v3 = newV3(
-				LENGTH, -HEIGHT, 0), v4 = newV3(LENGTH, HEIGHT, 0),
-
-		v5 = newV3(0, 0, -HEIGHT), v6 = newV3(0, 0, HEIGHT), v7 = newV3(LENGTH,
-				0, HEIGHT), v8 = newV3(LENGTH, 0, -HEIGHT);
-
-		GL11.glTranslatef((float) par2, (float) par4, (float) par6);
-		GL11.glDisable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		
-		if(renderTexture)
-			bindTexture(TEXTURE_PATH);
-		else {
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
-			GL11.glColor3f(colorR, colorG, colorB);
-		}
-		
-		if(ignoreLight)
-			GL11.glDisable(GL11.GL_LIGHTING);
-		
-		GL11.glRotatef(270.0F - entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
-		GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, -1.0F); // 上下旋转
-		
-		if(ignoreLight) 
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-		tessellator.startDrawingQuads();
-		if(ignoreLight) 
-			tessellator.setBrightness(15728880);
-		
-		RenderUtils.addVertex(v1, 0, 1);
-		RenderUtils.addVertex(v2, 1, 1);
-		RenderUtils.addVertex(v3, 1, 0);
-		RenderUtils.addVertex(v4, 0, 0);
-		
-		RenderUtils.addVertex(v5, 0, 1);
-		RenderUtils.addVertex(v6, 1, 1);
-		RenderUtils.addVertex(v7, 1, 0);
-		RenderUtils.addVertex(v8, 0, 0);
-		
-		tessellator.draw(); 
-		
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_LIGHTING);
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glDisable(GL11.GL_BLEND);
-		GL11.glPopMatrix();
+			GL11.glDisable(GL11.GL_CULL_FACE);
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			
+			if(renderTexture) {
+				bindTexture(TEXTURE_PATH);
+			} else {
+				GL11.glDisable(GL11.GL_TEXTURE_2D);
+				GL11.glColor3f(colorR, colorG, colorB);
+			}
+			if(ignoreLight) {
+				GL11.glDisable(GL11.GL_LIGHTING);
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+			}
+			
+			GL11.glTranslatef((float) par2, (float) par4, (float) par6);
+			GL11.glRotatef(270.0F - entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
+			GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, -1.0F); // 上下旋转
+				
+			tessellator.startDrawingQuads();
+			if(ignoreLight) 
+				tessellator.setBrightness(15728880);
+			
+			RenderUtils.addVertex(v1, 0, 1);
+			RenderUtils.addVertex(v2, 1, 1);
+			RenderUtils.addVertex(v3, 1, 0);
+			RenderUtils.addVertex(v4, 0, 0);
+			
+			RenderUtils.addVertex(v5, 0, 1);
+			RenderUtils.addVertex(v6, 1, 1);
+			RenderUtils.addVertex(v7, 1, 0);
+			RenderUtils.addVertex(v8, 0, 0);
+			
+			tessellator.draw(); 
+			
+			GL11.glEnable(GL11.GL_TEXTURE_2D);
+			GL11.glEnable(GL11.GL_LIGHTING);
+			GL11.glEnable(GL11.GL_CULL_FACE);
+			GL11.glDisable(GL11.GL_BLEND);
+		} GL11.glPopMatrix();
 	}
 
 	public static Vec3 newV3(double x, double y, double z) {
