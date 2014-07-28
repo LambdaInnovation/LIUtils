@@ -9,25 +9,21 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 
 /**
+ * Attached to the player and activate whenever player model is rendered.
+ * Used for rendering custom stuffs.
  * @author WeAthFolD
- *
  */
 @SideOnly(Side.CLIENT)
-public interface PlayerRenderHelper {
+public interface PlayerRenderHandler {
+	
 	/**
-	 * 用于确定当前的辅助渲染是否被激活。
-	 * 每Tick都会调用，不要进行太多运算。
+	 * Get whether the render process is activated or not
 	 * @param player
 	 * @param world
 	 * @return
 	 */
 	boolean isActivated(EntityPlayer player, World world);
 	
-	/**
-	 * 方向自己调，反正帮你做好旋转了……
-	 * @param player
-	 * @param world
-	 */
 	void renderHead(EntityPlayer player, World world);
 	
 	void renderBody(EntityPlayer player, World world);

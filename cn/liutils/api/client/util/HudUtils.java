@@ -3,9 +3,17 @@ package cn.liutils.api.client.util;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 
+/**
+ * Utilities about hud drawing.
+ */
 public class HudUtils {
 
 	private static float SCALE_X = 1.0F, SCALE_Y = 1.0F;
+	/**
+	 * Called to set the scale before any drawing call.
+	 * @param x
+	 * @param y
+	 */
 	public static void setTextureResolution(int x, int y) {
 		SCALE_X = 1.0F/x;
 		SCALE_Y = 1.0F/y;

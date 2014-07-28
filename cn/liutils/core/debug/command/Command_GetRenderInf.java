@@ -1,9 +1,9 @@
 /**
  * 
  */
-package cn.liutils.api.debug.command;
+package cn.liutils.core.debug.command;
 
-import cn.liutils.api.debug.IItemRenderInfProvider;
+import cn.liutils.core.debug.IItemRenderInfProvider;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;

@@ -9,12 +9,12 @@ import org.lwjgl.input.Keyboard;
 
 import cn.liutils.api.client.render.RenderPlayerHelper;
 import cn.liutils.api.client.render.RenderTrail;
-import cn.liutils.api.debug.Debug_ProcessorModel;
-import cn.liutils.api.debug.KeyMoving;
-import cn.liutils.api.entity.EntityPlayerRenderHelper;
+import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.LIUtilsMod;
 import cn.liutils.core.client.register.LIKeyProcess;
+import cn.liutils.core.debug.Debug_ProcessorModel;
+import cn.liutils.core.debug.KeyMoving;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -38,7 +38,7 @@ public class LIClientProxy extends LICommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();	
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRenderHelper.class, new RenderPlayerHelper());
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
 		FMLCommonHandler.instance().bus().register(new LITickEvents());
 		
 		if(LIUtilsMod.DEBUG) {

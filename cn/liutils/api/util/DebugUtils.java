@@ -7,7 +7,7 @@ public class DebugUtils {
 		for(T a : arr) {
 			b.append(a).append(", ");
 		}
-		b.append("/b/b )");
+		b.append("\b\b )");
 		return b.toString();
 	}
 

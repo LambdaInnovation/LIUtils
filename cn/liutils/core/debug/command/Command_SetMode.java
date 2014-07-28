@@ -1,9 +1,9 @@
 /**
  * 
  */
-package cn.liutils.api.debug.command;
+package cn.liutils.core.debug.command;
 
-import cn.liutils.api.debug.Debug_MovingProcessor;
+import cn.liutils.core.debug.Debug_MovingProcessor;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
@@ -47,7 +47,7 @@ public class Command_SetMode extends CommandBase {
 	
 	private static void printProcessor(EntityPlayer player, Debug_MovingProcessor pr) {
 		if(pr != null) {
-			player.addChatMessage(new ChatComponentTranslation("--------------------ACTIVE DEBUGGER INF------------------"));
+			player.addChatMessage(new ChatComponentTranslation("|-------------------ACTIVE DEBUGGER INF-----------------|"));
 			for(int i = 0; pr.getDescription(i) != null; i++) {
 				player.addChatMessage(new ChatComponentTranslation(EnumChatFormatting.GREEN + "Mode " + i + " : " + EnumChatFormatting.WHITE + pr.getDescription(i)));
 			}

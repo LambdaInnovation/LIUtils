@@ -9,17 +9,15 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
 /**
- * Entity尾迹渲染类。
- * 
+ * Entity trail entity.
  * @author WeAthFolD
- * 
  */
 public class EntityTrailFX extends Entity {
 
 	private LinkedList<SamplePoint> samples = new LinkedList();
 	private Entity linkedEntity;
 	private ResourceLocation texNormal, texEnd;
-	private boolean doesRenderEnd, hasLight;
+	private boolean renderEnd, hasLight;
 	private int decayTime, sampleFreq;
 	private double width;
 
@@ -27,7 +25,7 @@ public class EntityTrailFX extends Entity {
 		super(par1World);
 		this.linkedEntity = par2LinkedEntity;
 		texNormal = texEnd = null;
-		doesRenderEnd = false;
+		renderEnd = false;
 		decayTime = 20;
 		sampleFreq = 2;
 		this.posX = linkedEntity.posX;
@@ -58,7 +56,7 @@ public class EntityTrailFX extends Entity {
 	}
 
 	public EntityTrailFX setDoesRenderEnd(boolean b) {
-		doesRenderEnd = b;
+		renderEnd = b;
 		return this;
 	}
 
@@ -115,7 +113,7 @@ public class EntityTrailFX extends Entity {
 	}
 
 	public Boolean doesRenderEnd() {
-		return doesRenderEnd;
+		return renderEnd;
 	}
 
 	public LinkedList<SamplePoint> getSamplePoints() {

@@ -22,8 +22,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
+ * A entity that has its position and motion properties. used for all kinds of spacial calculations.
  * @author WeAthFolD
- * 
  */
 public class Motion3D {
 
@@ -32,8 +32,7 @@ public class Motion3D {
 	public double posX, posY, posZ;
 	public static final double OFFSET_SCALE = 0.5D;
 
-	public Motion3D(double pX, double pY, double pZ, double moX, double moY,
-			double moZ) {
+	public Motion3D(double pX, double pY, double pZ, double moX, double moY, double moZ) {
 		posX = pX;
 		posY = pY;
 		posZ = pZ;
@@ -43,37 +42,46 @@ public class Motion3D {
 		motionZ = moZ;
 	}
 
-	public Motion3D(Vec3 par0, double moX, double moY, double moZ) {
-		this(par0.xCoord, par0.yCoord, par0.zCoord, moX, moY, moZ);
+	public Motion3D(Vec3 posVec, double moX, double moY, double moZ) {
+		this(posVec.xCoord, posVec.yCoord, posVec.zCoord, moX, moY, moZ);
 	}
 
-	public Motion3D(Motion3D a) {
-		this(a.posX, a.posY, a.posZ, a.motionX, a.motionY, a.motionZ);
+	public Motion3D(Motion3D another) {
+		this(another.posX, another.posY, another.posZ, another.motionX, another.motionY, another.motionZ);
 	}
 	
 	/**
-	 * 创建一个以Entity位置和动作方向为基准的Motion3D
-	 * @param ent
+	 * Create an Motion3D based on its position and moving direction.
 	 */
 	public Motion3D(Entity ent) {
 		this(ent, 0, false);
 	}
 
 	/**
-	 * @param ent
-	 * @param ahr 是否以头部朝向决定旋转方向
+	 * @see cn.liutils.api.util.Motion3D(Entity, int, boolean)
+	 * @param ent entity
+	 * @param dirFlag false:use moving direction; true:use head-looking direction
 	 */
-	public Motion3D(Entity ent, boolean ahr) {
-		this(ent, 0, ahr);
+	public Motion3D(Entity ent, boolean dirFlag) {
+		this(ent, 0, dirFlag);
 	}
 
-	public Motion3D(Entity entity, int offset, boolean asHeadRotation) {
+	/**
+	 * Create an Motion3D from an entity, selectible offset.
+	 * @param entity
+	 * @param offset direction offset
+	 * @param dirFlag false:use moving direction; true:use head-looking direction
+	 */
+	public Motion3D(Entity entity, int offset, boolean dirFlag) {
 		this.posX = entity.posX;
 		this.posY = entity.posY + entity.getEyeHeight();
 		this.posZ = entity.posZ;
 
-		if (asHeadRotation) {
+		if (dirFlag) {
 			float var3 = 1.0F, var4 = 0.0F;
+			
+			double rotationYaw = entity.rotationYaw + (RNG.nextDouble() - 0.5) * offset;
+			double rotationPitch = entity.rotationYaw + (RNG.nextDouble() - 0.5) * offset;
 			this.motionX = -MathHelper.sin(entity.rotationYaw / 180.0F
 					* (float) Math.PI)
 					* MathHelper.cos(entity.rotationPitch / 180.0F
@@ -85,22 +93,35 @@ public class Motion3D {
 			this.motionY = -MathHelper.sin((entity.rotationPitch + var4)
 					/ 180.0F * (float) Math.PI)
 					* var3;
+			
+			
 		} else {
 			motionX = entity.motionX;
 			motionY = entity.motionY;
 			motionZ = entity.motionZ;
+			setMotionOffset(offset);
 		}
-		setMotionOffset(offset);
+		
 	}
 
+	
+	/**
+	 * Add a 3-dimension randomized offset for the motion vec.
+	 * @param par1
+	 * @return
+	 */
 	public Motion3D setMotionOffset(double par1) {
-		this.motionX += (RNG.nextDouble() - 1) * par1 * OFFSET_SCALE;
-		this.motionY += (RNG.nextDouble() - 1) * par1 * OFFSET_SCALE;
-		this.motionZ += (RNG.nextDouble() - 1) * par1 * OFFSET_SCALE;
+		this.motionX += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
+		this.motionY += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
+		this.motionZ += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
 		return this;
 	}
 	
-	public static void setMotionToEntity(Motion3D mo, Entity e) {
+	/*
+	 * @param mo
+	 * @param e
+	 */
+	public static void applyToEntity(Motion3D mo, Entity e) {
 		e.setPosition(mo.posX, mo.posY, mo.posZ);
 		e.motionX = mo.motionX;
 		e.motionY = mo.motionY;
@@ -108,14 +129,26 @@ public class Motion3D {
 	}
 	
 	/**
-	 * 
-	 * @param scale
-	 * @return
+	 * Move this motion3D towards motion vec direction.
+	 * @param step
+	 * @return this
 	 */
-	public Motion3D move(double scale) {
-		posX += motionX * scale;
-		posY += motionY * scale;
-		posZ += motionZ * scale;
+	public Motion3D move(double step) {
+		posX += motionX * step;
+		posY += motionY * step;
+		posZ += motionZ * step;
+		return this;
+	}
+	
+	/**
+	 * Normalize the motion vector.
+	 * @return this
+	 */
+	public Motion3D normalize() {
+		double z = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
+		motionX /= z;
+		motionY /= z;
+		motionZ /= z;
 		return this;
 	}
 
@@ -150,8 +183,17 @@ public class Motion3D {
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 	
-	public Vec3 asVec3(World world) {
+	/**
+	 * get position vector
+	 * @param world
+	 * @return
+	 */
+	public Vec3 getPosVec(World world) {
 		return world.getWorldVec3Pool().getVecFromPool(posX, posY, posZ);
+	}
+	
+	public Vec3 getMotionVec(World world) {
+		return world.getWorldVec3Pool().getVecFromPool(motionX, motionY, motionZ);
 	}
 	
 	@Override

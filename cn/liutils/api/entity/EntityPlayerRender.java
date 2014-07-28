@@ -6,7 +6,7 @@ package cn.liutils.api.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import cn.liutils.api.client.render.PlayerRenderHelper;
+import cn.liutils.api.client.render.PlayerRenderHandler;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -18,29 +18,26 @@ import net.minecraft.world.World;
  * @author WeAthFolD
  *
  */
-public class EntityPlayerRenderHelper extends Entity {
+public class EntityPlayerRender extends Entity {
 
 	public EntityPlayer player;
-	public float rotationYawHead = 0.0F;
 	
-	private static Set<PlayerRenderHelper> helpers = new HashSet();
-	public static Set<PlayerRenderHelper> activeHelpers = new HashSet();
+	private static Set<PlayerRenderHandler> helpers = new HashSet();
+	public static Set<PlayerRenderHandler> activeHelpers = new HashSet();
 	
 	/**
 	 */
-	public EntityPlayerRenderHelper(EntityPlayer p, World world) {
+	public EntityPlayerRender(EntityPlayer p, World world) {
 		super(world);
 		player = p;
 		setPositionAndRotation(p.posX, p.posY, p.posZ, p.rotationYaw, p.rotationPitch);
-		rotationYawHead = p.rotationYawHead;
 	}
 	
     @Override
 	public void onUpdate()
     {
     	setPositionAndRotation(player.posX, player.posY, player.posZ, player.renderYawOffset, player.rotationPitch);
-		rotationYawHead = player.rotationYawHead;
-		for(PlayerRenderHelper p : helpers) {
+		for(PlayerRenderHandler p : helpers) {
 			if(p.isActivated(player, worldObj)) {
 				activeHelpers.add(p);
 			} else activeHelpers.remove(p);
@@ -48,12 +45,12 @@ public class EntityPlayerRenderHelper extends Entity {
     }
     
     public static boolean hasActivate(EntityPlayer player) {
-    	for(PlayerRenderHelper p : helpers)
+    	for(PlayerRenderHandler p : helpers)
     		if(p.isActivated(player, player.worldObj)) return true;
     	return false;
     }
     
-    public static void addRenderHelper(PlayerRenderHelper helper) {
+    public static void addRenderHelper(PlayerRenderHandler helper) {
     	helpers.add(helper);
     }
 

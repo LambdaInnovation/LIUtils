@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.liutils.api.debug;
+package cn.liutils.core.debug;
 
 import java.util.HashSet;
 import java.util.Iterator;
@@ -15,13 +15,13 @@ import net.minecraftforge.client.MinecraftForgeClient;
 
 import org.lwjgl.input.Keyboard;
 
-import cn.liutils.api.client.register.IKeyProcess;
-import cn.liutils.api.debug.command.Command_SetMode;
+import cn.liutils.api.client.register.IKeyHandler;
+import cn.liutils.core.debug.command.Command_SetMode;
 
 /**
  * 跟武器位置调试有关的键位处理。
  */
-public class KeyMoving implements IKeyProcess {
+public class KeyMoving implements IKeyHandler {
 
 	int keyTick = 0;
 	private static HashSet<Debug_MovingProcessor> processors = new HashSet<Debug_MovingProcessor>();
@@ -89,5 +89,10 @@ public class KeyMoving implements IKeyProcess {
 	public void onKeyUp(int keyCode, boolean tickEnd) {
 		keyTick = 0;
 	}
+
+	@Override
+	public void onKeyTick(int keyCode, boolean tickEnd) {
+	}
+
 
 }

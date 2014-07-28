@@ -24,7 +24,7 @@ import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cn.liutils.api.client.register.IKeyProcess;
+import cn.liutils.api.client.register.IKeyHandler;
 
 /**
  * 统一处理按键的实用类。 请使用addKey(...)注册按键绑定。详见函数本身说明
@@ -41,11 +41,11 @@ public final class LIKeyProcess {
 	public static class LIKeyBinding {
 		public int keyCode;
 		public boolean isRepeat;
-		public IKeyProcess process;
+		public IKeyHandler process;
 		public boolean keyDown;
 		public String name;
 		
-		public LIKeyBinding(String n, int code, boolean repeat, IKeyProcess proc) {
+		public LIKeyBinding(String n, int code, boolean repeat, IKeyHandler proc) {
 			name = n;
 			keyCode = code;
 			isRepeat = repeat;
@@ -71,7 +71,7 @@ public final class LIKeyProcess {
             boolean state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
             if (state != kb.keyDown || (state && kb.isRepeat))
             {
-            	IKeyProcess proc = kb.process;
+            	IKeyHandler proc = kb.process;
             	
                 if (state)
                 {
@@ -85,29 +85,28 @@ public final class LIKeyProcess {
                 {
                     kb.keyDown = state;
                 }
+            } else if(state) {
+            	IKeyHandler handler = kb.process;
+            	handler.onKeyTick(keyCode, tickEnd);
             }
             KeyBinding binding = associates.get(kb);
             if(binding != null) kb.keyCode = binding.getKeyCode();
-        }
+        } 
     }
 
 	/**
-	 * 在按键处理中添加一个键位。请务必在preInit（Init之前）调用这个函数。
-	 * 
-	 * @param key
-	 *            按键
-	 * @param isRep
-	 *            是否重复
-	 * @param process
-	 *            对应的处理类
+	 * adding a key to the process list.
+	 * @param key the key
+	 * @param isRep repeatly call keyDown when pressing
+	 * @param handler handler
 	 */
-	public static LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyProcess process) {
-		LIKeyBinding binding = new LIKeyBinding(name, keyCode, isRep, process);
+	public static LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyHandler handler) {
+		LIKeyBinding binding = new LIKeyBinding(name, keyCode, isRep, handler);
 		bindingSet.add(binding);
 		return binding;
 	}
 	
-	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyProcess process) {
+	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyHandler process) {
 		LIKeyBinding bd = addKey(b.getKeyDescription(), b.getKeyCode(), isRep, process);
 		associates.put(bd, b);
 		return bd;

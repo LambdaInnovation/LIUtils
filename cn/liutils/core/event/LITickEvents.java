@@ -10,11 +10,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import cn.liutils.api.debug.Debug_MovingProcessor;
-import cn.liutils.api.debug.KeyMoving;
-import cn.liutils.api.debug.command.Command_SetMode;
-import cn.liutils.api.entity.EntityPlayerRenderHelper;
+import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.debug.Debug_MovingProcessor;
+import cn.liutils.core.debug.KeyMoving;
+import cn.liutils.core.debug.command.Command_SetMode;
 import cn.liutils.core.proxy.LIClientProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -25,7 +25,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  *
  */
 public class LITickEvents {
-	public EntityPlayerRenderHelper helper;
+	public EntityPlayerRender helper;
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
@@ -46,7 +46,7 @@ public class LITickEvents {
 	private void playerTick(EntityPlayer player) {
 		World world = player.worldObj;
 		if(helper == null) {
-			helper = new EntityPlayerRenderHelper(player, player.worldObj);
+			helper = new EntityPlayerRender(player, player.worldObj);
 			world.spawnEntityInWorld(helper);
 		}
 	}
