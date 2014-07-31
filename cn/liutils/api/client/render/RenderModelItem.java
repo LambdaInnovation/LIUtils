@@ -18,12 +18,11 @@ import org.lwjgl.util.vector.Vector2f;
 
 import cn.liutils.api.client.model.IItemModel;
 import cn.liutils.api.client.util.RenderUtils;
-import cn.liutils.core.debug.IItemRenderInfProvider;
 
 /**
  * Item model render. Implemented lots of methods to adjust rendering and positioning.
  */
-public class RenderModelItem implements IItemRenderer, IItemRenderInfProvider {
+public class RenderModelItem implements IItemRenderer {
 
 	protected Tessellator t = Tessellator.instance;
 	protected Minecraft mc = Minecraft.getMinecraft();
@@ -300,12 +299,6 @@ public class RenderModelItem implements IItemRenderer, IItemRenderInfProvider {
 	
 	protected float getModelAttribute(ItemStack item, EntityLivingBase entity) {
 		return 0.1F;
-	}
-
-	@Override
-	public String getFullInformation() {
-		StringBuilder sb =  new StringBuilder("[STD OFFSET: " + stdOffset + "]\n");
-		return sb.toString();
 	}
 	
 	protected void doTransformation(Vec3 vec3) {

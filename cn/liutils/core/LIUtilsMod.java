@@ -6,8 +6,6 @@ import net.minecraft.entity.Entity;
 
 import org.apache.logging.log4j.Logger;
 
-import cn.liutils.core.debug.command.Command_GetRenderInf;
-import cn.liutils.core.debug.command.Command_SetMode;
 import cn.liutils.core.proxy.LICommonProxy;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -84,10 +82,6 @@ public class LIUtilsMod {
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
-		if(DEBUG) {
-			cm.registerCommand(new Command_SetMode());
-			cm.registerCommand(new Command_GetRenderInf());
-		}	
 	}
 	
 }
