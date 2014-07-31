@@ -14,31 +14,31 @@
  */
 package cn.liutils.api.util;
 
-import net.minecraft.block.Block;
 import net.minecraft.tileentity.TileEntity;
 
 /**
- * Utility class providing position and the block instance.
+ * 提供方块位置信息的实用类。
+ * 
  * @author WeAthFolD
+ * 
  */
 public class BlockPos {
 
-	public int x, y, z;
-	public Block block;
+	public int x, y, z, blockID;
 
-	public BlockPos(int par1, int par2, int par3, Block bID) {
+	public BlockPos(int par1, int par2, int par3, int bID) {
 		x = par1;
 		y = par2;
 		z = par3;
-		block = bID;
+		blockID = bID;
 	}
 	
 	public BlockPos(TileEntity te) {
-		this(te.xCoord, te.yCoord, te.zCoord, te.blockType);
+		this(te.xCoord, te.yCoord, te.zCoord, te.worldObj.getBlockId(te.xCoord, te.yCoord, te.zCoord));
 	}
 
 	/**
-	 * Judegs only position.
+	 * 只判断坐标是否相等，忽略BlockId
 	 */
 	@Override
 	public boolean equals(Object b) {
@@ -50,11 +50,11 @@ public class BlockPos {
 	
 	@Override
 	public int hashCode() {
-		return x << 8 + y << 4 + z;
+		return x << 20 + y << 10 + z;
 	}
 
 	public BlockPos copy() {
-		return new BlockPos(x, y, z, block);
+		return new BlockPos(x, y, z, blockID);
 	}
 
 }

@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.liutils.core.debug;
+package cn.liutils.api.debug;
 
 /**
  * @author Administrator

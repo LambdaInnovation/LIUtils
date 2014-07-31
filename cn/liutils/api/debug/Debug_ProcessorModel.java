@@ -1,12 +1,12 @@
 /**
  * 
  */
-package cn.liutils.core.debug;
+package cn.liutils.api.debug;
 
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.IItemRenderer;
 import cn.liutils.api.client.render.RenderModelItem;
-import cn.liutils.core.debug.KeyMoving.EnumKey;
+import cn.liutils.api.debug.KeyMoving.EnumKey;
 
 /**
  * @author WeAthFolD

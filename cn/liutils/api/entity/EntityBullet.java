@@ -120,24 +120,20 @@ public class EntityBullet extends EntityThrowable {
 	@Override
 	protected void onImpact(MovingObjectPosition par1) {
 		switch (par1.typeOfHit) {
-		case BLOCK:
+		case TILE:
 			doBlockCollision(par1);
 			break;
 		case ENTITY:
 			doEntityCollision(par1);
 			break;
-		default:
-			break;
 		}
 	}
 
 	protected void doBlockCollision(MovingObjectPosition result) {
-		Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
-		//if(!worldObj.isRemote && (block == Blocks.glass || block == Blocks.glass_pane)) {
-		//	worldObj.destroyBlock(result.blockX, result.blockY, result.blockZ, false);
-		//	worldObj.destroyBlockInWorldPartially(p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);
-		//}
-		//TODO:子弹的选择性方块摧毁？
+		int blockid = worldObj.getBlockId(result.blockX, result.blockY, result.blockZ);
+		if(!worldObj.isRemote && (blockid == Block.glass.blockID || blockid == Block.thinGlass.blockID)) {
+			worldObj.destroyBlock(result.blockX, result.blockY, result.blockZ, false);
+		}
 		this.setDead();
 	}
 

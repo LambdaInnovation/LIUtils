@@ -8,9 +8,10 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
- * A general process model of GUI.
+ * 根据TileEntity的类型自动获取对应GUI的统一处理类。请配合IChannelProcess使用。 TODO:加入对按键等其他情况打开Gui的支持。
+ * 
  * @see IChannelProcess
- * @author WeAthFolD
+ * @author WeAThFolD
  */
 public class LIGuiHandler implements IGuiHandler {
 

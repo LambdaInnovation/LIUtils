@@ -1,19 +1,11 @@
 package cn.liutils.api.client.util;
 
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.IIcon;
+import net.minecraft.util.Icon;
 
-/**
- * Utilities about hud drawing.
- */
 public class HudUtils {
 
 	private static float SCALE_X = 1.0F, SCALE_Y = 1.0F;
-	/**
-	 * Called to set the scale before any drawing call.
-	 * @param x
-	 * @param y
-	 */
 	public static void setTextureResolution(int x, int y) {
 		SCALE_X = 1.0F/x;
 		SCALE_Y = 1.0F/y;
@@ -69,14 +61,14 @@ public class HudUtils {
         tessellator.draw();
     }
     
-    public static void drawTexturedModelRectFromIcon(int x, int y, IIcon icon, int width, int height)
+    public static void drawTexturedModelRectFromIcon(int par1, int par2, Icon par3Icon, int par4, int par5)
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, -90, icon.getMinU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y + height, -90, icon.getMaxU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y + 0, -90, icon.getMaxU(), icon.getMinV());
-        tessellator.addVertexWithUV(x + 0, y + 0, -90, icon.getMinU(), icon.getMinV());
+        tessellator.addVertexWithUV(par1 + 0, par2 + par5, -90, par3Icon.getMinU(), par3Icon.getMaxV());
+        tessellator.addVertexWithUV(par1 + par4, par2 + par5, -90, par3Icon.getMaxU(), par3Icon.getMaxV());
+        tessellator.addVertexWithUV(par1 + par4, par2 + 0, -90, par3Icon.getMaxU(), par3Icon.getMinV());
+        tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, par3Icon.getMinU(), par3Icon.getMinV());
         tessellator.draw();
     }
 }

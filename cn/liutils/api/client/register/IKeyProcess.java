@@ -19,21 +19,19 @@ import cn.liutils.core.client.register.LIKeyProcess;
 
 
 /**
- * Handler for a LIKeyProcess registered key.
+ * 实现这个接口以使用CBCKeyProcess及其按键统一处理。
  * @see LIKeyProcess
  * @author WeAthFolD
  */
-public interface IKeyHandler {
+public interface IKeyProcess {
 
 	/**
-	 * Called when key is pressed down.
+	 * 处理键位被按下时的行为。
 	 */
 	public void onKeyDown(int keyCode, boolean tickEnd);
 
 	/**
-	 * Called when key is released.
+	 * 处理键位被松开时的行为。
 	 */
 	public void onKeyUp(int keyCode, boolean tickEnd);
-	
-	public void onKeyTick(int keyCode, boolean tickEnd);
 }

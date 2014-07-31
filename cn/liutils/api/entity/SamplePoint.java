@@ -1,8 +1,10 @@
 package cn.liutils.api.entity;
 
 /**
- * A simple sample point with a timer, called by EntityTrail.
+ * 采样点类，在尾迹渲染中使用。
+ * 
  * @author WeAthFolD
+ * 
  */
 public class SamplePoint {
 
