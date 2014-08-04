@@ -31,12 +31,12 @@ public class LIUtilsMod {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.3.0";
+	public static final String VERSION = "1.7.2.000dev";
 	
 	/**
 	 * Does open debug mode. turn to false when compiling.
 	 */
-	public static final boolean DEBUG = false;
+	public static final boolean DEBUG = true;
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.

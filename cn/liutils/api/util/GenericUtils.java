@@ -8,12 +8,16 @@ import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import cn.liutils.api.util.selector.EntitySelectorLiving;
 import cn.liutils.api.util.selector.EntitySelectorPlayer;
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -96,6 +100,16 @@ public class GenericUtils {
 		if(id >= 0 && id < list.size())
 			return list.get(id);
 		return null;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	/**
+	 * Judge if the player is playing the client game and isn't opening any GUI.
+	 * @return
+	 */
+	public static boolean isPlayerInGame() {
+		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
+		return player != null && Minecraft.getMinecraft().currentScreen == null;
 	}
 	
 }
