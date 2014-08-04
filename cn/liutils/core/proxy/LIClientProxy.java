@@ -5,6 +5,7 @@ package cn.liutils.core.proxy;
 
 import org.lwjgl.input.Keyboard;
 
+import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.client.render.RenderPlayerHelper;
 import cn.liutils.api.client.render.RenderTrail;
 import cn.liutils.api.entity.EntityPlayerRender;
@@ -28,13 +29,14 @@ public class LIClientProxy extends LICommonProxy {
 	@Override
 	public void init() {
 		super.init();
+		RenderingRegistry.registerBlockHandler(new RenderEmptyBlock());
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 	}
 	
 	@Override
 	public void preInit() {
-		super.preInit();	
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
+		super.preInit();
 		FMLCommonHandler.instance().bus().register(new LITickEvents());
 	}
 	

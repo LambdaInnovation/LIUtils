@@ -3,6 +3,8 @@ package cn.liutils.core;
 
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 
 import org.apache.logging.log4j.Logger;
 

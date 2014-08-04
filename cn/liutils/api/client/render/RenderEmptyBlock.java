@@ -1,5 +1,6 @@
 package cn.liutils.api.client.render;
 
+import cn.liutils.core.proxy.LIClientProps;
 import cn.liutils.core.proxy.LIGeneralProps;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
@@ -29,7 +30,7 @@ public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public int getRenderId() {
-		return LIGeneralProps.RENDER_TYPE_EMPTY;
+		return LIClientProps.RENDER_TYPE_EMPTY;
 	}
 
 }
