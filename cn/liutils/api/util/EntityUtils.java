@@ -97,6 +97,9 @@ public class EntityUtils {
 		return list;
 	}
 	
+	public static void applyEntityToPos(Entity entity, Vec3 vec3) {
+		entity.setPosition(vec3.xCoord, vec3.yCoord, vec3.zCoord);
+	}
 
 	public static float getEntityVolume(Entity e) {
 		return e.width * e.width * e.height;

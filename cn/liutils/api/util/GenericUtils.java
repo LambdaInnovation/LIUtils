@@ -38,9 +38,9 @@ public class GenericUtils {
 	
 	public static float wrapYawAngle(float f) {
 		if(f > 180.0F)
-			f -= 360.0F;
+			f %= 360F;
 		else if(f < -180.0F)
-			f = 360.0F - f;
+			f = (360.0F - f) % 360F;
 		return f;
 	}
 	
