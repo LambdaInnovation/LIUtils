@@ -9,6 +9,8 @@ import net.minecraft.util.IIcon;
 public class HudUtils {
 
 	private static float SCALE_X = 1.0F, SCALE_Y = 1.0F;
+	private static double zLevel = -90D;
+	
 	/**
 	 * Called to set the scale before any drawing call.
 	 * @param x
@@ -17,6 +19,10 @@ public class HudUtils {
 	public static void setTextureResolution(int x, int y) {
 		SCALE_X = 1.0F/x;
 		SCALE_Y = 1.0F/y;
+	}
+	
+	public static void setZLevel(double z) {
+		zLevel = z;
 	}
 	
     /**
@@ -29,10 +35,10 @@ public class HudUtils {
         float f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, -90, 0, 1);
-        tessellator.addVertexWithUV(x + width, y + height, -90, 1, 1);
-        tessellator.addVertexWithUV(x + width, y + 0, -90, 1, 0);
-        tessellator.addVertexWithUV(x + 0, y + 0, -90, 0, 0);
+        tessellator.addVertexWithUV(x + 0, y + height, zLevel, 0, 1);
+        tessellator.addVertexWithUV(x + width, y + height, zLevel, 1, 1);
+        tessellator.addVertexWithUV(x + width, y + 0, zLevel, 1, 0);
+        tessellator.addVertexWithUV(x + 0, y + 0, zLevel, 0, 0);
         tessellator.draw();
     }
     
@@ -46,10 +52,10 @@ public class HudUtils {
         float f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(par1 + 0, par2 + par6, -90, (par3 + 0) * f, (par4 + par6) * f1);
-        tessellator.addVertexWithUV(par1 + par5, par2 + par6, -90, (par3 + par5) * f, (par4 + par6) * f1);
-        tessellator.addVertexWithUV(par1 + par5, par2 + 0, -90, (par3 + par5) * f, (par4 + 0) * f1);
-        tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, (par3 + 0) * f, (par4 + 0) * f1);
+        tessellator.addVertexWithUV(par1 + 0, par2 + par6, zLevel, (par3 + 0) * f, (par4 + par6) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + par6, zLevel, (par3 + par5) * f, (par4 + par6) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + 0, zLevel, (par3 + par5) * f, (par4 + 0) * f1);
+        tessellator.addVertexWithUV(par1 + 0, par2 + 0, zLevel, (par3 + 0) * f, (par4 + 0) * f1);
         tessellator.draw();
     }
     
@@ -62,10 +68,10 @@ public class HudUtils {
         float f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(par1 + 0, par2 + par6, -90, (par3 + 0) * f, (par4 + par8) * f1);
-        tessellator.addVertexWithUV(par1 + par5, par2 + par6, -90, (par3 + par7) * f, (par4 + par8) * f1);
-        tessellator.addVertexWithUV(par1 + par5, par2 + 0, -90, (par3 + par7) * f, (par4 + 0) * f1);
-        tessellator.addVertexWithUV(par1 + 0, par2 + 0, -90, (par3 + 0) * f, (par4 + 0) * f1);
+        tessellator.addVertexWithUV(par1 + 0, par2 + par6, zLevel, (par3 + 0) * f, (par4 + par8) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + par6, zLevel, (par3 + par7) * f, (par4 + par8) * f1);
+        tessellator.addVertexWithUV(par1 + par5, par2 + 0, zLevel, (par3 + par7) * f, (par4 + 0) * f1);
+        tessellator.addVertexWithUV(par1 + 0, par2 + 0, zLevel, (par3 + 0) * f, (par4 + 0) * f1);
         tessellator.draw();
     }
     
@@ -73,10 +79,10 @@ public class HudUtils {
     {
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
-        tessellator.addVertexWithUV(x + 0, y + height, -90, icon.getMinU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y + height, -90, icon.getMaxU(), icon.getMaxV());
-        tessellator.addVertexWithUV(x + width, y + 0, -90, icon.getMaxU(), icon.getMinV());
-        tessellator.addVertexWithUV(x + 0, y + 0, -90, icon.getMinU(), icon.getMinV());
+        tessellator.addVertexWithUV(x + 0, y + height, zLevel, icon.getMinU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y + height, zLevel, icon.getMaxU(), icon.getMaxV());
+        tessellator.addVertexWithUV(x + width, y + 0, zLevel, icon.getMaxU(), icon.getMinV());
+        tessellator.addVertexWithUV(x + 0, y + 0, zLevel, icon.getMinU(), icon.getMinV());
         tessellator.draw();
     }
 }
