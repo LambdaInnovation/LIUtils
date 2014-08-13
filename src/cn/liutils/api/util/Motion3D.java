@@ -151,6 +151,11 @@ public class Motion3D {
 		motionZ /= z;
 		return this;
 	}
+	
+	public double distanceTo(double x, double y, double z) {
+		double a = x - posX, b = y - posY, c = z - posZ;
+		return Math.sqrt(a * a + b * b + c * c);
+	}
 
 	/**
 	 * 获取以本身和另外一个MotionXYZ的pos为顶点的碰撞箱。

@@ -32,21 +32,21 @@ import cn.liutils.api.util.Motion3D;
 public class EntityBullet extends EntityThrowable {
 
 	protected Motion3D motion;
-	protected int damage;
+	protected float damage;
 	public boolean renderFromLeft = false;
-	private IEntitySelector selector = null;
+	protected IEntitySelector selector = null;
 	
 	public EntityBullet setRenderFromLeft() {
 		renderFromLeft = true;
 		return this;
 	}
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg) {
+	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg) {
 		this(par1World, par2EntityLiving, dmg, 0);
 	}
 	
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg, int scatterRadius) {
+	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, int scatterRadius) {
 		super(par1World, par2EntityLiving);
 		int d1 = 0, d2 = 0;
 		if(scatterRadius > 0) {
@@ -63,13 +63,13 @@ public class EntityBullet extends EntityThrowable {
 		this.damage = dmg;
 	}
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, int dmg, boolean rev) {
+	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, boolean rev) {
 		this(par1World, par2EntityLiving, dmg);
 		if(rev) setRenderFromLeft();
 	}
 	
 	
-	public EntityBullet(World par1World, Entity ent, Entity target, int dmg) {
+	public EntityBullet(World par1World, Entity ent, Entity target, float dmg) {
 		super(par1World);
 		motionX = target.posX  - ent.posX;
 		motionY = (target.posY + target.height / 2.0) - (ent.posY + ent.height / 2.0);
@@ -84,7 +84,7 @@ public class EntityBullet extends EntityThrowable {
 		motion = new Motion3D(this);
 	}
 	
-	public EntityBullet(World world, Vec3 begin, Vec3 motion, int dmg) {
+	public EntityBullet(World world, Vec3 begin, Vec3 motion, float dmg) {
 		super(world);
 		setPosition(begin.xCoord, begin.yCoord, begin.zCoord);
 		setThrowableHeading(motion.xCoord, motion.yCoord, motion.zCoord, func_70182_d(), 1.0F);
@@ -148,7 +148,7 @@ public class EntityBullet extends EntityThrowable {
 		result.entityHit.hurtResistantTime = -1;
 	}
 
-	public int getBulletDamage(int mode) {
+	public float getBulletDamage(int mode) {
 		return damage;
 	}
 

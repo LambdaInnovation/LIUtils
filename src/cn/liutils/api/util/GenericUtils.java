@@ -12,12 +12,15 @@ import cn.liutils.api.util.selector.EntitySelectorPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /**
@@ -37,6 +40,97 @@ public class GenericUtils {
 		else if(f < -180.0F)
 			f = (360.0F - f) % 360F;
 		return f;
+	}
+	
+	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {
+		MovingObjectPosition mop = rayTraceEntities(null, world, vec1, vec2);
+		if(mop == null)
+			return world.rayTraceBlocks(vec1, vec2);
+		return mop;
+	}
+	
+	public static MovingObjectPosition rayTraceBlocksAndEntities(IEntitySelector selector, World world, Vec3 vec1, Vec3 vec2, Entity... exclusion) {
+		MovingObjectPosition mop = rayTraceEntities(selector, world, vec1, vec2, exclusion);
+		if(mop == null)
+			return world.rayTraceBlocks(vec1, vec2);
+		return mop;
+	}
+	
+	public static MovingObjectPosition traceBetweenEntities(Entity e1, Entity e2) {
+		if(e1.worldObj != e2.worldObj) return null;
+		Vec3 v1 = e1.worldObj.getWorldVec3Pool().getVecFromPool(e1.posX, e1.posY + e1.getEyeHeight(), e1.posZ),
+				v2 = e2.worldObj.getWorldVec3Pool().getVecFromPool(e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ);
+		MovingObjectPosition mop = e1.worldObj.rayTraceBlocks(v1, v2);
+		return mop;
+	}
+	
+	public static AxisAlignedBB getBoundingBox(Vec3 vec1, Vec3 vec2) {
+		double minX = 0.0, minY = 0.0, minZ = 0.0, maxX = 0.0, maxY = 0.0, maxZ = 0.0;
+		if(vec1.xCoord < vec2.xCoord) {
+			minX = vec1.xCoord;
+			maxX = vec2.xCoord;
+		} else {
+			minX = vec2.xCoord;
+			maxX = vec1.xCoord;
+		}
+		if(vec1.yCoord < vec2.yCoord) {
+			minY = vec1.yCoord;
+			maxY = vec2.yCoord;
+		} else {
+			minY = vec2.yCoord;
+			maxY = vec1.yCoord;
+		}
+		if(vec1.zCoord < vec2.zCoord) {
+			minZ = vec1.zCoord;
+			maxZ = vec2.zCoord;
+		} else {
+			minZ = vec2.zCoord;
+			maxZ = vec1.zCoord;
+		}
+		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+	
+	public static MovingObjectPosition rayTraceEntities(IEntitySelector selector, World world, Vec3 vec1, Vec3 vec2, Entity... exclusion) {
+        Entity entity = null;
+        AxisAlignedBB boundingBox = getBoundingBox(vec1, vec2);
+        List list = world.getEntitiesWithinAABBExcludingEntity(null, boundingBox.expand(1.0D, 1.0D, 1.0D), selector);
+        double d0 = 0.0D;
+
+        for (int j = 0; j < list.size(); ++j)
+        {
+            Entity entity1 = (Entity)list.get(j);
+
+            Boolean b = entity1.canBeCollidedWith();
+            if(!b)
+            	continue;
+            for(Entity e : exclusion) {
+            	if(e == entity1)
+            		b = false;
+            }
+            if (b && entity1.canBeCollidedWith())
+            {
+                float f = 0.3F;
+                AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
+                MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec1, vec2);
+
+                if (movingobjectposition1 != null)
+                {
+                    double d1 = vec1.distanceTo(movingobjectposition1.hitVec);
+
+                    if (d1 < d0 || d0 == 0.0D)
+                    {
+                        entity = entity1;
+                        d0 = d1;
+                    }
+                }
+            }
+        }
+
+        if (entity != null)
+        {
+            return new MovingObjectPosition(entity);
+        }
+        return null;
 	}
 	
 	/**
@@ -105,6 +199,10 @@ public class GenericUtils {
 	public static boolean isPlayerInGame() {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		return player != null && Minecraft.getMinecraft().currentScreen == null;
+	}
+	
+	public static Vec3 multiply(Vec3 vec, double factor) {
+		return vec.myVec3LocalPool.getVecFromPool(vec.xCoord * factor, vec.yCoord * factor, vec.zCoord * factor);
 	}
 	
 }
