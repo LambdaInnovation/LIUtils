@@ -166,6 +166,72 @@ public class RenderUtils {
 		GL11.glPopMatrix();
 	}
 	
+	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back) {
+		Vec3 a1 = newV3(0, 0, w), a2 = newV3(1, 0, w), a3 = newV3(1, 1, w), a4 = newV3(
+				0, 1, w), a5 = newV3(0, 0, -w), a6 = newV3(1, 0, -w), a7 = newV3(
+				1, 1, -w), a8 = newV3(0, 1, -w);
+
+		Minecraft mc = Minecraft.getMinecraft();
+
+
+		float u1 = 0.0F, v1 = 0.0F, u2 = 1.0F, v2 = 1.0F;
+
+		Tessellator t;
+		t = Tessellator.instance;
+		GL11.glPushMatrix();
+		
+		RenderUtils.loadTexture(back);
+		t.startDrawingQuads();
+		t.setNormal(0.0F, 0.0F, 1.0F);
+		addVertex(a1, u2, v2);
+		addVertex(a2, u1, v2);
+		addVertex(a3, u1, v1);
+		addVertex(a4, u2, v1);
+		t.draw();
+
+		RenderUtils.loadTexture(front);
+		t.startDrawingQuads();
+		t.setNormal(0.0F, 0.0F, -1.0F);
+		addVertex(a8, u2, v1);
+		addVertex(a7, u1, v1);
+		addVertex(a6, u1, v2);
+		addVertex(a5, u2, v2);
+		t.draw();
+
+		int var7;
+		float var8;
+		float var9;
+		float var10;
+		
+		/*
+		 * Gets the width/16 of the currently bound texture, used to fix the
+		 * side rendering issues on textures != 16
+		 */
+		int tileSize = 32;
+		float tx = 1.0f / (32 * tileSize);
+		float tz = 1.0f / tileSize;
+
+		t.startDrawingQuads();
+		t.setNormal(-1.0F, 0.0F, 0.0F);
+		for (var7 = 0; var7 < tileSize; ++var7) {
+			var8 = (float) var7 / tileSize;
+			var9 = u2 - (u2 - u1) * var8 - tx;
+			var10 = 1.0F * var8;
+			t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
+			t.addVertexWithUV(var10, 0.0D, w, var9, v2);
+			t.addVertexWithUV(var10, 1.0D, w, var9, v1);
+			t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
+
+			t.addVertexWithUV(var10, 1.0D, w, var9, v1);
+			t.addVertexWithUV(var10, 0.0D, w, var9, v2);
+			t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
+			t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
+		}
+		t.draw();
+
+		GL11.glPopMatrix();
+	}
+	
 	private static ResourceLocation src_glint = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 	
 	public static void renderOverlay_Equip(ResourceLocation src) {

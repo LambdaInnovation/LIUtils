@@ -23,7 +23,6 @@ import cn.liutils.api.client.gui.LIGuiButton.ButtonState;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
-import net.minecraft.util.ResourceLocation;
 
 /**
  * GUIContainer supporting LIGuiPart functions.

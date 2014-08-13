@@ -1,10 +1,7 @@
 package cn.liutils.api.util;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 import java.util.Random;
 import java.util.Set;
 
@@ -15,8 +12,6 @@ import cn.liutils.api.util.selector.EntitySelectorPlayer;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -67,10 +62,10 @@ public class GenericUtils {
 		return set;
 	}
 	
-	public static NBTTagCompound loadCompound(ItemStack item) {
-		if(item.stackTagCompound == null)
-			item.stackTagCompound = new NBTTagCompound();
-		return item.stackTagCompound;
+	public static NBTTagCompound loadCompound(ItemStack stack) {
+		if(stack.stackTagCompound == null)
+			stack.stackTagCompound = new NBTTagCompound();
+		return stack.stackTagCompound;
 	}
 	
 	/**

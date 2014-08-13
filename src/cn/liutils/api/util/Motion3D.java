@@ -121,11 +121,11 @@ public class Motion3D {
 	 * @param mo
 	 * @param e
 	 */
-	public static void applyToEntity(Motion3D mo, Entity e) {
-		e.setPosition(mo.posX, mo.posY, mo.posZ);
-		e.motionX = mo.motionX;
-		e.motionY = mo.motionY;
-		e.motionZ = mo.motionZ;
+	public void applyToEntity(Entity e) {
+		e.setPosition(this.posX, this.posY, this.posZ);
+		e.motionX = this.motionX;
+		e.motionY = this.motionY;
+		e.motionZ = this.motionZ;
 	}
 	
 	/**

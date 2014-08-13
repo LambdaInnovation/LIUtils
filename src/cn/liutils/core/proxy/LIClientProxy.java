@@ -3,14 +3,11 @@
  */
 package cn.liutils.core.proxy;
 
-import org.lwjgl.input.Keyboard;
-
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.client.render.RenderPlayerHelper;
 import cn.liutils.api.client.render.RenderTrail;
 import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.api.entity.EntityTrailFX;
-import cn.liutils.core.LIUtilsMod;
 import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
