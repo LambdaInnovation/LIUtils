@@ -3,9 +3,11 @@ package cn.liutils.core;
 
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
+
 import org.apache.logging.log4j.Logger;
 
 import cn.liutils.core.proxy.LICommonProxy;
+import cn.weaponmod.core.proxy.WMGeneralProps;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -15,6 +17,8 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
 /**
@@ -81,6 +85,7 @@ public class LIUtilsMod {
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
+		proxy.cmdInit(cm);
 	}
 	
 }

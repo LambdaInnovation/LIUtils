@@ -46,12 +46,12 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, int scatterRadius) {
+	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, float scatterRadius) {
 		super(par1World, par2EntityLiving);
-		int d1 = 0, d2 = 0;
+		float d1 = 0, d2 = 0;
 		if(scatterRadius > 0) {
-			d1 = rand.nextInt(2 * scatterRadius) - scatterRadius;
-			d2 = rand.nextInt(2 * scatterRadius) - scatterRadius;
+			d1 = scatterRadius * (rand.nextFloat() * 2 - 1F);
+			d2 = scatterRadius * (rand.nextFloat() * 2 - 1F);
 		}
 		this.rotationYaw = par2EntityLiving.rotationYawHead + d1;
 		this.rotationPitch += d2;

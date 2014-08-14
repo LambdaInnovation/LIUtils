@@ -59,7 +59,7 @@ public class RenderModelItem implements IItemRenderer {
 	/**
 	 * Standard Scale.
 	 */
-	public float scale = 1.0F;
+	public double scale = 1.0F;
 	
 	/**
 	 * Equip Offset
@@ -74,7 +74,7 @@ public class RenderModelItem implements IItemRenderer {
 	/**
 	 * Inventory Scale
 	 */
-	public float invScale = 1.0F;
+	public double invScale = 1.0F;
 	
 	/**
 	 * Inventory Offset
@@ -146,12 +146,12 @@ public class RenderModelItem implements IItemRenderer {
 		return this;
 	}
 	
-	public RenderModelItem setScale(float s) {
+	public RenderModelItem setScale(double s) {
 		scale = s;
 		return this;
 	}
 	
-	public RenderModelItem setInvScale(float s) {
+	public RenderModelItem setInvScale(double s) {
 		invScale = s;
 		return this;
 	}
@@ -241,7 +241,7 @@ public class RenderModelItem implements IItemRenderer {
 			RenderUtils.loadTexture(texturePath);
 			
 			GL11.glTranslatef(8.0F + invOffset.x, 8.0F + invOffset.y, 0.0F);
-			GL11.glScalef(16F * invScale, 16F * invScale, 16F * invScale);
+			GL11.glScaled(16F * invScale, 16F * invScale, 16F * invScale);
 			float rotation = 145F;
 			if(inventorySpin) rotation = Minecraft.getSystemTime() / 100F;
 			GL11.glRotatef(rotation, 0, 1, 0);
@@ -287,7 +287,8 @@ public class RenderModelItem implements IItemRenderer {
 	}
 	
 	protected final void renderAtStdPosition(float i) {
-		GL11.glScalef(scale, scale, scale);
+		GL11.glScaled(scale, scale, scale);
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		this.doTransformation(stdOffset);
 		GL11.glScalef(-1F , -1F , 1F );
 		GL11.glRotated(stdRotation.yCoord + 180, 0.0F, 1.0F, 0.0F); //历史遗留问题，没什么必要改啦=w=
@@ -295,6 +296,7 @@ public class RenderModelItem implements IItemRenderer {
 		GL11.glRotated(stdRotation.xCoord, 1.0F, 0.0F, 0.0F);
 		
 		model.render(null, 0.0625F, i);
+		GL11.glEnable(GL11.GL_CULL_FACE);
 	}
 	
 	protected float getModelAttribute(ItemStack item, EntityLivingBase entity) {

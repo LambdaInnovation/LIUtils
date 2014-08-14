@@ -3,6 +3,7 @@
  */
 package cn.liutils.core.proxy;
 
+import net.minecraft.command.CommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import cn.liutils.core.event.LIEventListener;
 
@@ -19,5 +20,7 @@ public class LICommonProxy {
 	public void preInit() {}
 	
 	public void postInit() {}
+	
+	public void cmdInit(CommandHandler handler) {}
 	
 }
