@@ -37,7 +37,7 @@ public abstract class FieldModifier {
 	public abstract String getName();
 	
 	protected double getDeltaDoubleLinear(boolean flag, int tick) {
-		return (flag ? 1 : -1) * (1D + (double)tick / 20D) * scale;
+		return (flag ? 1 : -1) * (1D + tick / 20D) * scale;
 	}
 	
 	public String toInfo(Object instance) {

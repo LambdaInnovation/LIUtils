@@ -12,8 +12,6 @@ package cn.liutils.core.debug;
 
 import java.lang.reflect.Field;
 
-import org.lwjgl.util.vector.Vector2f;
-
 /**
  * @author WeAthFolD
  *
@@ -39,6 +37,7 @@ public abstract class DoubleModifier extends FieldModifier {
 		theField.set(instance, (Double)theField.get(instance) + this.getDeltaDoubleLinear(dirFlag, pressTick));
 	}
 	
+	@Override
 	public void directSet(Object instance, String value) {
 		try {
 		Double d = (Double) theField.get(instance);

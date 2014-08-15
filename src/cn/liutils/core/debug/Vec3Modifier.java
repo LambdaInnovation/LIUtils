@@ -36,6 +36,7 @@ public abstract class Vec3Modifier extends FieldModifier {
 		return 3;
 	}
 	
+	@Override
 	public void directSet(Object instance, String value) {
 		String[] v1 = value.split(",");
 		try {

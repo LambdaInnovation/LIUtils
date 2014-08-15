@@ -12,8 +12,6 @@ package cn.liutils.core.debug;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.util.Vec3;
-
 import org.lwjgl.util.vector.Vector2f;
 
 /**
@@ -37,6 +35,7 @@ public abstract class Vec2fModifier extends FieldModifier {
 		return 2;
 	}
 	
+	@Override
 	public void directSet(Object instance, String value) {
 		String[] v1 = value.split(",");
 		try {
