@@ -40,7 +40,8 @@ public class FieldModifierHandler {
 		if(currentProvider == null) {
 			player.addChatMessage(new ChatComponentTranslation("provider doesn't exist."));
 		} else {
-			player.addChatMessage(new ChatComponentTranslation(getCurModifier().toInfo(currentProvider.extractInstance())));
+			for(FieldModifier f : currentProvider.getModifiers())
+				player.addChatMessage(new ChatComponentTranslation(f.getName() + ": " + f.toInfo(currentProvider.extractInstance())));
 		}
 	}
 	

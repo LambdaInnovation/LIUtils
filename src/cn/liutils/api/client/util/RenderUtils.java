@@ -101,7 +101,6 @@ public class RenderUtils {
 		Minecraft mc = Minecraft.getMinecraft();
 
 		if (icon == null) {
-			GL11.glPopMatrix();
 			return;
 		}
 

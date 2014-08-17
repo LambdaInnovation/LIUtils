@@ -32,10 +32,13 @@ public class ShpGeneratorArcSquared {
 	
 	private static int edges = 0;
 	private static int size = 0;
-	public static void drawArc(double freq, int ed, double radius) {
+	private static boolean reverse = false;
+	public static void drawArc(double freq, int ed, double radius, boolean uvMirror, double uOffset) {
 		edges = ed;
 		Pair<Vec3, Pair<Double, Double>>[] vecs = getShape(freq, edges);
 		size = vecs.length;
+		//reverse = uvMirror;
+		reverse = false;
 		int times = vecs.length / edges;
 		Tessellator t = Tessellator.instance;
 		double uMax = 2D;
@@ -60,10 +63,10 @@ public class ShpGeneratorArcSquared {
 						 uv1 = calcUV(v1),
 						 uv2 = calcUV(v2),
 						 uv3 = calcUV(v3);
-				RenderUtils.addVertex(v1.first, uv1.x, uv1.y);
-				RenderUtils.addVertex(v3.first, uv3.x, uv3.y);
-				RenderUtils.addVertex(v2.first, uv2.x, uv2.y);
-				RenderUtils.addVertex(v0.first, uv0.x, uv0.y);
+				RenderUtils.addVertex(v1.first, uv1.x + uOffset, uv1.y);
+				RenderUtils.addVertex(v3.first, uv3.x + uOffset, uv3.y);
+				RenderUtils.addVertex(v2.first, uv2.x + uOffset, uv2.y);
+				RenderUtils.addVertex(v0.first, uv0.x + uOffset, uv0.y);
 			} 
 		}
 		
@@ -72,7 +75,7 @@ public class ShpGeneratorArcSquared {
 	
 	private static Vector2d calcUV(Pair<Vec3, Pair<Double, Double> > vec) {
 		return new Vector2d(
-				(vec.second.second / Math.PI / 2 - 0.5)
+				reverse ? 1 : -1 * (vec.second.second / Math.PI / 2 - 0.5)
 				, vec.first.yCoord);
 	}
 	

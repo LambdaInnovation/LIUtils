@@ -29,7 +29,7 @@ public class HudUtils {
      * Draws a textured rectangle at the stored z-value. Mapping the full texture to the rect.
      * Args: x, y, width, height
      */
-    public static void drawTexturedModalRect(int x, int y, int width, int height)
+    public static void drawTexturedModalRect(float x, float y, float width, float height)
     {
         float f = SCALE_X;
         float f1 = SCALE_Y;
@@ -46,7 +46,7 @@ public class HudUtils {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
      */
-    public static void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6)
+    public static void drawTexturedModalRect(float par1, float par2, int par3, int par4, float par5, float par6)
     {
         float f = SCALE_X;
         float f1 = SCALE_Y;
@@ -62,7 +62,7 @@ public class HudUtils {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height, texWidth, texHeight
      */
-    public static void drawTexturedModalRect(int par1, int par2, int par3, int par4, int par5, int par6, int par7, int par8)
+    public static void drawTexturedModalRect(float par1, float par2, int par3, int par4, float par5, float par6, float par7, float par8)
     {
     	float f = SCALE_X;
         float f1 = SCALE_Y;
