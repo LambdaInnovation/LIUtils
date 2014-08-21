@@ -3,6 +3,8 @@ package cn.liutils.api.entity;
 import java.util.LinkedList;
 
 
+
+import cn.liutils.core.entity.SamplePoint;
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;

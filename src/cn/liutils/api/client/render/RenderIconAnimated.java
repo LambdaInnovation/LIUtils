@@ -11,17 +11,17 @@ import net.minecraft.util.ResourceLocation;
  * @author WeAthFolD
  *
  */
-public class RenderIcon_Animated extends RenderIcon {
+public class RenderIconAnimated extends RenderIcon {
 
 	private ResourceLocation[] icons;
 	private int frameRate = 1; //tick/frame
 	
-	public RenderIcon_Animated(ResourceLocation[] ics) {
+	public RenderIconAnimated(ResourceLocation[] ics) {
 		super(ics[0]);
 		icons = ics;
 	}
 	
-	public RenderIcon_Animated(ResourceLocation[] ics, int fs) {
+	public RenderIconAnimated(ResourceLocation[] ics, int fs) {
 		this(ics);
 		this.frameRate = fs;
 	}

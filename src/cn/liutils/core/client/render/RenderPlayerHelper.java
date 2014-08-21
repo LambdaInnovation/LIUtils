@@ -1,8 +1,9 @@
-package cn.liutils.api.client.render;
+package cn.liutils.core.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.entity.EntityPlayerRender;
+import cn.liutils.api.client.render.PlayerRenderHandler;
+import cn.liutils.core.entity.EntityPlayerRender;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;

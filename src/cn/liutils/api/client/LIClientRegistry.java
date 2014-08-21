@@ -3,10 +3,10 @@
  */
 package cn.liutils.api.client;
 
-import cn.liutils.api.client.register.IKeyHandler;
+import cn.liutils.api.client.key.IKeyHandler;
 import cn.liutils.api.client.render.PlayerRenderHandler;
-import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.core.client.register.LIKeyProcess;
+import cn.liutils.core.entity.EntityPlayerRender;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

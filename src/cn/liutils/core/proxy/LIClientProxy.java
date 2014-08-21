@@ -7,15 +7,15 @@ import org.lwjgl.input.Keyboard;
 
 import net.minecraft.command.CommandHandler;
 import cn.liutils.api.client.render.RenderEmptyBlock;
-import cn.liutils.api.client.render.RenderPlayerHelper;
-import cn.liutils.api.client.render.RenderTrail;
-import cn.liutils.api.entity.EntityPlayerRender;
 import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.LIUtilsMod;
 import cn.liutils.core.client.register.LIKeyProcess;
+import cn.liutils.core.client.render.RenderPlayerHelper;
+import cn.liutils.core.client.render.RenderTrail;
 import cn.liutils.core.debug.CommandModifier;
 import cn.liutils.core.debug.KeyModifier;
 import cn.liutils.core.debug.KeyShowInfo;
+import cn.liutils.core.entity.EntityPlayerRender;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;

@@ -1,4 +1,4 @@
-package cn.liutils.api.entity;
+package cn.liutils.core.entity;
 
 /**
  * A simple sample point with a timer, called by EntityTrail.

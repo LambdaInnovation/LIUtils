@@ -10,7 +10,7 @@
  */
 package cn.liutils.core.debug;
 
-import cn.liutils.api.client.register.IKeyHandler;
+import cn.liutils.api.client.key.IKeyHandler;
 
 /**
  * @author WeAthFolD

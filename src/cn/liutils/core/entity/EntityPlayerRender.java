@@ -1,7 +1,7 @@
 /**
  * Code by Lambda Innovation, 2013.
  */
-package cn.liutils.api.entity;
+package cn.liutils.core.entity;
 
 import java.util.HashSet;
 import java.util.Set;

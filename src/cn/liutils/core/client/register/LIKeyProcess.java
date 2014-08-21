@@ -24,7 +24,7 @@ import net.minecraft.client.settings.KeyBinding;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cn.liutils.api.client.register.IKeyHandler;
+import cn.liutils.api.client.key.IKeyHandler;
 
 /**
  * 统一处理按键的实用类。 请使用addKey(...)注册按键绑定。详见函数本身说明

@@ -1,4 +1,4 @@
-package cn.liutils.api.client.render;
+package cn.liutils.core.client.render;
 
 import java.util.LinkedList;
 
@@ -13,7 +13,7 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.util.RenderUtils;
 import cn.liutils.api.entity.EntityTrailFX;
-import cn.liutils.api.entity.SamplePoint;
+import cn.liutils.core.entity.SamplePoint;
 
 public class RenderTrail extends Render {
 	
