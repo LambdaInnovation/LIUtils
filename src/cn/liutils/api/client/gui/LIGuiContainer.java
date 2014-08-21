@@ -21,6 +21,7 @@ import java.util.List;
 import cn.liutils.api.client.gui.LIGuiButton.ButtonState;
 
 
+import cn.liutils.api.client.util.HudUtils;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
@@ -113,13 +114,12 @@ public abstract class LIGuiContainer extends GuiContainer {
 					texV = b.invaildTexV;
 				}
 
-				drawTexturedModalRect(x + b.posX, y + b.posY, texU, texV,
-						b.width, b.height);
+				HudUtils.drawTexturedModalRect(x + b.posX, y + b.posY, texU, texV, b.width, b.height);
 			} else {
 				int x = (width - xSize) / 2;
 				int y = (height - ySize) / 2;
 				int texU = e.texU, texV = e.texV;
-				drawTexturedModalRect(x + e.posX, y + e.posY, texU, texV,
+				HudUtils.drawTexturedModalRect(x + e.posX, y + e.posY, texU, texV,
 						e.width, e.height);
 			}
 		}
@@ -181,8 +181,8 @@ public abstract class LIGuiContainer extends GuiContainer {
 	}
 
 	protected boolean isPointWithin(LIGuiPart element, int x, int y) {
-		return this.func_146978_c(element.posX, element.posY, element.width,
-				element.height, x, y);
+		return this.func_146978_c((int)element.posX, (int)element.posY, (int)element.width,
+				(int)element.height, x, y);
 	}
 
 	protected LIGuiButton getButton(String name) {

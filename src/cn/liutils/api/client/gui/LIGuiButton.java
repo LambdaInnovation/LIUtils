@@ -36,7 +36,7 @@ public class LIGuiButton extends LIGuiPart {
 	 */
 	public ButtonState state;
 
-	public LIGuiButton(String name, int x, int y, int width, int height) {
+	public LIGuiButton(String name, float x, float y, float width, float height) {
 		super(name, x, y, width, height);
 		state = ButtonState.IDLE;
 	}

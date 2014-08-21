@@ -14,6 +14,8 @@
  */
 package cn.liutils.api.client.gui;
 
+import net.minecraft.util.ResourceLocation;
+
 /**
  * LambdaCraft GUI元素。
  * 
@@ -30,28 +32,32 @@ public class LIGuiPart {
 	/**
 	 * GUI元素位置。
 	 */
-	public int posX, posY;
+	public float posX, posY;
 
 	/**
 	 * GUI元素的大小。
 	 */
-	public int width, height;
+	public float width, height;
+	
+	public float texWidth, texHeight;
 
 	public int texU, texV;
 
 	public boolean doesDraw;
 
 	public IGuiTip tip;
+	
+	public ResourceLocation texOverride = null;
 
 	/**
 	 * 
 	 */
-	public LIGuiPart(String n, int x, int y, int w, int h) {
+	public LIGuiPart(String n, float x, float y, float w, float h) {
 		name = n;
 		posX = x;
 		posY = y;
-		width = w;
-		height = h;
+		texWidth = width = w;
+		texHeight = height = h;
 		doesDraw = false;
 	}
 
@@ -78,6 +84,21 @@ public class LIGuiPart {
 		texV = v;
 		doesDraw = true;
 		return this;
+	}
+	
+	public LIGuiPart setTextureOverride(ResourceLocation r) {
+		texOverride = r;
+		return this;
+	}
+	
+	public LIGuiPart setTexSize(float u, float v) {
+		texWidth = u;
+		texHeight = v;
+		return this;
+	}
+	
+	public boolean hasTexOverride() {
+		return texOverride != null;
 	}
 
 	/**
