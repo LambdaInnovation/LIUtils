@@ -14,6 +14,8 @@
  */
 package cn.liutils.api.client.gui;
 
+import cn.liutils.api.client.util.HudUtils;
+import cn.liutils.api.client.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -45,6 +47,7 @@ public class LIGuiPart {
 
 	public boolean doesDraw;
 
+	@Deprecated
 	public IGuiTip tip;
 	
 	public ResourceLocation texOverride = null;
@@ -100,6 +103,14 @@ public class LIGuiPart {
 	public boolean hasTexOverride() {
 		return texOverride != null;
 	}
+	
+	/**
+	 * 当被点击时调用。返回false以阻止进一步的信息发送。
+	 * @return
+	 */
+	public boolean onPartClicked() {
+		return true;
+	}
 
 	/**
 	 * 判断是否拥有鼠标移上去时提示。
@@ -108,6 +119,12 @@ public class LIGuiPart {
 	 */
 	public boolean hasToolTip() {
 		return this.tip != null;
+	}
+	
+	public void drawAtOrigin(boolean mouseHovering) {
+		if(this.hasTexOverride())
+			RenderUtils.loadTexture(texOverride);
+		HudUtils.drawTexturedModalRect(0F, 0F, texU, texV, width, height, texWidth, texHeight);
 	}
 
 }

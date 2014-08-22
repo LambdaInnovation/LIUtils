@@ -10,17 +10,17 @@
  */
 package cn.liutils.api.client.render;
 
-import org.lwjgl.opengl.GL11;
-
-import cn.horniture.proxy.HFClientProps;
-import cn.liutils.api.block.BlockDirectionedMulti;
-import cn.liutils.api.client.model.ITileEntityModel;
-import cn.liutils.api.client.util.RenderUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+
+import org.lwjgl.opengl.GL11;
+
+import cn.liutils.api.block.BlockDirectionedMulti;
+import cn.liutils.api.client.model.ITileEntityModel;
+import cn.liutils.api.client.util.RenderUtils;
 
 /**
  * @author WeAthFolD
@@ -68,7 +68,7 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
 			double var6, float var8) {
 		int meta = var1.getBlockMetadata();
-		Vec3 rotate = ((BlockDirectionedMulti)var1.blockType).getOffsetRotated(BlockDirectionedMulti.getFacingDirection(meta).ordinal());
+		Vec3 rotate = ((BlockDirectionedMulti)var1.getBlockType()).getOffsetRotated(BlockDirectionedMulti.getFacingDirection(meta).ordinal());
 		GL11.glPushMatrix(); {
 			ResourceLocation tex = getTexture();
 			if(tex != null) RenderUtils.loadTexture(tex);
@@ -85,7 +85,7 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix(); {
 			float rotation = Minecraft.getSystemTime() / 100F;
 			GL11.glRotatef(rotations[meta], 0F, 1F, 0F);
-			GL11.glScalef(0.015F, 0.015F, 0.015F);
+			GL11.glScalef(scale, scale, scale);
 			theModel.render(te, 0D, 0D, 0D, 1F, scale, 1F);
 		} GL11.glPopMatrix();
 	}

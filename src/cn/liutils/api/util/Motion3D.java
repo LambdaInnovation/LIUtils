@@ -103,6 +103,35 @@ public class Motion3D {
 		}
 		
 	}
+	
+	public void update(Entity entity, boolean dirFlag) {
+		this.posX = entity.posX;
+		this.posY = entity.posY + entity.getEyeHeight();
+		this.posZ = entity.posZ;
+
+		if (dirFlag) {
+			float var3 = 1.0F, var4 = 0.0F;
+			
+			double rotationYaw = entity.rotationYaw;
+			double rotationPitch = entity.rotationYaw;
+			this.motionX = -MathHelper.sin(entity.rotationYaw / 180.0F
+					* (float) Math.PI)
+					* MathHelper.cos(entity.rotationPitch / 180.0F
+							* (float) Math.PI) * var3;
+			this.motionZ = MathHelper.cos(entity.rotationYaw / 180.0F
+					* (float) Math.PI)
+					* MathHelper.cos(entity.rotationPitch / 180.0F
+							* (float) Math.PI) * var3;
+			this.motionY = -MathHelper.sin((entity.rotationPitch + var4)
+					/ 180.0F * (float) Math.PI)
+					* var3;
+			
+		} else {
+			motionX = entity.motionX;
+			motionY = entity.motionY;
+			motionZ = entity.motionZ;
+		}
+	}
 
 	
 	/**

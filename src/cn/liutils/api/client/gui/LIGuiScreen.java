@@ -10,16 +10,13 @@
  */
 package cn.liutils.api.client.gui;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
+import java.util.Iterator;
 import java.util.Set;
 
-import cn.liutils.api.client.gui.LIGuiButton.ButtonState;
-import cn.liutils.api.client.util.HudUtils;
-import cn.liutils.api.client.util.RenderUtils;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.inventory.Container;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author WeAthFolD
@@ -30,110 +27,45 @@ public abstract class LIGuiScreen extends GuiScreen {
 	/**
 	 * List of all GUI elements
 	 */
-	private HashSet<LIGuiPart> elements;
+	private HashSet<LIGuiPage> activatePages = new HashSet();
 	
 	int xSize, ySize;
 
 	public LIGuiScreen(int xSize, int ySize) {
-		elements = new HashSet<LIGuiPart>();
 		this.xSize = xSize;
 		this.ySize = ySize;
 	}
-	
-	/**
-	 * Add a GUI part.
-	 * @param part
-	 */
-	public void addElement(LIGuiPart part) {
-		elements.add(part);
-	}
-
-	public void addElements(LIGuiPart... parts) {
-		for (LIGuiPart p : parts)
-			addElement(p);
-	}
 
 	/**
-	 * A process for each button's pressing movement.
-	 * @param button
+	 * 绘制按钮，请务必在drawGui时调用。
 	 */
-	public abstract void onButtonClicked(LIGuiButton button, boolean is);
-
-	/**
-	 * Set a state for a given button.
-	 * @param buttonName
-	 * @param state
-	 */
-	public void setButtonState(String buttonName, ButtonState state) {
-		getButton(buttonName).state = state;
-	}
-
-	/**
-	 * @param buttonName
-	 * @param tip
-	 * @return
-	 */
-	public boolean setElementTip(String buttonName, IGuiTip tip) {
-		getElement(buttonName).tip = tip;
-		return true;
-	}
-
-	/**
-	 * 获取某一按钮的状态
-	 * 
-	 * @param name
-	 *            按钮名称
-	 * @return 对应按钮状态
-	 */
-	public ButtonState getButtonState(String name) {
-		LIGuiButton button = getButton(name);
-		return button == null ? null : button.state;
-	}
-
-	/**
-	 * 绘制按钮，请务必在drawGuiBackgroundLayer()中调用。
-	 */
-	public void drawElements() {
-		for (LIGuiPart e : elements) {
-			drawElement(e);
-		}
-		for(Set<LIGuiPart> st : getAdditionalButtons()) {
-			for(LIGuiPart e : st)
-				drawElement(e);
+	public void drawElements(int mx, int my) {
+		update();
+		for(LIGuiPage pg : activatePages) {
+			Iterator<LIGuiPart> parts = pg.getParts();
+			float x0 = (width - xSize) / 2F;
+			float y0 = (height - ySize) / 2F;
+			
+			GL11.glPushMatrix(); {
+				GL11.glTranslatef(x0 + pg.originX, y0 + pg.originY, 0F);
+				pg.drawPage();
+			} GL11.glPopMatrix();
+			
+			while(parts.hasNext()) {
+				LIGuiPart pt = parts.next();
+				drawElement(pg, pt, mx, my, x0, y0);
+			}
 		}
 	}
 	
-	private void drawElement(LIGuiPart e) {
+	private void drawElement(LIGuiPage page, LIGuiPart e, int x, int y, float x0, float y0) {
 		if (!e.doesDraw)
 			return;
-		if (e instanceof LIGuiButton) {
-			LIGuiButton b = (LIGuiButton) e;
-			int x = (width - xSize) / 2;
-			int y = (height - ySize) / 2;
-			int texU = 0, texV = 0;
-
-			if (b.state == ButtonState.IDLE) {
-				texU = b.texU;
-				texV = b.texV;
-			} else if (b.state == ButtonState.DOWN) {
-				texU = b.downTexU;
-				texV = b.downTexV;
-			} else if (b.state == ButtonState.INVAILD) {
-				texU = b.invaildTexU;
-				texV = b.invaildTexV;
-			}
-
-			if(b.hasTexOverride()) RenderUtils.loadTexture(b.texOverride);
-			HudUtils.drawTexturedModalRect(x + b.posX, y + b.posY, texU, texV,
-					b.width, b.height, b.texWidth, b.texHeight);
-		} else {
-			int x = (width - xSize) / 2;
-			int y = (height - ySize) / 2;
-			int texU = e.texU, texV = e.texV;
-			if(e.hasTexOverride()) RenderUtils.loadTexture(e.texOverride);
-			HudUtils.drawTexturedModalRect(x + e.posX, y + e.posY, texU, texV,
-					e.width, e.height, e.texWidth, e.texHeight);
-		}
+		
+		GL11.glPushMatrix(); {
+			GL11.glTranslatef(x0 + e.posX + page.originX, y0 + e.posY + page.originY, 0F);
+			e.drawAtOrigin(isPointWithin(e, page, x, y));
+		} GL11.glPopMatrix();
 	}
 
 	@Override
@@ -143,105 +75,39 @@ public abstract class LIGuiScreen extends GuiScreen {
 	public void drawScreen(int par1, int par2, float par3)
     {
 		super.drawScreen(par1, par2, par3);
-		IGuiTip currentTip = null;
-		for (LIGuiPart b : elements) {
-			if (isPointWithin(b, par1, par2) && b.hasToolTip()) {
-				currentTip = b.tip;
-			}
-		}
-		for(Set<LIGuiPart> st : getAdditionalButtons()) {
-			for(LIGuiPart b : st) {
-				if (isPointWithin(b, par1, par2) && b.hasToolTip()) {
-					currentTip = b.tip;
-				}
-			}
-		}
-		
-		if (currentTip != null) {
-			boolean drawHead = currentTip.getHeader() != "";
-			List<String> list = new ArrayList();
-			if (drawHead) {
-				list.add(currentTip.getHeader());
-			}
-			int x = (width - xSize) / 2, y = (height - ySize) / 2;
-			list.add(currentTip.getText());
-			this.func_146283_a(list, par1 - x, par2 - y);
-		}
 	}
 
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
 		super.mouseClicked(par1, par2, par3);
-		for (LIGuiPart e : elements) {
-			checkElement(e, par1, par2, par3, true);
-		}
-		for(Set<LIGuiPart> st : getAdditionalButtons()) {
-			System.out.println("set" + st);
-			for(LIGuiPart e : st) {
-				System.out.println(e.name);
-				checkElement(e, par1, par2, par3, false);
+		update();
+		for(LIGuiPage pg : activatePages) {
+			Iterator<LIGuiPart> parts = pg.getParts();
+			while(parts.hasNext()) {
+				LIGuiPart pt = parts.next();
+				checkElement(pt, pg, par1, par2, par3);
 			}
 		}
 	}
 	
-	private void checkElement(LIGuiPart e, int par1, int par2, int par3, boolean is) {
-		if (!(e instanceof LIGuiButton))
-			return;
-		LIGuiButton b = (LIGuiButton) e;
-		if (isPointWithin(b, par1, par2)) {
-			if (b.state != ButtonState.INVAILD) {
-				b.setButtonState(ButtonState.DOWN);
-				onButtonClicked(b, is);
-			}
+	private void checkElement(LIGuiPart b, LIGuiPage pg, int par1, int par2, int par3) {
+		if (isPointWithin(b, pg, par1, par2)) {
+			if(b.onPartClicked())
+				pg.onPartClicked(b);
 		}
 	}
 
-	@Override
-	protected void mouseMovedOrUp(int par1, int par2, int par3) {
-		super.mouseMovedOrUp(par1, par2, par3);
-		/*
-		if (par3 == 0 || par3 == 1) {
-			for (LIGuiPart b : elements)
-				elementMoved(b, par1, par2, par3);
-			for(Set<LIGuiPart> st : getAdditionalButtons()) {
-				for(LIGuiPart b : st) {
-					elementMoved(b, par1, par2, par3);
-				}
-			}
-		}*/
-	}
-	
-	private void elementMoved(LIGuiPart b, int par1, int par2, int par3) {
-		if (!(b instanceof LIGuiButton))
-			return;
-		if (isPointWithin(b, par1, par2))
-			((LIGuiButton) b).setButtonState(ButtonState.IDLE);
-	}
-
-	protected boolean isPointWithin(LIGuiPart element, int x, int y) {
+	protected boolean isPointWithin(LIGuiPart element, LIGuiPage page, int x, int y) {
 		float x0 = (this.width - this.xSize) / 2F,
 			y0 = (this.height - this.ySize) / 2F;
-		float epx = element.posX + x0, epy = element.posY + y0;
-		//System.out.println(epx + ", " + epy + " - " + element.name);
+		float epx = element.posX + x0 + page.originX, epy = element.posY + y0 + page.originY;
 		return epx <= x && epy <= y && x <= epx + element.width && y <= epy + element.height;
 	}
-
-	protected LIGuiButton getButton(String name) {
-		LIGuiPart elem = getElement(name);
-		if (elem != null && elem instanceof LIGuiButton)
-			return (LIGuiButton) elem;
-		return null;
-	}
-
-	protected LIGuiPart getElement(String name) {
-		for (LIGuiPart b : elements) {
-			if (b.name == name)
-				return b;
-		}
-		return null;
+	
+	private final void update() {
+		activatePages.clear();
+		updateActivatedPages(activatePages);
 	}
 	
-	public Set<LIGuiPart>[] getAdditionalButtons() {
-		return new Set[] {};
-	}
+	public abstract void updateActivatedPages(Set<LIGuiPage> pages);
 }

@@ -14,6 +14,9 @@
  */
 package cn.liutils.api.client.gui;
 
+import cn.liutils.api.client.util.HudUtils;
+import cn.liutils.api.client.util.RenderUtils;
+
 /**
  * GUI按钮类，和CBCGuiContainer配合使用
  * 
@@ -22,23 +25,15 @@ package cn.liutils.api.client.gui;
  */
 public class LIGuiButton extends LIGuiPart {
 
-	public enum ButtonState {
-		INVAILD, IDLE, DOWN;
-	}
-
 	/**
 	 * texture UVs.
 	 */
 	public int downTexU, downTexV, invaildTexU, invaildTexV;
-
-	/*
-	 * Current button state.
-	 */
-	public ButtonState state;
+	
+	public boolean isInvalid = false;
 
 	public LIGuiButton(String name, float x, float y, float width, float height) {
 		super(name, x, y, width, height);
-		state = ButtonState.IDLE;
 	}
 
 	/**
@@ -66,17 +61,31 @@ public class LIGuiButton extends LIGuiPart {
 		doesDraw = true;
 		return this;
 	}
-
-	public void setButtonState(ButtonState a) {
-		if (this.state != ButtonState.INVAILD)
-			this.state = a;
+	
+	@Override
+	public boolean onPartClicked() {
+		if(isInvalid) return false;
+		return true;
 	}
+	
+	@Override
+	public void drawAtOrigin(boolean mouseHovering) {
+		int texU = 0, texV = 0;
 
-	/**
-	 * Regardless of button vaildness, set the state
-	 */
-	public void setButtonStateForce(ButtonState a) {
-		this.state = a;
+		if (isInvalid) {
+			texU = this.invaildTexU;
+			texV = this.invaildTexV;
+		} else if(mouseHovering) {
+			texU = this.downTexU;
+			texV = this.downTexV;
+		} else {
+			texU = this.texU;
+			texV = this.texV;
+		}
+		
+		if(this.hasTexOverride())
+			RenderUtils.loadTexture(texOverride);
+		HudUtils.drawTexturedModalRect(0F, 0F, texU, texV, width, height, texWidth, texHeight);
 	}
 
 }
