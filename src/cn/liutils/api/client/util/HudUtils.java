@@ -9,7 +9,7 @@ import net.minecraft.util.IIcon;
 public class HudUtils {
 
 	private static float SCALE_X = 1.0F, SCALE_Y = 1.0F;
-	private static double zLevel = -90D;
+	public static double zLevel = -90D;
 	
 	/**
 	 * Called to set the scale before any drawing call.

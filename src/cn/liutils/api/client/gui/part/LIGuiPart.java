@@ -12,8 +12,9 @@
  * LambdaCraft是完全开源的。它的发布遵从《LambdaCraft开源协议》。你允许阅读，修改以及调试运行
  * 源代码， 然而你不允许将源代码以另外任何的方式发布，除非你得到了版权所有者的许可。
  */
-package cn.liutils.api.client.gui;
+package cn.liutils.api.client.gui.part;
 
+import cn.liutils.api.client.gui.IGuiTip;
 import cn.liutils.api.client.util.HudUtils;
 import cn.liutils.api.client.util.RenderUtils;
 import net.minecraft.util.ResourceLocation;
@@ -108,7 +109,7 @@ public class LIGuiPart {
 	 * 当被点击时调用。返回false以阻止进一步的信息发送。
 	 * @return
 	 */
-	public boolean onPartClicked() {
+	public boolean onPartClicked(float x, float y) {
 		return true;
 	}
 

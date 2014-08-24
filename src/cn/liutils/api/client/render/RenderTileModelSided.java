@@ -70,20 +70,18 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		int meta = var1.getBlockMetadata();
 		Vec3 rotate = ((BlockDirectionedMulti)var1.getBlockType()).getOffsetRotated(BlockDirectionedMulti.getFacingDirection(meta).ordinal());
 		GL11.glPushMatrix(); {
-			ResourceLocation tex = getTexture();
-			if(tex != null) RenderUtils.loadTexture(tex);
 			GL11.glTranslated(var2 + offX + rotate.xCoord, var4 + offY + rotate.yCoord, var6 + offZ + rotate.zCoord);
 			renderAtOrigin(var1);
 		} GL11.glPopMatrix();
 	}
 	
-	private final float rotations[] = { 180, 90, 0, -90 };
+	protected final float rotations[] = { 180, 90, 0, -90 };
 	protected void renderAtOrigin(TileEntity te) {
 		if(te.getBlockMetadata() >> 2 != 0) return;
 		int meta = te.getBlockMetadata();
-		
+		ResourceLocation tex = getTexture();
+		if(tex != null) RenderUtils.loadTexture(tex);
 		GL11.glPushMatrix(); {
-			float rotation = Minecraft.getSystemTime() / 100F;
 			GL11.glRotatef(rotations[meta], 0F, 1F, 0F);
 			GL11.glScalef(scale, scale, scale);
 			theModel.render(te, 0D, 0D, 0D, 1F, scale, 1F);

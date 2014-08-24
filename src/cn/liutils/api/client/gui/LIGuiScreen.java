@@ -18,6 +18,8 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.api.client.gui.part.LIGuiPart;
+
 /**
  * @author WeAthFolD
  *
@@ -46,6 +48,7 @@ public abstract class LIGuiScreen extends GuiScreen {
 			float x0 = (width - xSize) / 2F;
 			float y0 = (height - ySize) / 2F;
 			
+			
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef(x0 + pg.originX, y0 + pg.originY, 0F);
 				pg.drawPage();
@@ -53,15 +56,14 @@ public abstract class LIGuiScreen extends GuiScreen {
 			
 			while(parts.hasNext()) {
 				LIGuiPart pt = parts.next();
-				drawElement(pg, pt, mx, my, x0, y0);
+				if(pt != null && pt.doesDraw) {
+					drawElement(pg, pt, mx, my, x0, y0);
+				}
 			}
 		}
 	}
 	
 	private void drawElement(LIGuiPage page, LIGuiPart e, int x, int y, float x0, float y0) {
-		if (!e.doesDraw)
-			return;
-		
 		GL11.glPushMatrix(); {
 			GL11.glTranslatef(x0 + e.posX + page.originX, y0 + e.posY + page.originY, 0F);
 			e.drawAtOrigin(isPointWithin(e, page, x, y));
@@ -72,10 +74,7 @@ public abstract class LIGuiScreen extends GuiScreen {
 	/*
 	 * 绘制GUI上层图像。请务必在子类中调用它以绘制Tip。
 	 */
-	public void drawScreen(int par1, int par2, float par3)
-    {
-		super.drawScreen(par1, par2, par3);
-	}
+	public void drawScreen(int par1, int par2, float par3) {}
 
 	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
@@ -91,9 +90,12 @@ public abstract class LIGuiScreen extends GuiScreen {
 	}
 	
 	private void checkElement(LIGuiPart b, LIGuiPage pg, int par1, int par2, int par3) {
+		float x0 = (this.width - this.xSize) / 2F,
+				y0 = (this.height - this.ySize) / 2F;
+		float hitX = par1 - x0 - pg.originX, hitY = par2 - y0 - pg.originY;
 		if (isPointWithin(b, pg, par1, par2)) {
-			if(b.onPartClicked())
-				pg.onPartClicked(b);
+			if(b.onPartClicked(hitX - b.posX, hitY - b.posY))
+				pg.onPartClicked(b, hitX, hitY);
 		}
 	}
 

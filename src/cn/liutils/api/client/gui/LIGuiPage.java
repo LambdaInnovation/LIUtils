@@ -14,7 +14,12 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import org.lwjgl.opengl.GL11;
+
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
+import cn.liutils.api.client.gui.part.LIGuiPart;
 
 import com.jcraft.jorbis.Block;
 import com.jcraft.jorbis.DspState;
@@ -35,10 +40,13 @@ public abstract class LIGuiPage {
 	
 	private Set<LIGuiPart> guiParts = new HashSet();
 	
-	public LIGuiPage(String s, float oriX, float oriY) {
+	protected GuiScreen myGui;
+	
+	public LIGuiPage(GuiScreen gui, String s, float oriX, float oriY) {
 		name = s;
 		originX = oriX;
 		originY = oriY;
+		myGui = gui;
 		addElements(guiParts);
 	}
 	
@@ -55,7 +63,7 @@ public abstract class LIGuiPage {
 	/**
 	 * 按键侦听
 	 */
-	public abstract void onPartClicked(LIGuiPart part);
+	public abstract void onPartClicked(LIGuiPart part, float subX, float subY);
 	
 	public String getUnlocalizedName() {
 		return name;
@@ -67,6 +75,14 @@ public abstract class LIGuiPage {
 	
 	public final Iterator<LIGuiPart> getParts() {
 		return guiParts.iterator();
+	}
+	
+	public static void drawString(FontRenderer font, String s, float x, float y, int color, float scale) {
+		GL11.glPushMatrix(); {
+			GL11.glTranslatef(x, y, 0);
+			GL11.glScalef(scale, scale, scale);
+			font.drawString(s, 0, 0, color);
+		} GL11.glPopMatrix();
 	}
 	
 }
