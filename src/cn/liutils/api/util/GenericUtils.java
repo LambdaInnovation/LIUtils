@@ -205,4 +205,9 @@ public class GenericUtils {
 		return vec.myVec3LocalPool.getVecFromPool(vec.xCoord * factor, vec.yCoord * factor, vec.zCoord * factor);
 	}
 	
+	public static int mini(int... arr) {
+		int min = Integer.MAX_VALUE;
+		for(int i : arr) if(i < min) min = i;
+		return min;
+		}
 }
