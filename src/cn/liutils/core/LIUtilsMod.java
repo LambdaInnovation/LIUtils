@@ -6,6 +6,7 @@ import net.minecraft.entity.Entity;
 
 import org.apache.logging.log4j.Logger;
 
+import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.proxy.LICommonProxy;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -51,12 +52,25 @@ public class LIUtilsMod {
 	
 	public static Logger log = FMLLog.getLogger();
 	
+	public static boolean ic2Exists = false;
+	
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
 
 		log.info("Starting LIUtils " + VERSION);
 		log.info("Copyright (c) Lambda Innovation, 2013");
 		log.info("http://www.lambdacraft.cn");
+		
+		try {
+			Class.forName("ic2.core.IC2");
+			ic2Exists = true;
+		} catch(Exception e) {}
+		
+		if(DEBUG)
+			log.info("IC2 internal network state: " + ic2Exists);
+		
+		if(!ic2Exists)
+			EnergyNet.initialize();
 		
 		proxy.preInit();
 	}

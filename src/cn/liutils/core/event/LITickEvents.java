@@ -7,6 +7,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cn.liutils.api.util.PlayerPositionLock;
+import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.entity.EntityPlayerRender;
 import cn.liutils.core.proxy.LIClientProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -14,6 +16,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 /**
  * @author Administrator
@@ -34,6 +37,13 @@ public class LITickEvents {
 		} else {
 			LIClientProxy.keyProcess.tickEnd();
 		}
+	}
+	
+	@SubscribeEvent
+	public void onWorldTick(WorldTickEvent event) {
+		World world = event.world;
+		if(!LIUtilsMod.ic2Exists)
+			EnergyNet.onTick(world);
 	}
 	
 	@SubscribeEvent
