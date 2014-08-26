@@ -21,7 +21,7 @@ public abstract class LIContainerBase extends BlockContainer {
 	 * @param id
 	 * @param mat
 	 */
-	public LIContainerBase(int id, Material mat, Object mod) {
+	public LIContainerBase(Material mat) {
 		super(mat);
 	}
 	
@@ -46,32 +46,35 @@ public abstract class LIContainerBase extends BlockContainer {
 		return true;
 	}
 	
+	protected static Random rand = new Random();
+	
 	protected void dropItems(World world, int x, int y, int z,
 			ItemStack[] inventory) {
-		Random rand = new Random();
-
 		for (ItemStack item : inventory) {
+			dropItem(world, x, y, z, item);
+		}
+	}
+	
+	protected void dropItem(World world, int x, int y, int z, ItemStack item) {
+		if (item != null && item.stackSize > 0) {
+			float rx = rand.nextFloat() * 0.8F + 0.1F;
+			float ry = rand.nextFloat() * 0.8F + 0.1F;
+			float rz = rand.nextFloat() * 0.8F + 0.1F;
 
-			if (item != null && item.stackSize > 0) {
-				float rx = rand.nextFloat() * 0.8F + 0.1F;
-				float ry = rand.nextFloat() * 0.8F + 0.1F;
-				float rz = rand.nextFloat() * 0.8F + 0.1F;
+			EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z
+					+ rz, new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
 
-				EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z
-						+ rz, new ItemStack(item.getItem(), item.stackSize, item.getItemDamage()));
-
-				if (item.hasTagCompound()) {
-					entityItem.getEntityItem().setTagCompound(
-							(NBTTagCompound) item.getTagCompound().copy());
-				}
-
-				float factor = 0.05F;
-				entityItem.motionX = rand.nextGaussian() * factor;
-				entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
-				entityItem.motionZ = rand.nextGaussian() * factor;
-				world.spawnEntityInWorld(entityItem);
-				item.stackSize = 0;
+			if (item.hasTagCompound()) {
+				entityItem.getEntityItem().setTagCompound(
+						(NBTTagCompound) item.getTagCompound().copy());
 			}
+
+			float factor = 0.05F;
+			entityItem.motionX = rand.nextGaussian() * factor;
+			entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
+			entityItem.motionZ = rand.nextGaussian() * factor;
+			world.spawnEntityInWorld(entityItem);
+			item.stackSize = 0;
 		}
 	}
 
