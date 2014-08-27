@@ -2,6 +2,8 @@ package cn.liutils.api.client.render;
 
 import java.util.Random;
 
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.api.client.model.ITileEntityModel;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -18,7 +20,9 @@ public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
 			double d2, float f) {
-		model.render(tileentity, d0, d1, d2, 0, 0.0625F, 1.0F);
+		GL11.glScalef(0.0625F, 0.0625F, 0.0625F);
+		GL11.glTranslated(d0, d1, d2);
+		model.render(tileentity, 0F, 0F);
 	}
 
 }

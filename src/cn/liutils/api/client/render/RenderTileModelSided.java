@@ -84,7 +84,7 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix(); {
 			GL11.glRotatef(rotations[meta], 0F, 1F, 0F);
 			GL11.glScalef(scale, scale, scale);
-			theModel.render(te, 0D, 0D, 0D, 1F, scale, 1F);
+			theModel.render(te, 0F, 0F);
 		} GL11.glPopMatrix();
 	}
 

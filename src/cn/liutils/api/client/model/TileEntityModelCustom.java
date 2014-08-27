@@ -31,14 +31,14 @@ public class TileEntityModelCustom implements ITileEntityModel {
 		theModel = model;
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.liutils.api.client.model.ITileEntityModel#render(net.minecraft.tileentity.TileEntity, double, double, double, float, float, float)
-	 */
 	@Override
-	public void render(TileEntity is, double x, double y, double z, float f1,
-			float scale, float f) {
-		GL11.glTranslated(x, y, z);
+	public void render(TileEntity is, float f1, float f) {
 		theModel.renderAll();
+	}
+
+	@Override
+	public void renderPart(TileEntity te, String name, float f1, float f) {
+		theModel.renderPart(name);
 	}
 
 }
