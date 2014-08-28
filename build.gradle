@@ -38,6 +38,9 @@ processResources
 		exclude 'mcmod.info'
 	}
 }
+minecraft {
+    version = "1.7.2-10.12.2.1121"
+}
 
 sourceSets.create('api')
 
