@@ -4,5 +4,5 @@ jdk:
   - openjdk7 
   - openjdk6 
 
-before_install: "chmod -Rv ./"
+before_install: "chmod 777 ./gradlew"
 script: "./gradlew check -i"
