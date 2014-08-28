@@ -6,5 +6,8 @@ jdk:
 
 before_install: 
   - "chmod 777 ./gradlew"
-  - "export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib"
+  - "wget http://services.gradle.org/distributions/gradle-1.6-bin.zip"
+  - "unzip gradle-1.6-bin.zip"
+  - "export GRADLE_HOME=$PWD/gradle-1.6"
+  - "export PATH=$GRADLE_HOME/bin:$PATH"
 script: "./gradlew check -i"
