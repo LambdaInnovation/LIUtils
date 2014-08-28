@@ -4,9 +4,7 @@ jdk:
   - openjdk7 
   - openjdk6 
 
-before_install: "chmod 777 ./gradlew"
-install: 
-  - "cd ./gradle/wrapper"
-  - "java -cp ./gradle-wrapper.jar org.gradle.wrapper.GradleWrapperMain assemble -i"
-  - "cd ../.."
+before_install: 
+  - "chmod 777 ./gradlew"
+  - "export CLASSPATH=.:${JAVA_HOME}/lib:${JRE_HOME}/lib"
 script: "./gradlew check -i"
