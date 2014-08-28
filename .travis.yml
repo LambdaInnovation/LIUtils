@@ -5,4 +5,4 @@ jdk:
   - openjdk6 
 
 script: 
- - "chmod 777 ./"
+ - "chmod -Rv ./"
