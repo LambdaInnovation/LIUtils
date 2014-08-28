@@ -4,4 +4,4 @@ jdk:
   - openjdk7 
   - openjdk6 
 script: 
-  "./gradlew runServer" 
+  "./gradlew tasks" 
