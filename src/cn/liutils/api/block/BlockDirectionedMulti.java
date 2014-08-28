@@ -57,7 +57,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 	}
 	 
-	protected List<SubBlockPos> subBlocks = new ArrayList();
+	protected List<SubBlockPos> subBlocks = new ArrayList<SubBlockPos>();
 
 	public BlockDirectionedMulti(Material mat) {
 		super(mat);

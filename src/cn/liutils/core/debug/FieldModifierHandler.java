@@ -25,7 +25,7 @@ public class FieldModifierHandler {
 	
 	private static int[] keyTicks = new int[6];
 
-	public static List<IModifierProvider> all = new ArrayList();
+	public static List<IModifierProvider> all = new ArrayList<IModifierProvider>();
 	static {
 		all.add(new ModifierProviderModelRender());
 	}

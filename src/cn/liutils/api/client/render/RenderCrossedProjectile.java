@@ -53,7 +53,7 @@ public class RenderCrossedProjectile extends Render {
 	@Override
 	public void doRender(Entity entity, double par2, double par4,
 			double par6, float par8, float par9) {
-		Motion3D motion = new Motion3D(entity);
+		new Motion3D(entity);
 		Tessellator tessellator = Tessellator.instance;
 
 		GL11.glPushMatrix(); {

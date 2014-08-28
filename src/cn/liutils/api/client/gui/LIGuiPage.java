@@ -38,7 +38,7 @@ public abstract class LIGuiPage {
 	 */
 	public final float originX, originY;
 	
-	private Set<LIGuiPart> guiParts = new HashSet();
+	private Set<LIGuiPart> guiParts = new HashSet<LIGuiPart>();
 	
 	protected GuiScreen myGui;
 	

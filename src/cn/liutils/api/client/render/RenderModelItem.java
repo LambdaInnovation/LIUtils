@@ -272,7 +272,7 @@ public class RenderModelItem implements IItemRenderer {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix(); {
 			RenderUtils.loadTexture(texturePath);
-			float sc2 = 0.0625F;
+			//float sc2 = 0.0625F;
 			GL11.glRotatef(40F, 0, 0, 1);
 			this.doTransformation(equipOffset);
 			this.doRotation(equipRotation);

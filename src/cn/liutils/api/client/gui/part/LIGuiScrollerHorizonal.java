@@ -11,11 +11,8 @@
 package cn.liutils.api.client.gui.part;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.gui.LIGuiPage;

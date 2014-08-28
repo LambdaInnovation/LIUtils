@@ -132,7 +132,7 @@ public class EntityBullet extends EntityThrowable {
 	}
 
 	protected void doBlockCollision(MovingObjectPosition result) {
-		Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
+		  //Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
 		//if(!worldObj.isRemote && (block == Blocks.glass || block == Blocks.glass_pane)) {
 		//	worldObj.destroyBlock(result.blockX, result.blockY, result.blockZ, false);
 		//	worldObj.destroyBlockInWorldPartially(p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);

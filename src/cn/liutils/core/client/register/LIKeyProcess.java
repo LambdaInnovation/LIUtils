@@ -34,8 +34,8 @@ public final class LIKeyProcess {
 	
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
 	
-	private static Set<LIKeyBinding> bindingSet = new HashSet();
-	private static Map<LIKeyBinding, KeyBinding> associates = new HashMap();
+	private static Set<LIKeyBinding> bindingSet = new HashSet<LIKeyBinding>();
+	private static Map<LIKeyBinding, KeyBinding> associates = new HashMap<LIKeyBinding, KeyBinding>();
 	//private static Map<KeyBinding, Integer> hackSet = new HashMap();
 	
 	public static class LIKeyBinding {

@@ -75,6 +75,10 @@ public class RenderIcon extends Render {
 		this.b = b;
 		return this;
 	}
+	public boolean getRenderBlend()
+	{
+	    return this.renderBlend;
+	}
 
 	@Override
 	public void doRender(Entity par1Entity, double par2, double par4,

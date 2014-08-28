@@ -96,7 +96,7 @@ public class ModifierProviderModelRender implements IModifierProvider {
 		return null;
 	}
 	
-	private static List<FieldModifier> list = new ArrayList();
+	private static List<FieldModifier> list = new ArrayList<FieldModifier>();
 	static {
 		try {
 			list.add(new ModVec3("stdOffset"));

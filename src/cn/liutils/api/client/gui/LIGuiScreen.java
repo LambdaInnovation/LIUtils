@@ -29,7 +29,7 @@ public abstract class LIGuiScreen extends GuiScreen {
 	/**
 	 * List of all GUI elements
 	 */
-	private HashSet<LIGuiPage> activatePages = new HashSet();
+	private HashSet<LIGuiPage> activatePages = new HashSet<LIGuiPage>();
 	
 	int xSize, ySize;
 

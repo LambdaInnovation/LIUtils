@@ -31,8 +31,8 @@ public class PlayerPositionLock {
 	}
 	
 	static Set<Entry> 
-		lockedPlayers_client = new HashSet(),
-		lockedPlayers_server = new HashSet();
+		lockedPlayers_client = new HashSet<Entry>(),
+		lockedPlayers_server = new HashSet<Entry>();
 	
 	public static void onTick(EntityPlayer player) {
 		

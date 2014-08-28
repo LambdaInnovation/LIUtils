@@ -80,7 +80,7 @@ public class LIUtilsMod {
 		proxy.init();
 	}
 	
-	private void registerEntity(Class<? extends Entity> cl, String name, int id) {
+	public void registerEntity(Class<? extends Entity> cl, String name, int id) {
 		registerEntity(cl, name, id, 32, 3, true);
 	}
 	

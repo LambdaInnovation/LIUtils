@@ -10,8 +10,6 @@
  */
 package cn.liutils.api.client.model;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.client.model.IModelCustom;
 

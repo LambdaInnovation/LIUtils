@@ -31,8 +31,8 @@ public class HudUtils {
      */
     public static void drawTexturedModalRect(float x, float y, float width, float height)
     {
-        float f = SCALE_X;
-        float f1 = SCALE_Y;
+        //float f = SCALE_X;
+        //float f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(x + 0, y + height, zLevel, 0, 1);

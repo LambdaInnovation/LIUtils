@@ -14,35 +14,43 @@ import java.lang.reflect.Field;
 
 /**
  * @author WeAthFolD
- *
+ * 
  */
-public abstract class DoubleModifier extends FieldModifier {
-
-	public DoubleModifier(Field field) {
-		super(field);
-	}
-
-	@Override
-	public int getRequiredDimensions() {
-		return 1;
-	}
-
-	/* (non-Javadoc)
-	 * @see cn.liutils.core.debug.INumberFieldModifier#applyModification(boolean, int)
-	 */
-	@Override
-	public void applyModification(Object instance, boolean dirFlag, int pressTick, int dimension) throws Exception
-	{
-		theField.setAccessible(true);
-		theField.set(instance, (Double)theField.get(instance) + this.getDeltaDoubleLinear(dirFlag, pressTick));
-	}
-	
-	@Override
-	public void directSet(Object instance, String value) {
-		try {
-		Double d = (Double) theField.get(instance);
-		d = Double.valueOf(value);
-		} catch(Exception e) {}
-	}
-
+public abstract class DoubleModifier extends FieldModifier
+{
+    public DoubleModifier(Field field)
+    {
+        super(field);
+    }
+    @Override
+    public int getRequiredDimensions()
+    {
+        return 1;
+    }
+    /*
+     * (non-Javadoc)
+     * 
+     * @see
+     * cn.liutils.core.debug.INumberFieldModifier#applyModification(boolean,
+     * int)
+     */
+    @Override
+    public void applyModification(Object instance, boolean dirFlag, int pressTick, int dimension) throws Exception
+    {
+        theField.setAccessible(true);
+        theField.set(instance, (Double) theField.get(instance) + this.getDeltaDoubleLinear(dirFlag, pressTick));
+    }
+    @Override
+    public void directSet(Object instance, String value)
+    {
+        Double d;
+        try
+        {
+            d = (Double) theField.get(instance);
+            d = Double.valueOf(value);
+        }
+        catch (Exception e)
+        {
+        }
+    }
 }

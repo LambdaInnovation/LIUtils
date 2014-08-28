@@ -16,7 +16,7 @@ import net.minecraft.world.World;
  */
 public class EntityTrailFX extends Entity {
 
-	private LinkedList<SamplePoint> samples = new LinkedList();
+	private LinkedList<SamplePoint> samples = new LinkedList<SamplePoint>();
 	private Entity linkedEntity;
 	private ResourceLocation texNormal, texEnd;
 	private boolean renderEnd, hasLight;
