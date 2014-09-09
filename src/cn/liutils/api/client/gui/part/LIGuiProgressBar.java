@@ -19,18 +19,9 @@ import cn.liutils.api.client.util.RenderUtils;
  * @author WeAthFolD
  *
  */
+public abstract class LIGuiProgressBar extends LIGuiPart {
 
-
-public class LIGuiScrollBar extends LIGuiPart {
-
-	final float barWidth,
-		barHeight;
-	final int	barTexU,
-		barTexV,
-		barTexW,
-		barTexH;
-	
-	LIGuiScrollerHorizonal scroller;
+	boolean isVertical = true;
 	
 	/**
 	 * @param n
@@ -39,28 +30,35 @@ public class LIGuiScrollBar extends LIGuiPart {
 	 * @param w
 	 * @param h
 	 */
-	public LIGuiScrollBar(String n, LIGuiScrollerHorizonal h2, float x, float y, float w, float h,
-			float btw, float bth, int btu, int btv, int bttw, int btth) {
+	public LIGuiProgressBar(String n, float x, float y, float w, float h, int u, int v, int texW, int texH) {
 		super(n, x, y, w, h);
-		scroller = h2;
-		barWidth = btw;
-		barHeight = bth;
-		barTexU = btu;
-		barTexV = btv;
-		barTexW = bttw;
-		barTexH = btth;
-		doesDraw = true;
+		this.setTexSize(texW, texH);
+		this.setTextureCoords(u, v);
 	}
 	
-	@Override
-	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
-		if(this.hasTexOverride()) RenderUtils.loadTexture(texOverride);
-		GL11.glDepthFunc(GL11.GL_ALWAYS);
-		float H = height - barHeight;
-		float modifier = (float)scroller.progress / (scroller.maxProgress - 1);
-		float h = H * modifier;
-		HudUtils.drawTexturedModalRect(0, h, barTexU, barTexV, barWidth, barHeight, barTexW, barTexH);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
+	public LIGuiProgressBar setVertical(boolean b) {
+		isVertical = b;
+		return this;
 	}
+	
+	/**
+	 * from 0.0 to 1.0
+	 * @return
+	 */
+	public abstract float getProgress();
+	
+	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
+		if(this.hasTexOverride())
+			RenderUtils.loadTexture(texOverride);
+		float f = getProgress();
+		GL11.glColor4f(1F, 1F, 1F, 1F);
+		if(isVertical)
+			HudUtils.drawTexturedModalRect(0F, 0F, texU, texV, width * f, height, texWidth * f, texHeight);
+		else {
+			HudUtils.drawTexturedModalRect(0F, 0F, texU, texV, width, height * f, texWidth, texHeight * f);
+		}
+	}
+	
+	
 
 }

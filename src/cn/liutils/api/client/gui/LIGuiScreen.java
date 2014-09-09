@@ -66,7 +66,7 @@ public abstract class LIGuiScreen extends GuiScreen {
 	private void drawElement(LIGuiPage page, LIGuiPart e, int x, int y, float x0, float y0) {
 		GL11.glPushMatrix(); {
 			GL11.glTranslatef(x0 + e.posX + page.originX, y0 + e.posY + page.originY, 0F);
-			e.drawAtOrigin(isPointWithin(e, page, x, y));
+			e.drawAtOrigin(x - x0 - page.originX - e.posX, y - y0 - page.originY - e.posY, isPointWithin(e, page, x, y));
 		} GL11.glPopMatrix();
 	}
 

@@ -122,7 +122,13 @@ public class LIGuiPart {
 		return this.tip != null;
 	}
 	
-	public void drawAtOrigin(boolean mouseHovering) {
+	/**
+	 * 这里的mx和my是相对于part自身的坐标。
+	 * @param mx
+	 * @param my
+	 * @param mouseHovering
+	 */
+	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
 		if(this.hasTexOverride())
 			RenderUtils.loadTexture(texOverride);
 		HudUtils.drawTexturedModalRect(0F, 0F, texU, texV, width, height, texWidth, texHeight);

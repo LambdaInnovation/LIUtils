@@ -36,6 +36,8 @@ public class EntityBullet extends EntityThrowable {
 	public boolean renderFromLeft = false;
 	protected IEntitySelector selector = null;
 	
+	protected int lifeTime = 50;
+	
 	public EntityBullet setRenderFromLeft() {
 		renderFromLeft = true;
 		return this;
@@ -46,21 +48,25 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, float scatterRadius) {
-		super(par1World, par2EntityLiving);
+	public EntityBullet(World par1World, EntityLivingBase ent, float dmg, float scatterRadius) {
+		super(par1World, ent);
+		initPosition(ent);
+		
 		float d1 = 0, d2 = 0;
 		if(scatterRadius > 0) {
 			d1 = scatterRadius * (rand.nextFloat() * 2 - 1F);
 			d2 = scatterRadius * (rand.nextFloat() * 2 - 1F);
 		}
-		this.rotationYaw = par2EntityLiving.rotationYawHead + d1;
+		this.rotationYaw = ent.rotationYawHead + d1;
 		this.rotationPitch += d2;
-        this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionY = MathHelper.sin((this.rotationPitch + this.func_70183_g()) / 180.0F * (float)Math.PI) * 0.4F;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.func_70182_d(), 1.0F);
-		this.motion = new Motion3D(this);
 		this.damage = dmg;
+	}
+	
+	protected void initPosition(EntityLivingBase ent) {
+		this.motion = new Motion3D(ent, true);
+		motion.applyToEntity(this);
+		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
+		this.rotationYaw = ent.rotationYawHead;
 	}
 	
 	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, boolean rev) {
@@ -100,7 +106,7 @@ public class EntityBullet extends EntityThrowable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (ticksExisted > 50)
+		if (ticksExisted > lifeTime)
 			this.setDead();
 	}
 

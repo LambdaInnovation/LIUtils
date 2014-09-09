@@ -58,6 +58,8 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 	}
 	 
 	protected List<SubBlockPos> subBlocks = new ArrayList();
+	
+	protected boolean useRotation = true;
 
 	public BlockDirectionedMulti(Material mat) {
 		super(mat);
@@ -86,17 +88,16 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         	pos2.setMe(world, x, y, z, metadata + pos2.id << 2, this);
         }
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
-        System.out.println("OnBlockPlacedBy finished " + world.isRemote);
     }
 	
 	private boolean originExists(World world, int x, int y, int z, int meta) {
 		int[] coord = getOrigin(world, x, y, z, meta);
 		Block block = world.getBlock(coord[0], coord[1], coord[2]);
 		int meta2  = world.getBlockMetadata(coord[0], coord[1], coord[2]);
-		return block == this && meta2 >> 2 == 0;
+		return block == this || meta2 >> 2 == 0;
 	}
 	
-	private int[] getOrigin(World world, int x, int y, int z, int meta) {
+	protected int[] getOrigin(World world, int x, int y, int z, int meta) {
 		SubBlockPos pos2 = applyRotation(subBlocks.get(meta >> 2),
 				getFacingDirection(meta).ordinal());
 		return new int[] { x - pos2.offX, y - pos2.offY, z - pos2.offZ };
@@ -132,6 +133,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     
     @SideOnly(Side.CLIENT)
     public Vec3 getOffsetRotated(int dir) {
+    	if(!useRotation) return getRenderOffset();
     	Vec3 pos = getRenderOffset();
     	if(dir == 3) 
 			return Vec3.createVectorHelper(pos.xCoord, pos.yCoord, pos.zCoord);
@@ -150,6 +152,15 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		if(dir == 2)
 			return new SubBlockPos(-pos.offX, pos.offY, -pos.offZ, pos.id);
 		return new SubBlockPos(pos.offZ, pos.offY, -pos.offX, pos.id);
+	}
+	
+	protected int[] offset(int x, int y, int z, int meta, int id) {
+		SubBlockPos pos2 = applyRotation(subBlocks.get(id), getFacingDirection(meta).ordinal());
+		return new int[] {
+				x + pos2.offX,
+				y + pos2.offY,
+				z + pos2.offZ
+		};
 	}
 	
 	private void clearAll(World world, int x, int y, int z, int dir) {

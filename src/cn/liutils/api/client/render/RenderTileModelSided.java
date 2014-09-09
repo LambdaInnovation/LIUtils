@@ -10,6 +10,7 @@
  */
 package cn.liutils.api.client.render;
 
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
@@ -21,6 +22,7 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.api.block.BlockDirectionedMulti;
 import cn.liutils.api.client.model.ITileEntityModel;
 import cn.liutils.api.client.util.RenderUtils;
+import cn.otfurniture.block.ITextureProvider;
 
 /**
  * @author WeAthFolD
@@ -57,13 +59,14 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		return this;
 	}
 	
-	public ResourceLocation getTexture() {
-		return texture;
+	public ResourceLocation getTexture(TileEntity te) {
+		ResourceLocation tex;
+		if(te.getBlockType() instanceof ITextureProvider)
+			tex = ((ITextureProvider)te.getBlockType()).getTexture();
+		else tex = this.texture;
+		return tex;
 	}
 
-	/* (non-Javadoc)
-	 * @see net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer#renderTileEntityAt(net.minecraft.tileentity.TileEntity, double, double, double, float)
-	 */
 	@Override
 	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
 			double var6, float var8) {
@@ -75,11 +78,12 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		} GL11.glPopMatrix();
 	}
 	
-	protected final float rotations[] = { 180, 90, 0, -90 };
+	protected float rotations[] = { 180, 90, 0, -90 };
 	protected void renderAtOrigin(TileEntity te) {
 		if(te.getBlockMetadata() >> 2 != 0) return;
 		int meta = te.getBlockMetadata();
-		ResourceLocation tex = getTexture();
+		ResourceLocation tex = getTexture(te);
+		Block blockType = te.getBlockType();
 		if(tex != null) RenderUtils.loadTexture(tex);
 		GL11.glPushMatrix(); {
 			GL11.glRotatef(rotations[meta], 0F, 1F, 0F);

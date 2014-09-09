@@ -93,8 +93,9 @@ public class RenderBullet extends Render {
 		if(ignoreLight)
 			GL11.glDisable(GL11.GL_LIGHTING);
 		
-		GL11.glRotatef(270.0F - entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
-		GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, -1.0F); // 上下旋转
+		System.out.println("Rotationg " + (270F - entity.rotationYaw));
+		GL11.glRotatef(entity.rotationYaw + 270F, 0.0F, -1.0F, 0.0F); // 左右旋转
+		GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, 1.0F); // 上下旋转
 		if(entity instanceof EntityBullet) {
 			if(((EntityBullet)entity).renderFromLeft) {
 				GL11.glTranslatef(0.0F, 0.0F, 0.3F);
