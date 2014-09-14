@@ -23,15 +23,15 @@ public abstract class LICommandBase extends CommandBase {
 	public LICommandBase() {
 	}
 	
-	protected void sendChat(ICommandSender ics, String st) {
+	public static void sendChat(ICommandSender ics, String st) {
 		ics.addChatMessage(new ChatComponentTranslation(st));
 	}
 	
-	protected void sendError(ICommandSender ics, String st) {
+	public static void sendError(ICommandSender ics, String st) {
 		ics.addChatMessage(new ChatComponentTranslation("\u00a7c" + st));
 	}
 	
-	protected void sendWithTranslation(ICommandSender ics, String unlStr, Object... args) {
+	public static void sendWithTranslation(ICommandSender ics, String unlStr, Object... args) {
 		ics.addChatMessage(new ChatComponentTranslation(unlStr, args));
 	}
 

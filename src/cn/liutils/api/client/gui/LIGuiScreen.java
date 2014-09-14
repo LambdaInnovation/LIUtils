@@ -21,28 +21,42 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.api.client.gui.part.LIGuiPart;
 
 /**
+ * 自建的简单GUIAPI。一般作为GUI类内部的一个对象单独使用。
  * @author WeAthFolD
  *
  */
-public abstract class LIGuiScreen extends GuiScreen {
+public class LIGuiScreen {
 	
 	/**
-	 * List of all GUI elements
+	 * Set of all GUI elements
 	 */
 	private HashSet<LIGuiPage> activatePages = new HashSet();
 	
 	int xSize, ySize;
+	
+	private int width, height;
 
 	public LIGuiScreen(int xSize, int ySize) {
 		this.xSize = xSize;
 		this.ySize = ySize;
 	}
+	
+	/**
+	 * 更新屏幕大小，请在绘制和侦听动作之前调用。
+	 */
+	public void updateScreenSize(int w, int h) {
+		width = w;
+		height = h;
+	}
+	
+	public Set<LIGuiPage> getActivePages() {
+		return activatePages;
+	}
 
 	/**
-	 * 绘制按钮，请务必在drawGui时调用。
+	 * 绘制pages和GUIElements，请务必在drawGui时调用。
 	 */
 	public void drawElements(int mx, int my) {
-		update();
 		for(LIGuiPage pg : activatePages) {
 			Iterator<LIGuiPart> parts = pg.getParts();
 			float x0 = (width - xSize) / 2F;
@@ -70,16 +84,7 @@ public abstract class LIGuiScreen extends GuiScreen {
 		} GL11.glPopMatrix();
 	}
 
-	@Override
-	/*
-	 * 绘制GUI上层图像。请务必在子类中调用它以绘制Tip。
-	 */
-	public void drawScreen(int par1, int par2, float par3) {}
-
-	@Override
 	protected void mouseClicked(int par1, int par2, int par3) {
-		super.mouseClicked(par1, par2, par3);
-		update();
 		for(LIGuiPage pg : activatePages) {
 			Iterator<LIGuiPart> parts = pg.getParts();
 			while(parts.hasNext()) {
@@ -87,6 +92,13 @@ public abstract class LIGuiScreen extends GuiScreen {
 				checkElement(pt, pg, par1, par2, par3);
 			}
 		}
+	}
+	
+	protected boolean isPointWithin(LIGuiPart element, LIGuiPage page, int x, int y) {
+		float x0 = (this.width - this.xSize) / 2F,
+			y0 = (this.height - this.ySize) / 2F;
+		float epx = element.posX + x0 + page.originX, epy = element.posY + y0 + page.originY;
+		return epx <= x && epy <= y && x <= epx + element.width && y <= epy + element.height;
 	}
 	
 	private void checkElement(LIGuiPart b, LIGuiPage pg, int par1, int par2, int par3) {
@@ -98,18 +110,4 @@ public abstract class LIGuiScreen extends GuiScreen {
 				pg.onPartClicked(b, hitX, hitY);
 		}
 	}
-
-	protected boolean isPointWithin(LIGuiPart element, LIGuiPage page, int x, int y) {
-		float x0 = (this.width - this.xSize) / 2F,
-			y0 = (this.height - this.ySize) / 2F;
-		float epx = element.posX + x0 + page.originX, epy = element.posY + y0 + page.originY;
-		return epx <= x && epy <= y && x <= epx + element.width && y <= epy + element.height;
-	}
-	
-	private final void update() {
-		activatePages.clear();
-		updateActivatedPages(activatePages);
-	}
-	
-	public abstract void updateActivatedPages(Set<LIGuiPage> pages);
 }

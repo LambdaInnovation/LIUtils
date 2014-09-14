@@ -11,7 +11,6 @@
 package cn.liutils.api.client.render;
 
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
@@ -20,9 +19,9 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.block.BlockDirectionedMulti;
+import cn.liutils.api.client.ITextureProvider;
 import cn.liutils.api.client.model.ITileEntityModel;
 import cn.liutils.api.client.util.RenderUtils;
-import cn.otfurniture.block.ITextureProvider;
 
 /**
  * @author WeAthFolD
