@@ -48,7 +48,6 @@ public class LIGuiPart {
 
 	public boolean doesDraw;
 
-	@Deprecated
 	public IGuiTip tip;
 	
 	public ResourceLocation texOverride = null;
@@ -120,6 +119,11 @@ public class LIGuiPart {
 	 */
 	public boolean hasToolTip() {
 		return this.tip != null;
+	}
+	
+	public LIGuiPart setTip(IGuiTip tip) {
+		this.tip = tip;
+		return this;
 	}
 	
 	/**
