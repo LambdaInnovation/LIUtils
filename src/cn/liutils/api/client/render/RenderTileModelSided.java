@@ -27,12 +27,10 @@ import cn.liutils.api.client.util.RenderUtils;
  * @author WeAthFolD
  *
  */
-public class RenderTileModelSided extends TileEntitySpecialRenderer {
+public class RenderTileModelSided extends RenderTileSided {
 	
 	protected ITileEntityModel theModel;
-	protected float scale = 0.0625F;
-	protected double offX, offY, offZ;
-	protected ResourceLocation texture;
+	protected boolean isTechne = false;
 
 	/**
 	 * 
@@ -41,52 +39,22 @@ public class RenderTileModelSided extends TileEntitySpecialRenderer {
 		theModel = mdl;
 	}
 	
-	public RenderTileModelSided setScale(float f) {
-		scale = f;
+	public RenderTileModelSided setTechne(boolean b) {
+		isTechne = b;
 		return this;
 	}
 	
-	public RenderTileModelSided setOffset(double x, double y, double z) {
-		offX = x;
-		offY = y;
-		offZ = z;
-		return this;
-	}
-	
-	public RenderTileModelSided setModelTexture(ResourceLocation t) {
-		texture = t;
-		return this;
-	}
-	
-	public ResourceLocation getTexture(TileEntity te) {
-		ResourceLocation tex;
-		if(te.getBlockType() instanceof ITextureProvider)
-			tex = ((ITextureProvider)te.getBlockType()).getTexture();
-		else tex = this.texture;
-		return tex;
-	}
-
-	@Override
-	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
-			double var6, float var8) {
-		int meta = var1.getBlockMetadata();
-		Vec3 rotate = ((BlockDirectionedMulti)var1.getBlockType()).getOffsetRotated(BlockDirectionedMulti.getFacingDirection(meta).ordinal());
-		GL11.glPushMatrix(); {
-			GL11.glTranslated(var2 + offX + rotate.xCoord, var4 + offY + rotate.yCoord, var6 + offZ + rotate.zCoord);
-			renderAtOrigin(var1);
-		} GL11.glPopMatrix();
-	}
-	
-	protected float rotations[] = { 180, 90, 0, -90 };
 	protected void renderAtOrigin(TileEntity te) {
-		if(te.getBlockMetadata() >> 2 != 0) return;
 		int meta = te.getBlockMetadata();
 		ResourceLocation tex = getTexture(te);
 		Block blockType = te.getBlockType();
 		if(tex != null) RenderUtils.loadTexture(tex);
 		GL11.glPushMatrix(); {
-			GL11.glRotatef(rotations[meta], 0F, 1F, 0F);
-			GL11.glScalef(scale, scale, scale);
+			if(isTechne) {
+				GL11.glScalef(-0.0625F, -0.0625F, 0.0625F);
+			} else {
+				GL11.glScalef(scale, scale, scale);
+			}
 			theModel.render(te, 0F, 0F);
 		} GL11.glPopMatrix();
 	}

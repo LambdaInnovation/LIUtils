@@ -24,6 +24,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -34,8 +35,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class BlockDirectionedMulti extends Block implements ITileEntityProvider {
 	
 	public static class SubBlockPos {
-		int offX, offY, offZ; //in origin rotation
-		int id;
+		public final int offX, offY, offZ; //in origin rotation
+		public final int id;
 		
 		public SubBlockPos(int x, int y, int z, int id) {
 			offX = x;
@@ -57,7 +58,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 	}
 	 
-	protected List<SubBlockPos> subBlocks = new ArrayList();
+	public List<SubBlockPos> subBlocks = new ArrayList();
 	
 	protected boolean useRotation = true;
 
@@ -85,8 +86,9 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         while(iter.hasNext()) {
         	SubBlockPos pos = iter.next();
         	SubBlockPos pos2 = applyRotation(pos, dir.ordinal());
-        	pos2.setMe(world, x, y, z, metadata + pos2.id << 2, this);
+        	pos2.setMe(world, x, y, z, metadata | (pos2.id << 2), this);
         }
+        
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
     }
 	
@@ -144,7 +146,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		return Vec3.createVectorHelper(pos.zCoord, pos.yCoord, 0);
     }
     
-	private SubBlockPos applyRotation(SubBlockPos pos, int dir) {
+	public SubBlockPos applyRotation(SubBlockPos pos, int dir) {
 		if(dir == 3) 
 			return new SubBlockPos(pos.offX, pos.offY, pos.offZ, pos.id);
 		if(dir == 4)
@@ -189,6 +191,10 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     {
         return false;
     }
+	
+	public int getMetadata(IBlockAccess world, int x, int y, int z) {
+		return world.getBlockMetadata(x, y, z);
+	}
 	
 	/**
 	 * Add subBlocks to the list.
