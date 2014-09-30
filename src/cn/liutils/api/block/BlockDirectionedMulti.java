@@ -48,7 +48,8 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
 			System.out.println("[" + (x + offX) + " " + (y + offZ) + " " + (z + offZ) + "]");
-			wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
+			throw new RuntimeException();
+			//wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
 		}
 		
 		public void setMe(World world, int x, int y, int z, int meta, Block block) {
@@ -81,16 +82,23 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int metadata = l;
         
-        ForgeDirection dir = getFacingDirection(metadata);
-        Iterator<SubBlockPos> iter = subBlocks.iterator();
-        iter.next();
-        
-        while(iter.hasNext()) {
-        	SubBlockPos pos = iter.next();
-        	SubBlockPos pos2 = applyRotation(pos, dir.ordinal());
-        	pos2.setMe(world, x, y, z, metadata | (pos2.id << 2), this);
+        int dir = getFacingDirection(metadata).ordinal();
+        SubBlockPos arr[] = new SubBlockPos[subBlocks.size()];
+        for(int i = 1; i < subBlocks.size(); ++i) {
+        	SubBlockPos bp = subBlocks.get(i);
+        	SubBlockPos bp2 = this.applyRotation(bp, dir);
+        	/*Block block = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
+        	if(!block.isReplaceable(world, x + bp2.offX, y + bp2.offY, z + bp2.offZ)) {
+        		this.dropBlockAsItem(world, x, y, z, new ItemStack(this));
+        		world.setBlockToAir(x, y, z);
+        		return;
+        	}*/
+        	arr[i] = bp2;
         }
         
+        for(int i = 1; i < subBlocks.size(); ++i) {
+        	arr[i].setMe(world, x, y, z, metadata | (arr[i].id << 2), this);
+        }
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
     }
 	
@@ -115,10 +123,12 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     
     public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
     {
-    	
+    	System.out.println("BreakBLock " + world.isRemote);
     	metadata = this.getMetadata(world, x, y, z);
+    	if(metadata == -1) metadata = world.getBlockMetadata(x, y, z);
     	super.breakBlock(world, x, y, z, block, metadata);
     	int[] crds = this.getOrigin(world, x, y, z, metadata);
+    	/*
     	{
     		x = crds[0];
     		y = crds[1];
@@ -129,7 +139,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     			bp2.destroyMe(world, x, y, z);
     		}
     	}
-    	
+    	*/
     }
     
     @SideOnly(Side.CLIENT)

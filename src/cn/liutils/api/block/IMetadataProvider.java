@@ -6,4 +6,5 @@ package cn.liutils.api.block;
  */
 public interface IMetadataProvider {
 	public int getMetadata();
+	public void setMetadata(int meta);
 }

@@ -56,7 +56,8 @@ public abstract class RenderTileSided extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
 			double var6, float var8) {
-		int meta = var1.getBlockMetadata();
+		int meta = ((BlockDirectionedMulti)var1.getBlockType())
+				.getMetadata(var1.getWorldObj(), var1.xCoord, var1.yCoord, var1.zCoord);
 		if(meta >> 2 != 0) return;
 		Vec3 rotate = ((BlockDirectionedMulti)var1.getBlockType()).getOffsetRotated(BlockDirectionedMulti.getFacingDirection(meta).ordinal());
 		GL11.glPushMatrix(); {
