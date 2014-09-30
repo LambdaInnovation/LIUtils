@@ -10,18 +10,45 @@
  */
 package cn.liutils.api.block;
 
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 /**
+ * 主要用来在子方块太多的时候，托管metadata以绕过byte值存储的限制~
  * @author WeAthFolD
- *
  */
-public class TileDirectionedMulti extends TileEntity {
+public class TileDirectionedMulti extends TileEntity implements IMetadataProvider {
 
-	/**
-	 * 
-	 */
-	public TileDirectionedMulti() {
+	int metadata;
+	
+	public TileDirectionedMulti(int meta) {
+		metadata = meta;
+	}
+	
+	public TileDirectionedMulti() {}
+	
+	public void updateEntity() {
+		if(metadata == 0)
+			metadata = worldObj.getBlockMetadata(xCoord, yCoord, zCoord);
+	}
+	
+	public void setMetadata(int meta) {
+		metadata = meta;
+	}
+	
+    public void readFromNBT(NBTTagCompound nbt)
+    {
+        super.readFromNBT(nbt);
+    }
+
+    public void writeToNBT(NBTTagCompound nbt)
+    {
+        super.writeToNBT(nbt);
+    }
+
+	@Override
+	public int getMetadata() {
+		return metadata;
 	}
 
 }

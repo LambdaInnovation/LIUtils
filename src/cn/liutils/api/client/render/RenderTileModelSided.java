@@ -45,7 +45,8 @@ public class RenderTileModelSided extends RenderTileSided {
 	}
 	
 	protected void renderAtOrigin(TileEntity te) {
-		int meta = te.getBlockMetadata();
+		int meta = ((BlockDirectionedMulti)te.getBlockType())
+				.getMetadata(te.getWorldObj(), te.xCoord, te.yCoord, te.zCoord);
 		ResourceLocation tex = getTexture(te);
 		Block blockType = te.getBlockType();
 		if(tex != null) RenderUtils.loadTexture(tex);

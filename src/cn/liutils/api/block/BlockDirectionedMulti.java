@@ -22,6 +22,7 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
@@ -46,6 +47,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
+			System.out.println("[" + (x + offX) + " " + (y + offZ) + " " + (z + offZ) + "]");
 			wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
 		}
 		
@@ -109,25 +111,25 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
     	super.onNeighborBlockChange(world, x, y, z, block);
-    	int meta = world.getBlockMetadata(x, y, z);
+    }
+    
+    public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+    {
     	
-    	/**
-    	if(meta >> 2 == 0) { //The origin block
-    		ForgeDirection dir = getFacingDirection(meta);
-    		System.out.println("MeJudging " + world.isRemote);
-    		
-    		Iterator<SubBlockPos> iter = subBlocks.iterator();
-    		iter.next();
-    		while(iter.hasNext()) {
-    			SubBlockPos pos2 = applyRotation(iter.next(), dir.ordinal());
-    			if(!pos2.meThere(world, x, y, z, this)) {
-    				System.out.println("ID " + pos2.id + "not there, removing me");
-    				clearAll(world, x, y, z, dir.ordinal());
-    				world.setBlockToAir(x, y, z);
-    				return;
-    			}
+    	metadata = this.getMetadata(world, x, y, z);
+    	super.breakBlock(world, x, y, z, block, metadata);
+    	int[] crds = this.getOrigin(world, x, y, z, metadata);
+    	{
+    		x = crds[0];
+    		y = crds[1];
+    		z = crds[2];
+    		int dir = this.getFacingDirection(metadata).ordinal();
+    		for(SubBlockPos bp : this.subBlocks) {
+    			SubBlockPos bp2 = this.applyRotation(bp, dir);
+    			bp2.destroyMe(world, x, y, z);
     		}
-    	}**/
+    	}
+    	
     }
     
     @SideOnly(Side.CLIENT)
@@ -193,6 +195,10 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     }
 	
 	public int getMetadata(IBlockAccess world, int x, int y, int z) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te != null && te instanceof IMetadataProvider) {
+			return ((IMetadataProvider)te).getMetadata();
+		}
 		return world.getBlockMetadata(x, y, z);
 	}
 	

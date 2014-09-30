@@ -34,7 +34,7 @@ public class RenderTrail extends Render {
 				c = getVec3(-width, 0, 0), d = getVec3(width, 0, 0),
 				e = getVec3(0, -width, 0), f = getVec3(0, width, 0);
 		
-		for (int i = 0; i != list.size(); i++) {
+		for (int i = 0; i != list.size() - 1; ++i) {
 			GL11.glPushMatrix();
 
 			if (i == 0 && ent.doesRenderEnd())

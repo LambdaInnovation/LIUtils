@@ -50,20 +50,16 @@ public class EntityBullet extends EntityThrowable {
 	
 	public EntityBullet(World par1World, EntityLivingBase ent, float dmg, float scatterRadius) {
 		super(par1World, ent);
-		initPosition(ent);
-		
-		float d1 = 0, d2 = 0;
-		if(scatterRadius > 0) {
-			d1 = scatterRadius * (rand.nextFloat() * 2 - 1F);
-			d2 = scatterRadius * (rand.nextFloat() * 2 - 1F);
-		}
-		this.rotationYaw = ent.rotationYawHead + d1;
-		this.rotationPitch += d2;
+		initPosition(ent, (int) scatterRadius);
 		this.damage = dmg;
 	}
 	
 	protected void initPosition(EntityLivingBase ent) {
-		this.motion = new Motion3D(ent, true);
+		initPosition(ent, 0);
+	}
+	
+	protected void initPosition(EntityLivingBase ent, int scatter) {
+		this.motion = new Motion3D(ent, scatter, true);
 		motion.applyToEntity(this);
 		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
 		this.rotationYaw = ent.rotationYawHead;
@@ -106,8 +102,13 @@ public class EntityBullet extends EntityThrowable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (ticksExisted > lifeTime)
-			this.setDead();
+		if(worldObj.isRemote) {
+			double par1 = motionX, par5 = motionZ, par3 = motionY, f3 = Math.sqrt(par1 * par1 + par5 + par5);
+	        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
+	        this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, (double)f3) * 180.0D / Math.PI);
+		}
+		//if (ticksExisted > lifeTime)
+		//	this.setDead();
 	}
 
 	@Override
@@ -165,7 +166,7 @@ public class EntityBullet extends EntityThrowable {
 
 	@Override
 	protected float func_70182_d() {
-		return worldObj.isRemote ? 3.0F : 15.0F;
+		return worldObj.isRemote ? 3F : 15.0F;
 	}
 
 
