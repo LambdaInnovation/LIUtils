@@ -121,7 +121,8 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     	super.onNeighborBlockChange(world, x, y, z, block);
     }
     
-    public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+    @Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
     {
     	System.out.println("BreakBLock " + world.isRemote);
     	metadata = this.getMetadata(world, x, y, z);

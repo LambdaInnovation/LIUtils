@@ -30,6 +30,7 @@ public abstract class GuiScreenLIAdaptor extends GuiScreen {
 	/**
 	 * 处理鼠标按下时的行为
 	 */
+	@Override
 	public void mouseClicked(int par1, int par2, int par3) {
 		update();
 		screen.mouseClicked(par1, par2, par3);

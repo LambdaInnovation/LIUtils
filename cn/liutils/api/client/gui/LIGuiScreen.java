@@ -14,8 +14,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.minecraft.client.gui.GuiScreen;
-
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.gui.part.LIGuiPart;

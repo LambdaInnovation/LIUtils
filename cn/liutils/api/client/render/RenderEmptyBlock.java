@@ -3,7 +3,6 @@ package cn.liutils.api.client.render;
 import cn.liutils.core.proxy.LIClientProps;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.init.Blocks;
 import net.minecraft.world.IBlockAccess;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 

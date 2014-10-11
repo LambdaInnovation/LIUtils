@@ -43,22 +43,22 @@ public class CommandModifier extends LICommandBase {
 	public void processCommand(ICommandSender var1, String[] var2) {
 		if(var2[0].equals("v")) {
 			
-			this.sendChat(var1, "Current Provider : " + FieldModifierHandler.getProviderName());
+			LICommandBase.sendChat(var1, "Current Provider : " + FieldModifierHandler.getProviderName());
 			FieldModifier fm = FieldModifierHandler.getCurModifier();
-			this.sendChat(var1, "Current Modifier : " + 
+			LICommandBase.sendChat(var1, "Current Modifier : " + 
 					(fm == null ? "NULL" : fm.getName()));
-			this.sendChat(var1, "-------Available Providers------");
+			LICommandBase.sendChat(var1, "-------Available Providers------");
 			for(int i = 0; i < FieldModifierHandler.all.size(); i++) {
-				this.sendChat(var1, i + ": " + FieldModifierHandler.all.get(i).getName());
+				LICommandBase.sendChat(var1, i + ": " + FieldModifierHandler.all.get(i).getName());
 			}
-			this.sendChat(var1, "--------------------------------");
-			this.sendChat(var1, "--------Available Modifiers------");
+			LICommandBase.sendChat(var1, "--------------------------------");
+			LICommandBase.sendChat(var1, "--------Available Modifiers------");
 			if(FieldModifierHandler.currentProvider != null) {
 				for(int i = 0; i < FieldModifierHandler.currentProvider.getModifiers().size(); i++) {
-					this.sendChat(var1, i + ": " + FieldModifierHandler.currentProvider.getModifiers().get(i).getName());
+					LICommandBase.sendChat(var1, i + ": " + FieldModifierHandler.currentProvider.getModifiers().get(i).getName());
 				}
 			}
-			this.sendChat(var1, "--------------------------------");
+			LICommandBase.sendChat(var1, "--------------------------------");
 			
 		} else if(var2[0].equals("p")) {
 			

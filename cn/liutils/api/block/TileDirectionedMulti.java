@@ -26,6 +26,7 @@ public class TileDirectionedMulti extends TileEntity implements IMetadataProvide
 	private int ticksUntilReq = 4;
 	int metadata = -1;
 	
+	@Override
 	public void updateEntity() {
 		if(metadata == -1) {
 			metadata = this.getBlockMetadata();
@@ -36,18 +37,21 @@ public class TileDirectionedMulti extends TileEntity implements IMetadataProvide
 		}
 	}
 	
+	@Override
 	public void setMetadata(int meta) {
 		synced = true;
 		metadata = meta;
 	}
 	
-    public void readFromNBT(NBTTagCompound nbt)
+    @Override
+	public void readFromNBT(NBTTagCompound nbt)
     {
     	metadata = nbt.getInteger("meta");
         super.readFromNBT(nbt);
     }
 
-    public void writeToNBT(NBTTagCompound nbt)
+    @Override
+	public void writeToNBT(NBTTagCompound nbt)
     {
     	nbt.setInteger("meta", metadata);
         super.writeToNBT(nbt);

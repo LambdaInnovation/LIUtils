@@ -15,8 +15,6 @@ import java.util.List;
 
 import javax.vecmath.Vector2d;
 
-import org.lwjgl.opengl.GL11;
-
 import cn.liutils.api.client.util.RenderUtils;
 import cn.liutils.api.util.Pair;
 import net.minecraft.client.renderer.Tessellator;

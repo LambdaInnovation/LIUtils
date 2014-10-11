@@ -47,6 +47,7 @@ public abstract class LIGuiProgressBar extends LIGuiPart {
 	 */
 	public abstract float getProgress();
 	
+	@Override
 	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
 		if(this.hasTexOverride())
 			RenderUtils.loadTexture(texOverride);

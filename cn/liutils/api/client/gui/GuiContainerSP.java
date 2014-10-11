@@ -6,7 +6,6 @@ package cn.liutils.api.client.gui;
 import java.util.Set;
 
 import cn.liutils.api.client.gui.part.LIGuiPart;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
@@ -52,6 +51,7 @@ public abstract class GuiContainerSP extends GuiContainer {
 	/**
 	 * 处理鼠标按下时的行为
 	 */
+	@Override
 	public void mouseClicked(int par1, int par2, int par3) {
 		update();
 		screen.mouseClicked(par1, par2, par3);
