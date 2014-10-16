@@ -7,7 +7,7 @@ import net.minecraft.world.World;
 import cn.liutils.core.energy.EnergyNet;
 
 public class WorldData {
-	private static Map<World, WorldData> mapping = new WeakHashMap<World, WorldData>();
+	private static Map<World, WorldData> mapping = new WeakHashMap();
 
 	/*
 	 * public Queue<ITickCallback> singleTickCallbacks = new ArrayDeque();

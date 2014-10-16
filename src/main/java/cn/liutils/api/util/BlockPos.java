@@ -25,11 +25,15 @@ public class BlockPos {
 
 	public int x, y, z;
 	public Block block;
-
-	public BlockPos(int par1, int par2, int par3, Block bID) {
+	
+	public BlockPos(int par1, int par2, int par3) {
 		x = par1;
 		y = par2;
 		z = par3;
+	}
+
+	public BlockPos(int par1, int par2, int par3, Block bID) {
+		this(par1, par2, par3);
 		block = bID;
 	}
 	

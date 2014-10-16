@@ -93,7 +93,7 @@ public class GenericUtils {
 	public static MovingObjectPosition rayTraceEntities(IEntitySelector selector, World world, Vec3 vec1, Vec3 vec2, Entity... exclusion) {
         Entity entity = null;
         AxisAlignedBB boundingBox = getBoundingBox(vec1, vec2);
-        List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(null, boundingBox.expand(1.0D, 1.0D, 1.0D), selector);
+        List list = world.getEntitiesWithinAABBExcludingEntity(null, boundingBox.expand(1.0D, 1.0D, 1.0D), selector);
         double d0 = 0.0D;
 
         for (int j = 0; j < list.size(); ++j)

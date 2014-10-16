@@ -22,8 +22,8 @@ public class EntityPlayerRender extends Entity {
 
 	public EntityPlayer player;
 	
-	private static Set<PlayerRenderHandler> helpers = new HashSet<PlayerRenderHandler>();
-	public static Set<PlayerRenderHandler> activeHelpers = new HashSet<PlayerRenderHandler>();
+	private static Set<PlayerRenderHandler> helpers = new HashSet();
+	public static Set<PlayerRenderHandler> activeHelpers = new HashSet();
 	
 	/**
 	 */

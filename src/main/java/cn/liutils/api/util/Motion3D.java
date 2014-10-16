@@ -80,17 +80,17 @@ public class Motion3D {
 		if (dirFlag) {
 			float var3 = 1.0F, var4 = 0.0F;
 			
-			double rotationYaw = entity.rotationYaw + (RNG.nextDouble() - 0.5) * offset;
-			double rotationPitch = entity.rotationYaw + (RNG.nextDouble() - 0.5) * offset;
-			this.motionX = -MathHelper.sin(entity.rotationYaw / 180.0F
+			float rotationYaw = entity.rotationYaw + (RNG.nextFloat() - 0.5F) * offset;
+			float rotationPitch = entity.rotationPitch + (RNG.nextFloat() - 0.5F) * offset;
+			this.motionX = -MathHelper.sin(rotationYaw / 180.0F
 					* (float) Math.PI)
-					* MathHelper.cos(entity.rotationPitch / 180.0F
+					* MathHelper.cos(rotationPitch / 180.0F
 							* (float) Math.PI) * var3;
-			this.motionZ = MathHelper.cos(entity.rotationYaw / 180.0F
+			this.motionZ = MathHelper.cos(rotationYaw / 180.0F
 					* (float) Math.PI)
-					* MathHelper.cos(entity.rotationPitch / 180.0F
+					* MathHelper.cos(rotationPitch / 180.0F
 							* (float) Math.PI) * var3;
-			this.motionY = -MathHelper.sin((entity.rotationPitch + var4)
+			this.motionY = -MathHelper.sin((rotationPitch + var4)
 					/ 180.0F * (float) Math.PI)
 					* var3;
 			

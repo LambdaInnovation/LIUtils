@@ -10,18 +10,59 @@
  */
 package cn.liutils.api.block;
 
+import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.network.MsgTileDMulti;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 
 /**
+ * 主要用来在子方块太多的时候，托管metadata以绕过byte值存储的限制~
  * @author WeAthFolD
- *
  */
-public class TileDirectionedMulti extends TileEntity {
+public class TileDirectionedMulti extends TileEntity implements IMetadataProvider {
 
-	/**
-	 * 
-	 */
-	public TileDirectionedMulti() {
+	//#boilerplate0
+	private boolean synced = false;
+	private int ticksUntilReq = 4;
+	int metadata = -1;
+	
+	@Override
+	public void updateEntity() {
+		if(metadata == -1) {
+			metadata = this.getBlockMetadata();
+		}
+		if(worldObj.isRemote && !synced && ++ticksUntilReq == 5) {
+			ticksUntilReq = 0;
+			LIUtilsMod.netHandler.sendToServer(new MsgTileDMulti.Request(this));
+		}
 	}
+	
+	@Override
+	public void setMetadata(int meta) {
+		synced = true;
+		metadata = meta;
+	}
+	
+    @Override
+	public void readFromNBT(NBTTagCompound nbt)
+    {
+    	metadata = nbt.getInteger("meta");
+        super.readFromNBT(nbt);
+    }
+
+    @Override
+	public void writeToNBT(NBTTagCompound nbt)
+    {
+    	nbt.setInteger("meta", metadata);
+        super.writeToNBT(nbt);
+    }
+
+	@Override
+	public int getMetadata() {
+		if(metadata == -1)
+			metadata = this.getBlockMetadata();
+		return metadata;
+	}
+	//#end boilerplate0
 
 }

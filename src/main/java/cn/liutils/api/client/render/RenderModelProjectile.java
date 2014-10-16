@@ -43,7 +43,7 @@ public class RenderModelProjectile extends Render {
 	@Override
 	public void doRender(Entity ent, double par2, double par4,
 			double par6, float par8, float par9) {
-		new Motion3D(ent);
+		Motion3D motion = new Motion3D(ent);
 		
 		GL11.glPushMatrix(); {
 			bindTexture(TEXTURE_PATH);

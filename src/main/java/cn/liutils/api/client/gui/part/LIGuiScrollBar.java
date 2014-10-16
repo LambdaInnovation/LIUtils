@@ -52,7 +52,8 @@ public class LIGuiScrollBar extends LIGuiPart {
 		doesDraw = true;
 	}
 	
-	public void drawAtOrigin(boolean mouseHovering) {
+	@Override
+	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
 		if(this.hasTexOverride()) RenderUtils.loadTexture(texOverride);
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		float H = height - barHeight;

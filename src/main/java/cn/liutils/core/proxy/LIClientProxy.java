@@ -3,10 +3,13 @@
  */
 package cn.liutils.core.proxy;
 
+import net.minecraft.command.CommandHandler;
+
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.command.CommandHandler;
+import cn.liutils.api.client.render.RenderCrossedProjectile;
 import cn.liutils.api.client.render.RenderEmptyBlock;
+import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.LIUtilsMod;
 import cn.liutils.core.client.register.LIKeyProcess;
@@ -34,6 +37,10 @@ public class LIClientProxy extends LICommonProxy {
 	public void init() {
 		super.init();
 		RenderingRegistry.registerBlockHandler(new RenderEmptyBlock());
+		
+		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, 
+				new RenderCrossedProjectile(0.45, 0.03, 1F, 0.96F, 0.722F).setIgnoreLight(true));
+		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 		if(LIUtilsMod.DEBUG) {

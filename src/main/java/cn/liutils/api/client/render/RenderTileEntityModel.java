@@ -5,24 +5,37 @@ import java.util.Random;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.model.ITileEntityModel;
+import cn.liutils.api.client.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 
 public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 
 	private ITileEntityModel model;
-	protected static Random rng = new Random();
+	private ResourceLocation texture;
+	protected static Random RNG = new Random();
+	protected double yOffset = 0F;
 	
-	public RenderTileEntityModel(ITileEntityModel mo) {
+	public RenderTileEntityModel(ITileEntityModel mo, ResourceLocation tex) {
 		model = mo;
+		texture = tex;
+	}
+	
+	public RenderTileEntityModel setYOffset(double f) {
+		yOffset = f;
+		return this;
 	}
 
 	@Override
 	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
 			double d2, float f) {
-		GL11.glScalef(0.0625F, 0.0625F, 0.0625F);
-		GL11.glTranslated(d0, d1, d2);
-		model.render(tileentity, 0F, 0F);
+		GL11.glPushMatrix(); {
+			GL11.glTranslated(d0 + .5, d1 + yOffset, d2 + .5);
+			GL11.glScalef(-0.0625F, -0.0625F, 0.0625F);
+			RenderUtils.loadTexture(texture);
+			model.render(tileentity, 0F, 0F);
+		} GL11.glPopMatrix();
 	}
 
 }

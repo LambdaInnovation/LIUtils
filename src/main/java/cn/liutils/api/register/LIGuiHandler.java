@@ -14,7 +14,7 @@ import cpw.mods.fml.common.network.IGuiHandler;
  */
 public class LIGuiHandler implements IGuiHandler {
 
-	public HashMap<Integer, IGuiElement> guis = new HashMap<Integer, IGuiElement>();
+	public HashMap<Integer, IGuiElement> guis = new HashMap();
 
 	@Override
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,

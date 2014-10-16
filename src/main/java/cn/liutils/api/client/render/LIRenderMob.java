@@ -10,8 +10,6 @@ import net.minecraft.util.ResourceLocation;
 
 public class LIRenderMob extends RenderLiving {
 
-	public final static TextureManager renderEngine = Minecraft.getMinecraft().renderEngine;
-
 	public LIRenderMob(ModelBase par1ModelBase, float par2) {
 		super(par1ModelBase, par2);
 	}

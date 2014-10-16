@@ -1,5 +1,6 @@
 package cn.liutils.api.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -17,6 +18,16 @@ import cn.liutils.api.util.Motion3D;
  * 
  */
 public class RenderCrossedProjectile extends Render {
+	
+	public double 
+		fpOffsetX = 0.0,
+		fpOffsetY = -0.2,
+		fpOffsetZ = -0.2;
+	
+	public double 
+		tpOffsetX = 0.0,
+		tpOffsetY = -1.2,
+		tpOffsetZ = -0.4;
 
 	protected double LENGTH;
 	protected double HEIGHT;
@@ -24,6 +35,7 @@ public class RenderCrossedProjectile extends Render {
 	protected boolean renderTexture = true;
 	protected float colorR, colorG, colorB;
 	protected boolean ignoreLight = false;
+	protected boolean playerViewOptm = true; //针对玩家的视角位置进行子弹位置微调
 	
 	public RenderCrossedProjectile(double l, double h, ResourceLocation texturePath) {
 		LENGTH = l;
@@ -45,6 +57,11 @@ public class RenderCrossedProjectile extends Render {
 		return this;
 	}
 	
+	public RenderCrossedProjectile setViewOptimize(boolean b) {
+		playerViewOptm = b;
+		return this;
+	}
+	
 	public RenderCrossedProjectile setIgnoreLight(boolean b) {
 		ignoreLight = b;
 		return this;
@@ -53,8 +70,8 @@ public class RenderCrossedProjectile extends Render {
 	@Override
 	public void doRender(Entity entity, double par2, double par4,
 			double par6, float par8, float par9) {
-		new Motion3D(entity);
-		Tessellator tessellator = Tessellator.instance;
+		Motion3D motion = new Motion3D(entity);
+		Tessellator t = Tessellator.instance;
 
 		GL11.glPushMatrix(); {
 			Vec3 v1 = newV3(0, HEIGHT, 0), 
@@ -82,12 +99,22 @@ public class RenderCrossedProjectile extends Render {
 			}
 			
 			GL11.glTranslatef((float) par2, (float) par4, (float) par6);
+			
 			GL11.glRotatef(270.0F - entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
 			GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, -1.0F); // 上下旋转
-				
-			tessellator.startDrawingQuads();
+			
+			if(this.playerViewOptm) {
+				boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+				if(firstPerson) {
+					GL11.glTranslated(fpOffsetX, fpOffsetY, fpOffsetZ);
+				} else {
+					GL11.glTranslated(tpOffsetX, tpOffsetY, tpOffsetZ);
+				}
+			}
+			
+			t.startDrawingQuads();
 			if(ignoreLight) 
-				tessellator.setBrightness(15728880);
+				t.setBrightness(15728880);
 			
 			RenderUtils.addVertex(v1, 0, 1);
 			RenderUtils.addVertex(v2, 1, 1);
@@ -99,7 +126,9 @@ public class RenderCrossedProjectile extends Render {
 			RenderUtils.addVertex(v7, 1, 0);
 			RenderUtils.addVertex(v8, 0, 0);
 			
-			tessellator.draw(); 
+			t.draw(); 
+			
+			
 			
 			GL11.glEnable(GL11.GL_TEXTURE_2D);
 			GL11.glEnable(GL11.GL_LIGHTING);

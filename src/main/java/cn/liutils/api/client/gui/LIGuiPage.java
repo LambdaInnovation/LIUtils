@@ -21,9 +21,6 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.StatCollector;
 import cn.liutils.api.client.gui.part.LIGuiPart;
 
-import com.jcraft.jorbis.Block;
-import com.jcraft.jorbis.DspState;
-
 /**
  * Page代表GUI中不同的子页面。它具有比GUI稍低的优先权。它允许划定一块自己的区域，并且在其中进行绘制、按钮/元素放置、侦听等操作。
  * Page的激活与否由GUI类控制。
@@ -38,7 +35,7 @@ public abstract class LIGuiPage {
 	 */
 	public final float originX, originY;
 	
-	private Set<LIGuiPart> guiParts = new HashSet<LIGuiPart>();
+	private Set<LIGuiPart> guiParts = new HashSet();
 	
 	protected GuiScreen myGui;
 	

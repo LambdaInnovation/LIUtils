@@ -22,8 +22,10 @@ import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
+import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 
@@ -34,8 +36,8 @@ import net.minecraftforge.common.util.ForgeDirection;
 public abstract class BlockDirectionedMulti extends Block implements ITileEntityProvider {
 	
 	public static class SubBlockPos {
-		int offX, offY, offZ; //in origin rotation
-		int id;
+		public final int offX, offY, offZ; //in origin rotation
+		public final int id;
 		
 		public SubBlockPos(int x, int y, int z, int id) {
 			offX = x;
@@ -45,7 +47,9 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
-			wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
+			System.out.println("[" + (x + offX) + " " + (y + offZ) + " " + (z + offZ) + "]");
+			throw new RuntimeException();
+			//wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
 		}
 		
 		public void setMe(World world, int x, int y, int z, int meta, Block block) {
@@ -57,7 +61,9 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 	}
 	 
-	protected List<SubBlockPos> subBlocks = new ArrayList<SubBlockPos>();
+	public List<SubBlockPos> subBlocks = new ArrayList();
+	
+	protected boolean useRotation = true;
 
 	public BlockDirectionedMulti(Material mat) {
 		super(mat);
@@ -76,27 +82,34 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int metadata = l;
         
-        ForgeDirection dir = getFacingDirection(metadata);
-        Iterator<SubBlockPos> iter = subBlocks.iterator();
-        iter.next();
+        int dir = getFacingDirection(metadata).ordinal();
+        SubBlockPos arr[] = new SubBlockPos[subBlocks.size()];
+        for(int i = 1; i < subBlocks.size(); ++i) {
+        	SubBlockPos bp = subBlocks.get(i);
+        	SubBlockPos bp2 = this.applyRotation(bp, dir);
+        	/*Block block = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
+        	if(!block.isReplaceable(world, x + bp2.offX, y + bp2.offY, z + bp2.offZ)) {
+        		this.dropBlockAsItem(world, x, y, z, new ItemStack(this));
+        		world.setBlockToAir(x, y, z);
+        		return;
+        	}*/
+        	arr[i] = bp2;
+        }
         
-        while(iter.hasNext()) {
-        	SubBlockPos pos = iter.next();
-        	SubBlockPos pos2 = applyRotation(pos, dir.ordinal());
-        	pos2.setMe(world, x, y, z, metadata + pos2.id << 2, this);
+        for(int i = 1; i < subBlocks.size(); ++i) {
+        	arr[i].setMe(world, x, y, z, metadata | (arr[i].id << 2), this);
         }
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
-        System.out.println("OnBlockPlacedBy finished " + world.isRemote);
     }
 	
 	private boolean originExists(World world, int x, int y, int z, int meta) {
 		int[] coord = getOrigin(world, x, y, z, meta);
 		Block block = world.getBlock(coord[0], coord[1], coord[2]);
 		int meta2  = world.getBlockMetadata(coord[0], coord[1], coord[2]);
-		return block == this && meta2 >> 2 == 0;
+		return block == this || meta2 >> 2 == 0;
 	}
 	
-	private int[] getOrigin(World world, int x, int y, int z, int meta) {
+	protected int[] getOrigin(World world, int x, int y, int z, int meta) {
 		SubBlockPos pos2 = applyRotation(subBlocks.get(meta >> 2),
 				getFacingDirection(meta).ordinal());
 		return new int[] { x - pos2.offX, y - pos2.offY, z - pos2.offZ };
@@ -106,25 +119,28 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 	public void onNeighborBlockChange(World world, int x, int y, int z, Block block)
     {
     	super.onNeighborBlockChange(world, x, y, z, block);
-    	int meta = world.getBlockMetadata(x, y, z);
-    	
-    	/**
-    	if(meta >> 2 == 0) { //The origin block
-    		ForgeDirection dir = getFacingDirection(meta);
-    		System.out.println("MeJudging " + world.isRemote);
-    		
-    		Iterator<SubBlockPos> iter = subBlocks.iterator();
-    		iter.next();
-    		while(iter.hasNext()) {
-    			SubBlockPos pos2 = applyRotation(iter.next(), dir.ordinal());
-    			if(!pos2.meThere(world, x, y, z, this)) {
-    				System.out.println("ID " + pos2.id + "not there, removing me");
-    				clearAll(world, x, y, z, dir.ordinal());
-    				world.setBlockToAir(x, y, z);
-    				return;
-    			}
+    }
+    
+    @Override
+	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
+    {
+    	System.out.println("BreakBLock " + world.isRemote);
+    	metadata = this.getMetadata(world, x, y, z);
+    	if(metadata == -1) metadata = world.getBlockMetadata(x, y, z);
+    	super.breakBlock(world, x, y, z, block, metadata);
+    	int[] crds = this.getOrigin(world, x, y, z, metadata);
+    	/*
+    	{
+    		x = crds[0];
+    		y = crds[1];
+    		z = crds[2];
+    		int dir = this.getFacingDirection(metadata).ordinal();
+    		for(SubBlockPos bp : this.subBlocks) {
+    			SubBlockPos bp2 = this.applyRotation(bp, dir);
+    			bp2.destroyMe(world, x, y, z);
     		}
-    	}**/
+    	}
+    	*/
     }
     
     @SideOnly(Side.CLIENT)
@@ -132,6 +148,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     
     @SideOnly(Side.CLIENT)
     public Vec3 getOffsetRotated(int dir) {
+    	if(!useRotation) return getRenderOffset();
     	Vec3 pos = getRenderOffset();
     	if(dir == 3) 
 			return Vec3.createVectorHelper(pos.xCoord, pos.yCoord, pos.zCoord);
@@ -142,7 +159,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		return Vec3.createVectorHelper(pos.zCoord, pos.yCoord, 0);
     }
     
-	private SubBlockPos applyRotation(SubBlockPos pos, int dir) {
+	public SubBlockPos applyRotation(SubBlockPos pos, int dir) {
 		if(dir == 3) 
 			return new SubBlockPos(pos.offX, pos.offY, pos.offZ, pos.id);
 		if(dir == 4)
@@ -150,6 +167,15 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		if(dir == 2)
 			return new SubBlockPos(-pos.offX, pos.offY, -pos.offZ, pos.id);
 		return new SubBlockPos(pos.offZ, pos.offY, -pos.offX, pos.id);
+	}
+	
+	protected int[] offset(int x, int y, int z, int meta, int id) {
+		SubBlockPos pos2 = applyRotation(subBlocks.get(id), getFacingDirection(meta).ordinal());
+		return new int[] {
+				x + pos2.offX,
+				y + pos2.offY,
+				z + pos2.offZ
+		};
 	}
 	
 	private void clearAll(World world, int x, int y, int z, int dir) {
@@ -178,6 +204,14 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     {
         return false;
     }
+	
+	public int getMetadata(IBlockAccess world, int x, int y, int z) {
+		TileEntity te = world.getTileEntity(x, y, z);
+		if(te != null && te instanceof IMetadataProvider) {
+			return ((IMetadataProvider)te).getMetadata();
+		}
+		return world.getBlockMetadata(x, y, z);
+	}
 	
 	/**
 	 * Add subBlocks to the list.

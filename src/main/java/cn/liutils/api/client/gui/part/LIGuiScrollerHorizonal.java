@@ -36,7 +36,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 			this.texHeight = texH;
 		}
 		
-		public void drawEntry(float width, float height) {
+		public void drawEntry(float width, float height, boolean mouseHovering) {
 			HudUtils.drawTexturedModalRect(0, 0, u, v, width, height, texWidth, texHeight);
 		}
 		
@@ -75,6 +75,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 		return GenericUtils.safeFetchFrom(entryList, id);
 	}
 	
+	@Override
 	public boolean onPartClicked(float x, float y) {
 		System.out.println("OnPartClicked" + y);
 		int id = (int) (y / entryHeight);
@@ -94,14 +95,20 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 		return true;
 	}
 	
-	public void drawAtOrigin(boolean mouseHovering) {
+	@Override
+	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
+		//Translate to Scroller-Relatived coords
+		int id = (int) (my / entryHeight);
+		id += progress;
+		if(mx < 0 || mx >= this.width) id = -1;
+		
 		for(int i = 0; i < entriesPerPage; i++) {
 			int x = i + progress;
 			ScrollerEntry ent = getEntry(x);
 			if(ent != null) {
 				GL11.glPushMatrix(); {
 					GL11.glTranslatef(0F, i * entryHeight, 0F);
-					ent.drawEntry(width, entryHeight);
+					ent.drawEntry(width, entryHeight, x == id);
 				} GL11.glPopMatrix();
 			}
 		}

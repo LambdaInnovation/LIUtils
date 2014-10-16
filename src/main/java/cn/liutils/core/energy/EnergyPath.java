@@ -11,7 +11,7 @@ import net.minecraftforge.common.util.ForgeDirection;
 public class EnergyPath {
 	TileEntity target = null;
 	ForgeDirection targetDirection;
-	Set<IEnergyConductor> conductors = new HashSet<IEnergyConductor>();
+	Set<IEnergyConductor> conductors = new HashSet();
 
 	int minX = 2147483647;
 	int minY = 2147483647;

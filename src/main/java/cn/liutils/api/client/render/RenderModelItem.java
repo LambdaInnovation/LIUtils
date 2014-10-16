@@ -272,7 +272,7 @@ public class RenderModelItem implements IItemRenderer {
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		GL11.glPushMatrix(); {
 			RenderUtils.loadTexture(texturePath);
-			//float sc2 = 0.0625F;
+			float sc2 = 0.0625F;
 			GL11.glRotatef(40F, 0, 0, 1);
 			this.doTransformation(equipOffset);
 			this.doRotation(equipRotation);
@@ -316,15 +316,19 @@ public class RenderModelItem implements IItemRenderer {
 		}
 	}
 	
-	private static void initVec(Vec3 vec) {
+	protected static void initVec(Vec3 vec) {
 		vec = vec == null ?  Vec3.createVectorHelper(0D, 0D, 0D) : vec;
 	}
 	
-	private static Vec3 initVec() {
+	protected static void initVec(Vec3 vec, Vec3 another) {
+		initVec(vec, another.xCoord, another.yCoord, another.zCoord);
+	}
+	
+	protected static Vec3 initVec() {
 		return Vec3.createVectorHelper(0D, 0D, 0D);
 	}
 	
-	private static void initVec(Vec3 vec, double x, double y, double z) {
+	protected static void initVec(Vec3 vec, double x, double y, double z) {
 		if(vec == null)
 			vec = Vec3.createVectorHelper(x, y, z);
 		else {

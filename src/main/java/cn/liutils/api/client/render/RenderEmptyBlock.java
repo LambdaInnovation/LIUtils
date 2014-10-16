@@ -1,9 +1,9 @@
 package cn.liutils.api.client.render;
 
+import cn.liutils.core.proxy.LIClientProps;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
-import cn.liutils.core.proxy.LIClientProps;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
 
 public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {

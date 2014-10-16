@@ -19,7 +19,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.projectile.EntityThrowable;
 import net.minecraft.util.DamageSource;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -36,6 +35,8 @@ public class EntityBullet extends EntityThrowable {
 	public boolean renderFromLeft = false;
 	protected IEntitySelector selector = null;
 	
+	protected int lifeTime = 50;
+	
 	public EntityBullet setRenderFromLeft() {
 		renderFromLeft = true;
 		return this;
@@ -46,21 +47,21 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, float scatterRadius) {
-		super(par1World, par2EntityLiving);
-		float d1 = 0, d2 = 0;
-		if(scatterRadius > 0) {
-			d1 = scatterRadius * (rand.nextFloat() * 2 - 1F);
-			d2 = scatterRadius * (rand.nextFloat() * 2 - 1F);
-		}
-		this.rotationYaw = par2EntityLiving.rotationYawHead + d1;
-		this.rotationPitch += d2;
-        this.motionX = -MathHelper.sin(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionZ = MathHelper.cos(this.rotationYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * 0.4F;
-        this.motionY = MathHelper.sin((this.rotationPitch + this.func_70183_g()) / 180.0F * (float)Math.PI) * 0.4F;
-        this.setThrowableHeading(this.motionX, this.motionY, this.motionZ, this.func_70182_d(), 1.0F);
-		this.motion = new Motion3D(this);
+	public EntityBullet(World par1World, EntityLivingBase ent, float dmg, float scatterRadius) {
+		super(par1World, ent);
+		initPosition(ent, (int) scatterRadius);
 		this.damage = dmg;
+	}
+	
+	protected void initPosition(EntityLivingBase ent) {
+		initPosition(ent, 0);
+	}
+	
+	protected void initPosition(EntityLivingBase ent, int scatter) {
+		this.motion = new Motion3D(ent, scatter, true);
+		motion.applyToEntity(this);
+		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
+		this.rotationYaw = ent.rotationYawHead;
 	}
 	
 	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, boolean rev) {
@@ -100,8 +101,13 @@ public class EntityBullet extends EntityThrowable {
 	@Override
 	public void onUpdate() {
 		super.onUpdate();
-		if (ticksExisted > 50)
-			this.setDead();
+		if(worldObj.isRemote) {
+			double par1 = motionX, par5 = motionZ, par3 = motionY, f3 = Math.sqrt(par1 * par1 + par5 + par5);
+	        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
+	        this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, f3) * 180.0D / Math.PI);
+		}
+		//if (ticksExisted > lifeTime)
+		//	this.setDead();
 	}
 
 	@Override
@@ -132,7 +138,7 @@ public class EntityBullet extends EntityThrowable {
 	}
 
 	protected void doBlockCollision(MovingObjectPosition result) {
-		  //Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
+		Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
 		//if(!worldObj.isRemote && (block == Blocks.glass || block == Blocks.glass_pane)) {
 		//	worldObj.destroyBlock(result.blockX, result.blockY, result.blockZ, false);
 		//	worldObj.destroyBlockInWorldPartially(p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);
@@ -159,7 +165,7 @@ public class EntityBullet extends EntityThrowable {
 
 	@Override
 	protected float func_70182_d() {
-		return worldObj.isRemote ? 3.0F : 15.0F;
+		return worldObj.isRemote ? 3F : 15.0F;
 	}
 
 

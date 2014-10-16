@@ -7,6 +7,7 @@ import net.minecraft.entity.Entity;
 import org.apache.logging.log4j.Logger;
 
 import cn.liutils.core.energy.EnergyNet;
+import cn.liutils.core.network.MsgTileDMulti;
 import cn.liutils.core.proxy.LICommonProxy;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
@@ -17,7 +18,10 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
+import cpw.mods.fml.common.network.NetworkRegistry;
+import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * LIUtils is a core support mod, written by Lambda Innovation.
@@ -32,7 +36,7 @@ public class LIUtilsMod {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.7.2.000dev";
+	public static final String VERSION = "1.7.2.100";
 	
 	/**
 	 * Does open debug mode. turn to false when compiling.
@@ -54,6 +58,8 @@ public class LIUtilsMod {
 	
 	public static boolean ic2Exists = false;
 	
+	public static SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel("LIUtils");
+	
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
 
@@ -72,6 +78,9 @@ public class LIUtilsMod {
 		if(!ic2Exists)
 			EnergyNet.initialize();
 		
+		netHandler.registerMessage(MsgTileDMulti.Handler.class, MsgTileDMulti.class, 0, Side.CLIENT);
+		netHandler.registerMessage(MsgTileDMulti.Request.Handler.class, MsgTileDMulti.Request.class, 1, Side.SERVER);
+		
 		proxy.preInit();
 	}
 	
@@ -80,7 +89,7 @@ public class LIUtilsMod {
 		proxy.init();
 	}
 	
-	public void registerEntity(Class<? extends Entity> cl, String name, int id) {
+	private void registerEntity(Class<? extends Entity> cl, String name, int id) {
 		registerEntity(cl, name, id, 32, 3, true);
 	}
 	

@@ -69,7 +69,7 @@ public class LIGuiButton extends LIGuiPart {
 	}
 	
 	@Override
-	public void drawAtOrigin(boolean mouseHovering) {
+	public void drawAtOrigin(float mx, float my, boolean mouseHovering) {
 		int texU = 0, texV = 0;
 
 		if (isInvalid) {
