@@ -43,6 +43,8 @@ public abstract class GuiContainerSP extends GuiContainer {
 
 	public GuiContainerSP(int xSize, int ySize, Container ct) {
 		super(ct);
+		this.xSize = xSize;
+		this.ySize = ySize;
 		screen = new LIGuiScreen(xSize, ySize);
 		page = new SinglePage();
 		screen.getActivePages().add(page);

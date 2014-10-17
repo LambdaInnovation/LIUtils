@@ -31,8 +31,8 @@ public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity tileentity, double d0, double d1,
 			double d2, float f) {
 		GL11.glPushMatrix(); {
-			GL11.glTranslated(d0 + .5, d1 + yOffset, d2 + .5);
-			GL11.glScalef(-0.0625F, -0.0625F, 0.0625F);
+			GL11.glTranslated(d0 + .5, d1 + yOffset + 1.5, d2 + .5);
+			GL11.glScalef(0.0625F, 0.0625F, 0.0625F);
 			RenderUtils.loadTexture(texture);
 			model.render(tileentity, 0F, 0F);
 		} GL11.glPopMatrix();
