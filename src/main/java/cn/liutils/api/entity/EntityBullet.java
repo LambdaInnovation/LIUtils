@@ -106,8 +106,8 @@ public class EntityBullet extends EntityThrowable {
 	        this.prevRotationYaw = this.rotationYaw = (float)(Math.atan2(par1, par5) * 180.0D / Math.PI);
 	        this.prevRotationPitch = this.rotationPitch = (float)(Math.atan2(par3, f3) * 180.0D / Math.PI);
 		}
-		//if (ticksExisted > lifeTime)
-		//	this.setDead();
+		if (ticksExisted > lifeTime)
+			this.setDead();
 	}
 
 	@Override
