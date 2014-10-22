@@ -70,6 +70,30 @@ public class EntityBullet extends EntityThrowable {
 	}
 	
 	
+	public EntityBullet(World par1World, Entity ent, Entity target, float dmg, float oriHgt, float targHgt) {
+		super(par1World);
+		double x0 = ent.posX + ent.width * 0.5,
+				y0 = ent.posY + oriHgt,
+				z0 = ent.posZ + ent.width * 0.5;
+		double x1 = target.posX + target.width * 0.5,
+				y1 = target.posY + targHgt,
+				z1 = target.posZ + target.width * 0.5;
+		
+		
+		motionX = x1 - x0;
+		motionY = y1 - y0;
+		motionZ = z1 - z0;
+		double d = Math.sqrt(motionX * motionX + motionY + motionY + motionZ * motionZ);
+		motionX /= d;
+		motionY /= d;
+		motionZ /= d;
+		float travel = 1.0F;
+		setPosition(x0 + motionX * travel, y0 + motionY * travel, z0 + motionZ * travel);
+		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
+		damage = dmg;
+		motion = new Motion3D(this);
+	}
+	
 	public EntityBullet(World par1World, Entity ent, Entity target, float dmg) {
 		super(par1World);
 		motionX = target.posX  - ent.posX;
@@ -79,7 +103,7 @@ public class EntityBullet extends EntityThrowable {
 		motionX /= d;
 		motionY /= d;
 		motionZ /= d;
-		setPosition(ent.posX + motionX * 1.0, ent.posY + ent.height / 2.0, ent.posZ + motionZ * 1.0);
+		setPosition(ent.posX + motionX * 1.0, ent.posY + ent.height / 2.0 + motionY * 1.0, ent.posZ + motionZ * 1.0);
 		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
 		damage = dmg;
 		motion = new Motion3D(this);

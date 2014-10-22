@@ -80,7 +80,7 @@ public class Motion3D {
 		if (dirFlag) {
 			float var3 = 1.0F, var4 = 0.0F;
 			
-			float rotationYaw = entity.rotationYaw + (RNG.nextFloat() - 0.5F) * offset;
+			float rotationYaw = entity.getRotationYawHead() + (RNG.nextFloat() - 0.5F) * offset;
 			float rotationPitch = entity.rotationPitch + (RNG.nextFloat() - 0.5F) * offset;
 			this.motionX = -MathHelper.sin(rotationYaw / 180.0F
 					* (float) Math.PI)
