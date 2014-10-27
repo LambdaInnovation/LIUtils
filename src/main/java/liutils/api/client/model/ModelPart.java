@@ -16,7 +16,7 @@ public class ModelPart {
 	
 	IModelCustom theModel;
 	String partName;
-	
+	               
 	public Vec3 pivotPt = Vec3.createVectorHelper(0.0, 0.0, 0.0); //旋转中心点
 	
 	public double //旋转角度
@@ -35,6 +35,9 @@ public class ModelPart {
 	
 	public ModelPart(IModelCustom model, String part, double px, double py, double pz) {
 		this(model, part);
+		pivotPt.xCoord = px;
+		pivotPt.yCoord = py;
+		pivotPt.zCoord = pz; 
 	}
 	
 	public void render() {

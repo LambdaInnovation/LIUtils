@@ -118,10 +118,10 @@ public class RenderIcon extends Render {
 		
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);
-		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 0);
-		tessllator.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, 0, 1);
-		tessllator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, 1, 1);
-		tessllator.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, 1, 0);
+		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 1);
+		tessllator.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, 1, 1);
+		tessllator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, 1, 0);
+		tessllator.addVertexWithUV(0.0F - f5, f4 - f6, 0.0D, 0, 0);
 		
 		tessllator.draw();
 	}
