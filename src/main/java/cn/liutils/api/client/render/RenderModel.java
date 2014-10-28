@@ -13,10 +13,10 @@ import net.minecraft.util.ResourceLocation;
  */
 public class RenderModel extends Render {
 
-	private ModelBase model;
-	private float modelScale;
-	private ResourceLocation texture;
-	private float offsetX = 0.0F, offsetY = 0.0F, offsetZ = 0.0F;
+	protected ModelBase model;
+	protected float modelScale;
+	protected ResourceLocation texture;
+	protected float offsetX = 0.0F, offsetY = 0.0F, offsetZ = 0.0F;
 
 	public RenderModel(ModelBase m, ResourceLocation texturePath, float scale) {
 		model = m;

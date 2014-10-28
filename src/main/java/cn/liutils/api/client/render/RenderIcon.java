@@ -14,6 +14,7 @@
  */
 package cn.liutils.api.client.render;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -24,7 +25,6 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cn.liutils.api.client.util.RenderUtils;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -34,6 +34,17 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderIcon extends Render {
 	
+	public double 
+		fpOffsetX = 0.0,
+		fpOffsetY = -0.2,
+		fpOffsetZ = -0.2;
+
+	public double 
+		tpOffsetX = 0.0,
+		tpOffsetY = -1.2,
+		tpOffsetZ = -0.4;
+	
+	
 	protected ResourceLocation icon;
 	private boolean renderBlend = false;
 	protected float alpha = 1.0F;
@@ -41,6 +52,7 @@ public class RenderIcon extends Render {
 	protected boolean enableDepth = true;
 	protected boolean hasLight = false;
 	protected float r = 1.0F, g = 1.0F, b = 1.0f;
+	protected boolean viewOptimize = false;
 
 	public RenderIcon(ResourceLocation ic) {
 		icon = ic;
@@ -49,6 +61,11 @@ public class RenderIcon extends Render {
 	public RenderIcon setBlend(float a) {
 		renderBlend = true;
 		alpha = a;
+		return this;
+	}
+	
+	public RenderIcon setViewOptimize() {
+		viewOptimize = true;
 		return this;
 	}
 	
@@ -90,6 +107,15 @@ public class RenderIcon extends Render {
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef((float) par2, (float) par4, (float) par6);
 				GL11.glScalef(size, size, size);
+				
+				if(this.viewOptimize) {
+					boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
+					if(firstPerson) {
+						GL11.glTranslated(fpOffsetX, fpOffsetY, fpOffsetZ);
+					} else {
+						GL11.glTranslated(tpOffsetX, tpOffsetY, tpOffsetZ);
+					}
+				}
 				
 				if(icon != null) RenderUtils.loadTexture(icon);
 				
