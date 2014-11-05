@@ -94,8 +94,8 @@ public class EntityBullet extends EntityThrowable {
 		motion = new Motion3D(this);
 	}
 	
-	public EntityBullet(World par1World, Entity ent, Entity target, float dmg) {
-		super(par1World);
+	public EntityBullet(World par1World, EntityLivingBase ent, Entity target, float dmg) {
+		super(par1World, ent);
 		motionX = target.posX  - ent.posX;
 		motionY = (target.posY + target.height / 2.0) - (ent.posY + ent.height / 2.0);
 		motionZ = target.posZ - ent.posZ;

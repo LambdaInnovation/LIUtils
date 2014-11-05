@@ -36,7 +36,7 @@ public class LIUtilsMod {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.7.2.100";
+	public static final String VERSION = "1.7.2.101";
 	
 	/**
 	 * Does open debug mode. turn to false when compiling.
@@ -64,13 +64,15 @@ public class LIUtilsMod {
 	public void preInit(FMLPreInitializationEvent event) {
 
 		log.info("Starting LIUtils " + VERSION);
-		log.info("Copyright (c) Lambda Innovation, 2013");
+		log.info("Copyright (c) Lambda Innovation, 2013-2014");
 		log.info("http://www.lambdacraft.cn");
 		
 		try {
 			Class.forName("ic2.core.IC2");
 			ic2Exists = true;
-		} catch(Exception e) {}
+		} catch(Exception e) {
+			ic2Exists = false;
+		}
 		
 		if(DEBUG)
 			log.info("IC2 internal network state: " + ic2Exists);
