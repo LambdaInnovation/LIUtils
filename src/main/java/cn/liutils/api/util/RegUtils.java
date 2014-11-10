@@ -1,5 +1,7 @@
 package cn.liutils.api.util;
 
+import java.lang.reflect.Array;
+
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.registry.GameRegistry;
 
@@ -29,7 +31,7 @@ public class RegUtils {
 	 * The registering result is returned.
 	 */
 	public static <T extends Item> T[] reg(Class<? extends T> itemClass, int n, String id) {
-		Item[] res = new Item[n]; //这个也是醉了
+		T[] res = (T[]) Array.newInstance(itemClass, n); //这个也是醉了
 		try {
 			for(int i = 0; i < n; ++i) {
 				Item it = itemClass.getConstructor(Integer.TYPE).newInstance(i);
@@ -39,7 +41,7 @@ public class RegUtils {
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-		return (T[]) res;
+		return res;
 	}
 
 }
