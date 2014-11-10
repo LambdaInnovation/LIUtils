@@ -19,10 +19,7 @@ import cn.liutils.api.command.LICommandBase;
  *
  */
 public class CommandModifier extends LICommandBase {
-
-	/**
-	 * 
-	 */
+	
 	public CommandModifier() {
 	}
 

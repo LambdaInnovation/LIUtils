@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * 渲染单个Icon为一个实体的实用类。
+ * A EntityRender that renders an entity as a single icon.
  */
 @SideOnly(Side.CLIENT)
 public class RenderIcon extends Render {

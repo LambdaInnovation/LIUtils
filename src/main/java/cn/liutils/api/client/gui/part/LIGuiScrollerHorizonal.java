@@ -77,7 +77,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 	
 	@Override
 	public boolean onPartClicked(float x, float y) {
-		System.out.println("OnPartClicked" + y);
+		//System.out.println("OnPartClicked" + y);
 		int id = (int) (y / entryHeight);
 		if(id >= entriesPerPage) return true;
 		id += progress;

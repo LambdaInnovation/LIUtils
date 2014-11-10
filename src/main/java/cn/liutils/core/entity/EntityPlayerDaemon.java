@@ -14,11 +14,10 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 
 /**
- * 用来辅助另一个Entity渲染的辅助Entity。
+ * A entity that always in the position of a player entity, in aid of player additional rendering.
  * @author WeAthFolD
- *
  */
-public class EntityPlayerRender extends Entity {
+public class EntityPlayerDaemon extends Entity {
 
 	public EntityPlayer player;
 	
@@ -27,7 +26,7 @@ public class EntityPlayerRender extends Entity {
 	
 	/**
 	 */
-	public EntityPlayerRender(EntityPlayer p, World world) {
+	public EntityPlayerDaemon(EntityPlayer p, World world) {
 		super(world);
 		player = p;
 		setPositionAndRotation(p.posX, p.posY, p.posZ, p.rotationYaw, p.rotationPitch);

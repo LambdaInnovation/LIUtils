@@ -23,7 +23,7 @@ import cn.liutils.api.client.util.RenderUtils;
  * @author WeAthFolD
  *
  */
-public class RenderTileModelSided extends RenderTileSided {
+public class RenderDirMultiModelled extends RenderTileDirMulti {
 	
 	protected ITileEntityModel theModel;
 	protected boolean isTechne = false;
@@ -31,11 +31,11 @@ public class RenderTileModelSided extends RenderTileSided {
 	/**
 	 * 
 	 */
-	public RenderTileModelSided(ITileEntityModel mdl) {
+	public RenderDirMultiModelled(ITileEntityModel mdl) {
 		theModel = mdl;
 	}
 	
-	public RenderTileModelSided setTechne(boolean b) {
+	public RenderDirMultiModelled setTechne(boolean b) {
 		isTechne = b;
 		return this;
 	}

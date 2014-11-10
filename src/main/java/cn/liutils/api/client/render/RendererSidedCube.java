@@ -27,8 +27,8 @@ import cn.liutils.api.client.util.RenderUtils;
 
 
 /**
- * 特殊的Block渲染类，如果你需要贴图比例不是1:1的多面贴图渲染，请使用它。(TileEntity version)
- * 
+ * A special TileEntityRenderer that handles multiple-sided non-cube block rendering.
+ * extend it to provide texture informations
  * @author WeAthFolD
  */
 public abstract class RendererSidedCube extends TileEntitySpecialRenderer {

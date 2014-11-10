@@ -27,19 +27,19 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.relauncher.Side;
 
 /**
+ * Utilities of generic rendering.
+ * P1.Texture Binding and Vertex plotting
+ * P2.
  * @author WeAthFolD
- *
  */
 @SideOnly(Side.CLIENT)
 public class RenderUtils {
 
 	private static Tessellator t = Tessellator.instance;
-	public static Random rand = new Random();
 	private static Map<String, ResourceLocation> srcMap  = Maps.newHashMap();
 	
 	/**
-	 * 添加带UV的三维顶点。
-	 * 
+	 * Add a vertex to the tessellator with UV coords.
 	 * @param vec3
 	 * @param texU
 	 * @param texV
@@ -49,8 +49,7 @@ public class RenderUtils {
 	}
 
 	/**
-	 * 添加不带UV的三维顶点。
-	 * 
+	 * Add a vertex to the tessellator without UV coords.
 	 * @param vec3
 	 */
 	public static void addVertex(Vec3 vec3) {
@@ -59,11 +58,11 @@ public class RenderUtils {
 	
 
 	/**
-	 * 获取并加载一个贴图。
-	 * 
-	 * @param path
-	 *            贴图路径
+	 * Load a texture by reading its namespace path.
+	 * This method is low in efficiency, use ResourceLocation directly
+	 * @param path The namespace path of the texture
 	 */
+	@Deprecated
 	public static void loadTexture(String path) {
 		ResourceLocation src = srcMap.get(path);
 		if(src == null) {

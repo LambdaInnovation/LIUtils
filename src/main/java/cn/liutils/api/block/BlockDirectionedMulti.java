@@ -47,7 +47,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		}
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
-			System.out.println("[" + (x + offX) + " " + (y + offZ) + " " + (z + offZ) + "]");
+			//System.out.println("[" + (x + offX) + " " + (y + offZ) + " " + (z + offZ) + "]");
 			throw new RuntimeException();
 			//wrld.setBlockToAir(x + offX, y + offZ, z + offZ);
 		}
@@ -124,7 +124,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
     {
-    	System.out.println("BreakBLock " + world.isRemote);
+    	//System.out.println("BreakBLock " + world.isRemote);
     	metadata = this.getMetadata(world, x, y, z);
     	if(metadata == -1) metadata = world.getBlockMetadata(x, y, z);
     	super.breakBlock(world, x, y, z, block, metadata);

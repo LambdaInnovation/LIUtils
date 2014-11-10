@@ -4,7 +4,7 @@
 package cn.liutils.core.network;
 
 import cn.liutils.api.block.IMetadataProvider;
-import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.LIUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
@@ -19,19 +19,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author WeathFolD
  *
  */
-public class MsgTileDMulti implements IMessage {
+public class MsgTileDirMulti implements IMessage {
 
 	int x, y, z;
 	int metadata;
 	
-	public MsgTileDMulti(TileEntity tile) {
+	public MsgTileDirMulti(TileEntity tile) {
 		x = tile.xCoord;
 		y = tile.yCoord;
 		z = tile.zCoord;
 		metadata = ((IMetadataProvider)tile).getMetadata();
 	}
 	
-	public MsgTileDMulti() {}
+	public MsgTileDirMulti() {}
 
 	@Override
 	public void fromBytes(ByteBuf buf) {
@@ -88,7 +88,7 @@ public class MsgTileDMulti implements IMessage {
 					System.err.println("It seems we don't have the correspond tile entity for the client sync request");
 					return null;
 				}
-				LIUtilsMod.netHandler.sendTo(new MsgTileDMulti(te), ctx.getServerHandler().playerEntity);
+				LIUtils.netHandler.sendTo(new MsgTileDirMulti(te), ctx.getServerHandler().playerEntity);
 				return null;
 			}
 			
@@ -96,11 +96,11 @@ public class MsgTileDMulti implements IMessage {
 		
 	}
 	
-	public static class Handler implements IMessageHandler<MsgTileDMulti, IMessage> {
+	public static class Handler implements IMessageHandler<MsgTileDirMulti, IMessage> {
 
 		@Override
 		@SideOnly(Side.CLIENT)
-		public IMessage onMessage(MsgTileDMulti msg, MessageContext ctx) {
+		public IMessage onMessage(MsgTileDirMulti msg, MessageContext ctx) {
 			World world = Minecraft.getMinecraft().theWorld;
 			TileEntity te = world.getTileEntity(msg.x, msg.y, msg.z);
 			if(te == null || !(te instanceof IMetadataProvider)) {

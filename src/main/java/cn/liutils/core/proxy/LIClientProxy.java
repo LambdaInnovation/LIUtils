@@ -11,14 +11,14 @@ import cn.liutils.api.client.render.RenderCrossedProjectile;
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.entity.EntityTrailFX;
-import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.LIUtils;
 import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.client.render.RenderPlayerHelper;
 import cn.liutils.core.client.render.RenderTrail;
 import cn.liutils.core.debug.CommandModifier;
 import cn.liutils.core.debug.KeyModifier;
 import cn.liutils.core.debug.KeyShowInfo;
-import cn.liutils.core.entity.EntityPlayerRender;
+import cn.liutils.core.entity.EntityPlayerDaemon;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;
@@ -41,16 +41,17 @@ public class LIClientProxy extends LICommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, 
 				new RenderCrossedProjectile(0.45, 0.03, 1F, 0.96F, 0.722F).setIgnoreLight(true));
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerRender.class, new RenderPlayerHelper());
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerDaemon.class, new RenderPlayerHelper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
-		if(LIUtilsMod.DEBUG) {
-			LIKeyProcess.addKey("a1", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
-			LIKeyProcess.addKey("a2", Keyboard.KEY_NUMPAD2, false, new KeyModifier(0, false));
-			LIKeyProcess.addKey("a3", Keyboard.KEY_NUMPAD4, false, new KeyModifier(1, true));
-			LIKeyProcess.addKey("a4", Keyboard.KEY_NUMPAD6, false, new KeyModifier(1, false));
-			LIKeyProcess.addKey("a5", Keyboard.KEY_NUMPAD7, false, new KeyModifier(2, true));
-			LIKeyProcess.addKey("a6", Keyboard.KEY_NUMPAD9, false, new KeyModifier(2, false));
-			LIKeyProcess.addKey("a7", Keyboard.KEY_NUMPAD5, false, new KeyShowInfo());
+		
+		if(LIUtils.DEBUG) {
+			LIKeyProcess.addKey("deb_0", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
+			LIKeyProcess.addKey("deb_1", Keyboard.KEY_NUMPAD2, false, new KeyModifier(0, false));
+			LIKeyProcess.addKey("deb_2", Keyboard.KEY_NUMPAD4, false, new KeyModifier(1, true));
+			LIKeyProcess.addKey("deb_3", Keyboard.KEY_NUMPAD6, false, new KeyModifier(1, false));
+			LIKeyProcess.addKey("deb_4", Keyboard.KEY_NUMPAD7, false, new KeyModifier(2, true));
+			LIKeyProcess.addKey("deb_5", Keyboard.KEY_NUMPAD9, false, new KeyModifier(2, false));
+			LIKeyProcess.addKey("deb_6", Keyboard.KEY_NUMPAD5, false, new KeyShowInfo());
 		}
 	}
 	
@@ -68,7 +69,7 @@ public class LIClientProxy extends LICommonProxy {
 	
 	@Override
 	public void cmdInit(CommandHandler handler) {
-		if(LIUtilsMod.DEBUG) {
+		if(LIUtils.DEBUG) {
 			handler.registerCommand(new CommandModifier());
 		}
 	}

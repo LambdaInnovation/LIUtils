@@ -26,8 +26,7 @@ import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.api.energy.event.EnergyTileSourceEvent;
-import cn.liutils.core.LIUtilsMod;
-import cn.liutils.core.world.WorldData;
+import cn.liutils.core.LIUtils;
 
 public final class EnergyNet {
 
@@ -95,7 +94,7 @@ public final class EnergyNet {
 
 	public void removeTileEntity(TileEntity removedTileEntity) {
 		if ((!(removedTileEntity instanceof IEnergyTile))) {
-			LIUtilsMod.log.error(new StringBuilder().append("removing ")
+			LIUtils.log.error(new StringBuilder().append("removing ")
 					.append(removedTileEntity)
 					.append(" from the EnergyNet failed.").toString());
 
@@ -211,7 +210,7 @@ public final class EnergyNet {
 										.append(",").append(te.zCoord)
 										.toString();
 							}
-							LIUtilsMod.log
+							LIUtils.log
 									.error(new StringBuilder()
 											.append("API ERROR: ")
 											.append(energySink)

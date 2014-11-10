@@ -14,7 +14,6 @@ import java.lang.reflect.Field;
 
 /**
  * @author WeAthFolD
- *
  */
 public abstract class DoubleModifier extends FieldModifier {
 
@@ -27,9 +26,6 @@ public abstract class DoubleModifier extends FieldModifier {
 		return 1;
 	}
 
-	/* (non-Javadoc)
-	 * @see cn.liutils.core.debug.INumberFieldModifier#applyModification(boolean, int)
-	 */
 	@Override
 	public void applyModification(Object instance, boolean dirFlag, int pressTick, int dimension) throws Exception
 	{

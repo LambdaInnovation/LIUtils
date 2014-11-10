@@ -34,9 +34,8 @@ public final class LIKeyProcess {
 	
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
 	
-	private static Set<LIKeyBinding> bindingSet = new HashSet();
+	private static Map<String, LIKeyBinding> bindingMap = new HashMap<String, LIKeyBinding>();
 	private static Map<LIKeyBinding, KeyBinding> associates = new HashMap();
-	//private static Map<KeyBinding, Integer> hackSet = new HashMap();
 	
 	public static class LIKeyBinding {
 		public int keyCode;
@@ -52,7 +51,30 @@ public final class LIKeyProcess {
 			process = proc;
 		}
 	}
+
+	/**
+	 * adding a key to the process list.
+	 * @param key the key
+	 * @param isRep repeatly call keyDown when pressing
+	 * @param handler handler
+	 */
+	public static LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyHandler handler) {
+		LIKeyBinding binding = new LIKeyBinding(name, keyCode, isRep, handler);
+		bindingMap.put(name, binding);
+		return binding;
+	}
 	
+	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyHandler process) {
+		LIKeyBinding bd = addKey(b.getKeyDescription(), b.getKeyCode(), isRep, process);
+		associates.put(bd, b);
+		return bd;
+	}
+	
+	public static LIKeyBinding getBindingByName(String s) {
+		return bindingMap.get(s);
+	}
+	
+	//----------------INTERNAL IMPLEMENTATIONS---------------------
 	public final void tickStart()
     {
         keyTick(false);
@@ -62,10 +84,10 @@ public final class LIKeyProcess {
     {
         keyTick(true);
     }
-
+	
     private void keyTick(boolean tickEnd)
     {
-        for (LIKeyBinding kb : bindingSet)
+        for (LIKeyBinding kb : bindingMap.values())
         {
             int keyCode = kb.keyCode;
             boolean state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
@@ -93,31 +115,5 @@ public final class LIKeyProcess {
             if(binding != null) kb.keyCode = binding.getKeyCode();
         } 
     }
-
-	/**
-	 * adding a key to the process list.
-	 * @param key the key
-	 * @param isRep repeatly call keyDown when pressing
-	 * @param handler handler
-	 */
-	public static LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyHandler handler) {
-		LIKeyBinding binding = new LIKeyBinding(name, keyCode, isRep, handler);
-		bindingSet.add(binding);
-		return binding;
-	}
-	
-	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyHandler process) {
-		LIKeyBinding bd = addKey(b.getKeyDescription(), b.getKeyCode(), isRep, process);
-		associates.put(bd, b);
-		return bd;
-	}
-	
-	public static LIKeyBinding getBindingByName(String s) {
-		for(LIKeyBinding kb : bindingSet) {
-			if(kb.name.equals(s))
-				return kb;
-		}
-		return null;
-	}
 
 }

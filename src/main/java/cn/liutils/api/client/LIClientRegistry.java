@@ -6,14 +6,13 @@ package cn.liutils.api.client;
 import cn.liutils.api.client.key.IKeyHandler;
 import cn.liutils.api.client.render.PlayerRenderHandler;
 import cn.liutils.core.client.register.LIKeyProcess;
-import cn.liutils.core.entity.EntityPlayerRender;
+import cn.liutils.core.entity.EntityPlayerDaemon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
- * 客户端的各种注册辅助。
+ * All sorts of client registry functions.
  * @author WeAthFolD
- *
  */
 @SideOnly(Side.CLIENT)
 public class LIClientRegistry {
@@ -23,7 +22,7 @@ public class LIClientRegistry {
 	}
 	
 	public static void addPlayerRenderingHelper(PlayerRenderHandler helper) {
-		EntityPlayerRender.addRenderHelper(helper);
+		EntityPlayerDaemon.addRenderHelper(helper);
 	}
 	
 	

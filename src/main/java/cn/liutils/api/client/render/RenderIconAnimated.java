@@ -7,9 +7,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Repeatly plays what's inside icons array. the framerate can be set.
+ * A RenderIcon which repeatly plays what's inside icons array. the framerate can be set.
  * @author WeAthFolD
- *
  */
 public class RenderIconAnimated extends RenderIcon {
 

@@ -17,7 +17,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
 /**
- * 玩家位置锁。在锁定以后对玩家位置的任何更改都只能在这里进行。
+ * PlayerPositionLock is a class that interrupt player's normal movements and
+ * take over it only in here.
+ * Still developing.
  * @author WeAthFolD
  */
 public class PlayerPositionLock {
@@ -44,8 +46,8 @@ public class PlayerPositionLock {
 			return;
 		}
 		ent.first.onGround = false;
-		System.out.println("[" + ent.first.posX + ", " + ent.first.posY + ", " + ent.first.posZ + "] TO \n"
-				+ "[" + ent.second.posX + ", " + ent.second.posY + ", " + ent.second.posZ + "]");
+		//System.out.println("[" + ent.first.posX + ", " + ent.first.posY + ", " + ent.first.posZ + "] TO \n"
+		//		+ "[" + ent.second.posX + ", " + ent.second.posY + ", " + ent.second.posZ + "]");
 		
 		ent.first.posX = ent.second.posX;
 		ent.first.posY = ent.second.posY;

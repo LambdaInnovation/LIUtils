@@ -26,7 +26,9 @@ public abstract class FieldModifier {
 	}
 	
 	/**
-	 * 获取需要几个维度的修改。最大支持3.
+	 * How many dimension of settings do this modifier need? Maxium 3 supported
+	 * P.S. a dimension is a left key and a right key, and the resulting value is 
+	 * passed to applyModification as the dimension par as value: -1*(left.pressed) + 1*(right.pressed)
 	 */
 	public abstract int getRequiredDimensions();
 	

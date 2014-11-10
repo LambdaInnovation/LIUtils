@@ -7,19 +7,16 @@ import net.minecraftforge.common.config.Property;
 import cn.liutils.api.register.Configurable;
 
 /**
- * 各种Registry类的统一接口，方便各方面注册。
+ * A public interface for all LIUtils Non-Client API functions.
  * @author WeAthFolD
- *
  */
 public class LIGeneralRegistry {
 	
 	/**
-	 * 加载一个含有可设置参数的类。
-	 * 
-	 * @param conf
-	 *            公用设置
-	 * @param cl
-	 *            类，要注册的参数必须为Static
+	 * Initialize a class's #cn.liutils.api.register.Configurable fields.
+	 * @param conf The data source(config)
+	 * @param cl The class containg property variables. currently they must be static.
+	 * @see cn.liutils.api.register.Configurable
 	 */
 	public static void loadConfigurableClass(Configuration conf, Class<?> cl) {
 		Property prop;

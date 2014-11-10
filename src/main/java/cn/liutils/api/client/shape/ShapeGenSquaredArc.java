@@ -21,10 +21,11 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.Vec3;
 
 /**
+ * 绘制一个由y=x^2绕y轴旋转确定的三维圆弧罩子。
+ * 现在纵向贴图的映射似乎还有问题的样子……
  * @author WeAthFolD
- *
  */
-public class ShpGeneratorArcSquared {
+public class ShapeGenSquaredArc {
 	
 	public static List<Vector2d> temp = new ArrayList<Vector2d>();
 	

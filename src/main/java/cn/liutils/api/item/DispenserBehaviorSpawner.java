@@ -15,12 +15,17 @@ import cn.liutils.api.util.MobHelper;
 
 
 /**
- * 怪物蛋的发射器行为，记得为你的物品实例注册上哟~
+ * The dispenser behavior for a LIMobSpawner. Remember to register it for your MobSpawner! >w>
  * @author WeAthFolD
  */
 public class DispenserBehaviorSpawner extends BehaviorDefaultDispenseItem {
 	
 	public static DispenserBehaviorSpawner INSTANCE = new DispenserBehaviorSpawner();
+	
+	/**
+	 * Prevents instanting
+	 */
+	private DispenserBehaviorSpawner() {}
 	
     /**
      * Dispense the specified stack, play the dispense sound and spawn particles.

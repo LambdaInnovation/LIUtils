@@ -83,7 +83,7 @@ public class FieldModifierHandler {
 			FieldModifier modder = GenericUtils.safeFetchFrom(currentProvider.getModifiers(), modifierID);
 			Object instance = currentProvider.extractInstance();
 			try {
-			System.out.println("Aplying " + dir + " " + getKeyTick(dir, dim));
+				//System.out.println("Aplying " + dir + " " + getKeyTick(dir, dim));
 			if(modder != null && instance != null) 
 				modder.applyModification(instance, dir, getKeyTick(dir, dim), 
 						dim >= modder.getRequiredDimensions() ? modder.getRequiredDimensions() - 1 : dim);

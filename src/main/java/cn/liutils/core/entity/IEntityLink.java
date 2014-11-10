@@ -17,24 +17,21 @@ package cn.liutils.core.entity;
 import net.minecraft.entity.Entity;
 
 /**
- * 在Entity中链接另外一个Entity（一般为玩家）的实用类。
- * 
+ * A utility class to enable one entity to link to another.
  * @author WeAthFolD
  * @see  cn.lambdacraft.mob.util.MobHelper#spawnCreature
- * @param <T> Entity类型
+ * @param <T> Entity type
  */
 public interface IEntityLink<T extends Entity> {
 
 	/**
-	 * 获取链接的Entity。
-	 * 
+	 * Get the linked entity.
 	 * @return
 	 */
 	public T getLinkedEntity();
 
 	/**
-	 * 设置连接的Entity。
-	 * 
+	 * Set the linked entity.
 	 * @param entity
 	 */
 	public void setLinkedEntity(T entity);

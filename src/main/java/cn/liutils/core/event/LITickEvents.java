@@ -7,9 +7,9 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cn.liutils.api.util.PlayerPositionLock;
-import cn.liutils.core.LIUtilsMod;
+import cn.liutils.core.LIUtils;
 import cn.liutils.core.energy.EnergyNet;
-import cn.liutils.core.entity.EntityPlayerRender;
+import cn.liutils.core.entity.EntityPlayerDaemon;
 import cn.liutils.core.proxy.LIClientProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -19,11 +19,10 @@ import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 
 /**
- * @author Administrator
- *
+ * @author WeAthFolD
  */
 public class LITickEvents {
-	public EntityPlayerRender helper;
+	public EntityPlayerDaemon helper;
 
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
@@ -42,7 +41,7 @@ public class LITickEvents {
 	@SubscribeEvent
 	public void onWorldTick(WorldTickEvent event) {
 		World world = event.world;
-		if(!LIUtilsMod.ic2Exists)
+		if(!LIUtils.ic2Exists)
 			EnergyNet.onTick(world);
 	}
 	
@@ -62,7 +61,7 @@ public class LITickEvents {
 	private void playerTick(EntityPlayer player) {
 		World world = player.worldObj;
 		if(helper == null) {
-			helper = new EntityPlayerRender(player, player.worldObj);
+			helper = new EntityPlayerDaemon(player, player.worldObj);
 			world.spawnEntityInWorld(helper);
 		}
 		

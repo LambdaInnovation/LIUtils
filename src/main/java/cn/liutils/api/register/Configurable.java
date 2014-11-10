@@ -20,7 +20,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 /**
- * **Inspired by HyperX**
+ * (Inspired by HyperX)
  * Mark a variable so it can be automatically loaded by config.
  * Currently static fields only.
  * @see cn.liutils.api.LIGeneralRegistry#loadConfigurableClass
@@ -31,22 +31,22 @@ import java.lang.annotation.Target;
 public @interface Configurable {
 
 	/**
-	 * 配置的分类。
+	 * Category of the settings shown in the configuration file.
 	 */
 	String category() default "general";
 
 	/**
-	 * 该配置在Config中显示名称。
+	 * The name of the settings.
 	 */
 	String key();
 
 	/**
-	 * 为该配置规定一个默认值。
+	 * Default value of the setting.
 	 */
 	String defValue();
 
 	/**
-	 * 该comment的注释。
+	 * Comment of the setting.
 	 */
 	String comment() default "";
 }

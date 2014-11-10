@@ -8,7 +8,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
 /**
- * Such a simple renderer.
+ * Most simple model renderer.
  * @author WeAthFolD
  */
 public class RenderModel extends Render {

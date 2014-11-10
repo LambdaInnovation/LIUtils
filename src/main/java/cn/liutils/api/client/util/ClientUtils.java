@@ -15,8 +15,8 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
 /**
+ * Client-Side judgement helper and other stuffs.
  * @author WeAthFolD
- *
  */
 @SideOnly(Side.CLIENT)
 public class ClientUtils {

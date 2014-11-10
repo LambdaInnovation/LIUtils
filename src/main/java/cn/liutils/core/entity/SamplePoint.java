@@ -1,7 +1,7 @@
 package cn.liutils.core.entity;
 
 /**
- * A simple sample point with a timer, called by EntityTrail.
+ * A simple sample point with a timer, data used by EntityTrail.
  * @author WeAthFolD
  */
 public class SamplePoint {

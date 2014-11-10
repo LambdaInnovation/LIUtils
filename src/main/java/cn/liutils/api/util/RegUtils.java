@@ -3,26 +3,38 @@ package cn.liutils.api.util;
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.registry.GameRegistry;
 
+/**
+ * Elegant and fast way to register specific kinds of items.
+ * @author WeathFolD
+ */
 public class RegUtils {
 
-	public static Item reg(Class<? extends Item> itemClass, String id) {
+	/**
+	 * Register a item instance of itemClass which have an empty constructor with key id and return its instance.
+	 */
+	public static <T extends Item> T reg(Class<? extends T> itemClass, String id) {
 		try {
 			Item it = itemClass.getConstructor().newInstance();
 			GameRegistry.registerItem(it, id);
-			return it;
+			return (T) it; //Hah, casting done here
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
 		return null;
 	}
 	
-	public static Item[] reg(Class<? extends Item> itemClass, int n, String id) {
-		Item[] res = new Item[n];
+	/**
+	 * Register n item instances of itemClass which should have a single-int-par Ctor with key id.
+	 * We do it by creating an array of size n and initialized the array each by Ctor(0),...,Ctor(n-1)
+	 * The registering result is returned.
+	 */
+	public static <T extends Item> T[] reg(Class<? extends T> itemClass, int n, String id) {
+		T[] res = (T[]) new Object[n]; //这个也是醉了
 		try {
 			for(int i = 0; i < n; ++i) {
 				Item it = itemClass.getConstructor(Integer.TYPE).newInstance(i);
 				GameRegistry.registerItem(it, id + i);
-				res[i] = it;
+				res[i] = (T) it;
 			}
 		} catch(Exception e) {
 			e.printStackTrace();

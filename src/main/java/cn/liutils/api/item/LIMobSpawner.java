@@ -8,12 +8,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 
+/**
+ * A Item class that spawns a given kind of mob.
+ * @author WeathFolD
+ */
 public class LIMobSpawner extends Item {
 
 	protected Class<? extends Entity> entClass = EntityPig.class;
 	
-	public LIMobSpawner() {
-	}
+	public LIMobSpawner() { }
 	
 	public LIMobSpawner(Class<? extends Entity> entityClass) {
 		entClass = entityClass;

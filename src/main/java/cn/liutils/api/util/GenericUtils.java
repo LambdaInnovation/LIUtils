@@ -207,7 +207,8 @@ public class GenericUtils {
 	
 	public static int mini(int... arr) {
 		int min = Integer.MAX_VALUE;
-		for(int i : arr) if(i < min) min = i;
+		for(int i : arr) 
+			if(i < min) min = i;
 		return min;
-		}
+	}
 }

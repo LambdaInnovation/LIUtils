@@ -20,8 +20,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 
 /**
- * 能量TileEntity发送能量的事件。
- * 
+ * TileEntity energy-omitting event.
  * @author HopeAsd
  * 
  */

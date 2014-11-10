@@ -1,10 +1,9 @@
-package cn.liutils.core.world;
+package cn.liutils.core.energy;
 
 import java.util.Map;
 import java.util.WeakHashMap;
 
 import net.minecraft.world.World;
-import cn.liutils.core.energy.EnergyNet;
 
 public class WorldData {
 	private static Map<World, WorldData> mapping = new WeakHashMap();

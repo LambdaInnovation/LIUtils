@@ -13,9 +13,7 @@ import cn.liutils.core.event.LIEventListener;
  */
 public class LICommonProxy {
 
-	public void init() {
-		MinecraftForge.EVENT_BUS.register(new LIEventListener());
-	}
+	public void init() {}
 	
 	public void preInit() {}
 	

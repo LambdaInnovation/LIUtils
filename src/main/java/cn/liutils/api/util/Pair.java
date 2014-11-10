@@ -11,9 +11,8 @@
 package cn.liutils.api.util;
 
 /**
- * 仿制C艹的Pair类
+ * A copy of C++ implementation
  * @author WeAthFolD
- *
  */
 public class Pair<U, V> {
 	public U first;

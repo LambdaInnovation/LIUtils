@@ -291,7 +291,7 @@ public class RenderModelItem implements IItemRenderer {
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		this.doTransformation(stdOffset);
 		GL11.glScalef(-1F , -1F , 1F );
-		GL11.glRotated(stdRotation.yCoord + 180, 0.0F, 1.0F, 0.0F); //历史遗留问题，没什么必要改啦=w=
+		GL11.glRotated(stdRotation.yCoord + 180, 0.0F, 1.0F, 0.0F);
 		GL11.glRotated(stdRotation.zCoord, 0.0F, 0.0F, 1.0F);
 		GL11.glRotated(stdRotation.xCoord, 1.0F, 0.0F, 0.0F);
 		

@@ -13,7 +13,7 @@ package cn.liutils.api.util;
 import net.minecraft.entity.player.EntityPlayer;
 
 /**
- * 玩家NBT的简单包装，用来进行和时间&运行周期判断相关的内容。
+ * Simple wrapping of EntityPlayer NBT. Used for tick counting&checking.
  * @author WeAthFolD
  */
 public class PlayerTicker {

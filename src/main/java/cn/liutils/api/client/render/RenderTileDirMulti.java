@@ -16,27 +16,27 @@ import net.minecraft.util.Vec3;
  * @author WeathFolD
  *
  */
-public abstract class RenderTileSided extends TileEntitySpecialRenderer {
+public abstract class RenderTileDirMulti extends TileEntitySpecialRenderer {
 
 	protected float scale = 0.0625F;
 	protected double offX, offY, offZ;
 	protected ResourceLocation texture;
 
-	public RenderTileSided() {}
+	public RenderTileDirMulti() {}
 	
-	public RenderTileSided setScale(float f) {
+	public RenderTileDirMulti setScale(float f) {
 		scale = f;
 		return this;
 	}
 	
-	public RenderTileSided setOffset(double x, double y, double z) {
+	public RenderTileDirMulti setOffset(double x, double y, double z) {
 		offX = x;
 		offY = y;
 		offZ = z;
 		return this;
 	}
 	
-	public RenderTileSided setModelTexture(ResourceLocation t) {
+	public RenderTileDirMulti setModelTexture(ResourceLocation t) {
 		texture = t;
 		return this;
 	}
