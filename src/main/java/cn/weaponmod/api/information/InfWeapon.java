@@ -3,17 +3,11 @@ package cn.weaponmod.api.information;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.TreeMap;
-
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.World;
 import cn.liutils.api.util.Pair;
 import cn.weaponmod.api.action.Action;
 import cpw.mods.fml.relauncher.Side;
@@ -73,7 +67,8 @@ public final class InfWeapon {
 
 	public void updateTick() {
 		++ticksExisted;
-		
+		//System.out.println("UpdateTick");
+//		System.out.println(lastStack);
 		ItemStack cs = owner.getCurrentEquippedItem();
 		if(!unchanged()) {
 			this.resetState();
@@ -119,7 +114,7 @@ public final class InfWeapon {
 		if(act == null)
 			return false;
 		if(isActionPresent(act.name))
-			this.removeAction(act.name);
+			return false;//this.removeAction(act.name);
 		
 		if(!act.isAvailable(owner.worldObj, owner, this))
 			return false;
@@ -144,9 +139,12 @@ public final class InfWeapon {
 				it.remove();
 			}
 		}
-		if(act.onActionBegin(owner.worldObj, owner, this)) setLastActionTick();
-		activeActions.add(new Pair(act, (Integer)act.maxTick));
-		return true;
+		if(act.onActionBegin(owner.worldObj, owner, this)) {
+			setLastActionTick();
+			activeActions.add(new Pair(act, act.maxTick));
+			return true;
+		}
+		return false;
 	}
 	
 	public boolean isActionPresent(String name) {
@@ -250,6 +248,7 @@ public final class InfWeapon {
 	}
 
 	public void resetState() {
+		System.out.println("ResetState " + owner.worldObj.isRemote);
 		infData = new NBTTagCompound();
 		activeActions.clear();
 		lastStack = owner.getCurrentEquippedItem();

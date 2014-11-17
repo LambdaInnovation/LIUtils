@@ -32,7 +32,8 @@ public class ModelBaseCustom extends ModelBase {
     /**
      * Sets the models various rotation angles then renders the model.
      */
-    public final void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
+    @Override
+	public final void render(Entity par1Entity, float par2, float par3, float par4, float par5, float par6, float par7) {
     	GL11.glPushMatrix(); {
     		GL11.glTranslated(offset.xCoord, offset.yCoord, offset.zCoord);
     		GL11.glScalef(scale, -scale, scale);
@@ -49,7 +50,8 @@ public class ModelBaseCustom extends ModelBase {
      * and legs, where par1 represents the time(so that arms and legs swing back and forth) and par2 represents how
      * "far" arms and legs can swing at most.
      */
-    public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
+    @Override
+	public void setRotationAngles(float par1, float par2, float par3, float par4, float par5, float par6, Entity par7Entity) {
     	//Set the rotations here
     }
 

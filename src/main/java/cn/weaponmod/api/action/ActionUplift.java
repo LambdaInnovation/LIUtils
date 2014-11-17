@@ -10,10 +10,6 @@
  */
 package cn.weaponmod.api.action;
 
-import org.lwjgl.opengl.GL11;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cn.weaponmod.api.information.InfWeapon;
@@ -45,10 +41,12 @@ public class ActionUplift extends Action {
 		max_uplift = max_rad;
 	}
 	
+	@Override
 	public boolean onActionTick(World world, EntityPlayer player, InfWeapon inf) {
 		return true;
 	}
 	
+	@Override
 	public boolean onActionEnd(World world, EntityPlayer player, InfWeapon information) {
 		return false;
 	}

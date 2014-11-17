@@ -15,10 +15,7 @@
 package cn.liutils.core.client.register;
 
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
-
 import net.minecraft.client.settings.KeyBinding;
 
 import org.lwjgl.input.Keyboard;

@@ -43,11 +43,13 @@ public class ActionJam extends Action {
 		return 0;
 	}
 	
+	@Override
 	public boolean onActionBegin(World world, EntityPlayer player, InfWeapon inf) {
 		player.playSound(sound, 0.5F, 1.0F);
 		return true;
 	}
 	
+	@Override
 	public boolean onActionTick(World world, EntityPlayer player, InfWeapon inf) {
 		int tt = inf.getTicker(TICKER_CHANNEL);
 		if(tt == 0 || (inf.getTicksExisted() - tt) % interval == 0) {

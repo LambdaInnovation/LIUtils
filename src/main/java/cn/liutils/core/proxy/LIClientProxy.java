@@ -4,10 +4,12 @@
 package cn.liutils.core.proxy;
 
 import net.minecraft.command.CommandHandler;
+import net.minecraft.entity.Entity;
 
 import org.lwjgl.input.Keyboard;
 
 import cn.liutils.api.client.render.RenderCrossedProjectile;
+import cn.liutils.api.client.render.RenderDirMultiModelled;
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.entity.EntityTrailFX;
@@ -39,7 +41,17 @@ public class LIClientProxy extends LICommonProxy {
 		RenderingRegistry.registerBlockHandler(new RenderEmptyBlock());
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityBullet.class, 
-				new RenderCrossedProjectile(0.45, 0.03, 1F, 0.96F, 0.722F).setIgnoreLight(true));
+				new RenderCrossedProjectile(0.45, 0.03, 1F, 0.96F, 0.722F) {
+			@Override
+			public void doRender(Entity entity, double par2, double par4,
+					double par6, float par8, float par9) {
+				EntityBullet bullet = (EntityBullet) entity;
+				fpOffsetZ = bullet.renderFromLeft ? 0.2 : -0.2;
+				tpOffsetZ = bullet.renderFromLeft ? 0.4 : -0.4;
+				super.doRender(entity, par2, par4, par6, par8, par9);
+			}
+		}
+		.setIgnoreLight(true));
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerDaemon.class, new RenderPlayerHelper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());

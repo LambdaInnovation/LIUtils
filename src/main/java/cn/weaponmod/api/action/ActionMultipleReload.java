@@ -16,7 +16,6 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import cn.weaponmod.api.WeaponHelper;
 import cn.weaponmod.api.information.InfUtils;
@@ -54,15 +53,25 @@ public class ActionMultipleReload extends Action {
 		return this;
 	}
 	
+	@Override
 	public boolean onActionBegin(World world, EntityPlayer player, InfWeapon inf) { 
+		ItemStack stack = player.getCurrentEquippedItem();
+		if(stack == null || !(stack.getItem() instanceof WeaponGenericBase))
+			return false;
+		WeaponGenericBase wpn = (WeaponGenericBase) stack.getItem();
+		if(wpn.getAmmo(stack) == stack.getMaxDamage() || !WeaponHelper.hasAmmo(wpn, player)) {
+			return false;
+		}
 		inf.setLastActionTick();
 		return true;
 	}
 	
+	@Override
 	public boolean onActionEnd(World world, EntityPlayer player, InfWeapon inf) {
 		return false;
 	}
 	
+	@Override
 	public boolean onActionTick(World world, EntityPlayer player, InfWeapon inf) {
 		
 		if(inf.getTicksExisted() % this.rate == 0) {
@@ -111,11 +120,9 @@ public class ActionMultipleReload extends Action {
 	@Override
 	@SideOnly(Side.CLIENT)
 	public void applyRenderEffect(World world, EntityPlayer player, InfWeapon inf, boolean first) {
-		float prog = (float)InfUtils.getDeltaTick(inf) / this.maxTick;
+		float prog = (float)InfUtils.getDeltaTick(inf) / this.rate;
 		if(prog < 0.1F) {
 			prog /= 0.1F;
-		} else if(prog >= 0.9F){
-			prog = (1 - prog) / 0.1F;
 		} else prog = 1F;
 		GL11.glRotatef(80F * prog, 0F, 1F, 0F);
 	}

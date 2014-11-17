@@ -6,8 +6,6 @@ package cn.liutils.api.client.util;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -37,6 +35,24 @@ public class RenderUtils {
 
 	private static Tessellator t = Tessellator.instance;
 	private static Map<String, ResourceLocation> srcMap  = Maps.newHashMap();
+	private static int textureState = -1;
+	
+	public static void pushTextureState() {
+		if(textureState != -1) {
+			System.err.println("RenderUtils:Texture State Overflow");
+			return;
+		}
+		textureState = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+	}
+	
+	public static void popTextureState() {
+		if(textureState == -1) {
+			System.err.println("RenderUtils:Texture State Underflow");
+			return;
+		}
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureState);
+		textureState = -1;
+	}
 	
 	/**
 	 * Add a vertex to the tessellator with UV coords.
@@ -73,6 +89,7 @@ public class RenderUtils {
 	}
 	
 	public static void loadTexture(ResourceLocation src) {
+		
 		Minecraft.getMinecraft().renderEngine.bindTexture(src);
 	}
 

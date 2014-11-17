@@ -14,13 +14,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraftforge.client.IItemRenderer;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import net.minecraftforge.client.IItemRenderer.ItemRendererHelper;
-import cn.liutils.api.client.model.IItemModel;
-import cn.liutils.api.client.render.RenderModelItem;
 import cn.weaponmod.api.action.Action;
 import cn.weaponmod.api.information.InfWeapon;
 import cn.weaponmod.api.weapon.WeaponGenericBase;
@@ -60,6 +55,7 @@ public abstract class RendererBulletWeaponBase implements IItemRenderer {
 		switch (type) {
 		case EQUIPPED:
 		case EQUIPPED_FIRST_PERSON:
+		case ENTITY:
 			return true;
 		default:
 			return false;
@@ -156,6 +152,10 @@ public abstract class RendererBulletWeaponBase implements IItemRenderer {
 		vec.xCoord = x;
 		vec.yCoord = y;
 		vec.zCoord = z;
+	}
+	
+	protected boolean doesApplyRender(Action a) {
+		return true;
 	}
 	
 	protected abstract void renderWeapon(ItemStack stack, EntityPlayer pl, ItemRenderType type);

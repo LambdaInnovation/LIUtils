@@ -44,6 +44,7 @@ public class ActionBuckshot extends ActionShoot {
 		return this;
 	}
 	
+	@Override
 	protected void doSpawnEntity(World world, EntityPlayer player) {
 		for(int i = 0; i < buck; i++) {
 			Entity bullet = getProjectileEntity(world, player);

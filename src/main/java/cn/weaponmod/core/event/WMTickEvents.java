@@ -1,9 +1,12 @@
 package cn.weaponmod.core.event;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.weapon.IZoomable;
-import cn.weaponmod.core.ModuleWeapon;
 import cn.weaponmod.core.proxy.WMClientProxy;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -42,6 +45,16 @@ public class WMTickEvents {
 	  public void OnWorldEvent(ServerTickEvent event) {
 		  if(event.phase == Phase.START)
 			  ItemControlHandler.tickStart(false);
+		  
+	  }
+	  
+	  @SubscribeEvent
+	  public void onWorldTick(WorldTickEvent event) {
+		  if(event.phase == Phase.START) {
+			  if(event.world.getClass().equals(WorldServer.class)) {
+				  WMInformation.instance.updateTick(event.world);
+			  }
+		  }
 	  }
 	  
 	  @SubscribeEvent
@@ -50,6 +63,10 @@ public class WMTickEvents {
 		  if(event.phase == Phase.START) {
 			  WMClientProxy.upliftHandler.tickStart();
 			  ItemControlHandler.tickStart(true);
+			  World world = Minecraft.getMinecraft().theWorld;
+			  if(world != null) {
+				  WMInformation.instance.updateTick(world);
+			  }
 		  } else {
 			  WMClientProxy.upliftHandler.tickEnd();
 		  }

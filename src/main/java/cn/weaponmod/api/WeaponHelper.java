@@ -15,7 +15,6 @@ package cn.weaponmod.api;
 
 import java.util.List;
 
-import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
@@ -30,7 +29,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.util.GenericUtils;
 import cn.liutils.api.util.Motion3D;
 import cn.weaponmod.api.weapon.WeaponGenericBase;
@@ -251,9 +249,10 @@ public class WeaponHelper {
 		if (entitylist.size() > 0) {
 			for (int i = 0; i < entitylist.size(); i++) {
 				Entity ent = (Entity) entitylist.get(i);
-				if (ent instanceof EntityLiving) {
+				if (ent instanceof EntityLivingBase) {
 					double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
 					int damage = (int) ((1 - distance / 6.928) * strengh);
+					System.out.println("Attacking " + ent + " " + damage);
 					ent.attackEntityFrom(src , damage);
 				}
 			}

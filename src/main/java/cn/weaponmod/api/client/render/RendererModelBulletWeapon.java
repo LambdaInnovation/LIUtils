@@ -13,31 +13,14 @@
  */
 package cn.weaponmod.api.client.render;
 
-import java.util.List;
-import java.util.Random;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-
-import org.lwjgl.opengl.GL11;
-
 import cn.liutils.api.client.model.IItemModel;
 import cn.liutils.api.client.render.RenderModelItem;
-import cn.liutils.core.LIUtils;
-import cn.weaponmod.api.action.Action;
-import cn.weaponmod.api.information.InfUtils;
-import cn.weaponmod.api.information.InfWeapon;
-import cn.weaponmod.api.weapon.WeaponGenericBase;
 import cn.weaponmod.api.weapon.WeaponGeneric;
-import cn.weaponmod.core.event.ItemControlHandler;
 
 /**
  * 

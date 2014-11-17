@@ -1,8 +1,5 @@
 package cn.weaponmod.api.action;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-
 import org.lwjgl.opengl.GL11;
 
 import cpw.mods.fml.relauncher.Side;
@@ -37,6 +34,7 @@ public class ActionShoot extends Action {
 	String sound = "";
 	float soundVolume = 0.5F;
 	int shootRate = 10;
+	public boolean left = false;
 	
 	public boolean testTicker = true;
 	public String ticker_channel = DEFAULT_TICKER_CHANNEL;
@@ -46,6 +44,25 @@ public class ActionShoot extends Action {
 	public static final String DEFAULT_TICKER_CHANNEL = "shoot";
 	protected Vec3 muzOffset = Vec3.createVectorHelper(0.0, 0.0, 0.0);
 	protected float muzScale = 1.0F;
+	
+	public ActionShoot copyFrom(ActionShoot res) {
+		sound = res.sound;
+		setSoundVolume(res.soundVolume);
+		setShootRate(res.shootRate);
+		setConsume(res.consumeAmmo, res.amountConsume);
+		setMuzzleOffset(res.muzOffset.xCoord, res.muzOffset.yCoord, res.muzOffset.zCoord);
+		setMuzzleScale(res.muzScale);
+		muzzleflash = res.muzzleflash;
+		left = res.left;
+		damage = res.damage;
+		return this;
+	}
+	
+	public ActionShoot copy() {
+		ActionShoot ac = new ActionShoot(0, 0, "");
+		ac.copyFrom(this);
+		return ac;
+	}
 	
 	public ActionShoot(int dmg, String snd) {
 		super(3, "shoot");
@@ -58,6 +75,11 @@ public class ActionShoot extends Action {
 		this.damage = dmg;
 		this.scatter = scat;
 		sound = snd;
+	}
+	
+	public ActionShoot setLeft(boolean b) {
+		left = b;
+		return this;
 	}
 	
 	public ActionShoot setMuzzleScale(float f) {
@@ -93,7 +115,9 @@ public class ActionShoot extends Action {
 	 * @return
 	 */
 	protected Entity getProjectileEntity(World world, EntityPlayer player) {
-		return new EntityBullet(world, player, damage, scatter);
+		EntityBullet bullet = new EntityBullet(world, player, damage, scatter);
+		bullet.renderFromLeft = left;
+		return bullet;
 	}
 
 	@Override
@@ -160,6 +184,7 @@ public class ActionShoot extends Action {
 	}
 	
 	
+	@Override
 	public boolean onActionTick(World world, EntityPlayer player, InfWeapon inf) {
 		return true;
 	}
@@ -195,6 +220,7 @@ public class ActionShoot extends Action {
 		return 1;
 	}
 	
+	@Override
 	@SideOnly(Side.CLIENT)
 	/**
 	 * 进行渲染器的叠加渲染。和物品渲染一样，实际绘制的范围在（0, 0, 0）到（1, 1, 1）

@@ -28,6 +28,7 @@ public abstract class ActionInstant extends Action {
 		super(0, name);
 	}
 	
+	@Override
 	public final boolean onActionBegin(World world, EntityPlayer player, InfWeapon information) { 
 		return onActionExecute(world, player, information);
 	}

@@ -5,6 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cn.weaponmod.api.weapon.IZoomable;
+import cn.weaponmod.core.event.ItemControlHandler;
+import cn.weaponmod.core.proxy.WMClientProxy;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -52,6 +57,16 @@ public class UpliftHandler {
 			angleToLift = 0;
 		angleToLift += upliftRad;
 	}
+	
+	 @SubscribeEvent
+	 @SideOnly(Side.CLIENT)
+	 public void onClientTick(ClientTickEvent event) {
+		 if(event.phase == Phase.START) {
+			  tickStart();
+		  } else {
+			  tickEnd();
+		  }
+	 }
 
 	public void tickStart() {
 		

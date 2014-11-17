@@ -4,16 +4,10 @@ package cn.weaponmod.core.event;
 import java.util.HashMap;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
-import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.feature.IClickHandler;
-import cn.weaponmod.api.information.InfWeapon;
-import cn.weaponmod.core.ModuleWeapon;
-import cn.weaponmod.core.network.MessageWMKey;
 
 /**
  * WeaponMod custom keys' data syncing.

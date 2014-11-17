@@ -1,30 +1,17 @@
 package cn.weaponmod.api.weapon;
 
-import java.util.List;
-
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import cn.liutils.api.entity.EntityBullet;
-import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.WeaponHelper;
 import cn.weaponmod.api.action.Action;
-import cn.weaponmod.api.action.ActionAutomaticShoot;
 import cn.weaponmod.api.action.ActionJam;
 import cn.weaponmod.api.action.ActionReload;
 import cn.weaponmod.api.action.ActionShoot;
 import cn.weaponmod.api.action.ActionUplift;
-import cn.weaponmod.api.information.InfUtils;
 import cn.weaponmod.api.information.InfWeapon;
-import cn.weaponmod.core.event.ItemControlHandler;
-import cn.weaponmod.core.proxy.WMClientProxy;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Typical weapon class support shooting, reloading and simple reload&muzzleflash animations.
@@ -93,8 +80,10 @@ public class WeaponGeneric extends WeaponGenericBase {
 		InfWeapon inf = loadInformation(pl);
 		switch(keyid) {
 		case 0: //LMOUSE
-			inf.removeAction(actionShoot.name);
-			inf.removeAction(actionJam.name);
+			if(actionShoot != null)
+				inf.removeAction(actionShoot.name);
+			if(actionJam != null)
+				inf.removeAction(actionJam.name);
 			break;
 		default:
 			break;

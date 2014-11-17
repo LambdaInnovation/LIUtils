@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.client.IItemRenderer.ItemRenderType;
-import cn.liutils.api.client.render.RenderModelItem;
 import cn.liutils.core.debug.ModifierProviderModelRender;
 import cn.weaponmod.api.client.render.RendererModelBulletWeapon;
 

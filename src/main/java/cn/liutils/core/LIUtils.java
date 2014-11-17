@@ -26,10 +26,10 @@ import cpw.mods.fml.common.registry.EntityRegistry;
 import cpw.mods.fml.relauncher.Side;
 
 /**
- * LIUtils is a core support mod, written by Lambda Innovation.
- * It's contents involve rendering, key listening, debugging and other many stuffs.
- * #cn.liutils.api is what user should invoke. It contains all the main functions.
- * #cn.liutils.core is core registration module, and should not be modified or invoked normally.
+ * LIUtils is a core support mod, written by Lambda Innovation. <br/>
+ * It's contents involve rendering, key listening, debugging and other many stuffs. <br/>
+ * <code>cn.liutils.api</code> is what user should invoke. It contains all the main functions.
+ * <code>cn.liutils.core</code> is core registration module, and should not be modified or invoked normally.
  * @author WeAthFolD
  */
 @Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
@@ -38,7 +38,7 @@ public class LIUtils {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.7.2.102";
+	public static final String VERSION = "1.7.2.200";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.

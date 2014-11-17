@@ -53,6 +53,8 @@ public abstract class RenderTileDirMulti extends TileEntitySpecialRenderer {
 	@Override
 	public void renderTileEntityAt(TileEntity var1, double var2, double var4,
 			double var6, float var8) {
+		if(!(var1.getBlockType() instanceof BlockDirectionedMulti))
+			return;
 		int meta = ((BlockDirectionedMulti)var1.getBlockType())
 				.getMetadata(var1.getWorldObj(), var1.xCoord, var1.yCoord, var1.zCoord);
 		if(meta >> 2 != 0) return;

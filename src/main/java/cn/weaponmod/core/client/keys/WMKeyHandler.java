@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import cn.liutils.api.client.key.IKeyHandler;
 import cn.liutils.api.client.util.ClientUtils;
 import cn.weaponmod.api.feature.IClickHandler;
-import cn.weaponmod.core.ModuleWeapon;
+import cn.weaponmod.core.WeaponMod;
 import cn.weaponmod.core.event.ItemControlHandler;
 import cn.weaponmod.core.network.MessageWMKey;
 
@@ -47,7 +47,7 @@ public class WMKeyHandler implements IKeyHandler {
 		if (stack != null) {
 			Item item = stack.getItem();
 			if (item instanceof IClickHandler) {
-				ModuleWeapon.netHandler.sendToServer(new MessageWMKey(id, b));
+				WeaponMod.netHandler.sendToServer(new MessageWMKey(id, b));
 				if(b) {
 					ItemControlHandler.onKeyPressed(player, id);
 				} else {

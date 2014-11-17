@@ -2,11 +2,9 @@ package cn.weaponmod.api.weapon;
 
 import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.information.InfWeapon;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.world.World;
 
 public abstract class ItemInfoHandler extends Item {
 	
@@ -21,11 +19,11 @@ public abstract class ItemInfoHandler extends Item {
 	 */
 	@Deprecated
 	public final InfWeapon loadInformation(ItemStack stack, EntityPlayer player) {
-		return WMInformation.getInformation(player);
+		return WMInformation.instance.getInformation(player);
 	}
 	
 	public final InfWeapon loadInformation(EntityPlayer player) {
-		return WMInformation.getInformation(player);
+		return WMInformation.instance.getInformation(player);
 	}
 
 }

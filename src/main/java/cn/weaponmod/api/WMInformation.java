@@ -18,10 +18,9 @@ import java.util.Map;
 import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 import cn.weaponmod.api.information.InfWeapon;
+import cn.weaponmod.core.WeaponMod;
 
 /**
  * Pool and processor of weapon informations.
@@ -29,19 +28,42 @@ import cn.weaponmod.api.information.InfWeapon;
  * @author WeAthFolD
  */
 public class WMInformation {
-
-	private static Map<EntityPlayer, InfWeapon> infPool_client = new HashMap();
-	private static Map<EntityPlayer, InfWeapon> infPool_server = new HashMap();
-	private static final Random RNG = new Random();
 	
-	public static InfWeapon getInformation(EntityPlayer player) {
+	public static WMInformation instance = new WMInformation();
+	private static WMInformation origin = instance;
+
+	private Map<EntityPlayer, InfWeapon> infPool_client = new HashMap();
+	private Map<EntityPlayer, InfWeapon> infPool_server = new HashMap();
+	private final Random RNG = new Random();
+	
+	public synchronized InfWeapon getInformation(EntityPlayer player) {
 		Map<EntityPlayer, InfWeapon> map = player.worldObj.isRemote ? infPool_client : infPool_server;
 		InfWeapon inf = map.get(player);
-		if(inf == null) {
+		if(inf == null || inf.owner != player) {
+//			WeaponMod.log.info("Created InfWeapon instance for " + player.getCommandSenderName()
+//					+ " in " + player.worldObj.isRemote + " side");
 			inf = new InfWeapon(player);
 			map.put(player, inf);
 		}
 		return inf;
+	}
+	
+	/**
+	 * Black techonology, don't use it!!
+	 */
+	public synchronized static void switchPool(WMInformation fake) {
+		instance = fake;
+	}
+	
+	public synchronized static void restorePool() {
+ 		instance = origin;
+	}
+	
+	public void updateTick(World world) {
+		Map<EntityPlayer, InfWeapon> pool = world.isRemote ? infPool_client : infPool_server;
+		for(InfWeapon inf : pool.values()) {
+			inf.updateTick();
+		}
 	}
 
 }

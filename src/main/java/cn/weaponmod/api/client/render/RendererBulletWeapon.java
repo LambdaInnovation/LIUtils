@@ -13,29 +13,16 @@
  */
 package cn.weaponmod.api.client.render;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.client.IItemRenderer;
-
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.util.RenderUtils;
-import cn.weaponmod.api.action.Action;
-import cn.weaponmod.api.information.InfUtils;
-import cn.weaponmod.api.information.InfWeapon;
-import cn.weaponmod.api.weapon.WeaponGenericBase;
 import cn.weaponmod.api.weapon.WeaponGeneric;
-import cn.weaponmod.core.proxy.WMClientProxy;
 
 /**
  * @author WeAthFolD

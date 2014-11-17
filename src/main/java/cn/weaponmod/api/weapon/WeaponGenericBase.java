@@ -48,8 +48,7 @@ public abstract class WeaponGenericBase extends ItemInfoHandler implements IClic
 		if (!(entity instanceof EntityPlayer) || !par5)
 			return null;
 
-		InfWeapon information = loadInformation(stack, (EntityPlayer) entity);
-		information.updateTick();
+		InfWeapon information = loadInformation((EntityPlayer) entity);
 		
 		if(information.swingAbortion) {
 			((EntityLivingBase)entity).isSwingInProgress = false;
@@ -58,6 +57,7 @@ public abstract class WeaponGenericBase extends ItemInfoHandler implements IClic
 		return information;
 	}
 	
+	@Override
 	public void onUpdate(ItemStack stack, World world, Entity entity, int par4, boolean par5) {
 		onWpnUpdate(stack, world, entity, par4, par5);
 	}

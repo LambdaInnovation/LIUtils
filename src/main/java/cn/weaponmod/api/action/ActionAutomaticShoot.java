@@ -15,7 +15,11 @@ import cn.weaponmod.api.weapon.WeaponGenericBase;
 public class ActionAutomaticShoot extends Action {
 
 	int rate;
-	private final ActionShoot shooter;
+	public  ActionShoot shooter;
+	
+	public ActionAutomaticShoot copy() {
+		return new ActionAutomaticShoot(shooter, rate, this.maxTick);
+	}
 	
 	public ActionAutomaticShoot(int ticks, int shootRate, int damage, String snd) {
 		super(ticks, "shoot_auto");
@@ -38,6 +42,16 @@ public class ActionAutomaticShoot extends Action {
 	
 	public ActionAutomaticShoot setConsume(boolean does, int amt) {
 		shooter.setConsume(does, amt);
+		return this;
+	}
+	
+	public ActionAutomaticShoot setLeft(boolean b ) {
+		shooter.setLeft(b);
+		return this;
+	}
+	
+	public ActionAutomaticShoot setShooter(ActionShoot s) {
+		shooter = s;
 		return this;
 	}
 	

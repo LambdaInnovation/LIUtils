@@ -1,10 +1,8 @@
 package cn.liutils.api.client.render;
 
 import cn.liutils.api.entity.LIEntityMob;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.ModelBase;
 import net.minecraft.client.renderer.entity.RenderLiving;
-import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 

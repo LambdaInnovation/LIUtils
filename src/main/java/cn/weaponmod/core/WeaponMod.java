@@ -32,10 +32,10 @@ import cpw.mods.fml.relauncher.Side;
  * MyWeaponry also provides lots of utility functions about weapons, such as ammo indication, HUD drawing.
  * @author WeAthFolD
  */
-@Mod(modid = "LambdaLib:Weapons", name = "LambdaLib#MyWeaponry", version = LIUtils.VERSION, dependencies = LIUtils.DEPENDENCY)
-public class ModuleWeapon {
+@Mod(modid = "LIUtils-Weapons", name = "LIUtils#MyWeaponry", version = LIUtils.VERSION, dependencies = LIUtils.DEPENDENCY)
+public class WeaponMod {
 	
-	public static final String DEPENDENCY = "required-after:Weaponry@" + LIUtils.VERSION;
+	public static final String DEPENDENCY = "required-after:LIUtils-Weapons@" + LIUtils.VERSION;
 	
 	@SidedProxy(serverSide = "cn.weaponmod.core.proxy.WMCommonProxy", clientSide = "cn.weaponmod.core.proxy.WMClientProxy")
 	public static WMCommonProxy proxy;
@@ -47,7 +47,7 @@ public class ModuleWeapon {
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
 		
-		log.info("Starting LambdaLib:MyWeaponary " + LIUtils.VERSION);
+		log.info("Starting LIUtils:MyWeaponary " + LIUtils.VERSION);
 		
 		//Network Registration
 		netHandler.registerMessage(MessageWMKey.Handler.class, MessageWMKey.class, 1, Side.SERVER);

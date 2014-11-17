@@ -18,7 +18,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import cn.weaponmod.api.feature.IClickHandler;
-import cn.weaponmod.core.ModuleWeapon;
+import cn.weaponmod.core.WeaponMod;
 import cn.weaponmod.core.event.ItemControlHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -85,7 +85,7 @@ public class MessageWMKey implements IMessage {
 			}
 			
 			if(wrong)
-				ModuleWeapon.log.info("Coudn't find the correct player-controlling Item instance...");
+				WeaponMod.log.info("Coudn't find the correct player-controlling Item instance...");
 			return null;
 		}
 		
