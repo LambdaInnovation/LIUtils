@@ -16,14 +16,12 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * ClientTickHandler. Handles FOV uplifting action.
  */
-@SideOnly(Side.CLIENT)
 public class UpliftHandler {
 	
-	public static final float DEFAULT_UPLIFT_RADIUS = 1.0F,
+	public static final float DEFAULT_UPLIFT_RADIUS = 2.2F,
 			DEFAULT_UPLIFT_SPEED = 1.2F, 
 			DEFAULT_RECOVER_SPEED = .5F;
 	
-	Minecraft mc = Minecraft.getMinecraft();
 	EntityPlayer player;
 	ItemStack lastStack;
 	
@@ -68,9 +66,10 @@ public class UpliftHandler {
 		  }
 	 }
 
+	@SideOnly(Side.CLIENT)
 	public void tickStart() {
 		
-		player = mc.thePlayer;
+		player = Minecraft.getMinecraft().thePlayer;
 		if(player == null) return;
 		
 		if(lastStack != player.getCurrentEquippedItem()) {

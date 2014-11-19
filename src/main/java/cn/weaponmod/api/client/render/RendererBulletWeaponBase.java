@@ -31,7 +31,7 @@ public abstract class RendererBulletWeaponBase implements IItemRenderer {
 	protected WeaponGenericBase weaponType;
 	protected static Random RNG = new Random();
 	
-	float upliftFactor = 12.0F;
+	float upliftFactor = 3F;
 	Vec3 recoilVec = Vec3.createVectorHelper(-0.05D, 0.02D, 0D);
 	
 	/**

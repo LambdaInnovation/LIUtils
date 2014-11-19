@@ -51,11 +51,10 @@ public class ActionReload extends Action {
 	
 	@Override
 	public boolean onActionBegin(World world, EntityPlayer player, InfWeapon inf) {
-		player.playSound(sound, 0.5F, 1.0F);
-		super.onActionBegin(world, player, inf);
 		ItemStack stack = player.getCurrentEquippedItem();
 		if(stack == null || !(stack.getItem() instanceof WeaponGeneric))
 			return false;
+		player.playSound(sound, 0.5F, 1.0F);
 		WeaponGeneric wpn = (WeaponGeneric) stack.getItem();
 		return canReload(player, stack) && WeaponHelper.hasAmmo(stack.getItem(), player);
 	}
@@ -95,12 +94,12 @@ public class ActionReload extends Action {
 	@SideOnly(Side.CLIENT)
 	public void applyRenderEffect(World world, EntityPlayer player, InfWeapon inf, boolean first) {
 		float prog = (float)InfUtils.getDeltaTick(inf) / this.maxTick;
-		if(prog < 0.4f) {
-			prog /= 0.4f;
-		} else if(prog < 0.7f) {
+		if(prog < 0.2f) {
+			prog /= 0.2f;
+		} else if(prog < 0.8f) {
 			prog = 1.0f;
 		} else {
-			prog = (1 - prog) / 0.3f;
+			prog = (1 - prog) / 0.2f;
 		}
 		GL11.glRotatef(80F * prog, 0F, 1F, 0F);
 	}

@@ -9,10 +9,12 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
 import cn.liutils.api.util.GenericUtils;
+import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.feature.IClickHandler;
 import cn.weaponmod.api.information.InfWeapon;
 import cpw.mods.fml.relauncher.Side;
@@ -20,9 +22,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The most basic weapon class and the function core of MyWeaponary.
+ * Implementing ItemSword in order to use MC's built-in mechanism for block-breaking.
  * @author WeAthFolD
  */
-public abstract class WeaponGenericBase extends ItemInfoHandler implements IClickHandler {
+public abstract class WeaponGenericBase extends ItemSword implements IClickHandler {
 
 	public Item ammoItem;
 	public boolean useAmmoTip = true;
@@ -32,7 +35,7 @@ public abstract class WeaponGenericBase extends ItemInfoHandler implements IClic
 	 * @param ammo Corresponding ammo item.
 	 */
 	public WeaponGenericBase(Item ammo) {
-		super();
+		super(ToolMaterial.IRON);
 		setMaxStackSize(1);
 		this.setFull3D();
 		ammoItem = ammo;
@@ -155,6 +158,20 @@ public abstract class WeaponGenericBase extends ItemInfoHandler implements IClic
 				+ ": "
 				+ this.getAmmo(par1ItemStack) + "/"
 				+ par1ItemStack.getMaxDamage());
+	}
+	
+	/**
+	 * Automatically loads the weapon information
+	 * {@link cn.weaponmod.api.WMInformation#register}
+	 * @return created weapon information
+	 */
+	@Deprecated
+	public final InfWeapon loadInformation(ItemStack stack, EntityPlayer player) {
+		return WMInformation.instance.getInformation(player);
+	}
+	
+	public final InfWeapon loadInformation(EntityPlayer player) {
+		return WMInformation.instance.getInformation(player);
 	}
 	
 }

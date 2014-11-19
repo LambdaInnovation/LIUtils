@@ -43,7 +43,9 @@ public class WeaponDualWield extends WeaponGeneric {
 
 	private WeaponGeneric template;
 	public static WMInformation fakePool = new WMInformation();
+	
 	public static UpliftHandler fakeUpl = new UpliftHandler();
+	
 	private Action leftShoot, rightShoot, leftReload, rightReload;
 	
 	private class DualShoot extends ActionShoot {
@@ -135,7 +137,8 @@ public class WeaponDualWield extends WeaponGeneric {
 		//WMClientProxy.switchUpl(fakeUpl);
 		if(keyid == 1) {
 			WMInformation.switchPool(fakePool);
-			WMClientProxy.switchUpl(fakeUpl);
+			if(world.isRemote)
+				WMClientProxy.switchUpl(fakeUpl);
 			actionShoot = rightShoot;
 		} else if(keyid == 0) {
 			actionShoot = leftShoot;
@@ -154,7 +157,8 @@ public class WeaponDualWield extends WeaponGeneric {
 		//WMClientProxy.restoreUpl();
 		if(keyid == 1) {
 			WMInformation.restorePool();
-			WMClientProxy.restoreUpl();
+			if(world.isRemote)
+				WMClientProxy.restoreUpl();
 		} else if(keyid == 0) {}
 	}
 
@@ -242,7 +246,8 @@ public class WeaponDualWield extends WeaponGeneric {
 				}
 			}
 		}
-		@SubscribeEvent public void clientTick(ClientTickEvent event) {
+		@SubscribeEvent @SideOnly(Side.CLIENT)
+		public void clientTick(ClientTickEvent event) {
 			if(event.phase == Phase.START) {
 				World world = Minecraft.getMinecraft().theWorld;
 				if(world != null)

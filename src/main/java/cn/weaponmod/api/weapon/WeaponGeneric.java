@@ -1,6 +1,8 @@
 package cn.weaponmod.api.weapon;
 
+import net.minecraft.block.Block;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -92,8 +94,7 @@ public class WeaponGeneric extends WeaponGenericBase {
 
 	@Override
 	public void onItemUsingTick(World world, EntityPlayer player,
-			ItemStack stack, int keyid, int ticks) {
-	}
+			ItemStack stack, int keyid, int ticks) { }
 
 	@Override
 	public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World,
