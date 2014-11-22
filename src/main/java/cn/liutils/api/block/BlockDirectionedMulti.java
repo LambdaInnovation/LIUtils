@@ -210,8 +210,8 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         int metadata = l;
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
         
-        if(world.isRemote)
-			return;
+        //if(world.isRemote)
+		// w	return;
        
         int dir = getFacingDirection(metadata).ordinal();
         SubBlockPos arr[] = new SubBlockPos[subBlocks.size()];
@@ -229,7 +229,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
         }
         
         for(int i = 1; i < subBlocks.size(); ++i) {
-        	System.out.println("Set");
+//        	System.out.println("Set");
         	arr[i].setMe(world, x, y, z, metadata | (arr[i].id << 2), this);
         }
     }
@@ -295,7 +295,7 @@ public abstract class BlockDirectionedMulti extends Block implements ITileEntity
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
 			Block cmp = wrld.getBlock(x + offX, y + offY, z + offZ);
-			System.out.println(cmp);
+//			System.out.println(cmp);
 			if(cmp == BlockDirectionedMulti.this)
 				wrld.setBlockToAir(x + offX, y + offY, z + offZ);
 		}

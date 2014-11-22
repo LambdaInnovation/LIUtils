@@ -64,6 +64,10 @@ public final class InfWeapon {
 	public InfWeapon(EntityPlayer player) {
 		owner = player;
 	}
+	
+	public ItemStack getLastStack() {
+		return lastStack;
+	}
 
 	public void updateTick() {
 		++ticksExisted;

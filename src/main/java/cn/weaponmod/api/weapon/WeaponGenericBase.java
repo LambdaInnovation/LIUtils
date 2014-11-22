@@ -53,6 +53,7 @@ public abstract class WeaponGenericBase extends ItemSword implements IClickHandl
 
 		InfWeapon information = loadInformation((EntityPlayer) entity);
 		
+		information.updateTick();
 		if(information.swingAbortion) {
 			((EntityLivingBase)entity).isSwingInProgress = false;
 		}

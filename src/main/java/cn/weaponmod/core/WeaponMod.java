@@ -63,7 +63,9 @@ public class WeaponMod {
 	}
 	
 	@EventHandler()
-	public void postInit(FMLPostInitializationEvent Init) { }
+	public void postInit(FMLPostInitializationEvent Init) { 
+		proxy.postInit();
+	}
 	
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {

@@ -62,6 +62,10 @@ public class ActionAutomaticShoot extends Action {
 	public int getDamage() {
 		return shooter.damage;
 	}
+	
+	public String getSound() {
+		return shooter.sound;
+	}
 
 	@Override
 	public boolean onActionBegin(World world, EntityPlayer player, InfWeapon information) {

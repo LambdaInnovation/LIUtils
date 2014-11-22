@@ -104,7 +104,7 @@ public class EntityBullet extends EntityThrowable {
 		motionY /= d;
 		motionZ /= d;
 		setPosition(ent.posX + motionX * 1.0, ent.posY + ent.height / 2.0 + motionY * 1.0, ent.posZ + motionZ * 1.0);
-		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 1.0F);
+		this.setThrowableHeading(motionX, motionY, motionZ, func_70182_d(), 10.0F);
 		damage = dmg;
 		motion = new Motion3D(this);
 	}

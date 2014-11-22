@@ -1,17 +1,25 @@
 package cn.weaponmod.core.proxy;
 
+import java.lang.reflect.Field;
+
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.RenderManager;
+import net.minecraft.client.renderer.entity.RenderPlayer;
+import net.minecraft.client.renderer.entity.RendererLivingEntity;
+import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.input.Keyboard;
 
-import cpw.mods.fml.common.FMLCommonHandler;
+import cn.liutils.api.util.RegUtils;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.debug.FieldModifierHandler;
+import cn.weaponmod.api.client.render.ModelBipedHack;
 import cn.weaponmod.api.weapon.WeaponDualWield;
 import cn.weaponmod.core.client.UpliftHandler;
 import cn.weaponmod.core.client.keys.WMKeyHandler;
 import cn.weaponmod.core.debug.ModifierProviderModelWeapon;
+import cpw.mods.fml.common.FMLCommonHandler;
 
 public class WMClientProxy extends WMCommonProxy{
 
@@ -36,6 +44,22 @@ public class WMClientProxy extends WMCommonProxy{
 		
 		if(LIUtils.DEBUG) {
 			FieldModifierHandler.all.add(new ModifierProviderModelWeapon());
+		}
+	}
+	
+	@Override
+	public void postInit() {
+		try {
+			Field field;
+			RenderPlayer r = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
+			ModelBipedHack mbh = new ModelBipedHack(1F);
+			RegUtils.getObfField(RendererLivingEntity.class, "mainModel", "field_77405_g").set(r, mbh);
+			RegUtils.getObfField(RenderPlayer.class, "modelBipedMain", "field_77071_a").set(r, mbh);
+			RegUtils.getObfField(RenderPlayer.class, "modelArmorChestplate", "field_77108_b").set(r, new ModelBipedHack(1F));
+			RegUtils.getObfField(RenderPlayer.class, "modelArmor", "field_77111_i").set(r, new ModelBipedHack(0.5F));
+			System.out.println("Attempted hack");
+		} catch(Exception e) {
+			e.printStackTrace();
 		}
 	}
 	

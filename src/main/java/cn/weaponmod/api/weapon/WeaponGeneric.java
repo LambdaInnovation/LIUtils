@@ -1,8 +1,10 @@
 package cn.weaponmod.api.weapon;
 
 import net.minecraft.block.Block;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -75,6 +77,11 @@ public class WeaponGeneric extends WeaponGenericBase {
 			break;
 		}
 	}
+	
+    public int getMaxItemUseDuration(ItemStack par1ItemStack)
+    {
+        return 0;
+    }
 
 	@Override
 	public void onItemRelease(World world, EntityPlayer pl, ItemStack stack,
@@ -100,14 +107,20 @@ public class WeaponGeneric extends WeaponGenericBase {
 	public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World,
 			EntityPlayer par3EntityPlayer, int par4) { }
 	
-	@Override
-	public int getMaxItemUseDuration(ItemStack par1ItemStack) {
-		return 0;
-	}
-	
 	protected NBTTagCompound loadNBT(ItemStack s) {
 		if (s.stackTagCompound == null)
 			s.stackTagCompound = new NBTTagCompound();
 		return s.stackTagCompound;
 	}
+	
+	@Override
+	public void onUpdate(ItemStack stack, World world,
+			Entity entity, int par4, boolean par5) {
+		super.onWpnUpdate(stack, world, entity, par4, par5);
+	}
+	
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.bow;
+    }
 }

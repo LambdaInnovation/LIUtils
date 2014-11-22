@@ -1,6 +1,7 @@
 package cn.liutils.api.util;
 
 import java.lang.reflect.Array;
+import java.lang.reflect.Field;
 
 import net.minecraft.item.Item;
 import cpw.mods.fml.common.registry.GameRegistry;
@@ -10,6 +11,16 @@ import cpw.mods.fml.common.registry.GameRegistry;
  * @author WeathFolD
  */
 public class RegUtils {
+	
+	private static boolean obfEnv = false;
+	static {
+		try {
+			Class cl = Class.forName("wz");
+			if(cl != null)
+				obfEnv = true;
+		} catch(Exception e) {}
+		System.out.println("Obufscated Environment : " + obfEnv);
+	}
 
 	/**
 	 * Register a item instance of itemClass which have an empty constructor with key id and return its instance.
@@ -42,6 +53,12 @@ public class RegUtils {
 			e.printStackTrace();
 		}
 		return res;
+	}
+	
+	public static Field getObfField(Class cl, String normName, String obfName) throws NoSuchFieldException, SecurityException {
+		Field f = cl.getDeclaredField(obfEnv ? obfName : normName);
+		f.setAccessible(true);
+		return f;
 	}
 
 }

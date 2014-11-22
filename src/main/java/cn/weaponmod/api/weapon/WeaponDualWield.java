@@ -9,6 +9,7 @@ import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.WorldTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -130,6 +131,13 @@ public class WeaponDualWield extends WeaponGeneric {
 			((ActionAutomaticShoot)rightShoot).shooter = (new DualShoot(((ActionAutomaticShoot)actionShoot).shooter, false));
 		} else { throw new RuntimeException(); }
 	}
+	
+	@Override
+	public void onUpdate(ItemStack stack, World world,
+			Entity entity, int par4, boolean par5) {
+		if(super.onWpnUpdate(stack, world, entity, par4, par5) != null) 
+			fakePool.getInformation((EntityPlayer) entity).updateTick();
+	}
 
 	@Override
 	public synchronized void onItemClick(World world, EntityPlayer player, ItemStack stack,
@@ -229,31 +237,6 @@ public class WeaponDualWield extends WeaponGeneric {
 		if(actionShoot instanceof ActionShoot) {
 			return ((ActionShoot)actionShoot).left;
 		} else return((ActionAutomaticShoot)actionShoot).shooter.left;
-	}
-	
-	static {
-		new Listener();
-	}
-	public static class Listener {
-		Listener() {
-			FMLCommonHandler.instance().bus().register(this);
-		}
-		
-		@SubscribeEvent public void worldTick(WorldTickEvent event) {
-			if(event.phase == Phase.START) {
-				if(event.world.getClass().equals(WorldServer.class)) {
-					fakePool.updateTick(event.world);
-				}
-			}
-		}
-		@SubscribeEvent @SideOnly(Side.CLIENT)
-		public void clientTick(ClientTickEvent event) {
-			if(event.phase == Phase.START) {
-				World world = Minecraft.getMinecraft().theWorld;
-				if(world != null)
-					fakePool.updateTick(world);
-			}
-		}
 	}
 
 }

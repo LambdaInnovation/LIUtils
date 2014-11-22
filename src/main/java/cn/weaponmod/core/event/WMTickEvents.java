@@ -43,17 +43,8 @@ public class WMTickEvents {
 	  
 	  @SubscribeEvent
 	  public void OnWorldEvent(ServerTickEvent event) {
-		  if(event.phase == Phase.START)
-			  ItemControlHandler.tickStart(false);
-		  
-	  }
-	  
-	  @SubscribeEvent
-	  public void onWorldTick(WorldTickEvent event) {
 		  if(event.phase == Phase.START) {
-			  if(event.world.getClass().equals(WorldServer.class)) {
-				  WMInformation.instance.updateTick(event.world);
-			  }
+			  ItemControlHandler.tickStart(false);
 		  }
 	  }
 	  
@@ -64,9 +55,6 @@ public class WMTickEvents {
 			  WMClientProxy.upliftHandler.tickStart();
 			  ItemControlHandler.tickStart(true);
 			  World world = Minecraft.getMinecraft().theWorld;
-			  if(world != null) {
-				  WMInformation.instance.updateTick(world);
-			  }
 		  } else {
 			  WMClientProxy.upliftHandler.tickEnd();
 		  }

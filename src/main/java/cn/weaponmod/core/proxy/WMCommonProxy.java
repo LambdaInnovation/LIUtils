@@ -6,4 +6,5 @@ public class WMCommonProxy {
 
 	public void init() {}
 	
+	public void postInit() {}	
 }

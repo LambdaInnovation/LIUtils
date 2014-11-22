@@ -41,6 +41,7 @@ public abstract class GuiScreenLIAdaptor extends GuiScreen {
 		screen.updateScreenSize(width, height);
 		Set<LIGuiPage> pages = screen.getActivePages();
 		pages.clear();
+		updateActivedPages(pages);
 	}
 	
 	public abstract void updateActivedPages(Set<LIGuiPage> pages);

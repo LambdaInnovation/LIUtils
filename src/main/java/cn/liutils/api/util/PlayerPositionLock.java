@@ -84,7 +84,7 @@ public class PlayerPositionLock {
 	public static void applyVelocity(EntityPlayer player, Vec3 vel) {
 		Entry ent = linearSearch(player);
 		if(ent == null) return;
-		System.out.println("SUCCESS");
+//		System.out.println("SUCCESS");
 		ent.second.posX += vel.xCoord;
 		ent.second.posY += vel.yCoord;
 		ent.second.posZ += vel.zCoord;
