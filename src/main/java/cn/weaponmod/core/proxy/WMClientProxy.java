@@ -51,13 +51,12 @@ public class WMClientProxy extends WMCommonProxy{
 	@Override
 	public void postInit() {
 		try {
-			Field field;
 			RenderPlayer r = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
 			ModelBipedHack mbh = new ModelBipedHack(1F);
-			RegUtils.getObfField(RendererLivingEntity.class, "mainModel", "field_77405_g").set(r, mbh);
-			RegUtils.getObfField(RenderPlayer.class, "modelBipedMain", "field_77071_a").set(r, mbh);
-			RegUtils.getObfField(RenderPlayer.class, "modelArmorChestplate", "field_77108_b").set(r, new ModelBipedHack(1F));
-			RegUtils.getObfField(RenderPlayer.class, "modelArmor", "field_77111_i").set(r, new ModelBipedHack(0.5F));
+			RegUtils.getObfField(RendererLivingEntity.class, "mainModel", "field_77045_g").set(r, mbh);
+			r.modelBipedMain = mbh;
+			r.modelArmorChestplate = new ModelBipedHack(1F);
+			r.modelArmor = new ModelBipedHack(0.5F);
 			WeaponMod.log.info("RenderPlayer model classes injecting successful");
 		} catch(Exception e) {
 			e.printStackTrace();

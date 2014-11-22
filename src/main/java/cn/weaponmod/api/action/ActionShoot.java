@@ -176,6 +176,7 @@ public class ActionShoot extends Action {
 				if(act_uplift != null) act_uplift.onActionBegin(world, player, inf);
 			}
 			//TODO:Check out why we have to play it in client
+			if(sound != null && sound != "")
 				player.playSound(sound, soundVolume, 1.0F);
 			//System.out.println("Action executed in " + world.isRemote);
 			inf.updateTicker(ticker_channel);
