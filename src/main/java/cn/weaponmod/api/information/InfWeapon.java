@@ -252,7 +252,7 @@ public final class InfWeapon {
 	}
 
 	public void resetState() {
-		System.out.println("ResetState " + owner.worldObj.isRemote);
+//		System.out.println("ResetState " + owner.worldObj.isRemote);
 		infData = new NBTTagCompound();
 		activeActions.clear();
 		lastStack = owner.getCurrentEquippedItem();

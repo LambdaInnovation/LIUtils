@@ -57,7 +57,7 @@ public class PlayerPositionLock {
 	}
 	
 	public static void lockPlayer(EntityPlayer player) {
-		System.out.println("locked playersss");
+//		System.out.println("locked playersss");
 		getSet(player.worldObj.isRemote).add(new Entry(player, 
 				new Motion3D(player)));
 		player.moveEntity(0D, 0.1D, 0D);
@@ -65,7 +65,7 @@ public class PlayerPositionLock {
 	}
 	
 	public static void lockPlayer(EntityPlayer player, Motion3D initPos) {
-		System.out.println("locked playerwww");
+//		System.out.println("locked playerwww");
 		getSet(player.worldObj.isRemote).add(new Entry(player, initPos));
 	}
 

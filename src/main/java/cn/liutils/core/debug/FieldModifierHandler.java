@@ -89,6 +89,7 @@ public class FieldModifierHandler {
 						dim >= modder.getRequiredDimensions() ? modder.getRequiredDimensions() - 1 : dim);
 			} catch(Exception e) {
 				System.err.println("Something bad occured while processing modification");
+				e.printStackTrace();
 			}
 		}
 	}

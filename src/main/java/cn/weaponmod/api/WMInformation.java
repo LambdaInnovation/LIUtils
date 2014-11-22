@@ -20,7 +20,6 @@ import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cn.weaponmod.api.information.InfWeapon;
-import cn.weaponmod.core.WeaponMod;
 
 /**
  * Pool and processor of weapon informations.

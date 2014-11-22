@@ -16,7 +16,6 @@ package cn.weaponmod.api;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
@@ -252,7 +251,7 @@ public class WeaponHelper {
 				if (ent instanceof EntityLivingBase) {
 					double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
 					int damage = (int) ((1 - distance / 6.928) * strengh);
-					System.out.println("Attacking " + ent + " " + damage);
+//					System.out.println("Attacking " + ent + " " + damage);
 					ent.attackEntityFrom(src , damage);
 				}
 			}

@@ -1,9 +1,7 @@
 package cn.weaponmod.api.weapon;
 
-import net.minecraft.block.Block;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -27,6 +25,7 @@ public class WeaponGeneric extends WeaponGenericBase {
 	public WeaponGeneric(Item ammo) {
 		super(ammo);
 		setMaxStackSize(1);
+		setMaxDamage(0);
 	}
 	
 	protected String CHANNEL_SHOOT = "shoot";
@@ -78,7 +77,8 @@ public class WeaponGeneric extends WeaponGenericBase {
 		}
 	}
 	
-    public int getMaxItemUseDuration(ItemStack par1ItemStack)
+    @Override
+	public int getMaxItemUseDuration(ItemStack par1ItemStack)
     {
         return 0;
     }
@@ -119,7 +119,8 @@ public class WeaponGeneric extends WeaponGenericBase {
 		super.onWpnUpdate(stack, world, entity, par4, par5);
 	}
 	
-    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    @Override
+	public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.bow;
     }

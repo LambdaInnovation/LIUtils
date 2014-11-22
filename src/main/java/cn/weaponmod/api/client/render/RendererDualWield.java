@@ -10,7 +10,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.IItemRenderer.ItemRenderType;
 import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.weapon.WeaponDualWield;
 import cn.weaponmod.api.weapon.WeaponGeneric;
@@ -41,7 +40,7 @@ public class RendererDualWield extends RendererBulletWeaponBase {
 			GL11.glScalef(1, 1, -1);
 			template.renderEquipped(item, (RenderBlocks) data[0], (EntityLivingBase) data[1], type);
 			GL11.glPopMatrix();
-			renderRight(item, (RenderBlocks) data[0], (EntityLivingBase) data[1]);
+			renderRight(item, data[0], data[1]);
 			break;
 		case ENTITY:
 			template.renderEntityItem((RenderBlocks)data[0], (EntityItem)data[1]);

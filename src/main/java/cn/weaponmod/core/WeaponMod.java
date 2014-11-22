@@ -32,7 +32,7 @@ import cpw.mods.fml.relauncher.Side;
  * MyWeaponry also provides lots of utility functions about weapons, such as ammo indication, HUD drawing.
  * @author WeAthFolD
  */
-@Mod(modid = "LIUtils-Weapons", name = "LIUtils#MyWeaponry", version = LIUtils.VERSION, dependencies = LIUtils.DEPENDENCY)
+@Mod(modid = "LIUtils-Weapons", name = "LIUtils-MyWeaponry", version = LIUtils.VERSION, dependencies = LIUtils.DEPENDENCY)
 public class WeaponMod {
 	
 	public static final String DEPENDENCY = "required-after:LIUtils-Weapons@" + LIUtils.VERSION;

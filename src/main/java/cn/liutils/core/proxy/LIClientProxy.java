@@ -9,7 +9,6 @@ import net.minecraft.entity.Entity;
 import org.lwjgl.input.Keyboard;
 
 import cn.liutils.api.client.render.RenderCrossedProjectile;
-import cn.liutils.api.client.render.RenderDirMultiModelled;
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.entity.EntityTrailFX;

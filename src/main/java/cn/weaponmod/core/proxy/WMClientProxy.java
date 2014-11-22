@@ -16,6 +16,7 @@ import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.debug.FieldModifierHandler;
 import cn.weaponmod.api.client.render.ModelBipedHack;
 import cn.weaponmod.api.weapon.WeaponDualWield;
+import cn.weaponmod.core.WeaponMod;
 import cn.weaponmod.core.client.UpliftHandler;
 import cn.weaponmod.core.client.keys.WMKeyHandler;
 import cn.weaponmod.core.debug.ModifierProviderModelWeapon;
@@ -57,7 +58,7 @@ public class WMClientProxy extends WMCommonProxy{
 			RegUtils.getObfField(RenderPlayer.class, "modelBipedMain", "field_77071_a").set(r, mbh);
 			RegUtils.getObfField(RenderPlayer.class, "modelArmorChestplate", "field_77108_b").set(r, new ModelBipedHack(1F));
 			RegUtils.getObfField(RenderPlayer.class, "modelArmor", "field_77111_i").set(r, new ModelBipedHack(0.5F));
-			System.out.println("Attempted hack");
+			WeaponMod.log.info("RenderPlayer model classes injecting successful");
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

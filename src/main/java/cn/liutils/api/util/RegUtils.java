@@ -19,7 +19,7 @@ public class RegUtils {
 			if(cl != null)
 				obfEnv = true;
 		} catch(Exception e) {}
-		System.out.println("Obufscated Environment : " + obfEnv);
+//		System.out.println("Obufscated Environment : " + obfEnv);
 	}
 
 	/**
