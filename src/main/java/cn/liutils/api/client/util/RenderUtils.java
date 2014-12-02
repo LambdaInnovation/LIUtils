@@ -36,6 +36,8 @@ public class RenderUtils {
 	private static Tessellator t = Tessellator.instance;
 	private static Map<String, ResourceLocation> srcMap  = Maps.newHashMap();
 	private static int textureState = -1;
+	public static final ResourceLocation
+		STEVE_TEXTURE = new ResourceLocation("textures/entity/steve.png");
 	
 	public static void pushTextureState() {
 		if(textureState != -1) {

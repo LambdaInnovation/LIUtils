@@ -14,7 +14,7 @@ public class RenderPlayerHelper extends Render {
 	public void doRender(Entity entity, double d0, double d1, double d2,
 			float f, float f1) {
 		EntityPlayerDaemon ent = (EntityPlayerDaemon) entity;
-		for(PlayerRenderHandler handler : EntityPlayerDaemon.activeHelpers) {
+		for(PlayerRenderHandler handler : ent.activeHelpers) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(d0, d1, d2);
 			GL11.glRotatef(ent.rotationYaw, 0.0F, -1.0F, 0.0F);

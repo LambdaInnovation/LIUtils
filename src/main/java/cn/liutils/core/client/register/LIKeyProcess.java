@@ -16,23 +16,33 @@ package cn.liutils.core.client.register;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import net.minecraft.client.settings.KeyBinding;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
 import cn.liutils.api.client.key.IKeyHandler;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 /**
  * 统一处理按键的实用类。 请使用addKey(...)注册按键绑定。详见函数本身说明
  * @author WeAthFolD
  */
-public final class LIKeyProcess {
+public class LIKeyProcess {
 	
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
 	
-	private static Map<String, LIKeyBinding> bindingMap = new HashMap<String, LIKeyBinding>();
-	private static Map<LIKeyBinding, KeyBinding> associates = new HashMap();
+	public static final LIKeyProcess instance = new LIKeyProcess();
+	static {
+		FMLCommonHandler.instance().bus().register(instance);
+	}
+	
+	private Map<String, LIKeyBinding> bindingMap = new HashMap<String, LIKeyBinding>();
+	private Map<LIKeyBinding, KeyBinding> associates = new HashMap();
 	
 	public static class LIKeyBinding {
 		public int keyCode;
@@ -55,34 +65,34 @@ public final class LIKeyProcess {
 	 * @param isRep repeatly call keyDown when pressing
 	 * @param handler handler
 	 */
-	public static LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyHandler handler) {
+	public LIKeyBinding addKey(String name, int keyCode, boolean isRep, IKeyHandler handler) {
 		LIKeyBinding binding = new LIKeyBinding(name, keyCode, isRep, handler);
 		bindingMap.put(name, binding);
 		return binding;
 	}
 	
-	public static LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyHandler process) {
+	public LIKeyBinding addKey(KeyBinding b, boolean isRep, IKeyHandler process) {
 		LIKeyBinding bd = addKey(b.getKeyDescription(), b.getKeyCode(), isRep, process);
 		associates.put(bd, b);
 		return bd;
 	}
 	
-	public static LIKeyBinding getBindingByName(String s) {
+	public LIKeyBinding getBindingByName(String s) {
 		return bindingMap.get(s);
 	}
 	
 	//----------------INTERNAL IMPLEMENTATIONS---------------------
-	public final void tickStart()
+	private final void tickStart()
     {
         keyTick(false);
     }
 
-    public final void tickEnd()
+    private final void tickEnd()
     {
         keyTick(true);
     }
 	
-    private void keyTick(boolean tickEnd)
+    protected void keyTick(boolean tickEnd)
     {
         for (LIKeyBinding kb : bindingMap.values())
         {
@@ -113,4 +123,13 @@ public final class LIKeyProcess {
         } 
     }
 
+    @SubscribeEvent
+    public void onClickTick(ClientTickEvent e) {
+    	if(e.phase == Phase.START) {
+    		keyTick(false);
+    	} else {
+    		keyTick(true);
+    	}
+    }
+    
 }

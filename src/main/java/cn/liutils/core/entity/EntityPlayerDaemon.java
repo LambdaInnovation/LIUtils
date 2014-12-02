@@ -22,7 +22,7 @@ public class EntityPlayerDaemon extends Entity {
 	public EntityPlayer player;
 	
 	private static Set<PlayerRenderHandler> helpers = new HashSet();
-	public static Set<PlayerRenderHandler> activeHelpers = new HashSet();
+	public Set<PlayerRenderHandler> activeHelpers = new HashSet();
 	
 	/**
 	 */

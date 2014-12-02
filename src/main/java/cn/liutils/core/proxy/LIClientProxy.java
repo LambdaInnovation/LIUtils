@@ -5,6 +5,7 @@ package cn.liutils.core.proxy;
 
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
@@ -20,19 +21,14 @@ import cn.liutils.core.debug.CommandModifier;
 import cn.liutils.core.debug.KeyModifier;
 import cn.liutils.core.debug.KeyShowInfo;
 import cn.liutils.core.entity.EntityPlayerDaemon;
-import cn.liutils.core.event.LIEventListener;
-import cn.liutils.core.event.LITickEvents;
+import cn.liutils.core.event.LIClientEvents;
 import cpw.mods.fml.client.registry.RenderingRegistry;
-import cpw.mods.fml.common.FMLCommonHandler;
 
 /**
  * @author WeAthFolD
  *
  */
 public class LIClientProxy extends LICommonProxy {
-
-	public static LIEventListener clientTickHandler = new LIEventListener();
-	public static LIKeyProcess keyProcess;
 	
 	@Override
 	public void init() {
@@ -56,26 +52,25 @@ public class LIClientProxy extends LICommonProxy {
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 		
 		if(LIUtils.DEBUG) {
-			LIKeyProcess.addKey("deb_0", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
-			LIKeyProcess.addKey("deb_1", Keyboard.KEY_NUMPAD2, false, new KeyModifier(0, false));
-			LIKeyProcess.addKey("deb_2", Keyboard.KEY_NUMPAD4, false, new KeyModifier(1, true));
-			LIKeyProcess.addKey("deb_3", Keyboard.KEY_NUMPAD6, false, new KeyModifier(1, false));
-			LIKeyProcess.addKey("deb_4", Keyboard.KEY_NUMPAD7, false, new KeyModifier(2, true));
-			LIKeyProcess.addKey("deb_5", Keyboard.KEY_NUMPAD9, false, new KeyModifier(2, false));
-			LIKeyProcess.addKey("deb_6", Keyboard.KEY_NUMPAD5, false, new KeyShowInfo());
+			LIKeyProcess.instance.addKey("deb_0", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
+			LIKeyProcess.instance.addKey("deb_1", Keyboard.KEY_NUMPAD2, false, new KeyModifier(0, false));
+			LIKeyProcess.instance.addKey("deb_2", Keyboard.KEY_NUMPAD4, false, new KeyModifier(1, true));
+			LIKeyProcess.instance.addKey("deb_3", Keyboard.KEY_NUMPAD6, false, new KeyModifier(1, false));
+			LIKeyProcess.instance.addKey("deb_4", Keyboard.KEY_NUMPAD7, false, new KeyModifier(2, true));
+			LIKeyProcess.instance.addKey("deb_5", Keyboard.KEY_NUMPAD9, false, new KeyModifier(2, false));
+			LIKeyProcess.instance.addKey("deb_6", Keyboard.KEY_NUMPAD5, false, new KeyShowInfo());
 		}
 	}
 	
 	@Override
 	public void preInit() {
 		super.preInit();
-		FMLCommonHandler.instance().bus().register(new LITickEvents());
+		MinecraftForge.EVENT_BUS.register(new LIClientEvents());
 	}
 	
 	@Override
 	public void postInit() {
 		super.postInit();
-		keyProcess = new LIKeyProcess();
 	}
 	
 	@Override

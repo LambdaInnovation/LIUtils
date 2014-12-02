@@ -8,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cn.liutils.api.util.PlayerPositionLock;
 import cn.liutils.core.LIUtils;
+import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.entity.EntityPlayerDaemon;
 import cn.liutils.core.proxy.LIClientProxy;
@@ -31,10 +32,7 @@ public class LITickEvents {
 			EntityPlayer player = mc.thePlayer;
 			if(player == null) return;
 			playerTick(player);
-			
-			LIClientProxy.keyProcess.tickStart();
 		} else {
-			LIClientProxy.keyProcess.tickEnd();
 		}
 	}
 	

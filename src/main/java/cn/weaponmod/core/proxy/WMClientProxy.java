@@ -39,9 +39,9 @@ public class WMClientProxy extends WMCommonProxy{
 		super.preInit();
 		FMLCommonHandler.instance().bus().register(upliftHandler);
 		FMLCommonHandler.instance().bus().register(WeaponDualWield.fakeUpl);
-		LIKeyProcess.addKey(mc.gameSettings.keyBindAttack, false, new WMKeyHandler(0));
-		LIKeyProcess.addKey(mc.gameSettings.keyBindUseItem, false, new WMKeyHandler(1));
-		LIKeyProcess.addKey(KEY_ID_RELOAD, Keyboard.KEY_R, false, new WMKeyHandler(2));
+		LIKeyProcess.instance.addKey(mc.gameSettings.keyBindAttack, false, new WMKeyHandler(0));
+		LIKeyProcess.instance.addKey(mc.gameSettings.keyBindUseItem, false, new WMKeyHandler(1));
+		LIKeyProcess.instance.addKey(KEY_ID_RELOAD, Keyboard.KEY_R, false, new WMKeyHandler(2));
 		
 		if(LIUtils.DEBUG) {
 			FieldModifierHandler.all.add(new ModifierProviderModelWeapon());

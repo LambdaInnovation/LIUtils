@@ -42,6 +42,18 @@ public class HudUtils {
         tessellator.draw();
     }
     
+    
+    public static void drawModalRect(float x, float y, double width, double height) {
+    	float f = SCALE_X;
+        float f1 = SCALE_Y;
+        Tessellator t = Tessellator.instance;
+        t.startDrawingQuads(); {
+	        t.addVertex(x + 0, y + height, zLevel);
+	        t.addVertex(x + width, y + height, zLevel);
+	        t.addVertex(x + width, y + 0, zLevel);
+	        t.addVertex(x + 0, y + 0, zLevel);
+        } t.draw();
+    }
 	
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height
@@ -62,7 +74,7 @@ public class HudUtils {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height, texWidth, texHeight
      */
-    public static void drawTexturedModalRect(float par1, float par2, int par3, int par4, float par5, float par6, float par7, float par8)
+    public static void drawTexturedModalRect(float par1, float par2, double par3, double par4, double par5, double par6, double par7, double par8)
     {
     	float f = SCALE_X;
         float f1 = SCALE_Y;

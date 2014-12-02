@@ -18,7 +18,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class LIClientRegistry {
 
 	public static void addKey(String s, int key, boolean isRep, IKeyHandler process) {
-		LIKeyProcess.addKey(s, key, isRep, process);
+		LIKeyProcess.instance.addKey(s, key, isRep, process);
 	}
 	
 	public static void addPlayerRenderingHelper(PlayerRenderHandler helper) {

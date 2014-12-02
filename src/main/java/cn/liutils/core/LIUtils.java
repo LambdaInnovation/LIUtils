@@ -9,8 +9,10 @@ import org.apache.logging.log4j.Logger;
 
 import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
+import cn.liutils.core.event.LITickEvents;
 import cn.liutils.core.network.MsgTileDirMulti;
 import cn.liutils.core.proxy.LICommonProxy;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -38,7 +40,7 @@ public class LIUtils {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.7.2.321";
+	public static final String VERSION = "1.7.2.321+dev";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.
@@ -48,7 +50,7 @@ public class LIUtils {
 	/**
 	 * Does open debug mode. turn to false when compiling.
 	 */
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	@Instance("LIutils")
 	public static LIUtils instance;
@@ -90,6 +92,7 @@ public class LIUtils {
 		netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
 		
 		MinecraftForge.EVENT_BUS.register(new LIEventListener());
+		FMLCommonHandler.instance().bus().register(new LITickEvents());
 		proxy.preInit();
 	}
 	
