@@ -81,6 +81,14 @@ public class LIKeyProcess {
 		return bindingMap.get(s);
 	}
 	
+	public static final String getKeyName(int code) {
+		if(code > 0) {
+			String res = Keyboard.getKeyName(code);
+			return res == null ? "" : res;
+		}
+		return "M" + (code + 100);
+	}
+	
 	//----------------INTERNAL IMPLEMENTATIONS---------------------
 	private final void tickStart()
     {

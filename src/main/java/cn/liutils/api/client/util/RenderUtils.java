@@ -488,5 +488,6 @@ public class RenderUtils {
         GL11.glEnable(GL11.GL_ALPHA_TEST);
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
+    
 
 }

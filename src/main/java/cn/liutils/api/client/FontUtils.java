@@ -63,7 +63,7 @@ public class FontUtils {
 		} GL11.glPopMatrix();
 	}
 	
-	public static Vector2d fontLength(String text, float size) {
+	public static Vector2d fontBoundry(String text, float size) {
 		Vector2d res = new Vector2d(0, 0);
 		res.y = size;
 		for(int i = 0; i < text.length(); ++i) {

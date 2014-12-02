@@ -1,5 +1,7 @@
 package cn.liutils.api.client.util;
 
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
 
@@ -29,7 +31,7 @@ public class HudUtils {
      * Draws a textured rectangle at the stored z-value. Mapping the full texture to the rect.
      * Args: x, y, width, height
      */
-    public static void drawTexturedModalRect(float x, float y, float width, float height)
+    public static void drawTexturedModalRect(double x, double y, double width, double height)
     {
         float f = SCALE_X;
         float f1 = SCALE_Y;
@@ -42,8 +44,18 @@ public class HudUtils {
         tessellator.draw();
     }
     
+    public static void drawRectOutline(double x, double y, double w, double h, float lineWidth) {
+    	GL11.glLineWidth(lineWidth);
+    	Tessellator t = Tessellator.instance;
+    	t.startDrawing(GL11.GL_LINE_LOOP);
+    	t.addVertex(x, y, zLevel);
+    	t.addVertex(x, y + h, zLevel);
+    	t.addVertex(x + w, y + h, zLevel);
+    	t.addVertex(x + w, y, zLevel);
+    	t.draw();
+    }
     
-    public static void drawModalRect(float x, float y, double width, double height) {
+    public static void drawModalRect(double x, double y, double width, double height) {
     	float f = SCALE_X;
         float f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;

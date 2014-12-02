@@ -21,21 +21,26 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  */
 public abstract class AuxGui {
 	private LIKeyProcess keyListener;
+	public static class AuxProcess extends LIKeyProcess {
+		final AuxGui gui;
+		public AuxProcess(AuxGui _gui) {
+			gui = _gui;
+		}
+		@SubscribeEvent
+		@Override
+	    public void onClickTick(ClientTickEvent e) {
+			if(!gui.doesEnable()) return;
+	    	if(e.phase == Phase.START) {
+	    		keyTick(false);
+	    	} else {
+	    		keyTick(true);
+	    	}
+	    }
+	}
 	
 	public AuxGui() {
 		if(needKeyListening()) {
-			keyListener = new LIKeyProcess() {
-				@SubscribeEvent
-				@Override
-			    public void onClickTick(ClientTickEvent e) {
-					if(!doesEnable()) return;
-			    	if(e.phase == Phase.START) {
-			    		keyTick(false);
-			    	} else {
-			    		keyTick(true);
-			    	}
-			    }
-			};
+			keyListener = new AuxProcess(this);
 			FMLCommonHandler.instance().bus().register(keyListener);
 		}
 	}
@@ -44,7 +49,7 @@ public abstract class AuxGui {
 	public abstract void draw(ScaledResolution sr);
 	
 	protected boolean needKeyListening() {
-		return false;
+		return true;
 	}
 	
 	protected void addKeyHandler(KeyBinding kb, boolean rep, IKeyHandler handler) {
