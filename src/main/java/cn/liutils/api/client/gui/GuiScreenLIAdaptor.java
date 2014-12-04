@@ -37,7 +37,7 @@ public abstract class GuiScreenLIAdaptor extends GuiScreen {
 		super.mouseClicked(par1, par2, par3);
 	}
 	
-	private void update() {
+	protected void update() {
 		screen.updateScreenSize(width, height);
 		Set<LIGuiPage> pages = screen.getActivePages();
 		pages.clear();

@@ -38,9 +38,9 @@ public class LIGuiScreen {
 	/**
 	 * Set of all GUI elements
 	 */
-	private HashSet<LIGuiPage> activatePages = new HashSet();
+	protected HashSet<LIGuiPage> activatePages = new HashSet();
 	
-	int xSize, ySize;
+	public int xSize, ySize;
 	
 	private int width, height;
 	

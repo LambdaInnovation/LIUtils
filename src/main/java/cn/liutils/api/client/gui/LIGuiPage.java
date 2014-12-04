@@ -33,9 +33,9 @@ public abstract class LIGuiPage {
 	/**
 	 * X或Y原点坐标，代表对GUI原点（左上角）的位移。
 	 */
-	public final float originX, originY;
+	public float originX, originY;
 	
-	private Set<LIGuiPart> guiParts = new HashSet();
+	protected Set<LIGuiPart> guiParts = new HashSet();
 	
 	protected GuiScreen myGui;
 	

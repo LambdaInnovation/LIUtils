@@ -47,24 +47,28 @@ public class HudUtils {
     public static void drawRectOutline(double x, double y, double w, double h, float lineWidth) {
     	GL11.glLineWidth(lineWidth);
     	Tessellator t = Tessellator.instance;
+    	GL11.glDisable(GL11.GL_TEXTURE_2D);
     	t.startDrawing(GL11.GL_LINE_LOOP);
     	t.addVertex(x, y, zLevel);
     	t.addVertex(x, y + h, zLevel);
     	t.addVertex(x + w, y + h, zLevel);
     	t.addVertex(x + w, y, zLevel);
     	t.draw();
+    	GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
     
     public static void drawModalRect(double x, double y, double width, double height) {
     	float f = SCALE_X;
         float f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
         t.startDrawingQuads(); {
 	        t.addVertex(x + 0, y + height, zLevel);
 	        t.addVertex(x + width, y + height, zLevel);
 	        t.addVertex(x + width, y + 0, zLevel);
 	        t.addVertex(x + 0, y + 0, zLevel);
         } t.draw();
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
 	
     /**
