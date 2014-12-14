@@ -9,6 +9,7 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
+import cn.liutils.api.client.TextUtils;
 import cn.liutils.api.client.render.RenderCrossedProjectile;
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.entity.EntityBullet;
@@ -66,6 +67,7 @@ public class LIClientProxy extends LICommonProxy {
 	public void preInit() {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new LIClientEvents());
+		TextUtils.init();
 	}
 	
 	@Override
