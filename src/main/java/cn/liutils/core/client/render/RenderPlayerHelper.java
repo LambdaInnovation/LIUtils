@@ -18,7 +18,10 @@ public class RenderPlayerHelper extends Render {
 			GL11.glPushMatrix();
 			GL11.glTranslated(d0, d1, d2);
 			GL11.glRotatef(ent.rotationYaw, 0.0F, -1.0F, 0.0F);
-			handler.renderBody(ent.player, ent.worldObj);
+			GL11.glPushMatrix(); {
+				GL11.glTranslated(0, -1.67, 0);
+				handler.renderBody(ent.player, ent.worldObj);
+			} GL11.glPopMatrix();
 			GL11.glTranslatef(0.0F, 0.5F, 0.0F);
 			handler.renderHead(ent.player, ent.worldObj);
 			GL11.glPopMatrix();

@@ -41,7 +41,7 @@ public class KeyModifier implements IKeyHandler {
 	 */
 	@Override
 	public void onKeyUp(int keyCode, boolean tickEnd) {
-		if(tickEnd)return;
+		if(tickEnd) return;
 		FieldModifierHandler.reset(dir, dimension);
 	}
 
@@ -50,7 +50,7 @@ public class KeyModifier implements IKeyHandler {
 	 */
 	@Override
 	public void onKeyTick(int keyCode, boolean tickEnd) {
-		if(tickEnd)return;
+		if(tickEnd) return;
 		FieldModifierHandler.onKeyTick(dir, dimension);
 	}
 

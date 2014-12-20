@@ -489,5 +489,55 @@ public class RenderUtils {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
     
+    /**
+     * Draw a cube with xwidth=w ywidth=l height=h at (0, 0, 0) with no texture.
+     * Often used for debugging? ^^
+     * @param w xwidth
+     * @param l ywidth
+     * @param h height
+     */
+    public static void drawCube(double w, double l, double h) {
+    	final Vec3 vs[] = {
+    		null, //placeholder
+    		newV3(0, 0, 0),
+    		newV3(w, 0, 0),
+    		newV3(w, 0, l),
+    		newV3(0, 0, l),
+    		newV3(0, h, 0),
+    		newV3(w, h, 0),
+    		newV3(w, h, l),
+    		newV3(0, h, l),
+    	};
+    	final int arr[][] = {
+    		{1, 2, 3, 4},
+    		{5, 6, 2, 1},
+    		{7, 3, 2, 6},
+    		{7, 8, 4, 3},
+    		{8, 7, 6, 5},
+    		{5, 1, 4, 8}
+    	};
+    	final int normals[][] = {
+    		{0, -1, 0},
+    		{0, 0, -1},
+    		{1, 0, 0},
+    		{0, 0, 1},
+    		{0, 1, 0},
+    		{-1, 0, 0}
+    	};
+    	GL11.glDisable(GL11.GL_TEXTURE_2D);
+    	GL11.glPushMatrix(); {
+    		Tessellator t = Tessellator.instance;
+    		for(int i = 0; i < arr.length; ++i) {
+    			t.startDrawingQuads();
+    			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+    			int[] va = arr[i];
+    			for(int j = 0; j < 4; ++j) {
+    				addVertex(vs[va[j]]);
+    			}
+    			t.draw();
+    		}
+    	} GL11.glPopMatrix();
+    	GL11.glEnable(GL11.GL_TEXTURE_2D);
+    }
 
 }
