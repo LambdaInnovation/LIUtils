@@ -40,6 +40,17 @@ dependencies {
 	compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
 }
 
+jar {
+	from {
+		configurations.compile.findAll {
+			it.name.contains('industrialcraft-2-2.1.484-experimental-api')
+		}.collect {
+			zipTree(it)
+		}
+	}
+
+}
+
 processResources
 {
 	inputs.property "version", project.version
