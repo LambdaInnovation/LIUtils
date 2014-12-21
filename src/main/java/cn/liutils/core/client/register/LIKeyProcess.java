@@ -81,6 +81,11 @@ public class LIKeyProcess {
 		return bindingMap.get(s);
 	}
 	
+	/**
+	 * Get the display name for a specific key code.
+	 * @param code
+	 * @return A human readable name of the key
+	 */
 	public static final String getKeyName(int code) {
 		if(code > 0) {
 			String res = Keyboard.getKeyName(code);

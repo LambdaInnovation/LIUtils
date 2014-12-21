@@ -44,5 +44,22 @@ public class LIGeneralRegistry {
 			}
 		}
 	}
+	
+	public static void storeConfigurableClass(Configuration conf, Class<?> cl) {
+		Property prop;
+		for (Field f : cl.getFields()) {
+			Configurable c = f.getAnnotation(Configurable.class);
+			if (c != null) {
+				try {
+					prop = conf.get(c.category(), c.key(), c.defValue());
+					prop.comment = c.comment();
+					prop.set(String.valueOf(f.get(null)));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+		}
+		conf.save();
+	}
 
 }
