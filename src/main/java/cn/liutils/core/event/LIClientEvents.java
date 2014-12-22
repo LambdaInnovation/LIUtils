@@ -30,7 +30,7 @@ public class LIClientEvents {
 	public void drawHudEvent(RenderGameOverlayEvent event) {
 		 if(event.type == ElementType.CROSSHAIRS) {
 			 for(AuxGui gui : auxGuiList) {
-				 if(gui.doesEnable()) gui.draw(event.resolution);
+				 if(gui.isOpen()) gui.draw(event.resolution);
 			 }
 		 }
 	}

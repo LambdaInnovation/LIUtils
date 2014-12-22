@@ -29,7 +29,7 @@ public abstract class AuxGui {
 		@SubscribeEvent
 		@Override
 	    public void onClickTick(ClientTickEvent e) {
-			if(!gui.doesEnable()) return;
+			if(!gui.isOpen()) return;
 	    	if(e.phase == Phase.START) {
 	    		keyTick(false);
 	    	} else {
@@ -45,7 +45,7 @@ public abstract class AuxGui {
 		}
 	}
 	
-	public abstract boolean doesEnable();
+	public abstract boolean isOpen();
 	public abstract void draw(ScaledResolution sr);
 	
 	protected boolean needKeyListening() {
