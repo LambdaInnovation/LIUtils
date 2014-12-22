@@ -43,8 +43,23 @@ public @interface Configurable {
 	/**
 	 * Default value of the setting.
 	 */
-	String defValue();
+	String defValue() default "";
 
+	/**
+	 * Default value of the setting, as an integer.
+	 */
+	int defValueInt() default 0;
+	
+	/**
+	 * Default value of the setting, as a boolean.
+	 */
+	boolean defValueBool() default false;
+
+	/**
+	 * Default value of the setting, as a double.
+	 */
+	double defValueDouble() default 0.0;
+	
 	/**
 	 * Comment of the setting.
 	 */

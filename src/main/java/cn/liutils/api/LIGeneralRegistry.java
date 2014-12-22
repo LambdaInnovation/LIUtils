@@ -24,16 +24,22 @@ public class LIGeneralRegistry {
 			Configurable c = f.getAnnotation(Configurable.class);
 			if (c != null) {
 				try {
-					prop = conf.get(c.category(), c.key(), c.defValue());
-					prop.comment = c.comment();
 					Class<?> type = f.getType();
 					if (type.equals(Integer.TYPE) || type.equals(Integer.class)) {
-						f.setInt(null, prop.getInt(Integer.parseInt(c.defValue())));
+						prop = conf.get(c.category(), c.key(), c.defValueInt());
+						prop.comment = c.comment();
+						f.setInt(null, prop.getInt(c.defValueInt()));
 					} else if (type.equals(Boolean.TYPE) || type.equals(Boolean.class)) {
-						f.setBoolean(null, prop.getBoolean(Boolean.parseBoolean(c.defValue())));
+						prop = conf.get(c.category(), c.key(), c.defValueBool());
+						prop.comment = c.comment();
+						f.setBoolean(null, prop.getBoolean(c.defValueBool()));
 					} else if (type.equals(Double.TYPE) || type.equals(Double.class)) {
-						f.setDouble(null, prop.getDouble(Double.parseDouble(c.defValue())));
+						prop = conf.get(c.category(), c.key(), c.defValueDouble());
+						prop.comment = c.comment();
+						f.setDouble(null, prop.getDouble(c.defValueDouble()));
 					} else if (type.equals(String.class)) {
+						prop = conf.get(c.category(), c.key(), c.defValue());
+						prop.comment = c.comment();
 						f.set(null, prop.getString());
 					} else {
 						throw new UnsupportedOperationException();
