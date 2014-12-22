@@ -6,6 +6,7 @@ package cn.liutils.api.client.util;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
@@ -18,6 +19,8 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
+
+import cn.liutils.api.client.render.Vertex;
 
 import com.google.common.collect.Maps;
 
@@ -489,6 +492,10 @@ public class RenderUtils {
         GL11.glEnable(GL11.GL_TEXTURE_2D);
     }
     
+    public static void drawCube(double w, double l, double h) {
+    	drawCube(w, l, h, false);
+    }
+    
     /**
      * Draw a cube with xwidth=w ywidth=l height=h at (0, 0, 0) with no texture.
      * Often used for debugging? ^^
@@ -496,17 +503,17 @@ public class RenderUtils {
      * @param l ywidth
      * @param h height
      */
-    public static void drawCube(double w, double l, double h) {
-    	final Vec3 vs[] = {
+    public static void drawCube(double w, double l, double h, boolean texture) {
+    	final Vertex vs[] = {
     		null, //placeholder
-    		newV3(0, 0, 0),
-    		newV3(w, 0, 0),
-    		newV3(w, 0, l),
-    		newV3(0, 0, l),
-    		newV3(0, h, 0),
-    		newV3(w, h, 0),
-    		newV3(w, h, l),
-    		newV3(0, h, l),
+    		vert(0, 0, 0, 0, 0),
+    		vert(w, 0, 0, 1, 0),
+    		vert(w, 0, l, 1, 1),
+    		vert(0, 0, l, 0, 1),
+    		vert(0, h, 0, 0, 0),
+    		vert(w, h, 0, 1, 0),
+    		vert(w, h, l, 1, 1),
+    		vert(0, h, l, 0, 1),
     	};
     	final int arr[][] = {
     		{1, 2, 3, 4},
@@ -524,7 +531,8 @@ public class RenderUtils {
     		{0, 1, 0},
     		{-1, 0, 0}
     	};
-    	GL11.glDisable(GL11.GL_TEXTURE_2D);
+    	if(!texture)
+    		GL11.glDisable(GL11.GL_TEXTURE_2D);
     	GL11.glPushMatrix(); {
     		Tessellator t = Tessellator.instance;
     		for(int i = 0; i < arr.length; ++i) {
@@ -532,12 +540,17 @@ public class RenderUtils {
     			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
     			int[] va = arr[i];
     			for(int j = 0; j < 4; ++j) {
-    				addVertex(vs[va[j]]);
+    				vs[va[j]].addTo(t);
     			}
     			t.draw();
     		}
     	} GL11.glPopMatrix();
     	GL11.glEnable(GL11.GL_TEXTURE_2D);
+    	GL11.glDisable(GL11.GL_BLEND);
+    }
+    
+    private static Vertex vert(double x, double y, double z, double u, double v) {
+    	return new Vertex(x, y, z, u, v);
     }
 
 }
