@@ -2,13 +2,36 @@ package cn.liutils.api.util;
 
 public class DebugUtils {
 
-	public static <T> String formatArray(T... arr) {
+	public static String formatArray(Object[] arr) {
 		StringBuilder b = new StringBuilder("(");
-		for(T a : arr) {
-			b.append(a).append(", ");
+		for(int i = 0; i < arr.length; ++i) {
+			b.append(arr[i]).append(i == arr.length - 1 ? "" : ", "); 
 		}
-		b.append("\b\b )");
-		return b.toString();
+		return b.append(")").toString();
+	}
+	
+	public static String formatArray(boolean[] arr) {
+		StringBuilder b = new StringBuilder("(");
+		for(int i = 0; i < arr.length; ++i) {
+			b.append(arr[i]).append(i == arr.length - 1 ? "" : ", "); 
+		}
+		return b.append(")").toString();
+	}
+	
+	public static String formatArray(float[] arr) {
+		StringBuilder b = new StringBuilder("(");
+		for(int i = 0; i < arr.length; ++i) {
+			b.append(arr[i]).append(i == arr.length - 1 ? "" : ", "); 
+		}
+		return b.append(")").toString();
+	}
+	
+	public static String formatArray(int[] arr) {
+		StringBuilder b = new StringBuilder("(");
+		for(int i = 0; i < arr.length; ++i) {
+			b.append(arr[i]).append(i == arr.length - 1 ? "" : ", "); 
+		}
+		return b.append(")").toString();
 	}
 
 }
