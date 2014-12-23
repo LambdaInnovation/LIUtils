@@ -18,6 +18,7 @@ import java.util.Random;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -228,6 +229,17 @@ public class Motion3D {
 	
 	public Vec3 getMotionVec(World world) {
 		return world.getWorldVec3Pool().getVecFromPool(motionX, motionY, motionZ);
+	}
+	
+	public MovingObjectPosition applyRaytrace(World world) {
+		return applyRaytrace(world, 100.0);
+	}
+	
+	public MovingObjectPosition applyRaytrace(World world, double maxdist) {
+		Vec3 dir = this.getMotionVec(world).normalize();
+		Vec3 pos = this.getPosVec(world);
+		Vec3 to = pos.addVector(dir.xCoord * maxdist, dir.yCoord * maxdist, dir.zCoord * maxdist);
+		return world.rayTraceBlocks(pos, to);
 	}
 	
 	@Override

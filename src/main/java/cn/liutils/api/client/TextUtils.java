@@ -21,8 +21,8 @@ import cn.liutils.api.client.util.HudUtils;
 public class TextUtils {
 	
 	public static final TrueTypeFont
-		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), false),
-		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), false);
+		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true),
+		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
 	
 	public static void init() {}
 	
