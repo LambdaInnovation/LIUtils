@@ -3,6 +3,7 @@
  */
 package cn.liutils.core.proxy;
 
+import cn.liutils.api.util.EntityManipHandler;
 import net.minecraft.command.CommandHandler;
 
 /**
@@ -11,7 +12,9 @@ import net.minecraft.command.CommandHandler;
  */
 public class LICommonProxy {
 
-	public void init() {}
+	public void init() {
+		EntityManipHandler.init();
+	}
 	
 	public void preInit() {}
 	

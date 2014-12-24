@@ -11,6 +11,7 @@ import java.util.WeakHashMap;
 import net.minecraft.entity.Entity;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.Mod.EventHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 
@@ -37,11 +38,11 @@ public class EntityManipHandler {
 		/**
 		 * Get the universal identifier of this instance.
 		 */
-		abstract String getID();
+		public abstract String getID();
 		/**
 		 * called each tick to update entity state
 		 */
-		abstract void onTick();
+		public abstract void onTick();
 		
 		protected boolean isRemote() { //Fast alias
 			return entity.worldObj.isRemote;
@@ -86,13 +87,14 @@ public class EntityManipHandler {
 		return res;
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
 		onTick(table_client);
 	}
 	
-	@EventHandler
+	@SubscribeEvent
 	public void onServerTick(ServerTickEvent event) {
+		//System.out.println("ost");
 		onTick(table_server);
 	}
 	
