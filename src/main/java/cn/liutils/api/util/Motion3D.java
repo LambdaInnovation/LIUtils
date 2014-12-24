@@ -74,6 +74,16 @@ public class Motion3D {
 	 * @param dirFlag false:use moving direction; true:use head-looking direction
 	 */
 	public Motion3D(Entity entity, int offset, boolean dirFlag) {
+		init(entity, offset, dirFlag);
+	}
+	
+	/**
+	 * Reset the pos and motion data to the data of entity passed in
+	 * @param entity
+	 * @param offset
+	 * @param dirFlag true: use head facing direction; flase: use motion
+	 */
+	public void init(Entity entity, int offset, boolean dirFlag) {
 		this.posX = entity.posX;
 		this.posY = entity.posY + entity.getEyeHeight();
 		this.posZ = entity.posZ;
@@ -102,7 +112,6 @@ public class Motion3D {
 			motionZ = entity.motionZ;
 			setMotionOffset(offset);
 		}
-		
 	}
 	
 	public void update(Entity entity, boolean dirFlag) {

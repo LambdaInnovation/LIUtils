@@ -28,9 +28,6 @@ public class RenderDirMultiModelled extends RenderTileDirMulti {
 	protected ITileEntityModel theModel;
 	protected boolean isTechne = false;
 
-	/**
-	 * 
-	 */
 	public RenderDirMultiModelled(ITileEntityModel mdl) {
 		theModel = mdl;
 	}

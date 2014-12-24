@@ -14,6 +14,7 @@ import cn.liutils.api.client.render.RenderCrossedProjectile;
 import cn.liutils.api.client.render.RenderEmptyBlock;
 import cn.liutils.api.entity.EntityBullet;
 import cn.liutils.api.entity.EntityTrailFX;
+import cn.liutils.api.util.EntityManipHandler;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.client.render.RenderPlayerHelper;
@@ -51,6 +52,7 @@ public class LIClientProxy extends LICommonProxy {
 		
 		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerDaemon.class, new RenderPlayerHelper());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
+		EntityManipHandler.init();
 		
 		if(LIUtils.DEBUG) {
 			LIKeyProcess.instance.addKey("deb_0", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
