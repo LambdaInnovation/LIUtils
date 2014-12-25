@@ -26,9 +26,8 @@ import cn.liutils.api.util.Motion3D;
 
 /**
  * @author WeAthFolD
- *
  */
-public class EntityBullet extends EntityThrowable {
+public class EntityBulletFX extends EntityThrowable {
 
 	protected Motion3D motion;
 	protected float damage;
@@ -37,17 +36,17 @@ public class EntityBullet extends EntityThrowable {
 	
 	protected int lifeTime = 50;
 	
-	public EntityBullet setRenderFromLeft() {
+	public EntityBulletFX setRenderFromLeft() {
 		renderFromLeft = true;
 		return this;
 	}
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg) {
+	public EntityBulletFX(World par1World, EntityLivingBase par2EntityLiving, float dmg) {
 		this(par1World, par2EntityLiving, dmg, 0);
 	}
 	
 	
-	public EntityBullet(World par1World, EntityLivingBase ent, float dmg, float scatterRadius) {
+	public EntityBulletFX(World par1World, EntityLivingBase ent, float dmg, float scatterRadius) {
 		super(par1World, ent);
 		initPosition(ent, (int) scatterRadius);
 		this.damage = dmg;
@@ -64,13 +63,13 @@ public class EntityBullet extends EntityThrowable {
 		this.rotationYaw = ent.rotationYawHead;
 	}
 	
-	public EntityBullet(World par1World, EntityLivingBase par2EntityLiving, float dmg, boolean rev) {
+	public EntityBulletFX(World par1World, EntityLivingBase par2EntityLiving, float dmg, boolean rev) {
 		this(par1World, par2EntityLiving, dmg);
 		if(rev) setRenderFromLeft();
 	}
 	
 	
-	public EntityBullet(World par1World, Entity ent, Entity target, float dmg, float oriHgt, float targHgt) {
+	public EntityBulletFX(World par1World, Entity ent, Entity target, float dmg, float oriHgt, float targHgt) {
 		super(par1World);
 		double x0 = ent.posX + ent.width * 0.5,
 				y0 = ent.posY + oriHgt,
@@ -94,7 +93,7 @@ public class EntityBullet extends EntityThrowable {
 		motion = new Motion3D(this);
 	}
 	
-	public EntityBullet(World par1World, EntityLivingBase ent, Entity target, float dmg) {
+	public EntityBulletFX(World par1World, EntityLivingBase ent, Entity target, float dmg) {
 		super(par1World, ent);
 		motionX = target.posX  - ent.posX;
 		motionY = (target.posY + target.height / 2.0) - (ent.posY + ent.height / 2.0);
@@ -109,7 +108,7 @@ public class EntityBullet extends EntityThrowable {
 		motion = new Motion3D(this);
 	}
 	
-	public EntityBullet(World world, Vec3 begin, Vec3 motion, float dmg) {
+	public EntityBulletFX(World world, Vec3 begin, Vec3 motion, float dmg) {
 		super(world);
 		setPosition(begin.xCoord, begin.yCoord, begin.zCoord);
 		setThrowableHeading(motion.xCoord, motion.yCoord, motion.zCoord, func_70182_d(), 1.0F);
@@ -117,9 +116,8 @@ public class EntityBullet extends EntityThrowable {
 		damage = dmg;
 	}
 	
-	public EntityBullet setEntitySelector(IEntitySelector sel) {
-		selector = sel;
-		return this;
+	public EntityBulletFX(World world) {
+		super(world);
 	}
 
 	@Override
@@ -138,10 +136,6 @@ public class EntityBullet extends EntityThrowable {
 	protected void entityInit() {
 	}
 
-	public EntityBullet(World world) {
-		super(world);
-	}
-
 	@Override
 	protected float getGravityVelocity() {
 		return 0.0F;
@@ -149,35 +143,13 @@ public class EntityBullet extends EntityThrowable {
 
 	@Override
 	protected void onImpact(MovingObjectPosition par1) {
-		switch (par1.typeOfHit) {
-		case BLOCK:
-			doBlockCollision(par1);
-			break;
-		case ENTITY:
-			doEntityCollision(par1);
-			break;
-		default:
-			break;
-		}
-	}
-
-	protected void doBlockCollision(MovingObjectPosition result) {
-		Block block = worldObj.getBlock(result.blockX, result.blockY, result.blockZ);
-		//if(!worldObj.isRemote && (block == Blocks.glass || block == Blocks.glass_pane)) {
-		//	worldObj.destroyBlock(result.blockX, result.blockY, result.blockZ, false);
-		//	worldObj.destroyBlockInWorldPartially(p_147443_1_, p_147443_2_, p_147443_3_, p_147443_4_, p_147443_5_);
-		//}
-		//TODO:子弹的选择性方块摧毁？
 		this.setDead();
 	}
 
-	protected void doEntityCollision(MovingObjectPosition result) {
-		if (selector != null && !selector.isEntityApplicable(result.entityHit))
-			return;
-		result.entityHit.attackEntityFrom(DamageSource.causeMobDamage(getThrower()), damage);
-		result.entityHit.hurtResistantTime = -1;
-	}
+	protected void doBlockCollision(MovingObjectPosition result) {}
 
+	protected void doEntityCollision(MovingObjectPosition result) {}
+	
 	public float getBulletDamage(int mode) {
 		return damage;
 	}
@@ -189,7 +161,7 @@ public class EntityBullet extends EntityThrowable {
 
 	@Override
 	protected float func_70182_d() {
-		return worldObj.isRemote ? 3F : 15.0F;
+		return 3F;
 	}
 
 

@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import cn.liutils.api.entity.EntityBullet;
+import cn.liutils.api.entity.EntityBulletFX;
 import cn.weaponmod.api.WeaponHelper;
 import cn.weaponmod.api.client.render.RendererBulletWeapon;
 import cn.weaponmod.api.information.InfUtils;
@@ -115,7 +115,7 @@ public class ActionShoot extends Action {
 	 * @return
 	 */
 	protected Entity getProjectileEntity(World world, EntityPlayer player) {
-		EntityBullet bullet = new EntityBullet(world, player, damage, scatter);
+		EntityBulletFX bullet = new EntityBulletFX(world, player, damage, scatter);
 		bullet.renderFromLeft = left;
 		return bullet;
 	}

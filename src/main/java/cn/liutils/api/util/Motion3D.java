@@ -48,7 +48,26 @@ public class Motion3D {
 	}
 
 	public Motion3D(Motion3D another) {
-		this(another.posX, another.posY, another.posZ, another.motionX, another.motionY, another.motionZ);
+		this();
+		setFrom(another);
+	}
+	
+	public Motion3D() {
+		this(0, 0, 0, 0, 0, 0);
+	}
+	
+	@Override
+	public Motion3D clone() {
+		return new Motion3D(this);
+	}
+	
+	public void setFrom(Motion3D ano) {
+		posX = ano.posX;
+		posY = ano.posY;
+		posZ = ano.posZ;
+		motionX = ano.motionX;
+		motionY = ano.motionY;
+		motionZ = ano.motionZ;
 	}
 	
 	/**
