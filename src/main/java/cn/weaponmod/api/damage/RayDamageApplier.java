@@ -3,9 +3,14 @@
  */
 package cn.weaponmod.api.damage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.DamageSource;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
@@ -25,10 +30,14 @@ public class RayDamageApplier {
 	protected Motion3D motion;
 	protected Damage damage;
 	protected IEntitySelector selector;
-	protected Entity[] exclusions;
+	protected List<Entity> excl = new ArrayList<Entity>();
 	
 	public RayDamageApplier(EntityLivingBase elb, Damage dmg) {
 		this(elb, dmg, DEFAULT_MAX_DISTANCE);
+	}
+	
+	public RayDamageApplier(EntityLivingBase elb, float dmg) {
+		this(elb, new DmgSimple(DamageSource.causeMobDamage(elb), dmg), DEFAULT_MAX_DISTANCE);
 	}
 	
 	/**
@@ -39,6 +48,11 @@ public class RayDamageApplier {
 	 */
 	public RayDamageApplier(EntityLivingBase elb, Damage dmg, double md) {
 		this(elb.worldObj, new Motion3D(elb, true), dmg, md);
+		excl.add(elb);
+	}
+	
+	public RayDamageApplier(EntityLivingBase elb, int dmg, double md) {
+		this(elb, new DmgSimple(DamageSource.causeMobDamage(elb), dmg), md);
 	}
 	
 	public RayDamageApplier(World world, Motion3D mo, Damage dmg) {
@@ -92,7 +106,9 @@ public class RayDamageApplier {
 	}
 	
 	public RayDamageApplier exclude(Entity... excl) {
-		exclusions = excl;
+		for(Entity e : excl) {
+			this.excl.add(e);
+		}
 		return this;
 	}
 	
@@ -100,8 +116,11 @@ public class RayDamageApplier {
 		Vec3 v1 = motion.getPosVec(world),
 			 v2 = motion.getPosVec(world);
 		Vec3 mv = motion.getMotionVec(world);
-		v2 = v2.addVector(v2.xCoord, v2.yCoord, v2.zCoord);
-		MovingObjectPosition mop = GenericUtils.rayTraceBlocksAndEntities(selector, world, v1, v2, exclusions);
+		v2 = v2.addVector(mv.xCoord * maxDistance, mv.yCoord * maxDistance, mv.zCoord * maxDistance);
+		System.out.println(v1);
+		System.out.println(v2);
+		MovingObjectPosition mop = GenericUtils.rayTraceBlocksAndEntities(selector, world, v1, v2, this.excl.toArray(new Entity[] {}));
+		System.out.println("Hit " + mop.typeOfHit + " ");
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			damage.damageEntity(mop.entityHit);
 		}

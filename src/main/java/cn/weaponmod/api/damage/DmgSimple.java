@@ -12,9 +12,9 @@ import net.minecraft.util.DamageSource;
  */
 public class DmgSimple extends Damage {
 	
-	int damage;
+	float damage;
 
-	public DmgSimple(DamageSource ds, int dmg) {
+	public DmgSimple(DamageSource ds, float dmg) {
 		super(ds);
 		damage = dmg;
 	}
