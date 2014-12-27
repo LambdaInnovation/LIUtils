@@ -25,24 +25,12 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 
 /**
- * @author EAirPeter
+ * 
+ * @author Violet
+ *
  */
 public class ControlManager {
-	private static ControlManager INSTANCE = null;
-	
-	private ControlManager() {	
-	}
 
-	private HashMap<String, ControlData> map = new HashMap<String, ControlData>();
-	
-	public static void init() {
-		if (INSTANCE == null)
-			INSTANCE = new ControlManager();
-		FMLCommonHandler.instance().bus().register(INSTANCE);
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
-		LIUtils.netHandler.registerMessage(MsgControlSyncAll.Handler.class, MsgControlSyncAll.class, LIClientProps.DISC_CONTROL_SYNCALL, Side.CLIENT);
-	}
-	
 	/**
 	 * Set lock state(s)
 	 * @param ticks Ticks to unlock the state and negative for infinite
@@ -66,61 +54,7 @@ public class ControlManager {
 		ControlData.get(player).lockCancel(type);
 	}
 	
-	@SubscribeEvent
-	public void onMouse(MouseEvent event) {
-		if (GenericUtils.isPlayerInGame() && Minecraft.getMinecraft().inGameHasFocus)
-			ControlData.get(Minecraft.getMinecraft().thePlayer).onMouse(event);
+	private ControlManager() {	
 	}
 	
-	@SubscribeEvent
-	public void onKeyboard(KeyInputEvent event) {
-		if (GenericUtils.isPlayerInGame() && Minecraft.getMinecraft().inGameHasFocus)
-			ControlData.get(Minecraft.getMinecraft().thePlayer).onKeyboard();
-	}
-	
-	@SubscribeEvent
-	public void onClientTick(ClientTickEvent event) {
-		if (Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().isGamePaused()) {
-			if (event.phase == Phase.START)
-				ControlData.get(Minecraft.getMinecraft().thePlayer).tick();
-			else
-				ControlData.get(Minecraft.getMinecraft().thePlayer).onTick();
-		}
-	}
-	
-	private int ticker = 0;
-	
-	@SubscribeEvent
-	public void onServerTick(ServerTickEvent event) {
-		List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-		if (event.phase == Phase.START) {
-			for (EntityPlayerMP player : players)
-				ControlData.get(player).tick();
-		}
-		else {
-			for (EntityPlayerMP player : players)
-				ControlData.get(player).onTick();
-			if (ticker == 0) {
-				ticker = 600;
-			}
-			else
-				--ticker;
-		}
-	}
-	
-	@SubscribeEvent
-	public void onEntityConstructing(EntityConstructing event) {
-		if (event.entity instanceof EntityPlayer) {
-			if (ControlData.get(event.entity) == null)
-				event.entity.registerExtendedProperties(ControlData.IDENTIFIER, new ControlData());
-		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerLoggedIn(PlayerLoggedInEvent event) {
-		ControlData data = ControlData.get(event.player);
-		if (data == null)
-			((EntityPlayerMP) event.player).playerNetServerHandler.kickPlayerFromServer("INVALID SITUATION");
-		data.syncAll();
-	}
 }

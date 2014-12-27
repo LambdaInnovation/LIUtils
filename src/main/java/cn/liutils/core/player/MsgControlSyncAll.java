@@ -1,5 +1,6 @@
-package cn.liutils.api.player;
+package cn.liutils.core.player;
 
+import cn.liutils.api.player.ControlData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatComponentText;
 import io.netty.buffer.ByteBuf;
@@ -8,7 +9,9 @@ import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.MessageContext;
 
 /**
- * @author EAirPeter
+ * 
+ * @author Violet
+ *
  */
 public class MsgControlSyncAll implements IMessage {
 

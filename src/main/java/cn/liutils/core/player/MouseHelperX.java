@@ -1,9 +1,14 @@
-package cn.liutils.api.player;
+package cn.liutils.core.player;
 
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.util.MouseHelper;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public class MouseHelperX extends MouseHelper {
 	
 	private static boolean locked = false;

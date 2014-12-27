@@ -1,15 +1,7 @@
 package cn.liutils.api.player;
 
-
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map.Entry;
-
-import cpw.mods.fml.common.network.ByteBufUtils;
-import cpw.mods.fml.relauncher.Side;
 import cn.liutils.api.player.lock.LockBase;
 import cn.liutils.api.player.lock.LockBase.LockType;
 import cn.liutils.api.player.lock.LockControlJump;
@@ -18,17 +10,20 @@ import cn.liutils.api.player.lock.LockControlSpin;
 import cn.liutils.api.player.lock.LockPosition;
 import cn.liutils.api.player.lock.LockRotation;
 import cn.liutils.core.LIUtils;
+import cn.liutils.core.player.MouseHelperX;
+import cn.liutils.core.player.MsgControlSyncAll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 /**
- * @author EAirPeter
+ * 
+ * @author Violet
+ *
  */
 public class ControlData implements IExtendedEntityProperties {
 

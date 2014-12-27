@@ -4,6 +4,11 @@ import cn.liutils.api.player.lock.LockBase.LockType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public class LockRotation extends LockBase {
 
 	public static final LockType TYPE = LockType.ROTATION;

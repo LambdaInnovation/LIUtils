@@ -5,6 +5,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatComponentText;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public class LockPosition extends LockBase {
 
 	public static final LockType TYPE = LockType.POSITION;

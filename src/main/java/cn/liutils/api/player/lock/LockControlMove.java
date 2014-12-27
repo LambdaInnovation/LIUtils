@@ -11,6 +11,11 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public class LockControlMove extends LockBase {
 
 	public static final LockType TYPE = LockType.CONTROL_MOVE;

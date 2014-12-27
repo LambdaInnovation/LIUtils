@@ -1,15 +1,11 @@
 package cn.liutils.api.player.lock;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+
 import org.lwjgl.input.Mouse;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.settings.GameSettings;
-import net.minecraft.client.settings.KeyBinding;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.MouseEvent;
-import cn.liutils.api.player.MouseHelperX;
-import cn.liutils.api.player.lock.LockBase.LockType;
+import cn.liutils.core.player.MouseHelperX;
 
 public class LockControlSpin extends LockBase {
 

@@ -6,6 +6,11 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.client.event.MouseEvent;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public abstract class LockBase {
 	public final LockType type;
 	protected int tick;

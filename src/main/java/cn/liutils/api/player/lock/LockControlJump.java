@@ -7,6 +7,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import cn.liutils.api.player.lock.LockBase.LockType;
 import io.netty.buffer.ByteBuf;
 
+/**
+ * 
+ * @author Violet
+ *
+ */
 public class LockControlJump extends LockBase {
 
 	public static final LockType TYPE = LockType.CONTROL_JUMP;
