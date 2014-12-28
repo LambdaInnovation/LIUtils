@@ -14,6 +14,10 @@ public abstract class Damage {
 	
 	protected DamageSource source;
 	
+	public Damage() {
+		this(DamageSource.generic);
+	}
+	
 	public Damage(DamageSource ds) {
 		source = ds;
 	}

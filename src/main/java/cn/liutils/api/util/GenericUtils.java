@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.lwjgl.Sys;
 import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.relauncher.Side;
@@ -43,6 +44,15 @@ public class GenericUtils {
 			f = (360.0F - f) % 360F;
 		return f;
 	}
+	
+	/**
+	 * An alias of Minecraft.getSystemTime() in case of server calls
+	 * @return
+	 */
+    public static long getSystemTime()
+    {
+        return Sys.getTime() * 1000L / Sys.getTimerResolution();
+    }
 	
 	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {
 		MovingObjectPosition mop = rayTraceEntities(null, world, vec1, vec2);
