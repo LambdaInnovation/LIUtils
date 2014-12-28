@@ -3,6 +3,7 @@
  */
 package cn.liutils.core.proxy;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
@@ -24,6 +25,7 @@ import cn.liutils.core.debug.KeyModifier;
 import cn.liutils.core.debug.KeyShowInfo;
 import cn.liutils.core.entity.EntityPlayerDaemon;
 import cn.liutils.core.event.LIClientEvents;
+import cn.liutils.core.player.MouseHelperX;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 /**
@@ -74,6 +76,7 @@ public class LIClientProxy extends LICommonProxy {
 	@Override
 	public void postInit() {
 		super.postInit();
+		Minecraft.getMinecraft().mouseHelper = new MouseHelperX();
 	}
 	
 	@Override

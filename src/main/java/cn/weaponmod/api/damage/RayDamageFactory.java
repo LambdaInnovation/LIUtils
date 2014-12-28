@@ -14,11 +14,17 @@ import net.minecraft.world.World;
  */
 public abstract class RayDamageFactory extends Entity {
 	
-	EntityLivingBase user;
+	final EntityLivingBase user;
+	protected final RayDamageApplier applier;
+	
+	public RayDamageFactory(EntityLivingBase elb, int dmg) {
+		this(elb, new RayDamageApplier(elb, dmg));
+	}
 
-	public RayDamageFactory(EntityLivingBase elb) {
+	public RayDamageFactory(EntityLivingBase elb, RayDamageApplier rda) {
 		super(elb.worldObj);
 		user = elb;
+		applier = rda;
 	}
 	
 	public abstract void onUpdate();
@@ -36,17 +42,23 @@ public abstract class RayDamageFactory extends Entity {
 		
 		final int lifeTime;
 		final int rate;
-		final RayDamageApplier applier;
 		
-		public Periodic(EntityLivingBase elb, RayDamageApplier rpa, int rate, int lifeTime) {
-			super(elb);
-			this.rate = rate;
-			this.lifeTime = lifeTime;
-			this.applier = rpa;
+		public Periodic(EntityLivingBase elb, float dmg, int rate, int lifeTime) {
+			this(elb, new RayDamageApplier(elb, dmg), rate, lifeTime);
 		}
 		
-		public Periodic(EntityLivingBase elb, RayDamageApplier rpa, int rate) {
-			this(elb, rpa, rate, -1);
+		public Periodic(EntityLivingBase elb, RayDamageApplier rda, int rate, int lifeTime) {
+			super(elb, rda);
+			this.rate = rate;
+			this.lifeTime = lifeTime;
+		}
+		
+		public Periodic(EntityLivingBase elb, float dmg, int rate) {
+			this(elb, dmg, rate, -1);
+		}
+		
+		public Periodic(EntityLivingBase elb, RayDamageApplier rda, int rate) {
+			this(elb, rda, rate, -1);
 		}
 
 		@Override
@@ -68,16 +80,22 @@ public abstract class RayDamageFactory extends Entity {
 	public static class Timed extends RayDamageFactory {
 		
 		final int waitTime;
-		final RayDamageApplier applier;
 
-		public Timed(EntityLivingBase elb, RayDamageApplier rpa) {
-			this(elb, rpa, 0);
+		public Timed(EntityLivingBase elb, RayDamageApplier rda) {
+			this(elb, rda, 0);
 		}
 		
-		public Timed(EntityLivingBase elb, RayDamageApplier rpa, int tick) {
-			super(elb);
+		public Timed(EntityLivingBase elb, float dmg) {
+			this(elb, dmg, 0);
+		}
+		
+		public Timed(EntityLivingBase elb, float dmg, int tick) {
+			this(elb, new RayDamageApplier(elb, dmg), tick);
+		}
+		
+		public Timed(EntityLivingBase elb, RayDamageApplier rda, int tick) {
+			super(elb, rda);
 			waitTime = tick;
-			applier = rpa;
 		}
 
 		@Override
