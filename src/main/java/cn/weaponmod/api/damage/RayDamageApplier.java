@@ -120,6 +120,7 @@ public class RayDamageApplier {
 		System.out.println(v1);
 		System.out.println(v2);
 		MovingObjectPosition mop = GenericUtils.rayTraceBlocksAndEntities(selector, world, v1, v2, this.excl.toArray(new Entity[] {}));
+		if(mop == null) return false;
 		System.out.println("Hit " + mop.typeOfHit + " ");
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			damage.damageEntity(mop.entityHit);
