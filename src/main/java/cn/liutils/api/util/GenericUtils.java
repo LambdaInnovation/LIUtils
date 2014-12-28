@@ -213,4 +213,11 @@ public class GenericUtils {
 			if(i < min) min = i;
 		return min;
 	}
+	
+	public static <T> T assertObj(T obj) {
+		if (obj == null) {
+			throw new NullPointerException();
+		}
+		return obj;
+	}
 }
