@@ -29,7 +29,6 @@ public class LockPosition extends LockBase {
 	
 	@Override
 	public void onTick(EntityPlayer player) {
-		player.addChatComponentMessage(new ChatComponentText("lpos(" + posX + "," + posY + "," + posZ + ").ontick: " + (player.worldObj.isRemote ? "client" : "server")));
 		player.setPosition(posX, posY + player.yOffset, posZ);
 	}
 

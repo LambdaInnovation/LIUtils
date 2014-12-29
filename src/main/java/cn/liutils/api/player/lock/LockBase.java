@@ -1,5 +1,6 @@
 package cn.liutils.api.player.lock;
 
+import cn.liutils.core.event.LIIHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -11,7 +12,7 @@ import net.minecraftforge.client.event.MouseEvent;
  * @author Violet
  *
  */
-public abstract class LockBase {
+public abstract class LockBase implements LIIHandler {
 	public final LockType type;
 	protected int tick;
 	
@@ -28,11 +29,13 @@ public abstract class LockBase {
 	protected LockBase(LockType pType, int ticks) {
 		type = pType;
 		tick = ticks;
+		register();
 	}
 	
 	public LockBase(LockType pType, ByteBuf buf) {
 		type = pType;
 		fromBytes(buf);
+		register();
 	}
 	
 	public final int getTick() {
@@ -58,8 +61,9 @@ public abstract class LockBase {
 	public final boolean tick() {
 		if (tick < 0)
 			return false;
-		if (tick-- == 0)
-			return true;
+		if (tick-- == 0) {
+			unregister();
+		}
 		return false;
 	}
 
@@ -72,14 +76,9 @@ public abstract class LockBase {
 		buf.writeInt(tick);
 		writeBytes(buf);
 	}
-
-	public void onMouse(EntityPlayer player, MouseEvent event) {
-	}
-	public void onKeyboard(EntityPlayer player) {
-	}
-	public void onTick(EntityPlayer player) {
-	}
 	
+	protected abstract void register();
+	protected abstract void unregister();
 	protected void readBytes(ByteBuf buf) {
 	}
 	protected void writeBytes(ByteBuf buf) {

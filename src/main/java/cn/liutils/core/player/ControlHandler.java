@@ -11,6 +11,7 @@ import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -21,6 +22,8 @@ import cpw.mods.fml.relauncher.Side;
 import cn.liutils.api.player.ControlData;
 import cn.liutils.api.util.GenericUtils;
 import cn.liutils.core.LIUtils;
+import cn.liutils.core.event.LIEventDispatcher;
+import cn.liutils.core.event.LIIHandler;
 import cn.liutils.core.proxy.LIClientProps;
 
 /**
@@ -28,7 +31,7 @@ import cn.liutils.core.proxy.LIClientProps;
  * @author Violet
  *
  */
-public class ControlHandler {
+public class ControlHandler implements LIIHandler {
 private static ControlHandler INSTANCE = null;
 	
 	private ControlHandler() {	
@@ -36,39 +39,26 @@ private static ControlHandler INSTANCE = null;
 
 	private HashMap<String, ControlData> map = new HashMap<String, ControlData>();
 	
+	//TODO use Dispatcher
 	public static void init() {
 		if (INSTANCE == null)
 			INSTANCE = new ControlHandler();
 		FMLCommonHandler.instance().bus().register(INSTANCE);
-		MinecraftForge.EVENT_BUS.register(INSTANCE);
 		LIUtils.netHandler.registerMessage(MsgControlSyncAll.Handler.class, MsgControlSyncAll.class, LIClientProps.DISC_CONTROL_SYNCALL, Side.CLIENT);
+		LIEventDispatcher lied = LIEventDispatcher.instance();
+		lied.setClientTick.add(INSTANCE);
+		lied.setServerTick.add(INSTANCE);
 	}
 	
-	@SubscribeEvent
-	public void onMouse(MouseEvent event) {
-		if (GenericUtils.isPlayerInGame() && Minecraft.getMinecraft().inGameHasFocus)
-			ControlData.get(Minecraft.getMinecraft().thePlayer).onMouse(event);
-	}
-	
-	@SubscribeEvent
-	public void onKeyboard(KeyInputEvent event) {
-		if (GenericUtils.isPlayerInGame() && Minecraft.getMinecraft().inGameHasFocus)
-			ControlData.get(Minecraft.getMinecraft().thePlayer).onKeyboard();
-	}
-	
-	@SubscribeEvent
 	public void onClientTick(ClientTickEvent event) {
 		if (Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().isGamePaused()) {
 			if (event.phase == Phase.START)
 				ControlData.get(Minecraft.getMinecraft().thePlayer).tick();
-			else
-				ControlData.get(Minecraft.getMinecraft().thePlayer).onTick();
 		}
 	}
 	
 	private int ticker = 0;
 	
-	@SubscribeEvent
 	public void onServerTick(ServerTickEvent event) {
 		List<EntityPlayerMP> players = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
 		if (event.phase == Phase.START) {
@@ -77,7 +67,7 @@ private static ControlHandler INSTANCE = null;
 		}
 		else {
 			for (EntityPlayerMP player : players)
-				ControlData.get(player).onTick();
+				ControlData.get(player).tickSync();
 			if (ticker == 0) {
 				ticker = 600;
 			}
@@ -100,5 +90,13 @@ private static ControlHandler INSTANCE = null;
 		if (data == null)
 			((EntityPlayerMP) event.player).playerNetServerHandler.kickPlayerFromServer("INVALID SITUATION");
 		data.syncAll();
+	}
+	
+	@Override
+	public void onEvent(Event event) {
+		if (event instanceof ServerTickEvent)
+			onServerTick((ServerTickEvent) event);
+		else if (event instanceof ClientTickEvent)
+			onClientTick((ClientTickEvent) event);
 	}
 }

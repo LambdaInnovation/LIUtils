@@ -118,28 +118,7 @@ public static final String IDENTIFIER = "li_con";
 	/**
 	 * Called by ControlManager
 	 */
-	public void onMouse(MouseEvent event) {
-		for (LockType lt : EVENT_MOUSE)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onMouse(player, event);
-	}
-	
-	/**
-	 * Called by ControlManager
-	 */
-	public void onKeyboard() {
-		for (LockType lt : EVENT_KEYBOARD)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onKeyboard(player);
-	}
-	
-	/**
-	 * Called by ControlManager
-	 */
-	public void onTick() {
-		for (LockType lt : EVENT_TICK)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onTick(player);
+	public void tickSync() {
 		if (shouldSync)
 			syncAll();
 	}
