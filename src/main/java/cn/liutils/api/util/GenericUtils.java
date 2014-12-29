@@ -45,6 +45,10 @@ public class GenericUtils {
 		return f;
 	}
 	
+	public static double distance(double dx, double dy, double dz) {
+		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+	}
+	
 	/**
 	 * An alias of Minecraft.getSystemTime() in case of server calls
 	 * @return
