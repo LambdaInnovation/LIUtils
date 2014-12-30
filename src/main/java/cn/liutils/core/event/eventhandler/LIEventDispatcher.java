@@ -1,4 +1,4 @@
-package cn.liutils.core.event;
+package cn.liutils.core.event.eventhandler;
 
 import java.util.HashSet;
 
@@ -22,12 +22,9 @@ public final class LIEventDispatcher {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
-	public static void init() {
+	public static LIEventDispatcher instance() {
 		if (INSTANCE == null)
 			INSTANCE = new LIEventDispatcher();
-	}
-	
-	public static LIEventDispatcher instance() {
 		return INSTANCE;
 	}
 

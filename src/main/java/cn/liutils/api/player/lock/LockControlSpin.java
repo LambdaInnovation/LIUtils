@@ -1,10 +1,12 @@
 package cn.liutils.api.player.lock;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraft.entity.player.EntityPlayer;
-
 import org.lwjgl.input.Mouse;
 
+import io.netty.buffer.ByteBuf;
+import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.RenderTickEvent;
 import cn.liutils.core.player.MouseHelperX;
 
 public class LockControlSpin extends LockBase {
@@ -26,9 +28,23 @@ public class LockControlSpin extends LockBase {
 	}
 	
 	@Override
-	public void onTick(EntityPlayer player) {
-		MouseHelperX.lock();
-		Mouse.setCursorPosition(x, y);
+	public void onEvent(Event event) {
+		if (((RenderTickEvent) event).phase == Phase.START) {
+			MouseHelperX.lock();
+			Mouse.setCursorPosition(x, y);
+			return;
+		}
+		incorrect(event);
 	}
 	
+	@Override
+	public void register() {
+		lied.setRenderTick.add(this);
+	}
+	
+	@Override
+	public void unregister() {
+		lied.setRenderTick.remove(this);
+		MouseHelperX.unlock();
+	}
 }

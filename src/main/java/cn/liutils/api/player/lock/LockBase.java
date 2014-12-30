@@ -1,6 +1,8 @@
 package cn.liutils.api.player.lock;
 
-import cn.liutils.core.event.LIIHandler;
+import cpw.mods.fml.common.eventhandler.Event;
+import cn.liutils.core.event.eventhandler.LIEventDispatcher;
+import cn.liutils.core.event.eventhandler.LIIHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -14,6 +16,7 @@ import net.minecraftforge.client.event.MouseEvent;
  */
 public abstract class LockBase implements LIIHandler {
 	public final LockType type;
+	protected static final LIEventDispatcher lied = LIEventDispatcher.instance();
 	protected int tick;
 	
 	public static enum LockType {
@@ -75,6 +78,10 @@ public abstract class LockBase implements LIIHandler {
 	public final void toBytes(ByteBuf buf) {
 		buf.writeInt(tick);
 		writeBytes(buf);
+	}
+	
+	protected final void incorrect(Event event) {
+		throw new RuntimeException("Incorrect event(" + event.getClass().getName() + ") for " + this.getClass().getName());
 	}
 	
 	protected abstract void register();

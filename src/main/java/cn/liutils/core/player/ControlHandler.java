@@ -22,8 +22,8 @@ import cpw.mods.fml.relauncher.Side;
 import cn.liutils.api.player.ControlData;
 import cn.liutils.api.util.GenericUtils;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.event.LIEventDispatcher;
-import cn.liutils.core.event.LIIHandler;
+import cn.liutils.core.event.eventhandler.LIEventDispatcher;
+import cn.liutils.core.event.eventhandler.LIIHandler;
 import cn.liutils.core.proxy.LIClientProps;
 
 /**
@@ -51,10 +51,8 @@ private static ControlHandler INSTANCE = null;
 	}
 	
 	public void onClientTick(ClientTickEvent event) {
-		if (Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().isGamePaused()) {
-			if (event.phase == Phase.START)
-				ControlData.get(Minecraft.getMinecraft().thePlayer).tick();
-		}
+		if (event.phase == Phase.START && Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().isGamePaused())
+			ControlData.get(Minecraft.getMinecraft().thePlayer).tick();
 	}
 	
 	private int ticker = 0;
@@ -66,13 +64,16 @@ private static ControlHandler INSTANCE = null;
 				ControlData.get(player).tick();
 		}
 		else {
-			for (EntityPlayerMP player : players)
-				ControlData.get(player).tickSync();
 			if (ticker == 0) {
+				for (EntityPlayerMP player : players)
+					ControlData.get(player).tickSync();
 				ticker = 600;
 			}
-			else
+			else {
+				for (EntityPlayerMP player : players)
+					ControlData.get(player).tickSync();
 				--ticker;
+			}
 		}
 	}
 	

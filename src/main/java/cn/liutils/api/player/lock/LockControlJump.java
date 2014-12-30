@@ -1,12 +1,13 @@
 package cn.liutils.api.player.lock;
 
 import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import cn.liutils.api.player.lock.LockBase.LockType;
-import cn.liutils.core.event.LIEventDispatcher;
+import cn.liutils.core.event.eventhandler.LIEventDispatcher;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -28,18 +29,22 @@ public class LockControlJump extends LockBase {
 	
 	@Override
 	public void onEvent(Event event) {
-		GameSettings gs = Minecraft.getMinecraft().gameSettings;
-		KeyBinding.setKeyBindState(gs.keyBindJump.getKeyCode(), false);
+		if (event instanceof KeyInputEvent) {
+			GameSettings gs = Minecraft.getMinecraft().gameSettings;
+			KeyBinding.setKeyBindState(gs.keyBindJump.getKeyCode(), false);
+			return;
+		}
+		incorrect(event);
 	}
 
 	@Override
 	protected void register() {
-		LIEventDispatcher.instance().setKeyInput.add(this);
+		lied.setKeyInput.add(this);
 	}
 
 	@Override
 	protected void unregister() {
-		LIEventDispatcher.instance().setKeyInput.remove(this);
+		lied.setKeyInput.remove(this);
 	}
 
 }

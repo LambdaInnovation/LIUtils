@@ -1,4 +1,4 @@
-package cn.liutils.core.event;
+package cn.liutils.core.event.eventhandler;
 
 import cpw.mods.fml.common.eventhandler.Event;
 
