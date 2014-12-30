@@ -43,6 +43,10 @@ public class EntityManipHandler {
 		 * called each tick to update entity state
 		 */
 		public abstract void onTick();
+		/**
+		 * called when the manip is to be removed
+		 */
+		public abstract void onEnd();
 		
 		protected boolean isRemote() { //Fast alias
 			return entity.worldObj.isRemote;
@@ -73,7 +77,12 @@ public class EntityManipHandler {
 		EntityManip now = map.get(em.getID());
 		if(now != null && !force) return false;
 		map.put(em.getID(), em);
+		em.onTick();
 		return now == null;
+	}
+	
+	public static boolean hasManip(Entity e, String str) {
+		return entityMap(e).containsKey(str);
 	}
 	
 	private static Map<String, EntityManip> entityMap(Entity e) {
@@ -111,6 +120,7 @@ public class EntityManipHandler {
 				if(eman.getValue().alive) {
 					eman.getValue().onTick();
 				} else {
+					eman.getValue().onEnd();
 					iter.remove();
 				}
 			}

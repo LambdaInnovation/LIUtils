@@ -36,8 +36,13 @@ public class TextUtils {
 		} GL11.glPopMatrix();
 	}
 	
+	public static void drawAtCenter(TrueTypeFont ttf, String text, double x, double y, float size) {
+		float hw = getWidth(ttf, text, size) / 2, hh = getHeight(ttf, text, size) / 2;
+		drawText(ttf, text, x - hw, y - hh, size);
+	}
+	
 	public static float getWidth(TrueTypeFont font, String str, float size) {
-		return font.getWidth(str) * size / font.getHeight();
+		return font.getWidth(str) * size / font.getLineHeight();
 	}
 	
 	public static float getHeight(TrueTypeFont font, String str, float size) {
