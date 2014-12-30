@@ -44,6 +44,7 @@ private static ControlHandler INSTANCE = null;
 		if (INSTANCE == null)
 			INSTANCE = new ControlHandler();
 		FMLCommonHandler.instance().bus().register(INSTANCE);
+		MinecraftForge.EVENT_BUS.register(INSTANCE);
 		LIUtils.netHandler.registerMessage(MsgControlSyncAll.Handler.class, MsgControlSyncAll.class, LIClientProps.DISC_CONTROL_SYNCALL, Side.CLIENT);
 		LIEventDispatcher lied = LIEventDispatcher.instance();
 		lied.setClientTick.add(INSTANCE);

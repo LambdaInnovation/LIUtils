@@ -5,6 +5,8 @@ package cn.liutils.core.proxy;
 
 import cn.liutils.api.player.ControlManager;
 import cn.liutils.api.util.EntityManipHandler;
+import cn.liutils.api.util.GenericUtils;
+import cn.liutils.core.event.eventhandler.LIEventDispatcher;
 import cn.liutils.core.player.ControlHandler;
 import net.minecraft.command.CommandHandler;
 
@@ -15,6 +17,7 @@ import net.minecraft.command.CommandHandler;
 public class LICommonProxy {
 
 	public void init() {
+		GenericUtils.assertObj(LIEventDispatcher.instance());
 		EntityManipHandler.init();
 		ControlHandler.init();
 	}
