@@ -27,17 +27,21 @@ public class TextUtils {
 	public static void init() {}
 	
 	public static void drawText(TrueTypeFont font, String text, double x, double y, float size) {
+		drawText(font, text, x, y, size, TrueTypeFont.ALIGN_LEFT);
+	}
+	
+	public static void drawText(TrueTypeFont font, String text, double x, double y, float size, int format) {
 		GL11.glPushMatrix(); {
 			GL11.glTranslated(x, y + getHeight(font, text, size), HudUtils.zLevel);
 			float scale = size / font.getHeight();
 			GL11.glScalef(scale, -scale, 1);
 			//GL11.glBindTexture(GL11.GL_TEXTURE_2D, getTexture(font).getTextureID());
-			font.drawString(0, 0, text, 1, 1);
+			font.drawString(0, 0, text, 1, 1, format);
 		} GL11.glPopMatrix();
 	}
 	
 	public static float getWidth(TrueTypeFont font, String str, float size) {
-		return font.getWidth(str) * size / font.getHeight();
+		return font.getWidth(str) * size * .7F / font.getLineHeight();
 	}
 	
 	public static float getHeight(TrueTypeFont font, String str, float size) {

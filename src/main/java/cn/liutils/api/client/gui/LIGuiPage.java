@@ -53,7 +53,7 @@ public abstract class LIGuiPage {
 	public abstract void drawPage();
 	
 	/**
-	 * 注册该page所有的元素。
+	 * 注册该page所有的元素。该方法每渲染tick被调用。
 	 */
 	public abstract void addElements(Set<LIGuiPart> set);
 	
