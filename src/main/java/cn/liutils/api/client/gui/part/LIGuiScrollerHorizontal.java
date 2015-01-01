@@ -13,6 +13,9 @@ package cn.liutils.api.client.gui.part;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+
+import net.minecraft.client.gui.GuiScreen;
+
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.client.gui.LIGuiPage;
@@ -23,27 +26,17 @@ import cn.liutils.api.util.GenericUtils;
  * @author WeAthFolD
  *
  */
-public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
+public abstract class LIGuiScrollerHorizontal extends LIGuiPart {
 	
 	public static abstract class ScrollerEntry extends LIGuiPage {
-		public int u, v, texWidth, texHeight;
-		
-		public ScrollerEntry(int u, int v, int texW, int texH) {
+		public ScrollerEntry() {
 			super(null, "", 0, 0);
-			this.u = u;
-			this.v = v;
-			this.texWidth = texW;
-			this.texHeight = texH;
 		}
-		
-		public void drawEntry(float width, float height, boolean mouseHovering) {
-			HudUtils.drawTexturedModalRect(0, 0, u, v, width, height, texWidth, texHeight);
-		}
-		
-		@Override
-		public final void drawPage() {
+		@Override public final void drawPage() { 
 			throw new UnsupportedOperationException();
 		}
+		public abstract void onEntryClicked();
+		public abstract void draw(boolean mouseHovering);
 	}
 	
 	protected List<ScrollerEntry> entryList = new ArrayList();
@@ -53,7 +46,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 	float entryHeight;
 	int maxProgress;
 
-	public LIGuiScrollerHorizonal(String n, float x, float y, float w, float h, float entryHeight) {
+	public LIGuiScrollerHorizontal(String n, float x, float y, float w, float h, float entryHeight) {
 		super(n, x, y, w, h);
 		this.entryHeight = entryHeight;
 		entriesPerPage = (int) (this.height / entryHeight);
@@ -84,6 +77,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 		y %= entryHeight;
 		ScrollerEntry ent = getEntry(id);
 		if(ent != null) {
+			ent.onEntryClicked();
 			Iterator<LIGuiPart> iter = ent.getParts();
 			while(iter.hasNext()) {
 				LIGuiPart pt = iter.next();
@@ -108,7 +102,7 @@ public abstract class LIGuiScrollerHorizonal extends LIGuiPart {
 			if(ent != null) {
 				GL11.glPushMatrix(); {
 					GL11.glTranslatef(0F, i * entryHeight, 0F);
-					ent.drawEntry(width, entryHeight, x == id);
+					ent.draw(id == i);
 				} GL11.glPopMatrix();
 			}
 		}

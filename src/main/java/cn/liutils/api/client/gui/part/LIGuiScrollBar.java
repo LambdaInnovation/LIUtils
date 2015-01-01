@@ -23,14 +23,16 @@ import cn.liutils.api.client.util.RenderUtils;
 
 public class LIGuiScrollBar extends LIGuiPart {
 
-	final float barWidth,
+	final float 
+		barWidth,
 		barHeight;
-	final int	barTexU,
+	final int	
+		barTexU,
 		barTexV,
 		barTexW,
 		barTexH;
 	
-	LIGuiScrollerHorizonal scroller;
+	LIGuiScrollerHorizontal scroller;
 	
 	/**
 	 * @param n
@@ -39,12 +41,12 @@ public class LIGuiScrollBar extends LIGuiPart {
 	 * @param w
 	 * @param h
 	 */
-	public LIGuiScrollBar(String n, LIGuiScrollerHorizonal h2, float x, float y, float w, float h,
-			float btw, float bth, int btu, int btv, int bttw, int btth) {
+	public LIGuiScrollBar(String n, LIGuiScrollerHorizontal h2, float x, float y, float w, float h,
+			float bw, float bh, int btu, int btv, int bttw, int btth) {
 		super(n, x, y, w, h);
 		scroller = h2;
-		barWidth = btw;
-		barHeight = bth;
+		barWidth = bw;
+		barHeight = bh;
 		barTexU = btu;
 		barTexV = btv;
 		barTexW = bttw;

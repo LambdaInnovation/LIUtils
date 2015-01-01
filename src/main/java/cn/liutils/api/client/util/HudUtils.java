@@ -90,7 +90,7 @@ public class HudUtils {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height, texWidth, texHeight
      */
-    public static void drawTexturedModalRect(float par1, float par2, double par3, double par4, double par5, double par6, double par7, double par8)
+    public static void drawTexturedModalRect(double par1, double par2, double par3, double par4, double par5, double par6, double par7, double par8)
     {
     	float f = SCALE_X;
         float f1 = SCALE_Y;

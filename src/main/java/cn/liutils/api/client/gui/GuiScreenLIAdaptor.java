@@ -6,6 +6,7 @@ package cn.liutils.api.client.gui;
 import java.util.Set;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.inventory.GuiContainer;
 
 /**
  * @author WeathFolD
@@ -17,6 +18,7 @@ public abstract class GuiScreenLIAdaptor extends GuiScreen {
 	
 	public GuiScreenLIAdaptor(int xSize, int ySize) {
 		screen = new LIGuiScreen(xSize, ySize);
+		GuiContainer gc;
 	}
 	
 	/**

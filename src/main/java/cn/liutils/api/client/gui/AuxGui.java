@@ -15,7 +15,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 /**
  * Auxillary GUI interface class. This is a kind of GUI that doesn't make mouse gain focus. </br>
  * GUIs such as health indication, information indications are suitable of using this interface to define.
- * The class also provided a set of key-listening fucntions, based on LIKeyProcess. you can use event-based key listening
+ * The class also provided a set of key-listening functions, based on LIKeyProcess. you can use event-based key listening
  * methods to setup key listening.
  * @author WeathFolD
  */
