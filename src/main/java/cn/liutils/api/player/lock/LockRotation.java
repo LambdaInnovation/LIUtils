@@ -21,41 +21,34 @@ public class LockRotation extends LockBase {
 	private float cameraPitch;
 	private float cameraYaw;
 	
-	
-	public LockRotation(ByteBuf buf) {
-		super(TYPE, buf);
+	public LockRotation(EntityPlayer player, ByteBuf buf) {
+		super(TYPE, player, buf);
+		fmlDispatcher.registerPlayerTick(this);
 	}
 
-	public LockRotation(int ticks, EntityPlayer player) {
-		super(TYPE, ticks);
+	public LockRotation(EntityPlayer player, int ticks) {
+		super(TYPE, player, ticks);
 		rotationPitch = player.rotationPitch;
 		rotationYaw = player.rotationYaw;
 		rotationYawHead = player.rotationYawHead;
 		cameraPitch = player.cameraPitch;
 		cameraYaw = player.cameraYaw;
+		fmlDispatcher.registerPlayerTick(this);
 	}
 
 	@Override
-	public void onEvent(Event event) {
+	protected boolean onEvent(Event event) {
 		if (event instanceof PlayerTickEvent) {
-			EntityPlayer player = ((PlayerTickEvent) event).player;
-			player.prevRotationPitch = player.rotationPitch = rotationPitch;
-			player.prevRotationYaw = player.rotationYaw = rotationYaw;
-			player.prevRotationYawHead = player.rotationYawHead = rotationYawHead;
-			player.prevCameraPitch = player.cameraPitch = cameraPitch;
-			player.prevCameraYaw = player.cameraYaw = cameraYaw;
+			if (player == ((PlayerTickEvent) event).player) {
+				player.prevRotationPitch = player.rotationPitch = rotationPitch;
+				player.prevRotationYaw = player.rotationYaw = rotationYaw;
+				player.prevRotationYawHead = player.rotationYawHead = rotationYawHead;
+				player.prevCameraPitch = player.cameraPitch = cameraPitch;
+				player.prevCameraYaw = player.cameraYaw = cameraYaw;
+			}
+			return true;
 		}
-		incorrect(event);
-	}
-	
-	@Override
-	public void register() {
-		lied.setPlayerTick.add(this);
-	}
-	
-	@Override
-	public void unregister() {
-		lied.setPlayerTick.remove(this);
+		return false;
 	}
 	
 	@Override

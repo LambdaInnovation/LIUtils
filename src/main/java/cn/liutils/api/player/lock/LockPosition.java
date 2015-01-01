@@ -1,17 +1,11 @@
 package cn.liutils.api.player.lock;
 
-import java.util.List;
-
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
 
 /**
  * 
@@ -24,48 +18,37 @@ public class LockPosition extends LockBase {
 	
 	private double posX, posY, posZ;
 	
-	public LockPosition(ByteBuf buf) {
-		super(TYPE, buf);
+	public LockPosition(EntityPlayer player, ByteBuf buf) {
+		super(TYPE, player, buf);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerClientTick(this);
+		else
+			fmlDispatcher.registerServerTick(this);
 	}
 
-	public LockPosition(int ticks, EntityPlayer player) {
-		super(TYPE, ticks);
+	public LockPosition(EntityPlayer player, int ticks) {
+		super(TYPE, player, ticks);
 		posX = player.posX;
 		posY = player.posY;
 		posZ = player.posZ;
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerClientTick(this);
+		else
+			fmlDispatcher.registerServerTick(this);
 	}
-	
-	private void onTick(EntityPlayer player) {
-		player.setPosition(posX, posY + player.yOffset, posZ);
-	}
-
-	
 	
 	@Override
-	public void onEvent(Event event) {
+	protected boolean onEvent(Event event) {
 		if (event instanceof ServerTickEvent) {
-			List<EntityPlayerMP> list = MinecraftServer.getServer().getConfigurationManager().playerEntityList;
-			for (EntityPlayerMP player : list)
-				onTick(player);
-			return;
+			player.setPosition(posX, posY + player.yOffset, posZ);
+			return true;
 		}
-		if (event instanceof ClientTickEvent && Minecraft.getMinecraft().thePlayer != null && !Minecraft.getMinecraft().isGamePaused()) {
-			onTick(Minecraft.getMinecraft().thePlayer);
-			return;
+		if (event instanceof ClientTickEvent) {
+			if (!Minecraft.getMinecraft().isGamePaused())
+				player.setPosition(posX, posY + player.yOffset, posZ);
+			return true;
 		}
-		incorrect(event);
-	}
-
-	@Override
-	protected void register() {
-		lied.setClientTick.add(this);
-		lied.setServerTick.add(this);
-	}
-
-	@Override
-	protected void unregister() {
-		lied.setClientTick.remove(this);
-		lied.setServerTick.remove(this);
+		return false;
 	}
 	
 	@Override

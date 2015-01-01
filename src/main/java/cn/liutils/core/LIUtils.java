@@ -10,6 +10,7 @@ import org.apache.logging.log4j.Logger;
 import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
+import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.core.network.MsgTileDirMulti;
 import cn.liutils.core.proxy.LICommonProxy;
 import cpw.mods.fml.common.FMLCommonHandler;
@@ -70,6 +71,9 @@ public class LIUtils {
 		log.info("Starting LIUtils " + VERSION);
 		log.info("Copyright (c) Lambda Innovation, 2013-2014");
 		log.info("http://www.lambdacraft.cn");
+		
+		//Initialize FMLGameEvent dispatcher
+		LIFMLGameEventDispatcher.init();
 		
 		//Try and see if IC2 implementation exists
 		{

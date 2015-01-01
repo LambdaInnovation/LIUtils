@@ -1,22 +1,20 @@
 package cn.liutils.api.player.lock;
 
-import cpw.mods.fml.common.eventhandler.Event;
-import cn.liutils.core.event.eventhandler.LIEventDispatcher;
-import cn.liutils.core.event.eventhandler.LIIHandler;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.server.MinecraftServer;
-import net.minecraftforge.client.event.MouseEvent;
+import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
+import cn.liutils.core.event.eventhandler.LIHandler;
+
 
 /**
  * 
  * @author Violet
  *
  */
-public abstract class LockBase implements LIIHandler {
+public abstract class LockBase extends LIHandler {
+	public static final LIFMLGameEventDispatcher fmlDispatcher = LIFMLGameEventDispatcher.INSTANCE;
 	public final LockType type;
-	protected static final LIEventDispatcher lied = LIEventDispatcher.instance();
+	public final EntityPlayer player;
 	protected int tick;
 	
 	public static enum LockType {
@@ -29,16 +27,16 @@ public abstract class LockBase implements LIIHandler {
 		CONTROL_SPIN;
 	}
 	
-	protected LockBase(LockType pType, int ticks) {
+	protected LockBase(LockType pType, EntityPlayer pPlayer, int ticks) {
 		type = pType;
+		player = pPlayer;
 		tick = ticks;
-		register();
 	}
 	
-	public LockBase(LockType pType, ByteBuf buf) {
+	public LockBase(LockType pType, EntityPlayer pPlayer, ByteBuf buf) {
 		type = pType;
+		player = pPlayer;
 		fromBytes(buf);
-		register();
 	}
 	
 	public final int getTick() {
@@ -57,17 +55,20 @@ public abstract class LockBase implements LIIHandler {
 			tick = 0;
 	}
 	
-	public final boolean getEffective() {
-		return tick != 0;
-	}
-	
 	public final boolean tick() {
 		if (tick < 0)
 			return false;
 		if (tick-- == 0) {
-			unregister();
+			cancel();
+			return true;
 		}
 		return false;
+	}
+	
+	public final void cancel() {
+		this.tick = 0;
+		setDead();
+		onDead();
 	}
 
 	public final void fromBytes(ByteBuf buf) {
@@ -79,15 +80,11 @@ public abstract class LockBase implements LIIHandler {
 		buf.writeInt(tick);
 		writeBytes(buf);
 	}
-	
-	protected final void incorrect(Event event) {
-		throw new RuntimeException("Incorrect event(" + event.getClass().getName() + ") for " + this.getClass().getName());
-	}
-	
-	protected abstract void register();
-	protected abstract void unregister();
+
 	protected void readBytes(ByteBuf buf) {
 	}
 	protected void writeBytes(ByteBuf buf) {
+	}
+	protected void onDead() {
 	}
 }

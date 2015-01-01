@@ -7,7 +7,6 @@ import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
 import cn.liutils.api.player.lock.LockBase.LockType;
-import cn.liutils.core.event.eventhandler.LIEventDispatcher;
 import io.netty.buffer.ByteBuf;
 
 /**
@@ -19,32 +18,26 @@ public class LockControlJump extends LockBase {
 
 	public static final LockType TYPE = LockType.CONTROL_JUMP;
 	
-	public LockControlJump(ByteBuf buf) {
-		super(TYPE, buf);
+	public LockControlJump(EntityPlayer player, ByteBuf buf) {
+		super(TYPE, player, buf);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerKeyInput(this);
 	}
 
-	public LockControlJump(int ticks, EntityPlayer player) {
-		super(TYPE, ticks);
+	public LockControlJump(EntityPlayer player, int ticks) {
+		super(TYPE, player, ticks);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerKeyInput(this);
 	}
 	
 	@Override
-	public void onEvent(Event event) {
+	protected boolean onEvent(Event event) {
 		if (event instanceof KeyInputEvent) {
 			GameSettings gs = Minecraft.getMinecraft().gameSettings;
 			KeyBinding.setKeyBindState(gs.keyBindJump.getKeyCode(), false);
-			return;
+			return true;
 		}
-		incorrect(event);
-	}
-
-	@Override
-	protected void register() {
-		lied.setKeyInput.add(this);
-	}
-
-	@Override
-	protected void unregister() {
-		lied.setKeyInput.remove(this);
+		return false;
 	}
 
 }

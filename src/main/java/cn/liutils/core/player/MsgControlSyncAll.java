@@ -2,7 +2,6 @@ package cn.liutils.core.player;
 
 import cn.liutils.api.player.ControlData;
 import net.minecraft.client.Minecraft;
-import net.minecraft.util.ChatComponentText;
 import io.netty.buffer.ByteBuf;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -26,7 +25,7 @@ public class MsgControlSyncAll implements IMessage {
 	
 	@Override
 	public void fromBytes(ByteBuf buf) {
-		cd = new ControlData(buf);
+		cd = new ControlData(Minecraft.getMinecraft().thePlayer, buf);
 	}
 
 	@Override
@@ -38,7 +37,6 @@ public class MsgControlSyncAll implements IMessage {
 
 		@Override
 		public IMessage onMessage(MsgControlSyncAll message, MessageContext ctx) {
-			Minecraft.getMinecraft().thePlayer.addChatComponentMessage(new ChatComponentText("onMessage"));
 			ControlData data = ControlData.get(Minecraft.getMinecraft().thePlayer);
 			if (data != null)
 				data.copyFrom(message.cd);
