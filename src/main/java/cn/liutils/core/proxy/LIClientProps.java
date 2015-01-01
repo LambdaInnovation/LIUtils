@@ -20,7 +20,6 @@ public class LIClientProps {
 
 	public static final int RENDER_TYPE_EMPTY = RenderingRegistry.getNextAvailableRenderId();
 	
-	public static final int DISC_CONTROL_SYNCALL = 1;
-	public static final int DISC_CONTROL_SYNC = 2;
+	public static final int DISC_CONTROL_SYNC = 1;
 	
 }

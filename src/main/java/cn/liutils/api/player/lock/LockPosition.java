@@ -1,9 +1,11 @@
 package cn.liutils.api.player.lock;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import io.netty.buffer.ByteBuf;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ChatComponentText;
 
 /**
  * 
@@ -16,23 +18,39 @@ public class LockPosition extends LockBase {
 	
 	private double posX, posY, posZ;
 	
-	public LockPosition(ByteBuf buf) {
-		super(TYPE, buf);
+	public LockPosition(EntityPlayer player, ByteBuf buf) {
+		super(TYPE, player, buf);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerClientTick(this);
+		else
+			fmlDispatcher.registerServerTick(this);
 	}
 
-	public LockPosition(int ticks, EntityPlayer player) {
-		super(TYPE, ticks);
+	public LockPosition(EntityPlayer player, int ticks) {
+		super(TYPE, player, ticks);
 		posX = player.posX;
 		posY = player.posY;
 		posZ = player.posZ;
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerClientTick(this);
+		else
+			fmlDispatcher.registerServerTick(this);
 	}
 	
 	@Override
-	public void onTick(EntityPlayer player) {
-		player.addChatComponentMessage(new ChatComponentText("lpos(" + posX + "," + posY + "," + posZ + ").ontick: " + (player.worldObj.isRemote ? "client" : "server")));
-		player.setPosition(posX, posY + player.yOffset, posZ);
+	protected boolean onEvent(Event event) {
+		if (event instanceof ServerTickEvent) {
+			player.setPosition(posX, posY + player.yOffset, posZ);
+			return true;
+		}
+		if (event instanceof ClientTickEvent) {
+			if (!Minecraft.getMinecraft().isGamePaused())
+				player.setPosition(posX, posY + player.yOffset, posZ);
+			return true;
+		}
+		return false;
 	}
-
+	
 	@Override
 	protected void readBytes(ByteBuf buf) {
 		posX = buf.readDouble();

@@ -30,9 +30,6 @@ public class ControlData implements IExtendedEntityProperties {
 public static final String IDENTIFIER = "li_con";
 	
 	public static final LockType[] CONTROLS = new LockType[] {LockType.CONTROL_MOVE, LockType.CONTROL_JUMP, LockType.CONTROL_MOVE, LockType.CONTROL_SPIN};
-	public static final LockType[] EVENT_MOUSE = new LockType[] {};
-	public static final LockType[] EVENT_KEYBOARD = new LockType[] {LockType.CONTROL_MOVE, LockType.CONTROL_JUMP};
-	public static final LockType[] EVENT_TICK = new LockType[] {LockType.POSITION, LockType.ROTATION, LockType.CONTROL_SPIN};
 	
 	/**
 	 * Get the data
@@ -41,16 +38,18 @@ public static final String IDENTIFIER = "li_con";
 		return (ControlData) entity.getExtendedProperties(IDENTIFIER);
 	}
 	
-	private EntityPlayer player = null;
+	private final EntityPlayer player;
 	
 	private LockBase[] lock = new LockBase[LockType.values().length];
 	
 	private boolean shouldSync;
 	
-	public ControlData() {
+	public ControlData(EntityPlayer host) {
+		player = host;
 	}
 	
-	public ControlData(ByteBuf buf) {
+	public ControlData(EntityPlayer host, ByteBuf buf) {
+		player = host;
 		fromBytes(buf);
 	}
 	
@@ -62,7 +61,8 @@ public static final String IDENTIFIER = "li_con";
 		switch(type) {
 		case ALL:
 			for (LockType lt : LockType.values())
-				doLockSet(lt, ticks);
+				if (!lt.equals(LockType.ALL) && !lt.equals(LockType.CONTROL_ALL))
+					doLockSet(lt, ticks);
 			break;
 		case CONTROL_ALL:
 			for (LockType lt : CONTROLS)
@@ -102,13 +102,21 @@ public static final String IDENTIFIER = "li_con";
 	public void lockCancel(LockType type) {
 		switch(type) {
 		case ALL:
-			lock = new LockBase[LockType.values().length];
+			for (int i = 0; i < lock.length; ++i)
+				if (lock[i] != null) {
+					lock[i].cancel();
+					lock[i] = null;
+				}
 			break;
 		case CONTROL_ALL:
 			for (LockType lt : CONTROLS)
-				lock[lt.ordinal()] = null;
+				if (lock[lt.ordinal()] != null) {
+					lock[lt.ordinal()].cancel();
+					lock[lt.ordinal()] = null;
+				}
 			break;
 		default:
+			lock[type.ordinal()].cancel();
 			lock[type.ordinal()] = null;
 			break;
 		}
@@ -118,28 +126,7 @@ public static final String IDENTIFIER = "li_con";
 	/**
 	 * Called by ControlManager
 	 */
-	public void onMouse(MouseEvent event) {
-		for (LockType lt : EVENT_MOUSE)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onMouse(player, event);
-	}
-	
-	/**
-	 * Called by ControlManager
-	 */
-	public void onKeyboard() {
-		for (LockType lt : EVENT_KEYBOARD)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onKeyboard(player);
-	}
-	
-	/**
-	 * Called by ControlManager
-	 */
-	public void onTick() {
-		for (LockType lt : EVENT_TICK)
-			if (lock[lt.ordinal()] != null)
-				lock[lt.ordinal()].onTick(player);
+	public void tickSync() {
 		if (shouldSync)
 			syncAll();
 	}
@@ -151,34 +138,32 @@ public static final String IDENTIFIER = "li_con";
 		for (int i = 0; i < lock.length; ++i)
 			if (lock[i] != null && lock[i].tick())
 				lock[i] = null;
-		MouseHelperX.unlock();
 	}
 	
 	private void doLockSet(LockType lt, int ticks) {
-		LockBase lb = lock[lt.ordinal()];
-		if (lb == null) {
+		if (lock[lt.ordinal()] == null) {
 			switch(lt) {
 			case POSITION:
-				lock[lt.ordinal()] = new LockPosition(ticks, player);
+				lock[lt.ordinal()] = new LockPosition(player, ticks);
 				break;
 			case ROTATION:
-				lock[lt.ordinal()] = new LockRotation(ticks, player);
+				lock[lt.ordinal()] = new LockRotation(player, ticks);
 				break;
 			case CONTROL_MOVE:
-				lock[lt.ordinal()] = new LockControlMove(ticks, player);
+				lock[lt.ordinal()] = new LockControlMove(player, ticks);
 				break;
 			case CONTROL_JUMP:
-				lock[lt.ordinal()] = new LockControlJump(ticks, player);
+				lock[lt.ordinal()] = new LockControlJump(player, ticks);
 				break;
 			case CONTROL_SPIN:
-				lock[lt.ordinal()] = new LockControlSpin(ticks, player);
+				lock[lt.ordinal()] = new LockControlSpin(player, ticks);
 				break;
 			default:
 				LIUtils.log.warn("Not supported yet: " + lt);
 			}
 		}
 		else
-			lb.setTick(ticks);
+			lock[lt.ordinal()].setTick(ticks);
 	}
 	
 	private void doLockModify(LockBase lb, int ticks) {
@@ -187,7 +172,7 @@ public static final String IDENTIFIER = "li_con";
 	}
 	
 	private void clear() {
-		lock = new LockBase[LockType.values().length];
+		lockCancel(LockType.ALL);
 	}
 	
 	public void syncAll() {
@@ -196,6 +181,7 @@ public static final String IDENTIFIER = "li_con";
 	}
 	
 	public void copyFrom(ControlData cd) {
+		clear();
 		lock = cd.lock.clone();
 	}
 	
@@ -210,19 +196,19 @@ public static final String IDENTIFIER = "li_con";
 					if (pre == -1)
 						break;
 					if (pre == LockType.POSITION.ordinal()) {
-						lock[pre] = new LockPosition(buf);
+						lock[pre] = new LockPosition(player, buf);
 					}
 					if (pre == LockType.ROTATION.ordinal()) {
-						lock[pre] = new LockRotation(buf);
+						lock[pre] = new LockRotation(player, buf);
 					}
 					if (pre == LockType.CONTROL_MOVE.ordinal()) {
-						lock[pre] = new LockControlMove(buf);
+						lock[pre] = new LockControlMove(player, buf);
 					}
 					if (pre == LockType.CONTROL_JUMP.ordinal()) {
-						lock[pre] = new LockControlJump(buf);
+						lock[pre] = new LockControlJump(player, buf);
 					}
 					if (pre == LockType.CONTROL_SPIN.ordinal()) {
-						lock[pre] = new LockControlSpin(buf);
+						lock[pre] = new LockControlSpin(player, buf);
 					}
 				}
 				break;
@@ -268,6 +254,5 @@ public static final String IDENTIFIER = "li_con";
 			LIUtils.log.warn("Registering ControlData for a(n)" + entity.getClass().getName());
 			return;
 		}
-		player = (EntityPlayer) entity;
 	}
 }

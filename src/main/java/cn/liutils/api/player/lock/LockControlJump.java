@@ -1,5 +1,7 @@
 package cn.liutils.api.player.lock;
 
+import cpw.mods.fml.common.eventhandler.Event;
+import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
@@ -16,18 +18,26 @@ public class LockControlJump extends LockBase {
 
 	public static final LockType TYPE = LockType.CONTROL_JUMP;
 	
-	public LockControlJump(ByteBuf buf) {
-		super(TYPE, buf);
+	public LockControlJump(EntityPlayer player, ByteBuf buf) {
+		super(TYPE, player, buf);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerKeyInput(this);
 	}
 
-	public LockControlJump(int ticks, EntityPlayer player) {
-		super(TYPE, ticks);
+	public LockControlJump(EntityPlayer player, int ticks) {
+		super(TYPE, player, ticks);
+		if (player.worldObj.isRemote)
+			fmlDispatcher.registerKeyInput(this);
 	}
 	
 	@Override
-	public void onKeyboard(EntityPlayer player) {
-		GameSettings gs = Minecraft.getMinecraft().gameSettings;
-		KeyBinding.setKeyBindState(gs.keyBindJump.getKeyCode(), false);
+	protected boolean onEvent(Event event) {
+		if (event instanceof KeyInputEvent) {
+			GameSettings gs = Minecraft.getMinecraft().gameSettings;
+			KeyBinding.setKeyBindState(gs.keyBindJump.getKeyCode(), false);
+			return true;
+		}
+		return false;
 	}
 
 }

@@ -1,9 +1,6 @@
 buildscript {
 	repositories {
-		maven {
-			name = "oschina"
-			url = "http://maven.oschina.net/content/groups/public/"
-		}
+		mavenCentral()
 		maven {
 			name = "forge"
 			url = "http://files.minecraftforge.net/maven"
