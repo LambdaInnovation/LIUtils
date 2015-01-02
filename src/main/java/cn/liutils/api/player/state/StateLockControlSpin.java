@@ -1,4 +1,4 @@
-package cn.liutils.api.player.lock;
+package cn.liutils.api.player.state;
 
 import org.lwjgl.input.Mouse;
 
@@ -15,13 +15,13 @@ import cn.liutils.core.player.MouseHelperX;
  * @author Violet
  *
  */
-public class LockControlSpin extends LockBase {
+public class StateLockControlSpin extends StateBase {
 
-	public static final LockType TYPE = LockType.CONTROL_SPIN;
+	public static final StateType TYPE = StateType.LOCK_CONTROL_SPIN;
 	
 	private int x, y;
 	
-	public LockControlSpin(EntityPlayer player, ByteBuf buf) {
+	public StateLockControlSpin(EntityPlayer player, ByteBuf buf) {
 		super(TYPE, player, buf);
 		x = Mouse.getX();
 		y = Mouse.getY();
@@ -29,7 +29,7 @@ public class LockControlSpin extends LockBase {
 			fmlDispatcher.registerRenderTick(this);
 	}
 
-	public LockControlSpin(EntityPlayer player, int ticks) {
+	public StateLockControlSpin(EntityPlayer player, int ticks) {
 		super(TYPE, player, ticks);
 		x = Mouse.getX();
 		y = Mouse.getY();

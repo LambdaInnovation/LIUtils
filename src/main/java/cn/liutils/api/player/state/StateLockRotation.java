@@ -1,8 +1,8 @@
-package cn.liutils.api.player.lock;
+package cn.liutils.api.player.state;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cn.liutils.api.player.lock.LockBase.LockType;
+import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 
@@ -11,9 +11,9 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author Violet
  *
  */
-public class LockRotation extends LockBase {
+public class StateLockRotation extends StateBase {
 
-	public static final LockType TYPE = LockType.ROTATION;
+	public static final StateType TYPE = StateType.LOCK_ROTATION;
 	
 	private float rotationPitch;
 	private float rotationYaw;
@@ -21,12 +21,12 @@ public class LockRotation extends LockBase {
 	private float cameraPitch;
 	private float cameraYaw;
 	
-	public LockRotation(EntityPlayer player, ByteBuf buf) {
+	public StateLockRotation(EntityPlayer player, ByteBuf buf) {
 		super(TYPE, player, buf);
 		fmlDispatcher.registerPlayerTick(this);
 	}
 
-	public LockRotation(EntityPlayer player, int ticks) {
+	public StateLockRotation(EntityPlayer player, int ticks) {
 		super(TYPE, player, ticks);
 		rotationPitch = player.rotationPitch;
 		rotationYaw = player.rotationYaw;

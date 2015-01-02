@@ -2,13 +2,13 @@ package cn.liutils.api.player;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.Unpooled;
-import cn.liutils.api.player.lock.LockBase;
-import cn.liutils.api.player.lock.LockBase.LockType;
-import cn.liutils.api.player.lock.LockControlJump;
-import cn.liutils.api.player.lock.LockControlMove;
-import cn.liutils.api.player.lock.LockControlSpin;
-import cn.liutils.api.player.lock.LockPosition;
-import cn.liutils.api.player.lock.LockRotation;
+import cn.liutils.api.player.state.StateBase;
+import cn.liutils.api.player.state.StateBase.StateType;
+import cn.liutils.api.player.state.StateLockControlJump;
+import cn.liutils.api.player.state.StateLockControlMove;
+import cn.liutils.api.player.state.StateLockControlSpin;
+import cn.liutils.api.player.state.StateLockPosition;
+import cn.liutils.api.player.state.StateLockRotation;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.player.MouseHelperX;
 import cn.liutils.core.player.MsgControlSyncAll;
@@ -28,9 +28,7 @@ import net.minecraftforge.common.IExtendedEntityProperties;
 public class ControlData implements IExtendedEntityProperties {
 
 public static final String IDENTIFIER = "li_con";
-	
-	public static final LockType[] CONTROLS = new LockType[] {LockType.CONTROL_MOVE, LockType.CONTROL_JUMP, LockType.CONTROL_MOVE, LockType.CONTROL_SPIN};
-	
+
 	/**
 	 * Get the data
 	 */
@@ -40,7 +38,7 @@ public static final String IDENTIFIER = "li_con";
 	
 	private final EntityPlayer player;
 	
-	private LockBase[] lock = new LockBase[LockType.values().length];
+	private StateBase[] state = new StateBase[StateType.values().length];
 	
 	private boolean shouldSync;
 	
@@ -54,72 +52,52 @@ public static final String IDENTIFIER = "li_con";
 	}
 	
 	/**
-	 * Set lock state(s)
-	 * @param ticks Ticks to unlock the state and negative for infinite
+	 * Set state
+	 * @param ticks Ticks to cancel the state and negative for infinite
 	 */
-	public void lockSet(LockType type, int ticks) {
-		switch(type) {
-		case ALL:
-			for (LockType lt : LockType.values())
-				if (!lt.equals(LockType.ALL) && !lt.equals(LockType.CONTROL_ALL))
-					doLockSet(lt, ticks);
-			break;
-		case CONTROL_ALL:
-			for (LockType lt : CONTROLS)
-				doLockSet(lt, ticks);
-			break;
-		default:
-			doLockSet(type, ticks);
-			break;
+	public void stateSet(StateType type, int ticks) {
+		if (state[type.ordinal()] == null) {
+			switch(type) {
+			case LOCK_POSITION:
+				state[type.ordinal()] = new StateLockPosition(player, ticks);
+				break;
+			case LOCK_ROTATION:
+				state[type.ordinal()] = new StateLockRotation(player, ticks);
+				break;
+			case LOCK_CONTROL_MOVE:
+				state[type.ordinal()] = new StateLockControlMove(player, ticks);
+				break;
+			case LOCK_CONTROL_JUMP:
+				state[type.ordinal()] = new StateLockControlJump(player, ticks);
+				break;
+			case LOCK_CONTROL_SPIN:
+				state[type.ordinal()] = new StateLockControlSpin(player, ticks);
+				break;
+			default:
+				LIUtils.log.warn("Not supported yet: " + type);
+			}
 		}
+		else
+			state[type.ordinal()].setTick(ticks);
 		shouldSync = true;
 	}
 
 	/**
-	 * Modify lock state(s)
+	 * Modify state
 	 * @param ticks Positive for increase while negative for decrease
 	 */
-	public void lockModify(LockType type, int ticks) {
-		switch(type) {
-		case ALL:
-			for (LockBase lb : lock)
-				doLockModify(lb, ticks);
-			break;
-		case CONTROL_ALL:
-			for (LockType lt : CONTROLS)
-				doLockModify(lock[lt.ordinal()], ticks);
-			break;
-		default:
-			doLockModify(lock[type.ordinal()], ticks);
-			break;
-		}
+	public void stateModify(StateType type, int ticks) {
+		if (state[type.ordinal()] != null)
+			state[type.ordinal()].modifyTick(ticks);
 		shouldSync = true;
 	}
 	
 	/**
-	 * Unlock something
+	 * Cancel some state
 	 */
-	public void lockCancel(LockType type) {
-		switch(type) {
-		case ALL:
-			for (int i = 0; i < lock.length; ++i)
-				if (lock[i] != null) {
-					lock[i].cancel();
-					lock[i] = null;
-				}
-			break;
-		case CONTROL_ALL:
-			for (LockType lt : CONTROLS)
-				if (lock[lt.ordinal()] != null) {
-					lock[lt.ordinal()].cancel();
-					lock[lt.ordinal()] = null;
-				}
-			break;
-		default:
-			lock[type.ordinal()].cancel();
-			lock[type.ordinal()] = null;
-			break;
-		}
+	public void stateCancel(StateType type) {
+		if (state[type.ordinal()] != null)
+			state[type.ordinal()].cancel();
 		shouldSync = true;
 	}
 	
@@ -135,44 +113,21 @@ public static final String IDENTIFIER = "li_con";
 	 * Never call it directly
 	 */
 	public void tick() {
-		for (int i = 0; i < lock.length; ++i)
-			if (lock[i] != null && lock[i].tick())
-				lock[i] = null;
+		for (int i = 0; i < state.length; ++i)
+			if (state[i] != null && state[i].tick())
+				state[i] = null;
 	}
 	
-	private void doLockSet(LockType lt, int ticks) {
-		if (lock[lt.ordinal()] == null) {
-			switch(lt) {
-			case POSITION:
-				lock[lt.ordinal()] = new LockPosition(player, ticks);
-				break;
-			case ROTATION:
-				lock[lt.ordinal()] = new LockRotation(player, ticks);
-				break;
-			case CONTROL_MOVE:
-				lock[lt.ordinal()] = new LockControlMove(player, ticks);
-				break;
-			case CONTROL_JUMP:
-				lock[lt.ordinal()] = new LockControlJump(player, ticks);
-				break;
-			case CONTROL_SPIN:
-				lock[lt.ordinal()] = new LockControlSpin(player, ticks);
-				break;
-			default:
-				LIUtils.log.warn("Not supported yet: " + lt);
+	private void stateCancelAll() {
+		for (int i = 0; i < state.length; ++i)
+			if (state[i] != null) {
+				state[i].cancel();
+				state[i] = null;
 			}
-		}
-		else
-			lock[lt.ordinal()].setTick(ticks);
-	}
-	
-	private void doLockModify(LockBase lb, int ticks) {
-		if (lb != null)
-			lb.modifyTick(ticks);
 	}
 	
 	private void clear() {
-		lockCancel(LockType.ALL);
+		stateCancelAll();
 	}
 	
 	public void syncAll() {
@@ -182,7 +137,7 @@ public static final String IDENTIFIER = "li_con";
 	
 	public void copyFrom(ControlData cd) {
 		clear();
-		lock = cd.lock.clone();
+		state = cd.state.clone();
 	}
 	
 	public void fromBytes(ByteBuf buf) {
@@ -195,20 +150,20 @@ public static final String IDENTIFIER = "li_con";
 				byte pre = buf.readByte();
 					if (pre == -1)
 						break;
-					if (pre == LockType.POSITION.ordinal()) {
-						lock[pre] = new LockPosition(player, buf);
+					if (pre == StateType.LOCK_POSITION.ordinal()) {
+						state[pre] = new StateLockPosition(player, buf);
 					}
-					if (pre == LockType.ROTATION.ordinal()) {
-						lock[pre] = new LockRotation(player, buf);
+					if (pre == StateType.LOCK_ROTATION.ordinal()) {
+						state[pre] = new StateLockRotation(player, buf);
 					}
-					if (pre == LockType.CONTROL_MOVE.ordinal()) {
-						lock[pre] = new LockControlMove(player, buf);
+					if (pre == StateType.LOCK_CONTROL_MOVE.ordinal()) {
+						state[pre] = new StateLockControlMove(player, buf);
 					}
-					if (pre == LockType.CONTROL_JUMP.ordinal()) {
-						lock[pre] = new LockControlJump(player, buf);
+					if (pre == StateType.LOCK_CONTROL_JUMP.ordinal()) {
+						state[pre] = new StateLockControlJump(player, buf);
 					}
-					if (pre == LockType.CONTROL_SPIN.ordinal()) {
-						lock[pre] = new LockControlSpin(player, buf);
+					if (pre == StateType.LOCK_CONTROL_SPIN.ordinal()) {
+						state[pre] = new StateLockControlSpin(player, buf);
 					}
 				}
 				break;
@@ -222,7 +177,7 @@ public static final String IDENTIFIER = "li_con";
 	
 	public void toBytes(ByteBuf buf) {
 		buf.writeByte(0);
-		for (LockBase lb : lock)
+		for (StateBase lb : state)
 			if (lb != null) {
 				buf.writeByte(lb.type.ordinal());
 				lb.toBytes(buf);
