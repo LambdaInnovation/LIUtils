@@ -60,30 +60,24 @@ public class LIGui implements Iterable<Widget> {
 	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
 		update();
 		//draw
-		//System.out.println("{");
 		if(w != null) {
 			GL11.glPushMatrix(); {
 				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
-				//System.out.println(w.wcoord.absX+ " " + w.wcoord.absY);
-				//System.out.println(w.ID);
 				w.draw(mx, my, w.wcoord.coordWithin(mx, my));
 			} GL11.glPopMatrix();
 		}
 		for(Widget sub : it)
 			drawAndTraverse(mx, my, sub, sub);
-		//System.out.println("}");
 	}
 	
 	public void mouseClicked(int mx, int my, int bid) {
 		update();
 		if(bid == 0) {
 			Widget w = getTopmostElement(mx, my);
-			System.out.println(w);
 			if(w != null) {
 				w.onMouseDown(mx - w.wcoord.absX, my - w.wcoord.absY);
 			}
 		}
-		//System.out.println("MouseClicked " + DebugUtils.formatArray(mx, my, bid));
 	}
 	
 	private Widget getTopmostElement(double mx, double my) {
@@ -97,7 +91,7 @@ public class LIGui implements Iterable<Widget> {
 			zo = wc.zOrder;
 			res = wc;
 		}
-		for(Widget t : con) {
+		for(Widget t : con) { //Recurse
 			Widget w = getTopmostElement(mx, my, t, t.getSubWidgets());
 			if(w != null && w.receiveEvent && w.wcoord.coordWithin(mx, my) && w.zOrder > zo) {
 				zo = w.zOrder;
@@ -110,7 +104,6 @@ public class LIGui implements Iterable<Widget> {
 	long lastStartTime;
 	Widget curDragging;
     protected void mouseClickMove(int mx, int my, int btn, long dt) {
-    	//System.out.println("mcm " + DebugUtils.formatArray(mx, my, btn, dt));
     	if(btn == 0) {
     		update();
     		long time = Minecraft.getSystemTime();
@@ -118,7 +111,6 @@ public class LIGui implements Iterable<Widget> {
         		lastStartTime = time;
         		curDragging = getTopmostElement(mx, my);
         	}
-        	System.out.println("Dragging " + curDragging);
         	if(curDragging != null)
         		curDragging.onMouseDrag(mx - curDragging.wcoord.absX, my - curDragging.wcoord.absY);
     	}
@@ -129,7 +121,6 @@ public class LIGui implements Iterable<Widget> {
     		width = parent.width;
     		height = parent.height;
     		resizeTraverse(null, this);
-    		System.out.println("ResizeTraverse");
     	}
     }
 	
@@ -225,11 +216,14 @@ public class LIGui implements Iterable<Widget> {
 		Integer i = zOrderProg.get(prio);
 		if(i == null)
 			i = 0;
-		c.zOrder = prio * 100 + i; //Need guarantee: no more than 100 widgets per priority.(Definetly isnt it? wwwwww)
-		//System.out.println(c.ID + " zo " + c.zOrder);
+		c.zOrder = prio * 100 + i; //Need guarantee: no more than 100 widgets per priority.(Definetly isnt it? wwwwww)a
 		zOrderProg.put(prio, i + 1);
 	}
 	
+	/**
+	 * Baked position data, updated when widget explicitly requires or new widget is added.
+	 * @author WeathFolD
+	 */
     public class WidgetCoord implements Comparable {
 		public Widget wig;
 		public double absX, absY;

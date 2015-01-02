@@ -51,7 +51,6 @@ public class DrawArea {
 	}
 	
 	public void draw() {
-		//System.out.println(DebugUtils.formatArray(x, y, u, v, width, height, tWidth, tHeight));
 		HudUtils.drawTexturedModalRect(0, 0, u, v, width, height, tWidth, tHeight);
 	}
 	

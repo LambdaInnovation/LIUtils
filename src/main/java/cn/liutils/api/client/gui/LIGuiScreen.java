@@ -26,10 +26,6 @@ public class LIGuiScreen extends GuiScreen {
     	gui.drawElements(mx, my);
     }
     
-    public void addWidget(Widget w) {
-    	gui.addWidget(w);
-    }
-    
     protected void mouseClicked(int mx, int my, int btn) {
     	gui.mouseClicked(mx, my, btn);
     }
