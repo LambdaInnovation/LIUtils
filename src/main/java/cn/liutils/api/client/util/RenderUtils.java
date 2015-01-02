@@ -59,6 +59,18 @@ public class RenderUtils {
 		textureState = -1;
 	}
 	
+    public static void bindColor(Vec3 cv) {
+    	GL11.glColor3d(cv.xCoord, cv.yCoord, cv.zCoord);
+    }
+    
+    public static void bindColor(int[] arr) {
+    	bindColor(arr[0], arr[1], arr[2]);
+    }
+    
+    public static void bindColor(int r, int g, int b) {
+    	GL11.glColor3ub((byte)r, (byte)g, (byte)b);
+    }
+	
 	/**
 	 * Add a vertex to the tessellator with UV coords.
 	 * @param vec3

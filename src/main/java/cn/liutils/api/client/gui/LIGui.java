@@ -60,12 +60,14 @@ public class LIGui implements Iterable<Widget> {
 	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
 		update();
 		//draw
-		if(w != null) {
+		if(w != null && w.visible) {
 			GL11.glPushMatrix(); {
 				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
 				w.draw(mx, my, w.wcoord.coordWithin(mx, my));
 			} GL11.glPopMatrix();
 		}
+		if(w != null && !w.visible)
+			return;
 		for(Widget sub : it)
 			drawAndTraverse(mx, my, sub, sub);
 	}
@@ -91,6 +93,8 @@ public class LIGui implements Iterable<Widget> {
 			zo = wc.zOrder;
 			res = wc;
 		}
+		if(wc != null && !wc.visible) 
+			return res;
 		for(Widget t : con) { //Recurse
 			Widget w = getTopmostElement(mx, my, t, t.getSubWidgets());
 			if(w != null && w.receiveEvent && w.wcoord.coordWithin(mx, my) && w.zOrder > zo) {
@@ -164,7 +168,7 @@ public class LIGui implements Iterable<Widget> {
 	
 	private WidgetCoord gueTraverse(double x, double y, Widget w, Iterable<Widget> iter, int max) {
 		WidgetCoord res = null;
-		if(w != null && w.wcoord.coordWithin(x, y) && w.zOrder > max) {
+		if(w != null && w.visible && w.receiveEvent && w.wcoord.coordWithin(x, y) && w.zOrder > max) {
 			max = w.zOrder;
 			res = w.wcoord;
 		}

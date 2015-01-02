@@ -7,10 +7,11 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.api.client.gui.LIGui.WidgetCoord;
 import cn.liutils.api.client.util.HudUtils;
 import cn.liutils.api.client.util.RenderUtils;
@@ -116,6 +117,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	 * @param mouseHovering if the mouse is on the widget
 	 */
 	public void draw(double mx, double my, boolean mouseHovering) {
+		GL11.glEnable(GL11.GL_BLEND);
 		if(texture != null) {
 			//System.out.println("load tex");
 			RenderUtils.loadTexture(texture);
@@ -124,6 +126,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 			//System.out.println("set res");
 			HudUtils.setTextureResolution(texWidth, texHeight);
 		}
+		//System.out.println(this);
 		area.draw();
 	}
 	

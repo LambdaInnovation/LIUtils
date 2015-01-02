@@ -5,6 +5,8 @@ package cn.liutils.api.client.gui;
 
 import net.minecraft.client.gui.GuiScreen;
 
+import org.lwjgl.opengl.GL11;
+
 /**
  * @author WeathFolD
  *
@@ -23,7 +25,11 @@ public class LIGuiScreen extends GuiScreen {
 	
     public void drawScreen(int mx, int my, float w)
     {
-    	gui.drawElements(mx, my);
+    	this.drawDefaultBackground();
+    	GL11.glPushMatrix(); {
+    		GL11.glTranslated(0, 0, 100);
+    		gui.drawElements(mx, my);
+    	} GL11.glPopMatrix();
     }
     
     protected void mouseClicked(int mx, int my, int btn) {
@@ -34,4 +40,8 @@ public class LIGuiScreen extends GuiScreen {
     	gui.mouseClickMove(mx, my, btn, time);
     }
 	
+    public LIGui getGui() {
+    	return gui;
+    }
+    
 }
