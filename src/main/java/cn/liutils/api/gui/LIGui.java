@@ -49,7 +49,7 @@ public class LIGui implements Iterable<Widget> {
 	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
 		update();
 		//draw
-		if(w != null && w.visible) {
+		if(w != null && w.visible && w.draw) {
 			GL11.glPushMatrix(); {
 				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
 				w.draw(mx - w.wcoord.absX, my - w.wcoord.absY, w.wcoord.coordWithin(mx, my));
@@ -96,6 +96,7 @@ public class LIGui implements Iterable<Widget> {
     
 	long lastStartTime;
 	Widget curDragging;
+	double xOffset, yOffset;
     public void mouseClickMove(int mx, int my, int btn, long dt) {
     	if(btn == 0) {
     		update();
@@ -103,9 +104,13 @@ public class LIGui implements Iterable<Widget> {
         	if(Math.abs(time - dt - lastStartTime) > TIME_TOLERANCE) {
         		lastStartTime = time;
         		curDragging = getTopmostElement(mx, my);
+        		if(curDragging == null)
+        			return;
+        		xOffset = mx - curDragging.wcoord.absX;
+        		yOffset = my - curDragging.wcoord.absY;
         	}
         	if(curDragging != null)
-        		curDragging.onMouseDrag(mx - curDragging.wcoord.absX, my - curDragging.wcoord.absY);
+        		curDragging.onMouseDrag(mx - curDragging.wcoord.absX - xOffset, my - curDragging.wcoord.absY - yOffset);
     	}
     }
     
@@ -188,7 +193,7 @@ public class LIGui implements Iterable<Widget> {
 		Collections.sort(widgets);
 	}
 	
-	protected void addSubWidget(Widget c) {
+	public void addSubWidget(Widget c) {
 		calcWidget(c);
 		assignZOrder(c);
 	}

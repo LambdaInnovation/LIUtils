@@ -40,8 +40,9 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	protected int zOrder; //The zOrder automatically assigned by LIGuiScreen.
 	
 	//public boolean alive = true; //Lifetime flag. Set to false to remove this widget next draw call
-	public boolean visible = true; //If this widget needs to be draw (and by default, receives keyboard events)
-	public boolean receiveEvent = true; //Whether this widget receives event
+	public boolean visible = true; //If this widget appears in draw and judgement at all
+	public boolean receiveEvent = true; //Whether this widget receives events
+	public boolean draw = false;
 	
 	protected ResourceLocation texture; //Texture to be automatically bind, if any
 	protected int texWidth, texHeight; //Texture resolution, if specified
@@ -76,7 +77,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	public Widget setTexMapping(double u, double v, double tw, double th) {
 		area.setTexMapping(u, v, tw, th);
-		visible = true;
+		draw = true;
 		return this;
 	}
 	
@@ -84,6 +85,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		texture = tex;
 		texWidth = width;
 		texHeight = height;
+		draw = true;
 		return this;
 	}
 	
@@ -126,6 +128,10 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	 */
 	public int getDrawPriority() {
 		return 1;
+	}
+	
+	public DrawArea getArea() {
+		return area;
 	}
 	
 	/**
@@ -172,8 +178,10 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	public void onMouseDrag(double x0, double y0) {}
 	
 	//---------INTERNAL----------
-	
-	private void addChild(Widget child) {
+	/**
+	 * Called when widget is created, usually not called by itself.
+	 */
+	protected void addChild(Widget child) {
 		for(Widget w : subWidgets) {
 			if(w.ID.equals(child.ID)) {
 				throw new RuntimeException("Widget ID collision: " + child.ID);
@@ -182,7 +190,6 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		subWidgets.add(child);
 		screen.addSubWidget(child);
 		Collections.sort(subWidgets);
-		System.out.println("sort");
 	}
 	
 	@Override
