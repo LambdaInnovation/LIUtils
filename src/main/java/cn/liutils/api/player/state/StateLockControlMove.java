@@ -1,4 +1,4 @@
-package cn.liutils.api.player.lock;
+package cn.liutils.api.player.state;
 
 import java.util.Set;
 
@@ -6,7 +6,7 @@ import org.lwjgl.input.Keyboard;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cn.liutils.api.player.lock.LockBase.LockType;
+import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
@@ -18,17 +18,17 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author Violet
  *
  */
-public class LockControlMove extends LockBase {
+public class StateLockControlMove extends StateBase {
 
-	public static final LockType TYPE = LockType.CONTROL_MOVE;
+	public static final StateType TYPE = StateType.LOCK_CONTROL_MOVE;
 	
-	public LockControlMove(EntityPlayer player, ByteBuf buf) {
+	public StateLockControlMove(EntityPlayer player, ByteBuf buf) {
 		super(TYPE, player, buf);
 		if (player.worldObj.isRemote)
 			fmlDispatcher.registerKeyInput(this);
 	}
 
-	public LockControlMove(EntityPlayer player, int ticks) {
+	public StateLockControlMove(EntityPlayer player, int ticks) {
 		super(TYPE, player, ticks);
 		if (player.worldObj.isRemote)
 			fmlDispatcher.registerKeyInput(this);

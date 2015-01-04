@@ -1,4 +1,4 @@
-package cn.liutils.api.player.lock;
+package cn.liutils.api.player.state;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -12,13 +12,13 @@ import net.minecraft.entity.player.EntityPlayer;
  * @author Violet
  *
  */
-public class LockPosition extends LockBase {
+public class StateLockPosition extends StateBase {
 
-	public static final LockType TYPE = LockType.POSITION;
+	public static final StateType TYPE = StateType.LOCK_POSITION;
 	
 	private double posX, posY, posZ;
 	
-	public LockPosition(EntityPlayer player, ByteBuf buf) {
+	public StateLockPosition(EntityPlayer player, ByteBuf buf) {
 		super(TYPE, player, buf);
 		if (player.worldObj.isRemote)
 			fmlDispatcher.registerClientTick(this);
@@ -26,7 +26,7 @@ public class LockPosition extends LockBase {
 			fmlDispatcher.registerServerTick(this);
 	}
 
-	public LockPosition(EntityPlayer player, int ticks) {
+	public StateLockPosition(EntityPlayer player, int ticks) {
 		super(TYPE, player, ticks);
 		posX = player.posX;
 		posY = player.posY;

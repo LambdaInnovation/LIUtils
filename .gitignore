@@ -1,7 +1,3 @@
-#gradle
-build/
-.gradle/
-
 *.class
 
 # Mobile Tools for Java (J2ME)
@@ -53,4 +49,13 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Gradle
+build/
+.gradle/
 /bin/
+
+# Eclipse
+.project
+.classpath
+.settings/

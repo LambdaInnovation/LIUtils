@@ -1,4 +1,4 @@
-package cn.liutils.api.player.lock;
+package cn.liutils.api.player.state;
 
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
@@ -11,29 +11,28 @@ import cn.liutils.core.event.eventhandler.LIHandler;
  * @author Violet
  *
  */
-public abstract class LockBase extends LIHandler {
+public abstract class StateBase extends LIHandler {
 	public static final LIFMLGameEventDispatcher fmlDispatcher = LIFMLGameEventDispatcher.INSTANCE;
-	public final LockType type;
+	public final StateType type;
 	public final EntityPlayer player;
 	protected int tick;
 	
-	public static enum LockType {
-		ALL,
-		POSITION,
-		ROTATION,
-		CONTROL_ALL,
-		CONTROL_MOVE,
-		CONTROL_JUMP,
-		CONTROL_SPIN;
+	public static enum StateType {
+		FREEMOVE,
+		LOCK_POSITION,
+		LOCK_ROTATION,
+		LOCK_CONTROL_MOVE,
+		LOCK_CONTROL_JUMP,
+		LOCK_CONTROL_SPIN;
 	}
 	
-	protected LockBase(LockType pType, EntityPlayer pPlayer, int ticks) {
+	protected StateBase(StateType pType, EntityPlayer pPlayer, int ticks) {
 		type = pType;
 		player = pPlayer;
 		tick = ticks;
 	}
 	
-	public LockBase(LockType pType, EntityPlayer pPlayer, ByteBuf buf) {
+	public StateBase(StateType pType, EntityPlayer pPlayer, ByteBuf buf) {
 		type = pType;
 		player = pPlayer;
 		fromBytes(buf);

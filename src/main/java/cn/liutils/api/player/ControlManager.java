@@ -11,7 +11,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.Side;
-import cn.liutils.api.player.lock.LockBase.LockType;
+import cn.liutils.api.player.state.StateBase.StateType;
 import cn.liutils.api.util.GenericUtils;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.proxy.LIClientProps;
@@ -32,26 +32,26 @@ import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 public class ControlManager {
 
 	/**
-	 * Set lock state(s)
-	 * @param ticks Ticks to unlock the state and negative for infinite
+	 * Set state
+	 * @param ticks Ticks to cancel the state and negative for infinite
 	 */
-	public static void lockSet(EntityPlayer player, LockType type, int ticks) {
-		ControlData.get(player).lockSet(type, ticks);
+	public static void stateSet(EntityPlayer player, StateType type, int ticks) {
+		ControlData.get(player).stateSet(type, ticks);
 	}
 	
 	/**
-	 * Modify lock state(s)
+	 * Modify state
 	 * @param ticks Positive for increase while negative for decrease
 	 */
-	public static void lockModify(EntityPlayer player, LockType type, int ticks) {
-		ControlData.get(player).lockModify(type, ticks);
+	public static void stateModify(EntityPlayer player, StateType type, int ticks) {
+		ControlData.get(player).stateModify(type, ticks);
 	}
 
 	/**
-	 * Unlock something
+	 * Cancel some state
 	 */
-	public static void lockCancel(EntityPlayer player, LockType type) {
-		ControlData.get(player).lockCancel(type);
+	public static void stateCancel(EntityPlayer player, StateType type) {
+		ControlData.get(player).stateCancel(type);
 	}
 	
 	private ControlManager() {	
