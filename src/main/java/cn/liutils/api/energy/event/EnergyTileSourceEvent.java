@@ -21,9 +21,10 @@ import net.minecraft.world.World;
 
 /**
  * TileEntity energy-omitting event.
+ * TODO adapt to new IC2API, remove this!
  * @author HopeAsd
- * 
  */
+@Deprecated
 public class EnergyTileSourceEvent extends EnergyTileEvent {
 	public int amount;
 	public World world;

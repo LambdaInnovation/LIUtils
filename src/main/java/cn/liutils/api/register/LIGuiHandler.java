@@ -8,7 +8,7 @@ import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
 /**
- * A general process model of GUI.
+ * A general process model of GUI, treats IGuiElement as a single GUI.
  * @see IChannelProcess
  * @author WeAthFolD
  */
@@ -20,8 +20,7 @@ public class LIGuiHandler implements IGuiHandler {
 	public Object getServerGuiElement(int ID, EntityPlayer player, World world,
 			int x, int y, int z) {
 		if (guis.containsKey(ID)) {
-			Object gui = guis.get(ID)
-					.getServerContainer(player, world, x, y, z);
+			Object gui = guis.get(ID).getServerContainer(player, world, x, y, z);
 			return gui;
 		}
 		return null;

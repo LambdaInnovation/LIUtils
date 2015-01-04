@@ -3,8 +3,8 @@
  */
 package cn.liutils.core.network;
 
-import cn.liutils.api.block.IMetadataProvider;
 import cn.liutils.core.LIUtils;
+import cn.liutils.template.block.IMetadataProvider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;

@@ -13,7 +13,7 @@ import net.minecraft.item.ItemSword;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import cn.liutils.api.util.GenericUtils;
+import cn.liutils.util.GenericUtils;
 import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.feature.IClickHandler;
 import cn.weaponmod.api.information.InfWeapon;

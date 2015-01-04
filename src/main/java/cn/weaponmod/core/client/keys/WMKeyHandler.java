@@ -4,8 +4,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import cn.liutils.api.client.key.IKeyHandler;
-import cn.liutils.api.client.util.ClientUtils;
+import cn.liutils.api.key.IKeyHandler;
+import cn.liutils.util.ClientUtils;
 import cn.weaponmod.api.feature.IClickHandler;
 import cn.weaponmod.core.WeaponMod;
 import cn.weaponmod.core.event.ItemControlHandler;
@@ -26,7 +26,7 @@ public class WMKeyHandler implements IKeyHandler {
 
 	@Override
 	public void onKeyDown(int keyCode, boolean isEnd) {
-		if(isEnd || ClientUtils.isOpeningGUI())
+		if(isEnd || !ClientUtils.isPlayerInGame())
 			return;
 		
 		job(true);
@@ -34,7 +34,7 @@ public class WMKeyHandler implements IKeyHandler {
 
 	@Override
 	public void onKeyUp(int keyCode, boolean isEnd) {
-		if(isEnd || ClientUtils.isOpeningGUI())
+		if(isEnd || !ClientUtils.isPlayerInGame())
 			return;
 		
 		job(false);

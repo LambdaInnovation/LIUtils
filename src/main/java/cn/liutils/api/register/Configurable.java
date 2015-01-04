@@ -25,6 +25,7 @@ import java.lang.annotation.Target;
  * Currently static fields only.
  * @see cn.liutils.api.LIGeneralRegistry#loadConfigurableClass
  * @author WeAthFolD
+ * TODO add AnnoRegistry dependency
  */
 @Target(ElementType.FIELD)
 @Retention(RetentionPolicy.RUNTIME)

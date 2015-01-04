@@ -10,14 +10,9 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.input.Keyboard;
 
-import cn.liutils.api.client.TextUtils;
-import cn.liutils.api.client.render.RenderCrossedProjectile;
-import cn.liutils.api.client.render.RenderEmptyBlock;
-import cn.liutils.api.entity.EntityBulletFX;
-import cn.liutils.api.entity.EntityTrailFX;
-import cn.liutils.api.util.EntityManipHandler;
+import cn.liutils.api.EntityManipHandler;
+import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.client.render.RenderPlayerHelper;
 import cn.liutils.core.client.render.RenderTrail;
 import cn.liutils.core.debug.CommandModifier;
@@ -26,6 +21,11 @@ import cn.liutils.core.debug.KeyShowInfo;
 import cn.liutils.core.entity.EntityPlayerDaemon;
 import cn.liutils.core.event.LIClientEvents;
 import cn.liutils.core.player.MouseHelperX;
+import cn.liutils.template.client.render.block.RenderEmptyBlock;
+import cn.liutils.template.client.render.entity.RenderCrossedProjectile;
+import cn.liutils.template.entity.EntityBulletFX;
+import cn.liutils.template.entity.EntityTrailFX;
+import cn.liutils.util.render.TextUtils;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 /**

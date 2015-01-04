@@ -11,9 +11,9 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.client.util.RenderUtils;
-import cn.liutils.api.entity.EntityTrailFX;
 import cn.liutils.core.entity.SamplePoint;
+import cn.liutils.template.entity.EntityTrailFX;
+import cn.liutils.util.RenderUtils;
 
 public class RenderTrail extends Render {
 	

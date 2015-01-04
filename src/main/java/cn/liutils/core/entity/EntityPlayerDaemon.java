@@ -6,8 +6,7 @@ package cn.liutils.core.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import cn.liutils.api.client.render.PlayerRenderHandler;
-
+import cn.liutils.api.render.IPlayerRenderListener;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -21,8 +20,8 @@ public class EntityPlayerDaemon extends Entity {
 
 	public EntityPlayer player;
 	
-	private static Set<PlayerRenderHandler> helpers = new HashSet();
-	public Set<PlayerRenderHandler> activeHelpers = new HashSet();
+	private static Set<IPlayerRenderListener> helpers = new HashSet();
+	public Set<IPlayerRenderListener> activeHelpers = new HashSet();
 	
 	/**
 	 */
@@ -36,7 +35,7 @@ public class EntityPlayerDaemon extends Entity {
 	public void onUpdate()
     {
     	setPositionAndRotation(player.posX, player.posY, player.posZ, player.renderYawOffset, player.rotationPitch);
-		for(PlayerRenderHandler p : helpers) {
+		for(IPlayerRenderListener p : helpers) {
 			if(p.isActivated(player, worldObj)) {
 				activeHelpers.add(p);
 			} else activeHelpers.remove(p);
@@ -44,12 +43,12 @@ public class EntityPlayerDaemon extends Entity {
     }
     
     public static boolean hasActivate(EntityPlayer player) {
-    	for(PlayerRenderHandler p : helpers)
+    	for(IPlayerRenderListener p : helpers)
     		if(p.isActivated(player, player.worldObj)) return true;
     	return false;
     }
     
-    public static void addRenderHelper(PlayerRenderHandler helper) {
+    public static void addRenderHelper(IPlayerRenderListener helper) {
     	helpers.add(helper);
     }
 

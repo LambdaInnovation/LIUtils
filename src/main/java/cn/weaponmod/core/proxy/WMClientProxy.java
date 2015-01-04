@@ -10,10 +10,10 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.lwjgl.input.Keyboard;
 
-import cn.liutils.api.util.RegUtils;
+import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.client.register.LIKeyProcess;
 import cn.liutils.core.debug.FieldModifierHandler;
+import cn.liutils.util.RegUtils;
 import cn.weaponmod.api.client.render.ModelBipedHack;
 import cn.weaponmod.api.weapon.WeaponDualWield;
 import cn.weaponmod.core.WeaponMod;

@@ -7,7 +7,7 @@ import java.util.List;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import cn.liutils.api.util.GenericUtils;
+import cn.liutils.util.GenericUtils;
 import cn.weaponmod.api.WMInformation;
 import cn.weaponmod.api.WeaponHelper;
 import cn.weaponmod.api.action.Action;

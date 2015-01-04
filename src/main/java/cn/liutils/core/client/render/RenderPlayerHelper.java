@@ -2,7 +2,7 @@ package cn.liutils.core.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.client.render.PlayerRenderHandler;
+import cn.liutils.api.render.IPlayerRenderListener;
 import cn.liutils.core.entity.EntityPlayerDaemon;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
@@ -14,7 +14,7 @@ public class RenderPlayerHelper extends Render {
 	public void doRender(Entity entity, double d0, double d1, double d2,
 			float f, float f1) {
 		EntityPlayerDaemon ent = (EntityPlayerDaemon) entity;
-		for(PlayerRenderHandler handler : ent.activeHelpers) {
+		for(IPlayerRenderListener handler : ent.activeHelpers) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(d0, d1, d2);
 			GL11.glRotatef(ent.rotationYaw, 0.0F, -1.0F, 0.0F);

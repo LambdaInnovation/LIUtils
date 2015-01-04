@@ -13,7 +13,7 @@ package cn.liutils.core.debug;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.liutils.api.client.render.RenderModelItem;
+import cn.liutils.template.client.render.item.RenderModelItem;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;

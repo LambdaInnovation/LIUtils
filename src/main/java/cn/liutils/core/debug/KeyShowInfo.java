@@ -12,7 +12,7 @@ package cn.liutils.core.debug;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import cn.liutils.api.client.key.IKeyHandler;
+import cn.liutils.api.key.IKeyHandler;
 
 /**
  * @author WeAthFolD

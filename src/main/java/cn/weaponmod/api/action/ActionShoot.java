@@ -12,7 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import cn.liutils.api.entity.EntityBulletFX;
+import cn.liutils.template.entity.EntityBulletFX;
 import cn.weaponmod.api.WeaponHelper;
 import cn.weaponmod.api.client.render.RendererBulletWeapon;
 import cn.weaponmod.api.information.InfUtils;

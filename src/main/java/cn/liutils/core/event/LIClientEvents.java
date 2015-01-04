@@ -8,7 +8,7 @@ import java.util.Set;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import cn.liutils.api.client.gui.AuxGui;
+import cn.liutils.api.gui.AuxGui;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

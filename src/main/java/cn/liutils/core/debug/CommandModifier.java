@@ -12,7 +12,7 @@ package cn.liutils.core.debug;
 
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentTranslation;
-import cn.liutils.api.command.LICommandBase;
+import cn.liutils.template.command.LICommandBase;
 
 /**
  * @author WeAthFolD

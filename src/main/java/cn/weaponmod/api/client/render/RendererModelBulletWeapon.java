@@ -18,8 +18,8 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import cn.liutils.api.client.model.IItemModel;
-import cn.liutils.api.client.render.RenderModelItem;
+import cn.liutils.api.render.model.IItemModel;
+import cn.liutils.template.client.render.item.RenderModelItem;
 import cn.weaponmod.api.weapon.WeaponGeneric;
 
 /**

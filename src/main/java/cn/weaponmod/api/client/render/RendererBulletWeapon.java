@@ -19,9 +19,10 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.client.util.RenderUtils;
+import cn.liutils.util.RenderUtils;
 import cn.weaponmod.api.weapon.WeaponGeneric;
 
 /**
