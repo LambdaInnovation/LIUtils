@@ -16,6 +16,7 @@ import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.api.client.gui.Widget.Alignment;
 import cn.liutils.api.util.DebugUtils;
 import cn.liutils.api.util.GenericUtils;
 
@@ -27,10 +28,6 @@ import cn.liutils.api.util.GenericUtils;
 public class LIGui implements Iterable<Widget> {
 
 	private long TIME_TOLERANCE = 100L;
-	enum Alignment { TOPLEFT, CENTER };
-	
-	Alignment style = Alignment.CENTER;
-	double posX, posY;
 	
 	protected List<Widget> widgets = new ArrayList<Widget>();
 	private Map<Integer, Integer> zOrderProg = new HashMap<Integer, Integer>();
@@ -38,15 +35,7 @@ public class LIGui implements Iterable<Widget> {
 	private int width, height;
 	protected final GuiScreen parent;
 	
-	public LIGui(GuiScreen screen, double x, double y) {
-		setAlignStyle(Alignment.CENTER);
-		posX = x;
-		posY = y;
-		parent = screen;
-	}
-	
 	public LIGui(GuiScreen screen) {
-		style = Alignment.TOPLEFT;
 		parent = screen;
 	}
 	
@@ -63,7 +52,7 @@ public class LIGui implements Iterable<Widget> {
 		if(w != null && w.visible) {
 			GL11.glPushMatrix(); {
 				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
-				w.draw(mx, my, w.wcoord.coordWithin(mx, my));
+				w.draw(mx - w.wcoord.absX, my - w.wcoord.absY, w.wcoord.coordWithin(mx, my));
 			} GL11.glPopMatrix();
 		}
 		if(w != null && !w.visible)
@@ -132,13 +121,13 @@ public class LIGui implements Iterable<Widget> {
 		WidgetCoord cw = new WidgetCoord(w, 0, 0);
 		Widget wp = w.getWidgetParent();
 		if(wp == null) { //Screen as parent
-			if(style == Alignment.CENTER) {
+			if(w.style == Alignment.CENTER) {
 				double hw = width * 0.5, hh = height * 0.5;
-				cw.absX = hw - posX * 0.5 + w.area.x;
-				cw.absY = hh - posY * 0.5 + w.area.y;
+				cw.absX = hw - w.area.width * 0.5 + w.area.x;
+				cw.absY = hh - w.area.height * 0.5 + w.area.y;
 			} else {
-				cw.absX = posX + w.area.x;
-				cw.absY = posY + w.area.y;
+				cw.absX = w.area.x;
+				cw.absY = w.area.y;
 			}
 		} else { //Widget as parent
 			GenericUtils.assertObj(wp.wcoord);
@@ -180,13 +169,6 @@ public class LIGui implements Iterable<Widget> {
 			}
 		}
 		return res;
-	}
-	
-	/**
-	 * Define the widget offset behavior.
-	 */
-	public void setAlignStyle(Alignment align) {
-		style = align;
 	}
 	
 	protected List<Widget> getWidgets() {

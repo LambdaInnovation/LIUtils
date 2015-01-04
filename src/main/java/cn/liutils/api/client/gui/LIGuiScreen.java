@@ -19,10 +19,6 @@ public class LIGuiScreen extends GuiScreen {
 		gui = new LIGui(this);
 	}
 	
-	public LIGuiScreen(double w, double h) {
-		gui = new LIGui(this, w, h);
-	}
-	
     public void drawScreen(int mx, int my, float w)
     {
     	this.drawDefaultBackground();

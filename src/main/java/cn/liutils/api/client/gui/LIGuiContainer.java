@@ -13,11 +13,6 @@ public class LIGuiContainer extends GuiContainer {
 		gui = new LIGui(this);
 	}
 
-	public LIGuiContainer(Container c, double w, double h) {
-		super(c);
-		gui = new LIGui(this, w, h);
-	}
-
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {

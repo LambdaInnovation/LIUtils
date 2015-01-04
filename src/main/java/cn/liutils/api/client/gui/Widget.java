@@ -27,6 +27,9 @@ import cn.liutils.api.util.DebugUtils;
  */
 public class Widget implements Comparable<Widget>, Iterable<Widget> {
 
+	public enum Alignment { TOPLEFT, CENTER };
+	Alignment style = Alignment.CENTER;
+	
 	public final LIGui screen; //Uppermost screen parent.
 	private Widget parent; //Last parent, maybe null
 	private List<Widget> subWidgets = new ArrayList<Widget>();
@@ -37,7 +40,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	protected int zOrder; //The zOrder automatically assigned by LIGuiScreen.
 	
 	//public boolean alive = true; //Lifetime flag. Set to false to remove this widget next draw call
-	public boolean visible = false; //If this widget needs to be draw (and by default, receives keyboard events)
+	public boolean visible = true; //If this widget needs to be draw (and by default, receives keyboard events)
 	public boolean receiveEvent = true; //Whether this widget receives event
 	
 	protected ResourceLocation texture; //Texture to be automatically bind, if any
@@ -54,7 +57,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		parent = par;
 		area = new DrawArea(x, y, w, h);
 		ID = id;
-		System.out.println("InitSub " + id + "/" + DebugUtils.formatArray(x, y, w, h));
+		//System.out.println("InitSub " + id + "/" + DebugUtils.formatArray(x, y, w, h));
 		par.addChild(this);
 	}
 	
@@ -67,7 +70,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		parent = null;
 		area = new DrawArea(x, y, w, h);
 		ID = id;
-		System.out.println("Init " + id + "/" + DebugUtils.formatArray(x, y, w, h));
+		//System.out.println("Init " + id + "/" + DebugUtils.formatArray(x, y, w, h));
 		scr.addWidget(this);
 	}
 	
@@ -82,6 +85,13 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		texWidth = width;
 		texHeight = height;
 		return this;
+	}
+	
+	/**
+	 * Define the widget offset behavior. Only applies when father is the screen.
+	 */
+	public void setAlignStyle(Alignment align) {
+		style = align;
 	}
 	
 	/**
@@ -100,6 +110,14 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	public List<Widget> getSubWidgets() {
 		return subWidgets;
+	}
+	
+	public void dispose() {
+		if(parent != null) {
+			parent.subWidgets.remove(this);
+		} else {
+			screen.widgets.remove(this);
+		}
 	}
 	
 	/**
@@ -166,7 +184,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		Collections.sort(subWidgets);
 		System.out.println("sort");
 	}
-
+	
 	@Override
 	public int compareTo(Widget o) {
 		return this.zOrder > o.zOrder ? 1 : this.zOrder == o.zOrder ? 0 : -1;
