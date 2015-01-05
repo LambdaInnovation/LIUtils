@@ -102,7 +102,7 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
 	/**
 	 * Return a array of size 3 containg the origin coordinate of the block.
 	 */
-	protected int[] getOrigin(World world, int x, int y, int z, int meta) {
+	public int[] getOrigin(World world, int x, int y, int z, int meta) {
 		SubBlockPos pos2 = applyRotation(getSubBlockByMeta(meta),
 				getFacingDirection(meta).ordinal());
 		if(pos2 == null)

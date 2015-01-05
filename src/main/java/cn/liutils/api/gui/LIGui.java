@@ -48,17 +48,19 @@ public class LIGui implements Iterable<Widget> {
 	
 	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
 		update();
+		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		//draw
 		if(w != null && w.visible && w.draw) {
 			GL11.glPushMatrix(); {
 				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
-				w.draw(mx - w.wcoord.absX, my - w.wcoord.absY, w.wcoord.coordWithin(mx, my));
+				w.draw(mx - w.wcoord.absX, my - w.wcoord.absY, w == this.getTopmostElement(mx, my)); //QUESTION: Maybe we can optimize this?
 			} GL11.glPopMatrix();
 		}
 		if(w != null && !w.visible)
 			return;
 		for(Widget sub : it)
 			drawAndTraverse(mx, my, sub, sub);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
 	}
 	
 	public void mouseClicked(int mx, int my, int bid) {
@@ -76,18 +78,16 @@ public class LIGui implements Iterable<Widget> {
 	}
 	
 	private Widget getTopmostElement(double mx, double my, Widget wc, Iterable<Widget> con) {
-		int zo = -1;
 		Widget res = null;
-		if(wc != null && wc.receiveEvent && wc.wcoord.coordWithin(mx, my)) {
-			zo = wc.zOrder;
+		if(wc != null && wc.visible && wc.receiveEvent && wc.wcoord.coordWithin(mx, my)) {
 			res = wc;
 		}
 		if(wc != null && !wc.visible) 
 			return res;
 		for(Widget t : con) { //Recurse
 			Widget w = getTopmostElement(mx, my, t, t.getSubWidgets());
-			if(w != null && w.receiveEvent && w.wcoord.coordWithin(mx, my) && w.zOrder > zo) {
-				zo = w.zOrder;
+			//The array is sorted in zOrder increase so naturally we replace the res
+			if(w != null && w.receiveEvent && w.wcoord.coordWithin(mx, my)) {
 				res = w;
 			}
 		}
@@ -143,10 +143,6 @@ public class LIGui implements Iterable<Widget> {
 		return cw;
 	}
 	
-	public WidgetCoord getUppermostElement(double x, double y) {
-		return gueTraverse(x, y, null, this, -1);
-	}
-	
 	private void resizeTraverse(Widget w, Iterable<Widget> iter) {
 		if(w != null) {
 			calcWidget(w);
@@ -158,22 +154,6 @@ public class LIGui implements Iterable<Widget> {
 	
 	public void updateWidgetPos(Widget wg) {
 		resizeTraverse(wg, wg.getSubWidgets());
-	}
-	
-	private WidgetCoord gueTraverse(double x, double y, Widget w, Iterable<Widget> iter, int max) {
-		WidgetCoord res = null;
-		if(w != null && w.visible && w.receiveEvent && w.wcoord.coordWithin(x, y) && w.zOrder > max) {
-			max = w.zOrder;
-			res = w.wcoord;
-		}
-		for(Widget s : iter) {
-			WidgetCoord tmp = gueTraverse(x, y, s, s, max);
-			if(tmp != null) {
-				max = tmp.wig.zOrder;
-				res = tmp;
-			}
-		}
-		return res;
 	}
 	
 	protected List<Widget> getWidgets() {
@@ -191,11 +171,13 @@ public class LIGui implements Iterable<Widget> {
 		widgets.add(c);
 		assignZOrder(c);
 		Collections.sort(widgets);
+		System.out.println(widgets);
 	}
 	
 	public void addSubWidget(Widget c) {
 		calcWidget(c);
 		assignZOrder(c);
+		Collections.sort(c.subWidgets);
 	}
 	
 	public void removeWidget(Widget c) {

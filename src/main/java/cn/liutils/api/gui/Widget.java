@@ -32,7 +32,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	public final LIGui screen; //Uppermost screen parent.
 	private Widget parent; //Last parent, maybe null
-	private List<Widget> subWidgets = new ArrayList<Widget>();
+	List<Widget> subWidgets = new ArrayList<Widget>();
 	
 	public final String ID; //THE universal identifier.
 	
@@ -48,6 +48,8 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	protected int texWidth, texHeight; //Texture resolution, if specified
 	
 	protected WidgetCoord wcoord; //Calculated by LIGuiScreen for drawing
+	
+	private boolean disposed;
 	
 	public Widget(String id, Widget par, double x, double y) {
 		this(id, par, x, y, 0, 0);
@@ -120,6 +122,12 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		} else {
 			screen.widgets.remove(this);
 		}
+		System.out.println("Dispose " + this);
+		disposed = true;
+	}
+	
+	public boolean hasDisposed() {
+		return disposed;
 	}
 	
 	/**
