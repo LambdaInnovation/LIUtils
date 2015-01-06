@@ -14,7 +14,7 @@ import net.minecraft.world.World;
  * @author WeAthFolD
  */
 @SideOnly(Side.CLIENT)
-public interface IPlayerRenderListener {
+public interface IPlayerRenderHook {
 	
 	/**
 	 * Get whether the render process is activated or not

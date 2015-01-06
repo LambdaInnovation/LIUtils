@@ -6,7 +6,7 @@ package cn.liutils.core.entity;
 import java.util.HashSet;
 import java.util.Set;
 
-import cn.liutils.api.render.IPlayerRenderListener;
+import cn.liutils.api.render.IPlayerRenderHook;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -16,16 +16,16 @@ import net.minecraft.world.World;
  * A entity that always in the position of a player entity, in aid of player additional rendering.
  * @author WeAthFolD
  */
-public class EntityPlayerDaemon extends Entity {
+public class EntityPlayerHook extends Entity {
 
 	public EntityPlayer player;
 	
-	private static Set<IPlayerRenderListener> helpers = new HashSet();
-	public Set<IPlayerRenderListener> activeHelpers = new HashSet();
+	private static Set<IPlayerRenderHook> helpers = new HashSet();
+	public Set<IPlayerRenderHook> activeHelpers = new HashSet();
 	
 	/**
 	 */
-	public EntityPlayerDaemon(EntityPlayer p, World world) {
+	public EntityPlayerHook(EntityPlayer p, World world) {
 		super(world);
 		player = p;
 		setPositionAndRotation(p.posX, p.posY, p.posZ, p.rotationYaw, p.rotationPitch);
@@ -35,7 +35,7 @@ public class EntityPlayerDaemon extends Entity {
 	public void onUpdate()
     {
     	setPositionAndRotation(player.posX, player.posY, player.posZ, player.renderYawOffset, player.rotationPitch);
-		for(IPlayerRenderListener p : helpers) {
+		for(IPlayerRenderHook p : helpers) {
 			if(p.isActivated(player, worldObj)) {
 				activeHelpers.add(p);
 			} else activeHelpers.remove(p);
@@ -43,12 +43,12 @@ public class EntityPlayerDaemon extends Entity {
     }
     
     public static boolean hasActivate(EntityPlayer player) {
-    	for(IPlayerRenderListener p : helpers)
+    	for(IPlayerRenderHook p : helpers)
     		if(p.isActivated(player, player.worldObj)) return true;
     	return false;
     }
     
-    public static void addRenderHelper(IPlayerRenderListener helper) {
+    public static void addRenderHelper(IPlayerRenderHook helper) {
     	helpers.add(helper);
     }
 

@@ -2,19 +2,19 @@ package cn.liutils.core.client.render;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.render.IPlayerRenderListener;
-import cn.liutils.core.entity.EntityPlayerDaemon;
+import cn.liutils.api.render.IPlayerRenderHook;
+import cn.liutils.core.entity.EntityPlayerHook;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
 
-public class RenderPlayerHelper extends Render {
+public class RenderPlayerHook extends Render {
 
 	@Override
 	public void doRender(Entity entity, double d0, double d1, double d2,
 			float f, float f1) {
-		EntityPlayerDaemon ent = (EntityPlayerDaemon) entity;
-		for(IPlayerRenderListener handler : ent.activeHelpers) {
+		EntityPlayerHook ent = (EntityPlayerHook) entity;
+		for(IPlayerRenderHook handler : ent.activeHelpers) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(d0, d1, d2);
 			GL11.glRotatef(ent.rotationYaw, 0.0F, -1.0F, 0.0F);

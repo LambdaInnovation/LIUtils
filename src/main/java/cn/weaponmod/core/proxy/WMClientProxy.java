@@ -1,7 +1,5 @@
 package cn.weaponmod.core.proxy;
 
-import java.lang.reflect.Field;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.entity.RenderPlayer;
@@ -11,15 +9,12 @@ import net.minecraft.entity.player.EntityPlayer;
 import org.lwjgl.input.Keyboard;
 
 import cn.liutils.api.key.LIKeyProcess;
-import cn.liutils.core.LIUtils;
-import cn.liutils.core.debug.FieldModifierHandler;
 import cn.liutils.util.RegUtils;
 import cn.weaponmod.api.client.render.ModelBipedHack;
 import cn.weaponmod.api.weapon.WeaponDualWield;
 import cn.weaponmod.core.WeaponMod;
 import cn.weaponmod.core.client.UpliftHandler;
 import cn.weaponmod.core.client.keys.WMKeyHandler;
-import cn.weaponmod.core.debug.ModifierProviderModelWeapon;
 import cpw.mods.fml.common.FMLCommonHandler;
 
 public class WMClientProxy extends WMCommonProxy{
@@ -42,10 +37,6 @@ public class WMClientProxy extends WMCommonProxy{
 		LIKeyProcess.instance.addKey(mc.gameSettings.keyBindAttack, false, new WMKeyHandler(0));
 		LIKeyProcess.instance.addKey(mc.gameSettings.keyBindUseItem, false, new WMKeyHandler(1));
 		LIKeyProcess.instance.addKey(KEY_ID_RELOAD, Keyboard.KEY_R, false, new WMKeyHandler(2));
-		
-		if(LIUtils.DEBUG) {
-			FieldModifierHandler.all.add(new ModifierProviderModelWeapon());
-		}
 	}
 	
 	@Override

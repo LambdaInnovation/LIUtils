@@ -7,6 +7,8 @@ import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.Logger;
 
+import cn.annoreg.core.RegistrationManager;
+import cn.annoreg.core.RegistrationMod;
 import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
@@ -36,7 +38,14 @@ import cpw.mods.fml.relauncher.Side;
  * @author WeAthFolD
  */
 @Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
+@RegistrationMod(pkg = "cn.liutils.", res = "liutils", prefix = "liu_")
 public class LIUtils {
+	
+	public static final String
+		REGISTER_TYPE_KEYHANDLER = "liu_akhs",
+		REGISTER_TYPE_KEYHANDLER2 = "liu_khs",
+		REGISTER_TYPE_AUXGUI = "liu_auxgui",
+		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook";
 	
 	/**
 	 * Version Number.

@@ -7,10 +7,13 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.settings.KeyBinding;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
+import cn.liutils.core.event.LIClientEvents;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Auxillary GUI interface class. This is a kind of GUI that doesn't make mouse gain focus. </br>
@@ -19,6 +22,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  * methods to setup key listening.
  * @author WeathFolD
  */
+@SideOnly(Side.CLIENT)
 public abstract class AuxGui {
 	private LIKeyProcess keyListener;
 	public static class AuxProcess extends LIKeyProcess {
@@ -58,5 +62,9 @@ public abstract class AuxGui {
 	
 	protected void addKeyHandler(String name, int keyCode, boolean rep, IKeyHandler handler) {
 		keyListener.addKey(name, keyCode, rep, handler);
+	}
+	
+	public static void register(AuxGui gui) {
+		LIClientEvents.registerAuxGui(gui);
 	}
 }

@@ -7,18 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
-
-import org.lwjgl.input.Keyboard;
-
-import cn.liutils.api.EntityManipHandler;
-import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.client.render.RenderPlayerHelper;
+import cn.liutils.core.client.render.RenderPlayerHook;
 import cn.liutils.core.client.render.RenderTrail;
-import cn.liutils.core.debug.CommandModifier;
-import cn.liutils.core.debug.KeyModifier;
-import cn.liutils.core.debug.KeyShowInfo;
-import cn.liutils.core.entity.EntityPlayerDaemon;
+import cn.liutils.core.entity.EntityPlayerHook;
 import cn.liutils.core.event.LIClientEvents;
 import cn.liutils.core.player.MouseHelperX;
 import cn.liutils.template.client.render.block.RenderEmptyBlock;
@@ -52,18 +44,9 @@ public class LIClientProxy extends LICommonProxy {
 		}
 		.setIgnoreLight(true));
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerDaemon.class, new RenderPlayerHelper());
+		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerHook.class, new RenderPlayerHook());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 		
-		if(LIUtils.DEBUG) {
-			LIKeyProcess.instance.addKey("deb_0", Keyboard.KEY_NUMPAD8, false, new KeyModifier(0, true));
-			LIKeyProcess.instance.addKey("deb_1", Keyboard.KEY_NUMPAD2, false, new KeyModifier(0, false));
-			LIKeyProcess.instance.addKey("deb_2", Keyboard.KEY_NUMPAD4, false, new KeyModifier(1, true));
-			LIKeyProcess.instance.addKey("deb_3", Keyboard.KEY_NUMPAD6, false, new KeyModifier(1, false));
-			LIKeyProcess.instance.addKey("deb_4", Keyboard.KEY_NUMPAD7, false, new KeyModifier(2, true));
-			LIKeyProcess.instance.addKey("deb_5", Keyboard.KEY_NUMPAD9, false, new KeyModifier(2, false));
-			LIKeyProcess.instance.addKey("deb_6", Keyboard.KEY_NUMPAD5, false, new KeyShowInfo());
-		}
 	}
 	
 	@Override
@@ -82,7 +65,6 @@ public class LIClientProxy extends LICommonProxy {
 	@Override
 	public void cmdInit(CommandHandler handler) {
 		if(LIUtils.DEBUG) {
-			handler.registerCommand(new CommandModifier());
 		}
 	}
 }

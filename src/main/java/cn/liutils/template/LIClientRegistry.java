@@ -5,8 +5,8 @@ package cn.liutils.template;
 
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
-import cn.liutils.api.render.IPlayerRenderListener;
-import cn.liutils.core.entity.EntityPlayerDaemon;
+import cn.liutils.api.render.IPlayerRenderHook;
+import cn.liutils.core.entity.EntityPlayerHook;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -21,8 +21,8 @@ public class LIClientRegistry {
 		LIKeyProcess.instance.addKey(s, key, isRep, process);
 	}
 	
-	public static void addPlayerRenderingHelper(IPlayerRenderListener helper) {
-		EntityPlayerDaemon.addRenderHelper(helper);
+	public static void addPlayerRenderingHook(IPlayerRenderHook helper) {
+		EntityPlayerHook.addRenderHelper(helper);
 	}
 	
 	
