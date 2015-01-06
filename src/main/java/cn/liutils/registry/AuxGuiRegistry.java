@@ -22,7 +22,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author WeathFolD
  */
 @RegistryTypeDecl
-//@SideOnly(Side.CLIENT)
+@SideOnly(Side.CLIENT)
 public class AuxGuiRegistry extends RegistryType {
 	
 	@Target({ElementType.TYPE, ElementType.FIELD})

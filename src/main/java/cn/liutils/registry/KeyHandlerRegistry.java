@@ -40,7 +40,7 @@ public class KeyHandlerRegistry extends RegistryType {
 
 	@Override
 	public boolean registerClass(AnnotationData data) {
-		Class<? extends IKeyHandler> clazz = data.getTheClass();
+		Class<? extends IKeyHandler> clazz = (Class<? extends IKeyHandler>) data.getTheClass();
 		try {
 			IKeyHandler ikh = clazz.newInstance();
 			doReg(data.<RegKeyHandler>getAnnotation(), ikh);

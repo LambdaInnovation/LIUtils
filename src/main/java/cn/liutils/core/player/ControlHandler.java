@@ -18,6 +18,9 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.mc.RegSubmoduleInit;
 import cn.liutils.api.player.ControlData;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.proxy.LIClientProps;
@@ -27,6 +30,9 @@ import cn.liutils.core.proxy.LIClientProps;
  * @author Violet
  *
  */
+@RegistrationClass
+@RegSubmoduleInit(side = RegSubmoduleInit.Side.CLIENT_ONLY)
+@SideOnly(Side.CLIENT)
 public class ControlHandler {
 private static ControlHandler INSTANCE = null;
 	

@@ -38,7 +38,7 @@ public class PlayerRenderHookRegistry extends RegistryType {
 	@Override
 	public boolean registerClass(AnnotationData data) {
 		try {
-			IPlayerRenderHook hook = data.<IPlayerRenderHook>getTheClass().newInstance();
+			IPlayerRenderHook hook = (IPlayerRenderHook) data.getTheClass().newInstance();
 			LIClientRegistry.addPlayerRenderingHook(hook);
 		} catch(Exception e) {
 			e.printStackTrace();

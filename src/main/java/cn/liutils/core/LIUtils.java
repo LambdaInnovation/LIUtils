@@ -105,7 +105,7 @@ public class LIUtils {
 		netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
 		
 		MinecraftForge.EVENT_BUS.register(new LIEventListener());
-		FMLCommonHandler.instance().bus().register(new LITickEvents());
+		//FMLCommonHandler.instance().bus().register(new LITickEvents());
 		proxy.preInit();
 	}
 	

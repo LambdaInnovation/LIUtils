@@ -24,6 +24,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author WeathFolD
  */
 @RegistryTypeDecl
+@SideOnly(Side.CLIENT)
 public class AttachKeyHandlerRegistry extends RegistryType {
 	
 	@Target({ElementType.FIELD})
@@ -47,7 +48,7 @@ public class AttachKeyHandlerRegistry extends RegistryType {
 	@Override
 	public boolean registerField(AnnotationData data) {
 		Field f = data.getTheField();
-		Class cl = f.getClass();
+		Class cl = f.getType();
 		if(cl == Integer.TYPE || cl == Integer.TYPE) {
 			try {
 				int kid = f.getInt(null);
