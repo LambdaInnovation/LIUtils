@@ -46,7 +46,7 @@ private static ControlHandler INSTANCE = null;
 			INSTANCE = new ControlHandler();
 			FMLCommonHandler.instance().bus().register(INSTANCE);
 			MinecraftForge.EVENT_BUS.register(INSTANCE);
-			LIUtils.netHandler.registerMessage(MsgControlSyncAll.Handler.class, MsgControlSyncAll.class, LIClientProps.DISC_CONTROL_SYNC, Side.CLIENT);
+			//LIUtils.netHandler.registerMessage(MsgControlSyncAll.Handler.class, MsgControlSyncAll.class, LIClientProps.DISC_CONTROL_SYNC, Side.CLIENT);
 		}
 	}
 	

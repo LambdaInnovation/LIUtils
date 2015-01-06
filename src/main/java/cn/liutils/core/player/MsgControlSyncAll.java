@@ -1,5 +1,7 @@
 package cn.liutils.core.player;
 
+import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.mc.RegMessageHandler;
 import cn.liutils.api.player.ControlData;
 import net.minecraft.client.Minecraft;
 import io.netty.buffer.ByteBuf;
@@ -12,6 +14,7 @@ import cpw.mods.fml.common.network.simpleimpl.MessageContext;
  * @author Violet
  *
  */
+@RegistrationClass
 public class MsgControlSyncAll implements IMessage {
 
 	private ControlData cd = null;
@@ -33,6 +36,7 @@ public class MsgControlSyncAll implements IMessage {
 		cd.toBytes(buf);
 	}
 	
+	@RegMessageHandler(msg = MsgControlSyncAll.class, side = RegMessageHandler.Side.CLIENT)
 	public static class Handler implements IMessageHandler<MsgControlSyncAll, IMessage> {
 
 		@Override

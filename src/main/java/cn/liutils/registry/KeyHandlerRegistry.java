@@ -28,12 +28,16 @@ public class KeyHandlerRegistry extends RegistryType {
 	@Target({ElementType.TYPE, ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@SideOnly(Side.CLIENT)
+	@Deprecated
+	/**
+	 * key is not configurable. Use AttachKeyHandler instead.
+	 */
 	public @interface RegKeyHandler {
 		int key();
 		boolean isRep() default false;
 		String name();
 	}
-	
+
 	public KeyHandlerRegistry() {
 		super(RegKeyHandler.class, LIUtils.REGISTER_TYPE_KEYHANDLER2);
 	}
