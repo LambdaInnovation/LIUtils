@@ -35,12 +35,13 @@ repositories {
 
 dependencies {
 	compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
+	compile files('libs/AnnotationRegistry-0.1.jar')
 }
 
 jar {
 	from {
 		configurations.compile.findAll {
-			it.name.contains('industrialcraft-2-2.1.484-experimental-api')
+			it.name.contains('industrialcraft-2-2.1.484-experimental-api') || it.name.contains('AnnotationRegistry-0.1')
 		}.collect {
 			zipTree(it)
 		}
