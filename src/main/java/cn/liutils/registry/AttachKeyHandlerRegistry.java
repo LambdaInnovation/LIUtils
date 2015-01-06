@@ -33,14 +33,14 @@ public class AttachKeyHandlerRegistry extends RegistryType {
 	@Target({ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@SideOnly(Side.CLIENT)
-	public @interface AttachKeyHandler { //Use on Integer or int fields
+	public @interface RegAttachKeyHandler { //Use on Integer or int fields
 		Class<? extends IKeyHandler> clazz();
 		boolean isRep() default false;
 		String name() default "";
 	}
 	
 	public AttachKeyHandlerRegistry() {
-		super(AttachKeyHandler.class, LIUtils.REGISTER_TYPE_KEYHANDLER);
+		super(RegAttachKeyHandler.class, LIUtils.REGISTER_TYPE_KEYHANDLER);
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class AttachKeyHandlerRegistry extends RegistryType {
 		if(cl == Integer.TYPE || cl == Integer.class) {
 			try {
 				int kid = f.getInt(null);
-				AttachKeyHandler anno = data.<AttachKeyHandler>getAnnotation();
+				RegAttachKeyHandler anno = data.<RegAttachKeyHandler>getAnnotation();
 				//Also allow ctor in this field.
 				IKeyHandler ikh = (IKeyHandler) ConstructorUtils.newInstance(anno.clazz(), f.getAnnotation(Ctor.class));
 				String name = anno.name();
