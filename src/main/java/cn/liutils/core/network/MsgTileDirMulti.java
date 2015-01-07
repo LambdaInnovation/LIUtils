@@ -3,6 +3,8 @@
  */
 package cn.liutils.core.network;
 
+import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.mc.RegMessageHandler;
 import cn.liutils.core.LIUtils;
 import cn.liutils.template.block.IMetadataProvider;
 import net.minecraft.client.Minecraft;
@@ -19,6 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author WeathFolD
  *
  */
+@RegistrationClass
 public class MsgTileDirMulti implements IMessage {
 
 	int x, y, z;
@@ -78,6 +81,7 @@ public class MsgTileDirMulti implements IMessage {
 			buf.writeInt(z);
 		}
 		
+		@RegMessageHandler(msg = MsgTileDirMulti.Request.class, side = RegMessageHandler.Side.SERVER)
 		public static class Handler implements IMessageHandler<Request, IMessage> {
 
 			@Override
@@ -96,6 +100,7 @@ public class MsgTileDirMulti implements IMessage {
 		
 	}
 	
+	@RegMessageHandler(msg = MsgTileDirMulti.class, side = RegMessageHandler.Side.CLIENT)
 	public static class Handler implements IMessageHandler<MsgTileDirMulti, IMessage> {
 
 		@Override

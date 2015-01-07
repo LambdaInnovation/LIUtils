@@ -9,6 +9,7 @@ import org.apache.logging.log4j.Logger;
 
 import cn.annoreg.core.RegistrationManager;
 import cn.annoreg.core.RegistrationMod;
+import cn.annoreg.mc.RegMessageHandler;
 import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.LITickEvents;
@@ -45,7 +46,8 @@ public class LIUtils {
 		REGISTER_TYPE_KEYHANDLER = "liu_akhs",
 		REGISTER_TYPE_KEYHANDLER2 = "liu_khs",
 		REGISTER_TYPE_AUXGUI = "liu_auxgui",
-		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook";
+		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook",
+		REGISTER_TYPE_CONFIGURABLE = "liu_configurable";
 	
 	/**
 	 * Version Number.
@@ -69,7 +71,8 @@ public class LIUtils {
 	public static LICommonProxy proxy;
 	
 	public static Logger log = FMLLog.getLogger();
-	
+
+	@RegMessageHandler.WrapperInstance
 	public static SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel("LIUtils");
 
 	public static boolean ic2Exists = false;
@@ -83,6 +86,10 @@ public class LIUtils {
 		
 		//Initialize FMLGameEvent dispatcher
 		LIFMLGameEventDispatcher.init();
+		
+		RegistrationManager.INSTANCE.registerAll(this, "EventHandler");
+		RegistrationManager.INSTANCE.registerAll(this, "SubmoduleInit");
+		RegistrationManager.INSTANCE.registerAll(this, "MessageHandler");
 		
 		//Try and see if IC2 implementation exists
 		{
@@ -101,11 +108,11 @@ public class LIUtils {
 		if(!ic2Exists)
 			EnergyNet.initialize();
 		
-		netHandler.registerMessage(MsgTileDirMulti.Handler.class, MsgTileDirMulti.class, 0, Side.CLIENT);
-		netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
+		//netHandler.registerMessage(MsgTileDirMulti.Handler.class, MsgTileDirMulti.class, 0, Side.CLIENT);
+		//netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
 		
 		MinecraftForge.EVENT_BUS.register(new LIEventListener());
-		FMLCommonHandler.instance().bus().register(new LITickEvents());
+		//FMLCommonHandler.instance().bus().register(new LITickEvents());
 		proxy.preInit();
 	}
 	

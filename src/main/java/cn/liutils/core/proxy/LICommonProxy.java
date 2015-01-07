@@ -17,7 +17,7 @@ public class LICommonProxy {
 
 	public void init() {
 		EntityManipHandler.init();
-		ControlHandler.init();
+		//ControlHandler.init();
 	}
 	
 	public void preInit() {}
