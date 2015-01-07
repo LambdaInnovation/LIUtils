@@ -129,7 +129,7 @@ public class RenderUtils {
 	}
 	
 	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back) {
-		renderItemIn2d(2, front, back, 0, 0, 1, 1);
+		renderItemIn2d(w, front, back, 0, 0, 1, 1);
 	}
 	
 	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back, double u1, double v1, double u2, double v2) {
