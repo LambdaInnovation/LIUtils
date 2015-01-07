@@ -38,7 +38,7 @@ public class AuxGuiRegistry extends RegistryType {
 	public boolean registerClass(AnnotationData data) {
 		Class<? extends AuxGui> clazz = (Class<? extends AuxGui>) data.reflect;
 		try {
-			AuxGui.register(clazz.newInstance());
+		 	AuxGui.register(clazz.newInstance());
 			return true;
 		} catch(Exception e) {
 			LIUtils.log.error("Exception regging AuxGui class" + clazz);
@@ -50,7 +50,6 @@ public class AuxGuiRegistry extends RegistryType {
 	@Override
 	public boolean registerField(AnnotationData data) {
 		Field f = data.getTheField();
-		System.out.println("registerField " + f);
 		try {
 			AuxGui.register((AuxGui) f.get(null));
 			return true;

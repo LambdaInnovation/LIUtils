@@ -76,7 +76,7 @@ public class LIUtils {
 	
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
-
+		
 		log.info("Starting LIUtils " + VERSION);
 		log.info("Copyright (c) Lambda Innovation, 2013-2014");
 		log.info("http://www.lambdacraft.cn");
