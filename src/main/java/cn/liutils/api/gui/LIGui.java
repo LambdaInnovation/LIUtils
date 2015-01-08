@@ -9,20 +9,25 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Queue;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cn.liutils.api.gui.Widget.Alignment;
+import cn.liutils.api.key.IKeyHandler;
+import cn.liutils.api.key.LIKeyProcess;
+import cn.liutils.api.key.LIKeyProcess.Trigger;
+import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.DebugUtils;
 import cn.liutils.util.GenericUtils;
 
 /**
  * Handler of Widget and event receiver of Minecraft GUIs.
  * In charge of renderering and event delegation job.
+ * A LIKeyProcess class has wrapped in for special key and mouse listening purpose.
  * @author WeathFolD
  */
 public class LIGui implements Iterable<Widget> {
@@ -35,6 +40,11 @@ public class LIGui implements Iterable<Widget> {
 	private int width, height;
 	protected final GuiScreen parent;
 	
+	LIKeyProcess keyProcess;
+	LIKeyProcess.Trigger trigger;
+	
+	public double mouseX, mouseY;
+	
 	public LIGui(GuiScreen screen) {
 		parent = screen;
 	}
@@ -43,6 +53,8 @@ public class LIGui implements Iterable<Widget> {
 	 * Event delegation from MCGUI
 	 */
 	public void drawElements(int mx, int my) {
+		mouseX = mx;
+		mouseY = my;
 		drawAndTraverse(mx, my, null, this);
 	}
 	
@@ -64,6 +76,8 @@ public class LIGui implements Iterable<Widget> {
 	}
 	
 	public void mouseClicked(int mx, int my, int bid) {
+		mouseX = mx;
+		mouseY = my;
 		update();
 		if(bid == 0) {
 			Widget w = getTopmostElement(mx, my);
@@ -98,6 +112,8 @@ public class LIGui implements Iterable<Widget> {
 	Widget curDragging;
 	double xOffset, yOffset;
     public void mouseClickMove(int mx, int my, int btn, long dt) {
+    	mouseX = mx;
+		mouseY = my;
     	if(btn == 0) {
     		update();
     		long time = Minecraft.getSystemTime();
@@ -180,6 +196,17 @@ public class LIGui implements Iterable<Widget> {
 		Collections.sort(c.subWidgets);
 	}
 	
+	public boolean isVisible(Widget w) {
+		Widget cur = w;
+		while(cur.getWidgetParent() != null) {
+			//Iterate self and all the parents to check
+			if(!cur.visible)
+				return false;
+			cur = cur.getWidgetParent();
+		}
+		return cur.visible;
+	}
+	
 	public void removeWidget(Widget c) {
 		widgets.remove(c);
 	}
@@ -215,7 +242,34 @@ public class LIGui implements Iterable<Widget> {
 			if(!(o instanceof WidgetCoord)) return -1;
 			return wig.compareTo(((WidgetCoord)o).wig);
 		}
+		
+		@Override
+		public String toString() {
+			return "[WC " + DebugUtils.formatArray(absX, absY, wig.area.width, wig.area.height) + "]";
+		}
 	}
+    
+    /**
+     * Called when this gui is not anymore useful(closed).
+     */
+    public void onDispose() {
+    	if(trigger != null) { //remove KeyHandler from tickEvent
+    		trigger.setDead();
+    	}
+    }
+    
+    /**
+     * Add a key event listener within the lifetime of the GUI.
+     */
+    public void addKeyHandler(String name, int keyCode, boolean isRep, IKeyHandler ikh) {
+    	if(keyProcess == null) { //lazy loading
+    		keyProcess = new LIKeyProcess();
+    		keyProcess.mouseOverride = false;
+    		trigger = new Trigger(keyProcess);
+    		LIFMLGameEventDispatcher.INSTANCE.registerClientTick(trigger);
+    	}
+    	keyProcess.addKey(name, keyCode, isRep, ikh);
+    }
 
 	@Override
 	public Iterator<Widget> iterator() {

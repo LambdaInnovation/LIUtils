@@ -11,6 +11,8 @@ import net.minecraft.util.MathHelper;
 import cn.liutils.api.gui.DrawArea;
 import cn.liutils.api.gui.LIGui;
 import cn.liutils.api.gui.Widget;
+import cn.liutils.api.key.IKeyHandler;
+import cn.liutils.api.key.LIKeyProcess;
 
 /**
  * @author WeathFolD
@@ -22,6 +24,7 @@ public class ListVertical extends Widget {
 	int maxProgress;
 	double perHeight;
 	List<Widget> widgets = new ArrayList<Widget>(); //real list
+	private DragBar bar;
 
 	/**
 	 * @param id
@@ -34,11 +37,43 @@ public class ListVertical extends Widget {
 	public ListVertical(String id, Widget par, double x, double y, double w,
 			double h) {
 		super(id, par, x, y, w, h);
+		setup();
 	}
 
 	public ListVertical(String id, LIGui scr, double x, double y, double w,
 			double h) {
 		super(id, scr, x, y, w, h);
+		setup();
+	}
+	
+	public void setDragBar(DragBar db) {
+		bar = db;
+	}
+	
+	private void setup() {
+		//add mouse wheel handlings
+		screen.addKeyHandler("scr_up_" + ID, LIKeyProcess.MWHEELUP, false, new IKeyHandler() {
+			@Override
+			public void onKeyDown(int keyCode, boolean tickEnd) {
+				if(screen.isVisible(ListVertical.this) && wcoord.coordWithin(screen.mouseX, screen.mouseY))
+					progressLast();
+			}
+			@Override public void onKeyUp(int keyCode, boolean tickEnd) {}
+			@Override public void onKeyTick(int keyCode, boolean tickEnd) {}
+		});
+		
+		screen.addKeyHandler("scr_dn_" + ID, LIKeyProcess.MWHEELDOWN, false, new IKeyHandler() {
+			@Override
+			public void onKeyDown(int keyCode, boolean tickEnd) {
+				if(screen.isVisible(ListVertical.this) && wcoord.coordWithin(screen.mouseX, screen.mouseY)) {
+					progressNext();
+				}
+			}
+			@Override public void onKeyUp(int keyCode, boolean tickEnd) {}
+			@Override public void onKeyTick(int keyCode, boolean tickEnd) {}
+		});
+		
+		this.draw = true;
 	}
 	
 	public void addElements(Widget ...ws) {
@@ -46,19 +81,20 @@ public class ListVertical extends Widget {
 	}
 	
 	public void progressNext() {
-		progress++;
-		if(progress > maxProgress)
-			progress = maxProgress;
+		setProgress(progress + 1);
 	}
 	
 	public void progressLast() {
-		progress--;
-		if(progress < 0)
-			progress = 0;
+		setProgress(progress - 1);
 	}
 	
 	public void setProgress(int prog) {
-		progress = Math.max(0, Math.min(maxProgress, prog));
+		int np = Math.max(0, Math.min(maxProgress, prog));
+		boolean changed = np != progress;
+		progress = np;
+		if(changed) {
+			onProgressChanged();
+		}
 		updateList();
 	}
 	
@@ -114,7 +150,13 @@ public class ListVertical extends Widget {
 		maxProgress = Math.max(0, widgets.size() - getMaxShow());
 		screen.addSubWidget(child);
 		updateList();
-		System.out.println("w");
+	}
+	
+	//---------EVENT LISTENER------------
+	public void onProgressChanged() {
+		if(bar != null) {
+			bar.setProgress(this.progress / (double)this.maxProgress);
+		}
 	}
 	
 }

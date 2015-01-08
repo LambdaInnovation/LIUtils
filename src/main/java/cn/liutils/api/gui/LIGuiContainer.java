@@ -30,4 +30,8 @@ public class LIGuiContainer extends GuiContainer {
     	if(clickItem) super.mouseClickMove(mx, my, btn, time);
     	gui.mouseClickMove(mx, my, btn, time);
     }
+    
+    public void onGuiClosed() {
+    	gui.onDispose();
+    }
 }

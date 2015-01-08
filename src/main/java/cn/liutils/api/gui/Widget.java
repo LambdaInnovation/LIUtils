@@ -51,6 +51,8 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	private boolean disposed;
 	
+	protected boolean hovering; //if the mouse is floating on the widget
+	
 	public Widget(String id, Widget par, double x, double y) {
 		this(id, par, x, y, 0, 0);
 	}
@@ -151,14 +153,11 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	public void draw(double mx, double my, boolean mouseHovering) {
 		GL11.glEnable(GL11.GL_BLEND);
 		if(texture != null) {
-			//System.out.println("load tex");
 			RenderUtils.loadTexture(texture);
 		}
 		if(texWidth != 0 && texHeight != 0) {
-			//System.out.println("set res");
 			HudUtils.setTextureResolution(texWidth, texHeight);
 		}
-		//System.out.println(this);
 		area.draw();
 	}
 	

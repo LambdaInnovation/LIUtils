@@ -13,25 +13,24 @@ import cn.liutils.api.gui.Widget;
  * The drawing area specified is no longer used in drawing the whole widget, but for drawing the scroll bar.
  * @author WeathFolD
  */
-public class ProgressBar extends Widget {
+public class DragBar extends Widget {
 	
 	private class Bar extends Widget {
 
 		public Bar() {
-			super("bar", ProgressBar.this, 0, 0, ProgressBar.this.getArea().width, barHeight);
+			super("bar", DragBar.this, 0, 0, DragBar.this.getArea().width, barHeight);
 		}
 		
 		public void draw(double mx, double my, boolean mouseHovering) {
-			this.area.y = progress * (ProgressBar.this.area.height - barHeight);
+			this.area.y = progress * (DragBar.this.area.height - barHeight);
 			screen.updateWidgetPos(this);
-			//System.out.println("BarDraw");
 			super.draw(mx, my, mouseHovering);
 		}
 		
 		public void onMouseDrag(double x0, double y0) {
 			if(!enableDragging)
 				return;
-			double full = ProgressBar.this.getArea().height - barHeight;
+			double full = DragBar.this.getArea().height - barHeight;
 			double y = Math.max(Math.min(area.y + y0, full), 0) / full;
 			setProgress(y);
 			onProgressChanged();
@@ -52,7 +51,7 @@ public class ProgressBar extends Widget {
 	/**
 	 * @param sh The bar drawing height
 	 */
-	public ProgressBar(String id, Widget par, double x, double y, double w,
+	public DragBar(String id, Widget par, double x, double y, double w,
 			double h, double sh) {
 		super(id, par, x, y, w, h);
 		barHeight = sh;
@@ -62,7 +61,7 @@ public class ProgressBar extends Widget {
 	/**
 	 * @param sh The bar drawing height
 	 */
-	public ProgressBar(String id, LIGui scr, double x, double y, double w,
+	public DragBar(String id, LIGui scr, double x, double y, double w,
 			double h, double sh) {
 		super(id, scr, x, y, w, h);
 		bar = new Bar();

@@ -17,11 +17,13 @@ package cn.liutils.api.key;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
+import cn.liutils.core.event.eventhandler.LIHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -33,7 +35,8 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  */
 public class LIKeyProcess {
 	
-	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99;
+	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99,
+			MWHEELDOWN = -50, MWHEELUP = -49;;
 	
 	public static final LIKeyProcess instance = new LIKeyProcess();
 	static {
@@ -42,6 +45,10 @@ public class LIKeyProcess {
 	
 	private Map<String, LIKeyBinding> bindingMap = new HashMap<String, LIKeyBinding>();
 	private Map<LIKeyBinding, KeyBinding> associates = new HashMap();
+	
+	private long lastMouseTime = 0;
+	
+	public boolean mouseOverride = false;
 	
 	public static class LIKeyBinding {
 		public int keyCode;
@@ -104,26 +111,49 @@ public class LIKeyProcess {
         keyTick(true);
     }
 	
-    protected void keyTick(boolean tickEnd)
+    public void keyTick(boolean tickEnd)
     {
+    	int dwheel = 0;
+    	long time = Mouse.getEventNanoseconds();
+    	if(mouseOverride) {
+    		while(Mouse.next());
+    	}
+    	
+    	if(this != instance) {
+    		int dt = Mouse.getEventDWheel();
+    		if(lastMouseTime != time && dt != 0) {
+    			dwheel = dt > 0 ? 1 : -1;
+    		}
+	    	
+	    	lastMouseTime = time;
+    	}
+    	
+    	
+    	
         for (LIKeyBinding kb : bindingMap.values())
         {
             int keyCode = kb.keyCode;
-            boolean state = (keyCode < 0 ? Mouse.isButtonDown(keyCode + 100) : Keyboard.isKeyDown(keyCode));
+            boolean state = false;
+            if(MWHEELDOWN == keyCode) {
+            	state = dwheel < 0;
+            } else if(MWHEELUP == keyCode) {
+            	state = dwheel > 0;
+            } else if(keyCode < -60) {
+            	state = Mouse.isButtonDown(keyCode + 100);
+            } else if(keyCode > 0){
+            	state = Keyboard.isKeyDown(keyCode);
+            }
+            
             if (state != kb.keyDown || (state && kb.isRepeat))
             {
             	IKeyHandler proc = kb.process;
             	
-                if (state)
-                {
+                if (state) {
                     proc.onKeyDown(keyCode, tickEnd);
+                } else {
+                	proc.onKeyUp(keyCode, tickEnd);
                 }
-                else
-                {
-                   proc.onKeyUp(keyCode, tickEnd);
-                }
-                if (tickEnd)
-                {
+                if (!tickEnd) {
                     kb.keyDown = state;
                 }
             } else if(state) {
@@ -143,5 +173,24 @@ public class LIKeyProcess {
     		keyTick(true);
     	}
     }
+    
+    /**
+     * For fast KeyHandler deploying. register this to LIFMLGameEventDispatcher.
+     * @author WeathFolD
+     */
+    public static class Trigger extends LIHandler<ClientTickEvent> {
+		
+		LIKeyProcess process;
+		
+		public Trigger(LIKeyProcess lkp) {
+			process = lkp;
+		}
+
+		@Override
+		protected boolean onEvent(ClientTickEvent event) {
+			process.keyTick(event.phase == Phase.END);
+			return true;
+		}
+	}
     
 }

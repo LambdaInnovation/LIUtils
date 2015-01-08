@@ -18,17 +18,18 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * Auxillary GUI interface class. This is a kind of GUI that doesn't make mouse gain focus. </br>
  * GUIs such as health indication, information indications are suitable of using this interface to define.
- * The class also provided a set of key-listening functions, based on LIKeyProcess. you can use event-based key listening
+ * The class also provided a set of key-listening functions, based on LIKeyProcess. you can use event-based
  * methods to setup key listening.
  * @author WeathFolD
  */
 @SideOnly(Side.CLIENT)
 public abstract class AuxGui {
 	private LIKeyProcess keyListener;
-	public static class AuxProcess extends LIKeyProcess {
+	public class AuxProcess extends LIKeyProcess {
 		final AuxGui gui;
 		public AuxProcess(AuxGui _gui) {
 			gui = _gui;
+			this.mouseOverride = overrideMouse();
 		}
 		@SubscribeEvent
 		@Override
@@ -62,6 +63,10 @@ public abstract class AuxGui {
 	
 	protected void addKeyHandler(String name, int keyCode, boolean rep, IKeyHandler handler) {
 		keyListener.addKey(name, keyCode, rep, handler);
+	}
+	
+	protected boolean overrideMouse() {
+		return false;
 	}
 	
 	public static void register(AuxGui gui) {
