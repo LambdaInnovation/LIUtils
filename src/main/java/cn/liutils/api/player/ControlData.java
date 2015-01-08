@@ -46,9 +46,9 @@ public static final String IDENTIFIER = "li_con";
 		player = host;
 	}
 	
-	public ControlData(EntityPlayer host, ByteBuf buf) {
-		player = host;
-		fromBytes(buf);
+	public ControlData(EntityPlayer host, ByteBuf data) {
+		this(host);
+		fromBytes(data);
 	}
 	
 	/**
