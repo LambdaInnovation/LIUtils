@@ -7,6 +7,7 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.gui.LIGui;
 import cn.liutils.api.gui.Widget;
+import cn.liutils.util.DebugUtils;
 import cn.liutils.util.render.TextUtils;
 import cn.liutils.util.render.TrueTypeFont;
 
@@ -49,6 +50,15 @@ public class TextButton extends Widget {
 	
 	public void setTextColor(double r, double g, double b, double a) {
 		color = new double[] { r, g, b, a };
+	}
+	
+	public void setTextColor(int[] barr) {
+		setTextColor(barr[0], barr[1], barr[2], 255);
+	}
+	
+	public void setTextColor(int r, int g, int b, int a) {
+		color = new double[] { r / 255.0, g / 255.0, b / 255.0, a / 255.0 };
+		System.out.println(DebugUtils.formatArray(color));
 	}
 	
 	@Override

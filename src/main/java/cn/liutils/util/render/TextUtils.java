@@ -41,7 +41,7 @@ public class TextUtils {
 	}
 	
 	public static float getWidth(TrueTypeFont font, String str, float size) {
-		return font.getWidth(str) * size * .7F / font.getLineHeight();
+		return font.getWidth(str) * size / font.getLineHeight();
 	}
 	
 	public static float getHeight(TrueTypeFont font, String str, float size) {
