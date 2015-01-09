@@ -18,6 +18,7 @@ import cn.liutils.util.render.TrueTypeFont;
 public class TextButton extends Widget {
 	
 	double downU = -1, downV = -1;
+	double invalidU = -1, invalidV = -1;
 	String text = null;
 	TrueTypeFont font;
 	float size;
@@ -48,6 +49,11 @@ public class TextButton extends Widget {
 		downV = v;
 	}
 	
+	public void setInvalidMapping(double u, double v) {
+		invalidU = u;
+		invalidV = v;
+	}
+	
 	public void setTextColor(double r, double g, double b, double a) {
 		color = new double[] { r, g, b, a };
 	}
@@ -64,7 +70,12 @@ public class TextButton extends Widget {
 	@Override
 	public void draw(double mx, double my, boolean mouseHovering) {
 		double ou = area.u, ov = area.v;
-		if(mouseHovering) {
+		if(!this.receiveEvent) {
+			if(invalidU != -1 && invalidV != -1) {
+				area.u = invalidU;
+				area.v = invalidV;
+			}
+		} else if(mouseHovering) {
 			area.u = downU;
 			area.v = downV;
 		}

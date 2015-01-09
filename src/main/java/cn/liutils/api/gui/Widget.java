@@ -158,6 +158,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		if(texWidth != 0 && texHeight != 0) {
 			HudUtils.setTextureResolution(texWidth, texHeight);
 		}
+		GL11.glColor4d(1, 1, 1, 1);
 		area.draw();
 	}
 	

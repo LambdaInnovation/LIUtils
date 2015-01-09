@@ -128,8 +128,6 @@ public class LIKeyProcess {
 	    	lastMouseTime = time;
     	}
     	
-    	
-    	
         for (LIKeyBinding kb : bindingMap.values())
         {
             int keyCode = kb.keyCode;

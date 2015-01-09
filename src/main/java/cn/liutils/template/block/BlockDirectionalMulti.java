@@ -271,6 +271,14 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         return false;
     }
 	
+	public TileEntity getOriginTileEntity(World world, int x, int y, int z, int meta) {
+		int[] coords = this.getOrigin(world, x, y, z, meta);
+		if(coords == null)
+			return null;
+		TileEntity te = world.getTileEntity(coords[0], coords[1], coords[2]);
+		return te;
+	}
+	
 	public class SubBlockPos {
 		public final int offX, offY, offZ; //in origin rotation
 		public final int id;
