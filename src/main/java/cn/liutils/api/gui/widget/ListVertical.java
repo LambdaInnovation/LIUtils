@@ -133,7 +133,7 @@ public class ListVertical extends Widget {
 	public void draw(double a, double b, boolean c) {}
 	
 	private int getMaxShow() {
-		return perHeight == 0 ? 0 : MathHelper.floor_double(area.height / perHeight);
+		return perHeight == 0 ? 0 : MathHelper.floor_double(getArea().height / perHeight);
 	}
 	
 	public void setPerHeight(double d) {
@@ -146,9 +146,9 @@ public class ListVertical extends Widget {
 			throw new RuntimeException("Widget ID collision: " + child.ID);
 		}
 		widgets.add(child);
+		screen.addSubWidget(child);
 		perHeight = Math.max(perHeight, child.getArea().height);
 		maxProgress = Math.max(0, widgets.size() - getMaxShow());
-		screen.addSubWidget(child);
 		updateList();
 	}
 	

@@ -35,12 +35,10 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	public final LIGui screen; //Uppermost screen parent.
 	private Widget parent; //Last parent, maybe null
-	List<Widget> subWidgets = new ArrayList<Widget>();
-	Set<Widget> widgetToAdd = new HashSet<Widget>();
 	
 	public final String ID; //THE universal identifier.
 	
-	protected final DrawArea area; //Drawing area.
+	final DrawArea area; //Drawing area.
 	protected int zOrder; //The zOrder automatically assigned by LIGuiScreen.
 	
 	public boolean visible = true; //If this widget appears in draw and judgement at all
@@ -52,9 +50,13 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	protected WidgetCoord wcoord; //Calculated by LIGuiScreen for drawing
 	
+	double scale = 1.0;
+	
+	//Internal states
+	List<Widget> subWidgets = new ArrayList<Widget>();
+	Set<Widget> widgetToAdd = new HashSet<Widget>();
 	boolean disposed;
 	boolean iterating;
-	
 	
 	public Widget(String id, Widget par, double x, double y) {
 		this(id, par, x, y, 0, 0);
@@ -77,7 +79,6 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		parent = null;
 		area = new DrawArea(x, y, w, h);
 		ID = id;
-		//System.out.println("Init " + id + "/" + DebugUtils.formatArray(x, y, w, h));
 		scr.addWidget(this);
 	}
 	
@@ -136,15 +137,17 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		return 1;
 	}
 	
-	public DrawArea getArea() {
+	public DrawArea getRawArea() {
 		return area;
 	}
 	
-	final void checkUpdate() {
-		for(Widget w : widgetToAdd) {
-			this.addChild(w);
-		}
-		widgetToAdd.clear();
+	public DrawArea getArea() {
+		return wcoord.da;
+	}
+	
+	public void setScale(double s) {
+		scale = s;
+		screen.updateWidgetPos(this);
 	}
 	
 	/**
@@ -162,7 +165,7 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 			HudUtils.setTextureResolution(texWidth, texHeight);
 		}
 		GL11.glColor4d(1, 1, 1, 1);
-		area.draw();
+		getArea().draw();
 	}
 	
 	//---------EVENT RECEIVERS---------
@@ -205,6 +208,13 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		subWidgets.add(child);
 		screen.addSubWidget(child);
 		Collections.sort(subWidgets);
+	}
+	
+	final void checkUpdate() {
+		for(Widget w : widgetToAdd) {
+			this.addChild(w);
+		}
+		widgetToAdd.clear();
 	}
 	
 	@Override

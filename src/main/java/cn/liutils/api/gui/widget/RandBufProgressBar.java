@@ -5,9 +5,10 @@ package cn.liutils.api.gui.widget;
 
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
+
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
 import cn.liutils.api.gui.DrawArea;
 import cn.liutils.api.gui.LIGui;
 import cn.liutils.api.gui.Widget;
@@ -90,7 +91,7 @@ public abstract class RandBufProgressBar extends Widget {
 		{ //Area setting
 			double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
 			double x, y, u, v, w, h, tw, th;
-			
+			DrawArea area = getArea();
 			switch(dir) {
 			case RIGHT:
 				w = area.width * disp;
