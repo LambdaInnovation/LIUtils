@@ -30,8 +30,6 @@ public class ExpUtils {
     
     public static boolean consumeExp(EntityPlayer player, int exp) {
     	int total = getTotalExp(player);
-    	System.out.println("total: " + total);
-    	System.out.println(player.experience);
     	if(exp > total) {
     		return false;
     	}

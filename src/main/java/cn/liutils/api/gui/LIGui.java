@@ -6,16 +6,17 @@ package cn.liutils.api.gui;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cn.liutils.api.gui.Widget.Alignment;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
@@ -35,6 +36,7 @@ public class LIGui implements Iterable<Widget> {
 	private long TIME_TOLERANCE = 100L;
 	
 	protected List<Widget> widgets = new ArrayList<Widget>();
+	protected Set<Widget> toAdd = new HashSet<Widget>();
 	private Map<Integer, Integer> zOrderProg = new HashMap<Integer, Integer>();
 	
 	private int width, height;
@@ -45,6 +47,8 @@ public class LIGui implements Iterable<Widget> {
 	
 	public double mouseX, mouseY;
 	
+	boolean iterating;
+	
 	public LIGui(GuiScreen screen) {
 		parent = screen;
 	}
@@ -53,9 +57,27 @@ public class LIGui implements Iterable<Widget> {
 	 * Event delegation from MCGUI
 	 */
 	public void drawElements(int mx, int my) {
+		for(Widget w : toAdd) {
+			this.addWidget(w);
+		}
+		toAdd.clear();
+		checkTraverse(null, this);
+		
 		mouseX = mx;
 		mouseY = my;
+		iterating = true;
+		//System.out.println("--------");
 		drawAndTraverse(mx, my, null, this);
+		//System.out.println("--------");
+		iterating = false;
+	}
+	
+	private void checkTraverse(Widget w, Iterable<Widget> it) {
+		if(w != null) 
+			w.checkUpdate();
+		for(Widget w2 : it) {
+			checkTraverse(w2, w2.getSubWidgets());
+		}
 	}
 	
 	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
@@ -70,8 +92,19 @@ public class LIGui implements Iterable<Widget> {
 		}
 		if(w != null && !w.visible)
 			return;
-		for(Widget sub : it)
+		Iterator<Widget> iter = it.iterator();
+		while(iter.hasNext()) {
+			Widget sub = iter.next();
+			sub.iterating = true;
+			//System.out.println((w == null ? "parent": sub.ID) + " {");
 			drawAndTraverse(mx, my, sub, sub);
+			//System.out.println("}");
+			sub.iterating = false;
+			//Check if disposed and remove
+			if(sub.disposed) {
+				iter.remove();
+			}
+		}
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 	}
 	
@@ -182,6 +215,10 @@ public class LIGui implements Iterable<Widget> {
 	protected void addWidget(Widget c) {
 		if(widgets.contains(c)) {
 			throw new RuntimeException("ID Collision: " + c.ID);
+		}
+		if(iterating) {
+			toAdd.add(c);
+			return;
 		}
 		calcWidget(c);
 		widgets.add(c);

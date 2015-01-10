@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.api.gui.LIGui;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.DebugUtils;
+import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.TextUtils;
 import cn.liutils.util.render.TrueTypeFont;
 
@@ -22,7 +23,10 @@ public class TextButton extends Widget {
 	String text = null;
 	TrueTypeFont font;
 	float size;
-	double[] color = { 1.0, 1.0, 1.0, 1.0 };
+	int[] 
+		color = {255, 255, 255, 255},
+		activeColor = {255, 255, 255, 255},
+		inActiveColor = {255, 255, 255, 255};
 
 	public TextButton(String id, Widget par, double x, double y, double w,
 			double h) {
@@ -54,37 +58,53 @@ public class TextButton extends Widget {
 		invalidV = v;
 	}
 	
-	public void setTextColor(double r, double g, double b, double a) {
-		color = new double[] { r, g, b, a };
-	}
-	
 	public void setTextColor(int[] barr) {
-		setTextColor(barr[0], barr[1], barr[2], 255);
+		setTextColor(barr[0], barr[1], barr[2], barr.length > 3 ? barr[3] : 255);
 	}
 	
 	public void setTextColor(int r, int g, int b, int a) {
-		color = new double[] { r / 255.0, g / 255.0, b / 255.0, a / 255.0 };
-		System.out.println(DebugUtils.formatArray(color));
+		color = new int[] { r, g, b, a };
+	}
+	
+	public void setActiveColor(int[] barr) {
+		setActiveColor(barr[0], barr[1], barr[2], barr.length > 3 ? barr[3] : 255);
+	}
+	
+	public void setActiveColor(int r, int g, int b, int a) {
+		activeColor = new int[] { r, g, b, a };
+	}
+	
+	public void setInactiveColor(int[] barr) {
+		setInactiveColor(barr[0], barr[1], barr[2], barr.length > 3 ? barr[3] : 255);
+	}
+	
+	public void setInactiveColor(int r, int g, int b, int a) {
+		inActiveColor = new int[] { r, g, b, a };
 	}
 	
 	@Override
 	public void draw(double mx, double my, boolean mouseHovering) {
 		double ou = area.u, ov = area.v;
+		int[] color;
 		if(!this.receiveEvent) {
 			if(invalidU != -1 && invalidV != -1) {
 				area.u = invalidU;
 				area.v = invalidV;
-			}
+			} 
+			color = this.inActiveColor;
 		} else if(mouseHovering) {
 			area.u = downU;
 			area.v = downV;
+			color = this.activeColor;
+		} else {
+			color = this.color;
 		}
 		super.draw(mx, my, mouseHovering);
 		area.u = ou;
 		area.v = ov;
 		
 		if(text != null) {
-			GL11.glColor4d(color[0], color[1], color[2], color[3]);
+			RenderUtils.bindColor(color);
 			TextUtils.drawText(font, text, area.width / 2, 
 				area.height / 2 - size / 2, size, 
 				TrueTypeFont.ALIGN_CENTER);
