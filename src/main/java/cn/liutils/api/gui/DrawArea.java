@@ -44,10 +44,6 @@ public class DrawArea {
 		this.height = h;
 	}
 	
-	public void setData(DrawArea da) {
-		setData(da.x, da.y, da.width, da.height, da.u, da.v, da.tWidth, da.tHeight);
-	}
-	
 	public void setData(double x, double y, double w, double h,
 			double u, double v, double tw, double th) {
 		setDrawArea(x, y, w, h);

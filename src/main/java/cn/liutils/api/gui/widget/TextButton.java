@@ -5,9 +5,9 @@ package cn.liutils.api.gui.widget;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.gui.DrawArea;
 import cn.liutils.api.gui.LIGui;
 import cn.liutils.api.gui.Widget;
+import cn.liutils.util.DebugUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.TextUtils;
 import cn.liutils.util.render.TrueTypeFont;
@@ -84,7 +84,6 @@ public class TextButton extends Widget {
 	
 	@Override
 	public void draw(double mx, double my, boolean mouseHovering) {
-		DrawArea area = getArea();
 		double ou = area.u, ov = area.v;
 		int[] color;
 		if(!this.receiveEvent) {

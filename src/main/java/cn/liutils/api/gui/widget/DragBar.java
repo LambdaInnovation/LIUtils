@@ -18,11 +18,11 @@ public class DragBar extends Widget {
 	private class Bar extends Widget {
 
 		public Bar() {
-			super("bar", DragBar.this, 0, 0, DragBar.this.getRawArea().width, barHeight);
+			super("bar", DragBar.this, 0, 0, DragBar.this.getArea().width, barHeight);
 		}
 		
 		public void draw(double mx, double my, boolean mouseHovering) {
-			this.getRawArea().y = progress * (DragBar.this.getRawArea().height - barHeight);
+			this.area.y = progress * (DragBar.this.area.height - barHeight);
 			screen.updateWidgetPos(this);
 			super.draw(mx, my, mouseHovering);
 		}
@@ -30,8 +30,8 @@ public class DragBar extends Widget {
 		public void onMouseDrag(double x0, double y0) {
 			if(!enableDragging)
 				return;
-			double full = DragBar.this.getRawArea().height - barHeight;
-			double y = Math.max(Math.min(getRawArea().y + y0, full), 0) / full;
+			double full = DragBar.this.getArea().height - barHeight;
+			double y = Math.max(Math.min(area.y + y0, full), 0) / full;
 			setProgress(y);
 			onProgressChanged();
 		}

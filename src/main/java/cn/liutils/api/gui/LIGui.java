@@ -172,26 +172,22 @@ public class LIGui implements Iterable<Widget> {
     }
 	
 	protected WidgetCoord calcWidget(Widget w) {
-		WidgetCoord cw = new WidgetCoord(w, 0, 0, 0);
+		WidgetCoord cw = new WidgetCoord(w, 0, 0);
 		Widget wp = w.getWidgetParent();
 		if(wp == null) { //Screen as parent
-			cw.absScale = w.scale;
 			if(w.style == Alignment.CENTER) {
 				double hw = width * 0.5, hh = height * 0.5;
-				cw.absX = hw - w.area.width * 0.5 + w.area.x * cw.absScale;
-				cw.absY = hh - w.area.height * 0.5 + w.area.y * cw.absScale;
+				cw.absX = hw - w.area.width * 0.5 + w.area.x;
+				cw.absY = hh - w.area.height * 0.5 + w.area.y;
 			} else {
-				cw.absX = w.area.x * cw.absScale;
-				cw.absY = w.area.y * cw.absScale;
+				cw.absX = w.area.x;
+				cw.absY = w.area.y;
 			}
 		} else { //Widget as parent
 			GenericUtils.assertObj(wp.wcoord);
-			cw.absScale = wp.wcoord.absScale * w.scale;
-			cw.absX = (wp.wcoord.absX + w.area.x) * cw.absScale;
-			cw.absY = (wp.wcoord.absY + w.area.y) * cw.absScale;
+			cw.absX = wp.wcoord.absX + w.area.x;
+			cw.absY = wp.wcoord.absY + w.area.y;
 		}
-		cw.da.width *= cw.absScale;
-		cw.da.height *= cw.absScale;
 		w.wcoord = cw;
 		return cw;
 	}
@@ -228,6 +224,7 @@ public class LIGui implements Iterable<Widget> {
 		widgets.add(c);
 		assignZOrder(c);
 		Collections.sort(widgets);
+		System.out.println(widgets);
 	}
 	
 	public void addSubWidget(Widget c) {
@@ -267,15 +264,10 @@ public class LIGui implements Iterable<Widget> {
     public class WidgetCoord implements Comparable {
 		public Widget wig;
 		public double absX, absY;
-		public double absScale;
-		public DrawArea da;
-		
-		public WidgetCoord(Widget w, double ax, double ay, double as) {
+		public WidgetCoord(Widget w, double ax, double ay) {
 			wig = w;
 			absX = ax;
 			absY = ay;
-			absScale = as;
-			da = w.area.clone();
 		}
 		
 		public boolean coordWithin(double x, double y) {
