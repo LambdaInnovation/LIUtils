@@ -48,7 +48,7 @@ public abstract class EntityX extends Entity {
 			if(doesUpdate)
 				updateAll(onSpawned);
 		}
-		++ticksExisted;
+		//++ticksExisted;
 		
 		//vec copy
 		this.lastTickPosX = this.posX;

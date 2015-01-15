@@ -12,9 +12,6 @@ import java.lang.reflect.Field;
 import cn.annoreg.core.AnnotationData;
 import cn.annoreg.core.RegistryType;
 import cn.annoreg.core.RegistryTypeDecl;
-import cn.annoreg.core.ctor.Arg;
-import cn.annoreg.core.ctor.ConstructorUtils;
-import cn.annoreg.core.ctor.Ctor;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.core.LIUtils;
@@ -57,7 +54,7 @@ public class AttachKeyHandlerRegistry extends RegistryType {
 				int kid = f.getInt(null);
 				RegAttachKeyHandler anno = data.<RegAttachKeyHandler>getAnnotation();
 				//Also allow ctor in this field.
-				IKeyHandler ikh = (IKeyHandler) ConstructorUtils.newInstance(anno.clazz(), f.getAnnotation(Ctor.class));
+				IKeyHandler ikh = (IKeyHandler) anno.clazz().newInstance();
 				String name = anno.name();
 				if(name.equals("")) {
 					//We should not use the name of cl for default, because one class may be used more than once.

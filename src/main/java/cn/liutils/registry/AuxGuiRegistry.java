@@ -12,7 +12,6 @@ import java.lang.reflect.Field;
 import cn.annoreg.core.AnnotationData;
 import cn.annoreg.core.RegistryType;
 import cn.annoreg.core.RegistryTypeDecl;
-import cn.annoreg.core.ctor.ConstructorUtils;
 import cn.liutils.api.gui.AuxGui;
 import cn.liutils.core.LIUtils;
 import cpw.mods.fml.relauncher.Side;
@@ -36,9 +35,9 @@ public class AuxGuiRegistry extends RegistryType {
 	}
 
 	@Override
-	public boolean registerClass(AnnotationData data) {
+	public boolean registerClass(AnnotationData data) throws Exception {
 		Class<? extends AuxGui> clazz = (Class<? extends AuxGui>) data.getTheClass();
-		AuxGui.register((AuxGui) ConstructorUtils.newInstance(clazz));
+		AuxGui.register((AuxGui) clazz.newInstance());
 		return true;
 	}
 
@@ -46,7 +45,7 @@ public class AuxGuiRegistry extends RegistryType {
 	public boolean registerField(AnnotationData data) {
 		Field f = data.getTheField();
 		try {
-			AuxGui.register((AuxGui) ConstructorUtils.newInstance(f));
+			AuxGui.register((AuxGui) f.get(null));
 			return true;
 		} catch(Exception e) {
 			LIUtils.log.error("Exception regging AuxGui field" + f);
