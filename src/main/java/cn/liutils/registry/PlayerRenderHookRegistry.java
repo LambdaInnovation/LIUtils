@@ -11,8 +11,7 @@ import java.lang.annotation.Target;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import cn.annoreg.core.AnnotationData;
-import cn.annoreg.core.RegistryType;
+import cn.annoreg.base.RegistrationInstance;
 import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.render.IPlayerRenderHook;
 import cn.liutils.core.LIUtils;
@@ -24,7 +23,8 @@ import cn.liutils.template.LIClientRegistry;
  */
 @RegistryTypeDecl
 @SideOnly(Side.CLIENT)
-public class PlayerRenderHookRegistry extends RegistryType {
+public class PlayerRenderHookRegistry 
+		extends RegistrationInstance<PlayerRenderHookRegistry.RegPlayerRenderHook, IPlayerRenderHook> {
 	
 	@Target({ElementType.TYPE, ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
@@ -36,25 +36,8 @@ public class PlayerRenderHookRegistry extends RegistryType {
 	}
 
 	@Override
-	public boolean registerClass(AnnotationData data) {
-		try {
-			IPlayerRenderHook hook = (IPlayerRenderHook) data.getTheClass().newInstance();
-			LIClientRegistry.addPlayerRenderingHook(hook);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return true;
-	}
-
-	@Override
-	public boolean registerField(AnnotationData data) {
-		try {
-			LIClientRegistry.addPlayerRenderingHook(
-				(IPlayerRenderHook) data.getTheField().get(null));
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-		return true;
+	protected void register(IPlayerRenderHook obj, RegPlayerRenderHook anno) throws Exception {
+		LIClientRegistry.addPlayerRenderingHook(obj);
 	}
 
 }

@@ -9,8 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
 
-import cn.annoreg.core.AnnotationData;
-import cn.annoreg.core.RegistryType;
+import cn.annoreg.base.RegistrationFieldSimple;
 import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
@@ -25,7 +24,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @RegistryTypeDecl
 @SideOnly(Side.CLIENT)
-public class AttachKeyHandlerRegistry extends RegistryType {
+public class AttachKeyHandlerRegistry 
+		extends RegistrationFieldSimple<AttachKeyHandlerRegistry.RegAttachKeyHandler, Integer> {
 	
 	@Target({ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
@@ -41,33 +41,9 @@ public class AttachKeyHandlerRegistry extends RegistryType {
 	}
 
 	@Override
-	public boolean registerClass(AnnotationData data) {
-		return false;
-	}
-
-	@Override
-	public boolean registerField(AnnotationData data) {
-		Field f = data.getTheField();
-		Class cl = f.getType();
-		if(cl == Integer.TYPE || cl == Integer.class) {
-			try {
-				int kid = f.getInt(null);
-				RegAttachKeyHandler anno = data.<RegAttachKeyHandler>getAnnotation();
-				//Also allow ctor in this field.
-				IKeyHandler ikh = (IKeyHandler) anno.clazz().newInstance();
-				String name = anno.name();
-				if(name.equals("")) {
-					//We should not use the name of cl for default, because one class may be used more than once.
-					name = f.getDeclaringClass().getSimpleName() + "." + f.getName();
-				}
-				LIKeyProcess.instance.addKey(name, kid, anno.isRep(), ikh);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		} else {
-			throw new RuntimeException("Invalid AttachKeyHandler type");
-		}
-		return true;
+	protected void register(Integer value, RegAttachKeyHandler anno, String field) throws Exception {
+		IKeyHandler ikh = (IKeyHandler) anno.clazz().newInstance();
+		LIKeyProcess.instance.addKey(this.getSuggestedName(), value, anno.isRep(), ikh);
 	}
 
 }
