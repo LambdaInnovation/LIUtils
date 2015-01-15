@@ -20,7 +20,9 @@ import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -58,6 +60,30 @@ public class GenericUtils {
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
 		}
+	}
+	
+	/**
+	 * Return: how many not merged
+	 */
+	public static int mergeStackable(InventoryPlayer inv, ItemStack stack) {
+		for(int i = 0; i < inv.getSizeInventory() - 4 && stack.stackSize > 0; ++i) {
+			ItemStack is = inv.getStackInSlot(i);
+			if(is != null && is.getItem() == stack.getItem()) {
+				is.stackSize += stack.stackSize;
+				int left = Math.max(0, is.stackSize - is.getMaxStackSize());
+				stack.stackSize = left;
+				is.stackSize -= left;
+			}
+		}
+		if(stack.stackSize > 0) {
+			int id = inv.getFirstEmptyStack();
+			if(id == -1) {
+				return stack.stackSize;
+			}
+			inv.setInventorySlotContents(id, stack.copy());
+			return 0;
+		}
+		return 0;
 	}
 	
 	public static void Explode(World world, Entity entity, float strengh,

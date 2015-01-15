@@ -14,12 +14,8 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-import cn.liutils.core.proxy.LIClientProps;
-import cn.liutils.util.GenericUtils;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.block.Block;
-import net.minecraft.block.ITileEntityProvider;
+import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
@@ -29,6 +25,11 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
+import cn.liutils.core.proxy.LIClientProps;
+import cn.liutils.util.DebugUtils;
+import cn.liutils.util.GenericUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * A class of block that can be placed to player's facing direction, also it contains multiblock structure. <br/>
@@ -50,7 +51,7 @@ import net.minecraftforge.common.util.ForgeDirection;
  * @see cn.liutils.template.block.IMetadataProvider
  * @see cn.liutils.template.block.TileDirectionalMulti
  */
-public abstract class BlockDirectionalMulti extends Block implements ITileEntityProvider {
+public abstract class BlockDirectionalMulti extends BlockContainer {
 	
 	/**
 	 * A list for all the subblocks. Automatically stores id0
@@ -100,7 +101,7 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
 	}
 	
 	/**
-	 * Return a array of size 3 containg the origin coordinate of the block.
+	 * Return an array of size 3 containg the origin coordinate of the block.
 	 */
 	public int[] getOrigin(World world, int x, int y, int z, int meta) {
 		SubBlockPos pos2 = applyRotation(getSubBlockByMeta(meta),
@@ -236,8 +237,7 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
     {
     	TileEntity te = world.getTileEntity(x, y, z);
-    	if(te != null && te instanceof TileDirectionalMulti)
-    		metadata = this.getMetadata(world, x, y, z);
+    	//metadata = this.getMetadata(world, x, y, z);
     	int[] crds = this.getOrigin(world, x, y, z, metadata);
     	if(crds != null) {
     		x = crds[0];
@@ -249,7 +249,8 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
     			bp2.destroyMe(world, x, y, z);
     		}
     	}
-    	super.breakBlock(world, x, y, z, block, metadata);
+    	//world.removeTileEntity(x, y, z);
+    	//super.breakBlock(world, x, y, z, block, metadata);
     }
 	
 	@Override
@@ -270,6 +271,14 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
         return false;
     }
 	
+	public TileEntity getOriginTileEntity(World world, int x, int y, int z, int meta) {
+		int[] coords = this.getOrigin(world, x, y, z, meta);
+		if(coords == null)
+			return null;
+		TileEntity te = world.getTileEntity(coords[0], coords[1], coords[2]);
+		return te;
+	}
+	
 	public class SubBlockPos {
 		public final int offX, offY, offZ; //in origin rotation
 		public final int id;
@@ -282,9 +291,8 @@ public abstract class BlockDirectionalMulti extends Block implements ITileEntity
 		}
 		
 		public void destroyMe(World wrld, int x, int y, int z) {
-			Block cmp = wrld.getBlock(x + offX, y + offY, z + offZ);
-			if(cmp == BlockDirectionalMulti.this)
-				wrld.setBlockToAir(x + offX, y + offY, z + offZ);
+			wrld.removeTileEntity(x + offX, y + offY, z + offZ);
+			wrld.setBlockToAir(x + offX, y + offY, z + offZ);
 		}
 		
 		public void setMe(World world, int x, int y, int z, int meta, Block block) {

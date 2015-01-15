@@ -37,5 +37,13 @@ public class DebugUtils {
 		}
 		return b.append(")").toString();
 	}
+	
+	public static String formatArray(double[] arr) {
+		StringBuilder b = new StringBuilder("(");
+		for(int i = 0; i < arr.length; ++i) {
+			b.append(arr[i]).append(i == arr.length - 1 ? "" : ", "); 
+		}
+		return b.append(")").toString();
+	}
 
 }

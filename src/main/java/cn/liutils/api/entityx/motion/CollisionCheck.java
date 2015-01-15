@@ -53,7 +53,7 @@ public class CollisionCheck extends MotionHandler {
 				entity.motionX = 0;
 			}
 		} else if(fd.offsetY != 0) {
-			entity.posY = res.hitVec.yCoord; //+height?
+			entity.posY = res.hitVec.yCoord + entity.height * .5 * fd.offsetY;
 			if(resetVel) {
 				entity.motionY = 0;
 			}

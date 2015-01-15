@@ -20,6 +20,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class MsgControlSyncAll implements IMessage {
 
 	private ControlData cd = null;
+	private ByteBuf buf = null;
 	
 	public MsgControlSyncAll(ControlData data) {
 		this.cd = data;
@@ -30,10 +31,8 @@ public class MsgControlSyncAll implements IMessage {
 	
 	@Override
 	@SideOnly(Side.CLIENT)
-	//FIXME DO NOT use class Minecraft in this function. Do it in handler, which is side only. 
-	//Remove SideOnly after that.
 	public void fromBytes(ByteBuf buf) {
-		cd = new ControlData(Minecraft.getMinecraft().thePlayer, buf);
+		this.buf = buf;
 	}
 
 	@Override
@@ -48,8 +47,9 @@ public class MsgControlSyncAll implements IMessage {
 		@SideOnly(Side.CLIENT)
 		public IMessage onMessage(MsgControlSyncAll message, MessageContext ctx) {
 			ControlData data = ControlData.get(Minecraft.getMinecraft().thePlayer);
+			ControlData cd = new ControlData(Minecraft.getMinecraft().thePlayer, message.buf);
 			if (data != null)
-				data.copyFrom(message.cd);
+				data.copyFrom(cd);
 			return null;
 		}
 		

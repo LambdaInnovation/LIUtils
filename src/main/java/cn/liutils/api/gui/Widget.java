@@ -5,25 +5,28 @@ package cn.liutils.api.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.gui.LIGui.WidgetCoord;
-import cn.liutils.util.DebugUtils;
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 
 /**
- * <code>Widget</code> describes a arbitary GUI element with a specified area on screen.
- * Widget is registered and handled by a LIGuiScreen. You can specify either a LIGuiScreen or Widget as its parent.</br>
+ * <code>Widget</code> describes an arbitrary GUI element specifying an area on screen.
+ * Widget is registered and handled by a LIGui. You can specify either a LIGuiScreen or Widget as its parent.</br>
  * A widget can own multiple subWidgets. This enables page-like widget placement
  * (The coords specified serve as relative coordinate to its first parent).
  * <br/> The ID is the widget's universal identifier. Don't make it collide.
  * @author WeathFolD
+ * @see cn.liutils.api.gui.LIGui
  */
 public class Widget implements Comparable<Widget>, Iterable<Widget> {
 
@@ -33,13 +36,13 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	public final LIGui screen; //Uppermost screen parent.
 	private Widget parent; //Last parent, maybe null
 	List<Widget> subWidgets = new ArrayList<Widget>();
+	Set<Widget> widgetToAdd = new HashSet<Widget>();
 	
 	public final String ID; //THE universal identifier.
 	
 	protected final DrawArea area; //Drawing area.
 	protected int zOrder; //The zOrder automatically assigned by LIGuiScreen.
 	
-	//public boolean alive = true; //Lifetime flag. Set to false to remove this widget next draw call
 	public boolean visible = true; //If this widget appears in draw and judgement at all
 	public boolean receiveEvent = true; //Whether this widget receives events
 	public boolean draw = false;
@@ -49,7 +52,9 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	
 	protected WidgetCoord wcoord; //Calculated by LIGuiScreen for drawing
 	
-	private boolean disposed;
+	boolean disposed;
+	boolean iterating;
+	
 	
 	public Widget(String id, Widget par, double x, double y) {
 		this(id, par, x, y, 0, 0);
@@ -60,7 +65,6 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		parent = par;
 		area = new DrawArea(x, y, w, h);
 		ID = id;
-		//System.out.println("InitSub " + id + "/" + DebugUtils.formatArray(x, y, w, h));
 		par.addChild(this);
 	}
 	
@@ -117,12 +121,6 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	}
 	
 	public void dispose() {
-		if(parent != null) {
-			parent.subWidgets.remove(this);
-		} else {
-			screen.widgets.remove(this);
-		}
-		System.out.println("Dispose " + this);
 		disposed = true;
 	}
 	
@@ -142,23 +140,28 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 		return area;
 	}
 	
+	final void checkUpdate() {
+		for(Widget w : widgetToAdd) {
+			this.addChild(w);
+		}
+		widgetToAdd.clear();
+	}
+	
 	/**
 	 * Draw the widget!
 	 * @param mx mouse posX (Widget origin)
 	 * @param my mouse posY (Widget origin)
-	 * @param mouseHovering if the mouse is on the widget
+	 * @param mouseHovering true if the mouse is on the widget
 	 */
 	public void draw(double mx, double my, boolean mouseHovering) {
 		GL11.glEnable(GL11.GL_BLEND);
 		if(texture != null) {
-			//System.out.println("load tex");
 			RenderUtils.loadTexture(texture);
 		}
 		if(texWidth != 0 && texHeight != 0) {
-			//System.out.println("set res");
 			HudUtils.setTextureResolution(texWidth, texHeight);
 		}
-		//System.out.println(this);
+		GL11.glColor4d(1, 1, 1, 1);
 		area.draw();
 	}
 	
@@ -190,9 +193,13 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	 * Called when widget is created, usually not called by itself.
 	 */
 	protected void addChild(Widget child) {
+		if(iterating) {
+			this.widgetToAdd.add(child);
+			return;
+		}
 		for(Widget w : subWidgets) {
 			if(w.ID.equals(child.ID)) {
-				throw new RuntimeException("Widget ID collision: " + child.ID);
+				throw new RuntimeException("Widget ID collision: " + w.ID);
 			}
 		}
 		subWidgets.add(child);

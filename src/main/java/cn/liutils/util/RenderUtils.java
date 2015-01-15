@@ -80,6 +80,28 @@ public class RenderUtils {
     public static void bindColor(int r, int g, int b) {
     	GL11.glColor3ub((byte)r, (byte)g, (byte)b);
     }
+    
+    public static void bindGray(int s) {
+    	byte r = (byte) s;
+    	GL11.glColor3ub(r, r, r);
+    }
+    
+    public static void bindIdentity() {
+    	GL11.glColor4f(1, 1, 1, 1);
+    }
+    
+    public static void bindGray(int s, int alpha) {
+    	byte r = (byte) s;
+    	GL11.glColor4ub(r, r, r, (byte) alpha);
+    }
+    
+    public static void bindGray(double s) {
+    	GL11.glColor3d(s, s, s);
+    }
+    
+    public static void bindGray(double s, double alpha) {
+    	GL11.glColor4d(s, s, s, alpha);
+    }
 	
 	/**
 	 * Add a vertex to the tessellator with UV coords.
