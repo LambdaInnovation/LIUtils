@@ -13,6 +13,7 @@ import cn.liutils.api.entityx.MotionHandler;
 public class VelocityUpdate extends MotionHandler {
 	
 	double decrRate = 0.98; //Mutiplied to entity's motion each tick;
+	public static final String ID = "velupdate";
 	
 	public VelocityUpdate(EntityX ent, double decr) {
 		super(ent);
@@ -42,7 +43,7 @@ public class VelocityUpdate extends MotionHandler {
 	
 	@Override
 	public String getID() {
-		return "velupdate";
+		return ID;
 	}
 
 }

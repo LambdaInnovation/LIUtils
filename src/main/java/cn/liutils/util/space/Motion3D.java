@@ -192,7 +192,7 @@ public class Motion3D {
 	}
 	
 	/**
-	 * Move this motion3D towards motion vec direction.
+	 * Move this motion3D towards motion vec direction. Didn't copy the class.
 	 * @param step
 	 * @return this
 	 */

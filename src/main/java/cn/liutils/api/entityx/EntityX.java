@@ -27,7 +27,7 @@ public abstract class EntityX extends Entity {
 	private Queue<MotionHandler> daemonHandlers = new PriorityQueue<MotionHandler>();
 	
 	protected boolean updated = false;
-	public boolean handleClient = false;
+	public boolean handleClient = true;
 
 	public EntityX(World world) {
 		super(world);
@@ -125,16 +125,16 @@ public abstract class EntityX extends Entity {
 		return !worldObj.isRemote || handleClient;
 	}
 	
-	private void updateAll(DoSth sth) {
+	private void updateAll(Callback sth) {
 		updateAll(sth, null);
 	}
 	
-	private void updateAll(DoSth sth, MotionHandler exclusion) {
+	private void updateAll(Callback cb, MotionHandler exclusion) {
 		if(curMotion != null)  {
 			if(!curMotion.alive) {
 				curMotion = null;
 			} else {
-				sth.dosth(curMotion);
+				cb.invoke(curMotion);
 			}
 		}
 		Iterator<MotionHandler> iter = daemonHandlers.iterator();
@@ -145,22 +145,22 @@ public abstract class EntityX extends Entity {
 				continue;
 			}
 			if(mh != exclusion) {
-				sth.dosth(mh);
+				cb.invoke(mh);
 			}
 		}
 	}
 	
-	private static interface DoSth {
-		void dosth(MotionHandler mo);
+	private static interface Callback {
+		void invoke(MotionHandler mo);
 	}
 	
-	private static DoSth onSpawned = new DoSth() {
-		@Override public void dosth(MotionHandler mo) {
+	private static Callback onSpawned = new Callback() {
+		@Override public void invoke(MotionHandler mo) {
 			mo.onSpawnedInWorld();
 		}
 	};
-	private static DoSth onUpdate = new DoSth() {
-		@Override public void dosth(MotionHandler mo) {
+	private static Callback onUpdate = new Callback() {
+		@Override public void invoke(MotionHandler mo) {
 			//System.out.println("OnUpdate " + mo.getID());
 			mo.onUpdate();
 		}

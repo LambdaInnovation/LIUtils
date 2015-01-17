@@ -16,6 +16,7 @@ import cn.liutils.api.entityx.MotionHandler;
 public class CollisionCheck extends MotionHandler {
 	
 	boolean resetVel = true;
+	public static final String ID = "collision";
 
 	public CollisionCheck(EntityX ent) {
 		super(ent);
@@ -67,7 +68,7 @@ public class CollisionCheck extends MotionHandler {
 
 	@Override
 	public String getID() {
-		return "collision";
+		return ID;
 	}
 
 }

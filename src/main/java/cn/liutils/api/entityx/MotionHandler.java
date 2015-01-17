@@ -7,8 +7,6 @@ import net.minecraft.util.Vec3;
 
 /**
  * Generic interface handling entity motion.
- * If you want the motion handler to be re-created on reloading(which is the most case),
- * you must keep the default constructor in the MotionHandler.
  * @author WeathFolD
  */
 public abstract class MotionHandler<T extends EntityX> implements Comparable<MotionHandler> {

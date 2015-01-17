@@ -22,6 +22,7 @@ import cn.liutils.util.misc.Pair;
  *
  */
 public class Vertex extends Pair<Vec3, Vector2d> {
+	
 	public Vertex(double x, double y, double z, double u, double v) {
 		super(RenderUtils.newV3(x, y, z), new Vector2d(u, v));
 	}
