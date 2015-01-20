@@ -29,6 +29,7 @@ public class ExpUtils {
     }
     
     public static boolean consumeExp(EntityPlayer player, int exp) {
+    	//TODO: Currently, change not shown in lower bar, our mistake or MC's mistake?
     	int total = getTotalExp(player);
     	if(exp > total) {
     		return false;
