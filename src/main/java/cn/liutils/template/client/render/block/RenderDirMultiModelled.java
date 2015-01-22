@@ -15,6 +15,7 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL14;
 
 import cn.liutils.api.render.model.ITileEntityModel;
 import cn.liutils.template.block.BlockDirectionalMulti;
@@ -51,6 +52,7 @@ public class RenderDirMultiModelled extends RenderTileDirMulti {
 			} else {
 				GL11.glScalef(scale, scale, scale);
 			}
+			GL11.glColor4d(1, 1, 1, 0.6);
 			theModel.render(te, 0F, 0F);
 		} GL11.glPopMatrix();
 	}

@@ -53,6 +53,8 @@ public class RenderIcon extends Render {
 	protected boolean hasLight = false;
 	protected float r = 1.0F, g = 1.0F, b = 1.0f;
 	protected boolean viewOptimize = false;
+	
+	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
 
 	public RenderIcon(ResourceLocation ic) {
 		icon = ic;
@@ -104,6 +106,7 @@ public class RenderIcon extends Render {
 			if(!hasLight)
 				GL11.glDisable(GL11.GL_LIGHTING);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			GL11.glAlphaFunc(GL11.GL_GREATER, minTolerateAlpha);
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef((float) par2, (float) par4, (float) par6);
 				GL11.glScalef(size, size, size);
@@ -125,7 +128,6 @@ public class RenderIcon extends Render {
 			} GL11.glPopMatrix();
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_CULL_FACE);
@@ -137,11 +139,10 @@ public class RenderIcon extends Render {
 		float f6 = 0.25F;
 		GL11.glRotatef(180F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
 		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
-		GL11.glColor4f(r, g, b, alpha);
 		if(!hasLight) 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		tessllator.startDrawingQuads();
-		
+		tessllator.setColorRGBA_F(r, g, b, alpha);
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);
 		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 1);

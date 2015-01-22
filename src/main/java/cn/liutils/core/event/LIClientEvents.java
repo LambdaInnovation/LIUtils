@@ -8,6 +8,9 @@ import java.util.Set;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.api.gui.AuxGui;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -28,11 +31,13 @@ public class LIClientEvents {
 	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		 if(event.type == ElementType.CROSSHAIRS) {
 			 for(AuxGui gui : auxGuiList) {
 				 if(gui.isOpen()) gui.draw(event.resolution);
 			 }
 		 }
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 	}
 	
 }
