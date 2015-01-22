@@ -10,13 +10,14 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.api.render.piece.Piece;
 
 /**
- * Transformation property designed for 2D drawings, will not transform the billboard to the center of the origin.
+ * Transformation property designed for 2D drawings.
  * @author WeathFolD
  */
 public class Transform2D extends PieceProperty {
 
-	double tx, ty; //Transform coordinates
-	double rotation; //Rotation angle around Z axis
+	public double tx, ty; //Transform coordinates
+	public double rotation; //Rotation angle around Z axis
+	public double pivotX, pivotY;
 	
 	public Transform2D(Piece p) {
 		super(p);
@@ -27,7 +28,12 @@ public class Transform2D extends PieceProperty {
 		this.tx = tx;
 		this.ty = ty;
 	}
-
+	
+	public void setPivotPoint(double x, double y) {
+		pivotX = x;
+		pivotY = y;
+	}
+	
 	@Override
 	public EnumSet<EventType> getHandledEvents() {
 		return EnumSet.of(EventType.PRE_TESSELLATION);
@@ -35,12 +41,10 @@ public class Transform2D extends PieceProperty {
 
 	@Override
 	public void onEvent(EventType type) {
-		double ox = piece.width / 2, oy = piece.height / 2;
 		GL11.glTranslated(tx, ty, 0);
-		
-		GL11.glTranslated(ox, oy, 0);
-		GL11.glRotated(rotation, 0, 1, 0);
-		GL11.glTranslated(-ox, -oy, 0);
+		GL11.glTranslated(pivotX, pivotY, 0);
+		GL11.glRotated(rotation, 0, 0, 1);
+		GL11.glTranslated(-pivotX, -pivotY, 0);
 	}
 
 }

@@ -13,18 +13,19 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.util.HudUtils;
 
 /**
- * PNG-Generated font drawer. Use a small C++-written tool as assist.
- * Currently don't support line-ends. Please seperate line-ends by yourself.
+ * Font drawing assistance build upon TrueTypeFont class.
  * @author WeathFolD
- *
  */
 public class TextUtils {
 	
-	public static final TrueTypeFont
-		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true),
-		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
+	public static TrueTypeFont
+		FONT_CONSOLAS_64,
+		FONT_YAHEI_64;
 	
-	public static void init() {}
+	public static void init() {
+		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("Consolas", Font.PLAIN, 32), true);
+		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
+	}
 	
 	public static void drawText(TrueTypeFont font, String text, double x, double y, float size) {
 		drawText(font, text, x, y, size, TrueTypeFont.ALIGN_LEFT);

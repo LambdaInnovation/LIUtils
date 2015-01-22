@@ -96,14 +96,14 @@ public class HudUtils {
     /**
      * Draws a textured rectangle at the stored z-value. Args: x, y, u, v, width, height, texWidth, texHeight
      */
-    public static void drawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texJeogjt)
+    public static void drawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texHeight)
     {
     	float f = SCALE_X;
         float f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        t.addVertexWithUV(x + 0, y + height, zLevel, (u + 0) * f, (v + texJeogjt) * f1);
-        t.addVertexWithUV(x + width, y + height, zLevel, (u + texWidth) * f, (v + texJeogjt) * f1);
+        t.addVertexWithUV(x + 0, y + height, zLevel, (u + 0) * f, (v + texHeight) * f1);
+        t.addVertexWithUV(x + width, y + height, zLevel, (u + texWidth) * f, (v + texHeight) * f1);
         t.addVertexWithUV(x + width, y + 0, zLevel, (u + texWidth) * f, (v + 0) * f1);
         t.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * f, (v + 0) * f1);
         t.draw();

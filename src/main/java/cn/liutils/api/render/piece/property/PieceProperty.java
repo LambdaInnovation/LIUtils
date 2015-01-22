@@ -14,9 +14,11 @@ import cn.liutils.api.render.piece.Piece;
 public abstract class PieceProperty {
 	
 	public final Piece piece;
+	public boolean enabled = true;
 	
 	public PieceProperty(Piece piece) {
 		this.piece = piece;
+		piece.addProperty(this);
 	}
 
 	public enum EventType {
@@ -26,6 +28,10 @@ public abstract class PieceProperty {
 		ON_TESSELLATION,
 		POST_DRAW
 	};
+	
+	public void setEnabled(boolean b) {
+		enabled = b;
+	}
 	
 	public abstract EnumSet<EventType> getHandledEvents();
 	

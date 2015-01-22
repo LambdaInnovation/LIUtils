@@ -74,7 +74,9 @@ public class RenderUtils {
     }
     
     public static void bindColor(int[] arr) {
-    	bindColor(arr[0], arr[1], arr[2]);
+    	if(arr.length == 3)
+    		bindColor(arr[0], arr[1], arr[2]);
+    	else bindColor(arr[0], arr[1], arr[2], arr[3]);
     }
     
     public static void bindColor(int r, int g, int b) {

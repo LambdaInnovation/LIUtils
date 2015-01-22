@@ -24,6 +24,10 @@ public class AssignTexture extends PieceProperty {
 		super(piece);
 		texture = res;
 	}
+	
+	public void setTexture(ResourceLocation tex) {
+		texture = tex;
+	}
 
 	@Override
 	public EnumSet<EventType> getHandledEvents() {

@@ -27,14 +27,34 @@ public class AssignColor extends PieceProperty {
 	
 	public AssignColor(Piece piece, int r, int g, int b, int a) {
 		super(piece);
-		setColor(r, g, b, a);
+		setColor4ub(r, g, b, a);
 	}
 	
-	public void setColor(int r, int g, int b, int a) {
+	public void setColor4ub(int r, int g, int b, int a) {
 		color[0] = r;
 		color[1] = g;
 		color[2] = b;
 		color[3] = a;
+	}
+	
+	public void setColor4f(float r, float g, float b, float a) {
+		setColor4ub((int)(r * 255), (int)(g * 255), (int)(b * 255), (int)(a * 255));
+	}
+	
+	public void setColor4d(double r, double g, double b, double a) {
+		setColor4ub((int)(r * 255), (int)(g * 255), (int)(b * 255), (int)(a * 255));
+	}
+	
+	public void setAlphaub(int a) {
+		color[3] = a;
+	}
+	
+	public void setAlphaf(float a) {
+		setAlphaub((int)(a * 255));
+	}
+	
+	public void setAlphad(double a) {
+		setAlphaub((int)(a * 255));
 	}
 
 	@Override
