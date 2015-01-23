@@ -28,7 +28,7 @@ public class CollisionCheck extends MotionHandler {
 	}
 
 	@Override
-	public void onSpawnedInWorld() {}
+	public void onCreated() {}
 	
 	public CollisionCheck setResetVelocity(boolean b) {
 		resetVel = b;

@@ -343,6 +343,8 @@ public class RenderUtils {
     	drawCube(w, l, h, false);
     }
     
+    
+   
     /**
      * Draw a cube with xwidth=w zwidth=l height=h at (0, 0, 0) with no texture.
      * <br/>Often used for debugging? ^^
@@ -351,16 +353,22 @@ public class RenderUtils {
      * @param h height
      */
     public static void drawCube(double w, double l, double h, boolean texture) {
-    	final Vertex vs[] = {
-    		null, //placeholder
-    		vert(0, 0, 0, 0, 0),
-    		vert(w, 0, 0, 1, 0),
-    		vert(w, 0, l, 1, 1),
-    		vert(0, 0, l, 0, 1),
-    		vert(0, h, 0, 0, 0),
-    		vert(w, h, 0, 1, 0),
-    		vert(w, h, l, 1, 1),
-    		vert(0, h, l, 0, 1),
+    	final Vec3 vs[] = {
+    	    null, //placeholder
+    	    newV3(0, 0, 0),
+    	    newV3(w, 0, 0),
+    	    newV3(w, 0, l),
+    	    newV3(0, 0, l),
+    	    newV3(0, h, 0),
+    	    newV3(w, h, 0),
+    	    newV3(w, h, l),
+    	    newV3(0, h, l),
+    	};
+    	final int uvs[][] = {
+    		{0, 0},
+    		{1, 0}, 
+    		{1, 1},
+    		{0, 1}
     	};
     	final int arr[][] = {
     		{1, 2, 3, 4},
@@ -383,10 +391,12 @@ public class RenderUtils {
     	GL11.glPushMatrix(); {
     		for(int i = 0; i < arr.length; ++i) {
     			t.startDrawingQuads();
+    			t.setBrightness(15728880);
     			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
     			int[] va = arr[i];
     			for(int j = 0; j < 4; ++j) {
-    				vs[va[j]].addTo(t);
+    				Vec3 v = vs[va[j]];
+    				t.addVertexWithUV(v.xCoord, v.yCoord, v.zCoord, uvs[j][0], uvs[j][1]);
     			}
     			t.draw();
     		}

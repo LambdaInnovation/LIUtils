@@ -30,7 +30,7 @@ public class ConstVelocity extends MotionHandler {
 	}
 
 	@Override
-	public void onSpawnedInWorld() {}
+	public void onCreated() {}
 
 	@Override
 	public void onUpdate() {

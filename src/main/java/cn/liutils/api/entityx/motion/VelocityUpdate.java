@@ -25,7 +25,7 @@ public class VelocityUpdate extends MotionHandler {
 	}
 
 	@Override
-	public void onSpawnedInWorld() {}
+	public void onCreated() {}
 
 	@Override
 	public void onUpdate() {

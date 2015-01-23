@@ -45,8 +45,6 @@ public abstract class EntityX extends Entity {
 		
 		if(!updated) {
 			updated = true;
-			if(doesUpdate)
-				updateAll(onSpawned);
 		}
 		//++ticksExisted;
 		
@@ -70,12 +68,17 @@ public abstract class EntityX extends Entity {
 		return false;
 	}
 	
+	public void clearDaemonHandlers() {
+		daemonHandlers.clear();
+	}
+	
 	public void addDaemonHandler(MotionHandler mh) {
 		if(hasMotionHandler(mh.getID())) {
 			throw new RuntimeException("ID Collision: trying to add [" + 
 				mh.getID() + "] into " + this);
 		}
 		daemonHandlers.add(mh);
+		mh.onCreated();
 	}
 	
 	public void setCurMotion(MotionHandler mh) {
@@ -156,7 +159,7 @@ public abstract class EntityX extends Entity {
 	
 	private static Callback onSpawned = new Callback() {
 		@Override public void invoke(MotionHandler mo) {
-			mo.onSpawnedInWorld();
+			mo.onCreated();
 		}
 	};
 	private static Callback onUpdate = new Callback() {

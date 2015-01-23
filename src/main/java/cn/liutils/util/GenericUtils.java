@@ -13,6 +13,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cn.liutils.template.selector.EntitySelectorLiving;
 import cn.liutils.template.selector.EntitySelectorPlayer;
 import cn.liutils.util.space.BlockPos;
+import cn.liutils.util.space.IBlockFilter;
 import cn.liutils.util.space.Motion3D;
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
@@ -258,13 +259,17 @@ public class GenericUtils {
         return null;
 	}
 	
+	public static Set<BlockPos> getBlocksWithinAABB(World world, AxisAlignedBB box) {
+		return getBlocksWithinAABB(world, box, IBlockFilter.always);
+	}
+	
 	/**
 	 * 获取一个区域内所有的方块信息。
 	 * @param world
 	 * @param box
 	 * @return
 	 */
-	public static Set<BlockPos> getBlocksWithinAABB(World world, AxisAlignedBB box) {
+	public static Set<BlockPos> getBlocksWithinAABB(World world, AxisAlignedBB box, IBlockFilter filter) {
 		Set<BlockPos> set = new HashSet();
 		int minX = MathHelper.floor_double(box.minX), minY = MathHelper.floor_double(box.minY), minZ = MathHelper.floor_double(box.minZ),
 			maxX = MathHelper.ceiling_double_int(box.maxX), maxY = MathHelper.ceiling_double_int(box.maxY), maxZ = MathHelper.ceiling_double_int(box.maxZ);
@@ -272,7 +277,7 @@ public class GenericUtils {
 			for(int y = minY; y <= maxY; y++) {
 				for(int z = minZ; z <= maxZ; z++) {
 					Block id = world.getBlock(x, y, z);
-					if(id != Blocks.air) {
+					if(id != Blocks.air && filter.accepts(id)) {
 						set.add(new BlockPos(x, y, z, id));
 					}
 				}

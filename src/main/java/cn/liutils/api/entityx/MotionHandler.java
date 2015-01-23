@@ -19,9 +19,9 @@ public abstract class MotionHandler<T extends EntityX> implements Comparable<Mot
 	}
 	
 	/**
-	 * Called when entity is first updated.
+	 * Called when the MotionHandler is constructed and added into world.
 	 */
-	public abstract void onSpawnedInWorld();
+	public abstract void onCreated();
 	public abstract void onUpdate();
 	/**
 	 * Get the identifier of this MotionHandler. Within an entity,
