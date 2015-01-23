@@ -52,7 +52,6 @@ public class RenderDirMultiModelled extends RenderTileDirMulti {
 			} else {
 				GL11.glScalef(scale, scale, scale);
 			}
-			GL11.glColor4d(1, 1, 1, 0.6);
 			theModel.render(te, 0F, 0F);
 		} GL11.glPopMatrix();
 	}

@@ -71,6 +71,11 @@ public class EntityTrailFX extends Entity {
 		sampleFreq = freq;
 		return this;
 	}
+	
+	@Override
+    public boolean shouldRenderInPass(int pass) {
+        return pass == 1;
+    }
 
 	@Override
 	protected void entityInit() {
