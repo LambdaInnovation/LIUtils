@@ -156,7 +156,19 @@ public class GenericUtils {
 	}
 	
 	public static double distance(double dx, double dy, double dz) {
-		return Math.sqrt(dx * dx + dy * dy + dz * dz);
+		return Math.sqrt(distanceSq(dx, dy, dz));
+	}
+	
+	public static double distanceSq(double dx, double dy, double dz) {
+		return dx * dx + dy * dy + dz * dz;
+	}
+	
+	public static double distanceSq(double x0, double y0, double z0, double x1, double y1, double z1) {
+		return distanceSq(x0 - x1, y0 - y1, z0 - z1);
+	}
+	
+	public static double distance(double x0, double y0, double z0, double x1, double y1, double z1) {
+		return distance(x0 - x1, y0 - y1, z0 - z1);
 	}
 	
 	/**
@@ -323,13 +335,6 @@ public class GenericUtils {
 	
 	public static Vec3 multiply(Vec3 vec, double factor) {
 		return vec.myVec3LocalPool.getVecFromPool(vec.xCoord * factor, vec.yCoord * factor, vec.zCoord * factor);
-	}
-	
-	public static double distance(double x1, double y1, double z1, double x2, double y2, double z2) {
-		double dx = x2 - x1;
-		double dy = y2 - y1;
-		double dz = z2 - z1;
-		return Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 	
 	public static double length(double dx, double dy, double dz) {

@@ -10,6 +10,7 @@ import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -390,9 +391,11 @@ public class RenderUtils {
     		GL11.glDisable(GL11.GL_TEXTURE_2D);
     	GL11.glPushMatrix(); {
     		for(int i = 0; i < arr.length; ++i) {
+    			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
     			t.startDrawingQuads();
     			t.setBrightness(15728880);
     			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+    			
     			int[] va = arr[i];
     			for(int j = 0; j < 4; ++j) {
     				Vec3 v = vs[va[j]];
