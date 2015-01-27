@@ -210,9 +210,9 @@ public class LIGui implements Iterable<Widget> {
 	}
 	
 	/**
-	 * Do not call this function the widget automatically does the job
+	 * Do NOT call this function. The widget automatically does the job
 	 */
-	protected void addWidget(Widget c) {
+	final void addWidget(Widget c) {
 		if(widgets.contains(c)) {
 			throw new RuntimeException("ID Collision: " + c.ID);
 		}
@@ -224,7 +224,6 @@ public class LIGui implements Iterable<Widget> {
 		widgets.add(c);
 		assignZOrder(c);
 		Collections.sort(widgets);
-		System.out.println(widgets);
 	}
 	
 	public void addSubWidget(Widget c) {
