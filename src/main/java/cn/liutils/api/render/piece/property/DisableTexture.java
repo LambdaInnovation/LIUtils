@@ -33,4 +33,9 @@ public class DisableTexture extends PieceProperty {
 		}
 	}
 
+	@Override
+	public String getID() {
+		return "disable_tex";
+	}
+
 }

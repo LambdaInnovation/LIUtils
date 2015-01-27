@@ -27,6 +27,7 @@ public class Piece implements IDrawable {
 	public double u0, v0, u1, v1;
 	
 	private Map<EventType, Set<PieceProperty>> props = new HashMap();
+	private Map<String, PieceProperty> index = new HashMap();
 	
 	public Piece() {}
 	
@@ -43,6 +44,22 @@ public class Piece implements IDrawable {
 		for(EventType et : prop.getHandledEvents()) {
 			gset(et).add(prop);
 		}
+		index.put(prop.getID(), prop);
+	}
+	
+	/**
+	 * A bit costly, don't use it all the time
+	 */
+	public void removeProperty(String ID) {
+		PieceProperty pp = index.get(ID);
+		if(pp == null) return;
+		for(EventType et : pp.getHandledEvents()) {
+			gset(et).remove(pp);
+		}
+	}
+	
+	public PieceProperty getProperty(String name) {
+		return index.get(name);
 	}
 	
 	protected void onEvent(EventType event) {

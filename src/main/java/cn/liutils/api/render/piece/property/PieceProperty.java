@@ -36,4 +36,6 @@ public abstract class PieceProperty {
 	public abstract EnumSet<EventType> getHandledEvents();
 	
 	public abstract void onEvent(EventType type);
+	
+	public abstract String getID();
 }

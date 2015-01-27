@@ -33,4 +33,9 @@ public class DisableCullFace extends PieceProperty {
 		}
 	}
 
+	@Override
+	public String getID() {
+		return "disable_cull_face";
+	}
+
 }

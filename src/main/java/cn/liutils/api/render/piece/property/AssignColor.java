@@ -74,4 +74,9 @@ public class AssignColor extends PieceProperty {
 		}
 	}
 
+	@Override
+	public String getID() {
+		return "assign_color";
+	}
+
 }

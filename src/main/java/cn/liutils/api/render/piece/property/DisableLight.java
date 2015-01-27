@@ -40,4 +40,9 @@ public class DisableLight extends PieceProperty {
 		}
 	}
 
+	@Override
+	public String getID() {
+		return "disable_light";
+	}
+
 }

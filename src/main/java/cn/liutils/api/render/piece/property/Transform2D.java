@@ -47,4 +47,9 @@ public class Transform2D extends PieceProperty {
 		GL11.glTranslated(-pivotX, -pivotY, 0);
 	}
 
+	@Override
+	public String getID() {
+		return "transform";
+	}
+
 }

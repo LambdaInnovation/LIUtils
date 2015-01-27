@@ -46,4 +46,9 @@ public class AssignTexture extends PieceProperty {
 		return texture;
 	}
 
+	@Override
+	public String getID() {
+		return "assign_texture";
+	}
+
 }

@@ -71,4 +71,9 @@ public class Transform extends PieceProperty {
 	 */
 	protected void prepare() {}
 
+	@Override
+	public String getID() {
+		return "transform";
+	}
+
 }
