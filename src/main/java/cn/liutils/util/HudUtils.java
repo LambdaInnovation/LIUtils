@@ -3,13 +3,15 @@ package cn.liutils.util;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
+
+import cn.liutils.api.draw.tess.RectMapping;
 
 /**
  * Utilities about hud drawing.
@@ -91,6 +93,10 @@ public class HudUtils {
         t.addVertexWithUV(x + width, y + 0, zLevel, (u + width) * f, (v + 0) * f1);
         t.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * f, (v + 0) * f1);
         t.draw();
+    }
+    
+    public static void drawRect(double x, double y, double width, double height, RectMapping rm) {
+    	drawRect(x, y, rm.u0, rm.v0, width, height, rm.u1 - rm.u0, rm.v1 - rm.v0);
     }
     
     /**

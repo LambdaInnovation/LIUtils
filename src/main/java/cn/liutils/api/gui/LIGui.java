@@ -1,299 +1,176 @@
-/**
- * 
- */
 package cn.liutils.api.gui;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.gui.Widget.Alignment;
+import cn.liutils.api.gui.Widget.AlignStyle;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.api.key.LIKeyProcess.Trigger;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.DebugUtils;
-import cn.liutils.util.GenericUtils;
 
 /**
- * Handler of Widget and event receiver of Minecraft GUIs.
- * In charge of renderering and event delegation job.
- * A LIKeyProcess class has wrapped in for special key and mouse listening purpose.
  * @author WeathFolD
+ *
  */
-public class LIGui implements Iterable<Widget> {
+public class LIGui implements Iterable<LIGui.WidgetNode> {
+	
+	double width, height; //Only useful when calculating 'CENTER' align preference
 
-	private long TIME_TOLERANCE = 100L;
+	private List<WidgetNode> widgets = new LinkedList();
 	
-	protected List<Widget> widgets = new ArrayList<Widget>();
-	protected Set<Widget> toAdd = new HashSet<Widget>();
-	private Map<Integer, Integer> zOrderProg = new HashMap<Integer, Integer>();
-	
-	private int width, height;
-	protected final GuiScreen parent;
-	
-	LIKeyProcess keyProcess;
-	LIKeyProcess.Trigger trigger;
+	//If we are currently going through widgets list.
+	boolean iterating = false;
+	//Nodes that were added last frame during iteration to be added at next frame's beginning.
+	private List<WidgetNode> nodesToAdd = new LinkedList(); 
+	//Counter for assigning ZOrder.
+	private Map<Integer, Integer> zOrderProg = new HashMap();
 	
 	public double mouseX, mouseY;
 	
-	boolean iterating;
+	LIKeyProcess keyProcess;
+	LIKeyProcess.Trigger trigger;
+
+	public LIGui() {}
 	
-	public LIGui(GuiScreen screen) {
-		parent = screen;
+	public LIGui(double width, double height) {
+		this.width = width;
+		this.height = height;
 	}
 	
 	/**
-	 * Event delegation from MCGUI
+	 * Called when screen is being resized.
+	 * @param w new width
+	 * @param h new height
 	 */
-	public void drawElements(int mx, int my) {
-		for(Widget w : toAdd) {
-			this.addWidget(w);
-		}
-		toAdd.clear();
-		checkTraverse(null, this);
+	public void resize(double w, double h) {
+		boolean diff = width != w || height != h;
 		
-		mouseX = mx;
-		mouseY = my;
+		this.width = w;
+		this.height = h;
+		
+		if(diff) {
+			for(WidgetNode node : widgets) {
+				if(node.widget.alignStyle == AlignStyle.CENTER)
+					updateNode(node);
+			}
+		}
+	}
+	
+	//---Widget handling
+	/**
+	 * Add the constructed Widget into the LIGui.
+	 * @param widget
+	 */
+	public void addWidget(Widget widget) {
+		if(widget.gui != null && widget.gui != this) {
+			throw new RuntimeException("Fatal: Trying to add widget " + widget + " into multiple GUIs");
+		}
+		widget.gui = this;
+		initWidget(widget);
+		
+		if(!iterating) {
+			widgets.add(widget.node);
+			Collections.sort(widgets);
+		} else nodesToAdd.add(widget.node);
+		widget.onAdded();
+	}
+	
+	public void addSubWidget(Widget parent, Widget sub) {
+		if(sub.getWidgetParent() != null && sub.getWidgetParent() != parent) {
+			throw new RuntimeException("Fatal: Trying to add widget " + sub + " into multiple GUIs");
+		}
+		sub.gui = this;
+		sub.lastParent = parent;
+		initWidget(sub);
+		
+		if(!iterating) {
+			parent.node.addSubNode(sub.node); //.....
+			Collections.sort(parent.node.sub);
+		} else parent.node.toAdd.add(sub.node);
+		sub.onAdded();
+	}
+	
+	public boolean isVisible(Widget wig) {
+		do {
+			if(!wig.doesDraw)
+				return false;
+		} while((wig = wig.getWidgetParent()) != null);
+		return true;
+	}
+	
+	//---Events
+	/**
+	 * Go down the hierarchy tree and draw each widget node.
+	 */
+	public void draw(double mx, double my) {
+		frameUpdate();
+		updateMouse(mx, my);
 		iterating = true;
-		//System.out.println("--------");
-		drawAndTraverse(mx, my, null, this);
-		//System.out.println("--------");
+		GL11.glDepthFunc(GL11.GL_ALWAYS);
+		drawTraverse(mx, my, null, this, getTopNode(mx, my));
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		iterating = false;
 	}
 	
-	private void checkTraverse(Widget w, Iterable<Widget> it) {
-		if(w != null) 
-			w.checkUpdate();
-		for(Widget w2 : it) {
-			checkTraverse(w2, w2.getSubWidgets());
-		}
-	}
-	
-	private void drawAndTraverse(double mx, double my, Widget w, Iterable<Widget> it) {
-		update();
-		GL11.glDepthFunc(GL11.GL_ALWAYS);
-		//draw
-		if(w != null && w.visible && w.draw) {
-			GL11.glPushMatrix(); {
-				GL11.glTranslated(w.wcoord.absX, w.wcoord.absY, 0);
-				w.draw(mx - w.wcoord.absX, my - w.wcoord.absY, w == this.getTopmostElement(mx, my)); //QUESTION: Maybe we can optimize this?
-			} GL11.glPopMatrix();
-		}
-		if(w != null && !w.visible)
-			return;
-		Iterator<Widget> iter = it.iterator();
-		while(iter.hasNext()) {
-			Widget sub = iter.next();
-			sub.iterating = true;
-			//System.out.println((w == null ? "parent": sub.ID) + " {");
-			drawAndTraverse(mx, my, sub, sub);
-			//System.out.println("}");
-			sub.iterating = false;
-			//Check if disposed and remove
-			if(sub.disposed) {
-				iter.remove();
-			}
-		}
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
-	}
-	
-	public void mouseClicked(int mx, int my, int bid) {
-		mouseX = mx;
-		mouseY = my;
-		update();
-		if(bid == 0) {
-			Widget w = getTopmostElement(mx, my);
-			if(w != null) {
-				w.onMouseDown(mx - w.wcoord.absX, my - w.wcoord.absY);
-			}
-		}
-	}
-	
-	private Widget getTopmostElement(double mx, double my) {
-		return getTopmostElement(mx, my, null, this);
-	}
-	
-	private Widget getTopmostElement(double mx, double my, Widget wc, Iterable<Widget> con) {
-		Widget res = null;
-		if(wc != null && wc.visible && wc.receiveEvent && wc.wcoord.coordWithin(mx, my)) {
-			res = wc;
-		}
-		if(wc != null && !wc.visible) 
-			return res;
-		for(Widget t : con) { //Recurse
-			Widget w = getTopmostElement(mx, my, t, t.getSubWidgets());
-			//The array is sorted in zOrder increase so naturally we replace the res
-			if(w != null && w.receiveEvent && w.wcoord.coordWithin(mx, my)) {
-				res = w;
-			}
-		}
-		return res;
-	}
-    
+	static final long DRAG_TIME_TOLE = 100;
 	long lastStartTime;
-	Widget curDragging;
+	WidgetNode draggingNode;
 	double xOffset, yOffset;
+	/**
+	 * Standard GUI class callback.
+	 * @param mx
+	 * @param my
+	 * @param btn the mouse button ID.
+	 * @param dt how long is this button being pressed(ms)
+	 */
     public void mouseClickMove(int mx, int my, int btn, long dt) {
-    	mouseX = mx;
-		mouseY = my;
+    	updateMouse(mx, my);
     	if(btn == 0) {
-    		update();
     		long time = Minecraft.getSystemTime();
-        	if(Math.abs(time - dt - lastStartTime) > TIME_TOLERANCE) {
+        	if(Math.abs(time - dt - lastStartTime) > DRAG_TIME_TOLE) {
         		lastStartTime = time;
-        		curDragging = getTopmostElement(mx, my);
-        		if(curDragging == null)
+        		draggingNode = getTopNode(mx, my);
+        		System.out.println(draggingNode);
+        		if(draggingNode == null)
         			return;
-        		xOffset = mx - curDragging.wcoord.absX;
-        		yOffset = my - curDragging.wcoord.absY;
+        		xOffset = mx - draggingNode.x;
+        		yOffset = my - draggingNode.y;
         	}
-        	if(curDragging != null)
-        		curDragging.onMouseDrag(mx - curDragging.wcoord.absX - xOffset, my - curDragging.wcoord.absY - yOffset);
+        	if(draggingNode != null)
+        		draggingNode.widget.onMouseDrag(
+        			(mx - draggingNode.x - xOffset) / draggingNode.scale, 
+        			(my - draggingNode.y - yOffset) / draggingNode.scale);
     	}
     }
-    
-    private void update() {
-    	if(width != parent.width || height != parent.height) {
-    		width = parent.width;
-    		height = parent.height;
-    		resizeTraverse(null, this);
-    	}
-    }
-	
-	protected WidgetCoord calcWidget(Widget w) {
-		WidgetCoord cw = new WidgetCoord(w, 0, 0);
-		Widget wp = w.getWidgetParent();
-		if(wp == null) { //Screen as parent
-			if(w.style == Alignment.CENTER) {
-				double hw = width * 0.5, hh = height * 0.5;
-				cw.absX = hw - w.area.width * 0.5 + w.area.x;
-				cw.absY = hh - w.area.height * 0.5 + w.area.y;
-			} else {
-				cw.absX = w.area.x;
-				cw.absY = w.area.y;
-			}
-		} else { //Widget as parent
-			GenericUtils.assertObj(wp.wcoord);
-			cw.absX = wp.wcoord.absX + w.area.x;
-			cw.absY = wp.wcoord.absY + w.area.y;
-		}
-		w.wcoord = cw;
-		return cw;
-	}
-	
-	private void resizeTraverse(Widget w, Iterable<Widget> iter) {
-		if(w != null) {
-			calcWidget(w);
-		}
-		for(Widget s : iter) {
-			resizeTraverse(s, s.getSubWidgets());
-		}
-	}
-	
-	public void updateWidgetPos(Widget wg) {
-		resizeTraverse(wg, wg.getSubWidgets());
-	}
-	
-	protected List<Widget> getWidgets() {
-		return widgets;
-	}
-	
-	/**
-	 * Do NOT call this function. The widget automatically does the job
-	 */
-	final void addWidget(Widget c) {
-		if(widgets.contains(c)) {
-			throw new RuntimeException("ID Collision: " + c.ID);
-		}
-		if(iterating) {
-			toAdd.add(c);
-			return;
-		}
-		calcWidget(c);
-		widgets.add(c);
-		assignZOrder(c);
-		Collections.sort(widgets);
-	}
-	
-	public void addSubWidget(Widget c) {
-		calcWidget(c);
-		assignZOrder(c);
-		Collections.sort(c.subWidgets);
-	}
-	
-	public boolean isVisible(Widget w) {
-		Widget cur = w;
-		while(cur.getWidgetParent() != null) {
-			//Iterate self and all the parents to check
-			if(!cur.visible)
-				return false;
-			cur = cur.getWidgetParent();
-		}
-		return cur.visible;
-	}
-	
-	public void removeWidget(Widget c) {
-		widgets.remove(c);
-	}
-	
-	private void assignZOrder(Widget c) {
-		int prio = c.getDrawPriority();
-		Integer i = zOrderProg.get(prio);
-		if(i == null)
-			i = 0;
-		c.zOrder = prio * 100 + i; //Need guarantee: no more than 100 widgets per priority.(Definetly isnt it? wwwwww)a
-		zOrderProg.put(prio, i + 1);
-	}
-	
-	/**
-	 * Baked position data, updated when widget explicitly requires or new widget is added.
-	 * @author WeathFolD
-	 */
-    public class WidgetCoord implements Comparable {
-		public Widget wig;
-		public double absX, absY;
-		public WidgetCoord(Widget w, double ax, double ay) {
-			wig = w;
-			absX = ax;
-			absY = ay;
-		}
-		
-		public boolean coordWithin(double x, double y) {
-			return (absX <= x && x <= absX + wig.area.width) && (absY <= y && y <= absY + wig.area.height);
-		}
-		
-		@Override
-		public int compareTo(Object o) {
-			if(!(o instanceof WidgetCoord)) return -1;
-			return wig.compareTo(((WidgetCoord)o).wig);
-		}
-		
-		@Override
-		public String toString() {
-			return "[WC " + DebugUtils.formatArray(absX, absY, wig.area.width, wig.area.height) + "]";
-		}
-	}
     
     /**
-     * Called when this gui is not anymore useful(closed).
-     */
-    public void onDispose() {
-    	if(trigger != null) { //remove KeyHandler from tickEvent
-    		trigger.setDead();
-    	}
-    }
-    
+	 * Standard GUI class callback.
+	 * @param mx
+	 * @param my
+	 * @param btn the mouse button ID.
+	 */
+	public void mouseClicked(int mx, int my, int bid) {
+		updateMouse(mx, my);
+		if(bid == 0) {
+			WidgetNode node = getTopNode(mx, my);
+			if(node != null) {
+				node.widget.onMouseDown((mx - node.x) / node.scale, (my - node.y) / node.scale);
+			}
+		}
+	}
+	
+	//---Key Handling
     /**
      * Add a key event listener within the lifetime of the GUI.
      */
@@ -306,10 +183,187 @@ public class LIGui implements Iterable<Widget> {
     	}
     	keyProcess.addKey(name, keyCode, isRep, ikh);
     }
+	
+	//---Internal Processing
+	/**
+	 * Recalculate node's absolute position and offset, provided that its parent's data is correct.
+	 */
+	void updateNode(WidgetNode node) {
+		if(node.widget.isWidgetParent()) {
+			WidgetNode parent = node.parent();
+			node.scale = parent.scale * node.widget.scale;
+			node.x = parent.x + node.widget.posX * node.scale;
+			node.y = parent.y + node.widget.posY * node.scale;
+		} else {
+			node.scale = node.widget.scale;
 
-	@Override
-	public Iterator<Widget> iterator() {
-		return widgets.iterator();
+			double x0 = 0, y0 = 0;
+			switch(node.widget.alignStyle) {
+			case CENTER:
+				x0 = (width - node.widget.width * node.scale) / 2;
+				y0 = (height - node.widget.height * node.scale) / 2;
+				break;
+			case LEFT:
+				x0 = node.widget.posX * node.scale;
+				y0 = node.widget.posY * node.scale;
+				break;
+			}
+			node.x = Math.max(0, x0);
+			node.y = Math.max(0, y0);
+		}
+		
+		for(WidgetNode wn : node) {
+			updateNode(wn);
+		}
 	}
 	
+	void initWidget(Widget widget) {
+		if(widget.node == null) {
+			widget.node = new WidgetNode(widget);
+			updateOrder(widget);
+		}
+		updateNode(widget.node);
+	}
+	
+	/**
+	 * Generic checking.
+	 */
+	private void frameUpdate() {
+		if(!this.nodesToAdd.isEmpty()) {
+			widgets.addAll(nodesToAdd);
+			nodesToAdd.clear();
+			Collections.sort(widgets);
+		}
+	}
+	
+	private void updateTraverse(WidgetNode cur, Iterable<WidgetNode> set) {
+		if(cur != null) {
+			if(cur.toAdd != null && !cur.toAdd.isEmpty()) {
+				cur.sub.addAll(cur.toAdd);
+				cur.toAdd.clear();
+				Collections.sort(cur.sub);
+			}
+		}
+		Iterator<WidgetNode> iter = set.iterator();
+		while(iter.hasNext()) {
+			WidgetNode node = iter.next();
+			if(node.widget.disposed) {
+				iter.remove();
+			} else {
+				updateTraverse(node, node);
+			}
+		}
+	}
+	
+	private void updateOrder(Widget widget) {
+		//Assign z order
+		int prio = widget.getDrawPriority();
+		Integer prog = zOrderProg.get(prio);
+		if(prog == null) prog = 0;
+		widget.node.zOrder = prio * 100 + prog;
+		zOrderProg.put(prio, (prog + 1) % 100);
+	}
+	
+	private void updateMouse(double mx, double my) {
+		this.mouseX = mx;
+		this.mouseY = my;
+	}
+	
+	private WidgetNode getTopNode(double x, double y) {
+		return gtnTraverse(x, y, null, this);
+	}
+	
+	private void drawTraverse(double mx, double my, WidgetNode cur, Iterable<WidgetNode> set, WidgetNode top) {
+		if(cur != null && cur.widget.doesDraw) {
+			GL11.glPushMatrix();
+			GL11.glTranslated(cur.x, cur.y, 0);
+			GL11.glScaled(cur.scale, cur.scale, 1);
+			//System.out.println(cur.widget + " " + DebugUtils.formatArray(cur.x, cur.y, cur.scale));
+			cur.widget.draw((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top);
+			GL11.glPopMatrix();
+		}
+		
+		if(cur == null || cur.widget.doesDraw) {
+			if(cur != null)
+				cur.iterating = true;
+			Iterator<WidgetNode> iter = set.iterator();
+			while(iter.hasNext()) {
+				WidgetNode wn = iter.next();
+				drawTraverse(mx, my, wn, wn, top);
+			}
+			if(cur != null)
+				cur.iterating = false;
+		}
+	}
+	
+	private WidgetNode gtnTraverse(double x, double y, WidgetNode node, Iterable<WidgetNode> set) {
+		WidgetNode res = null;
+		if(node != null && node.pointWithin(x, y)) {
+			res = node;
+		}
+		
+		WidgetNode next = null;
+		for(WidgetNode wn : set) {
+			WidgetNode tmp = gtnTraverse(x, y, wn, wn);
+			if(tmp != null)
+				next = tmp;
+		}
+		return next == null ? res : next;
+	}
+	
+	public class WidgetNode implements Comparable<WidgetNode>, Iterable<WidgetNode> {
+		public final Widget widget;
+		
+		public double x, y;
+		public double scale;
+		public int zOrder;
+		
+		private List<WidgetNode> sub = new LinkedList();
+		
+		//Design same to LIGui main class
+		boolean iterating = false;
+		List<WidgetNode> toAdd;
+		
+		public WidgetNode(Widget wig) {
+			widget = wig;
+		}
+		
+		public boolean hasChild() {
+			return sub != null && !sub.isEmpty();
+		}
+		
+		public void addSubNode(WidgetNode wn) {
+			sub.add(wn);
+		}
+		
+		public List<WidgetNode> getSubNodes() {
+			return sub;
+		}
+		
+		public WidgetNode parent() {
+			Widget wx = widget.getWidgetParent();
+			return wx == null ? null : wx.node;
+		}
+		
+		public boolean pointWithin(double mx, double my) {
+			double x1 = x + widget.width * scale, y1 = y + widget.height * scale;
+			return (x <= mx && mx <= x1) && (y <= my && my <= y1);
+		}
+
+		@Override
+		public int compareTo(WidgetNode other) {
+			return zOrder - other.zOrder;
+		}
+
+		@Override
+		public Iterator<WidgetNode> iterator() {
+			return sub.iterator();
+		}
+		
+	}
+
+	@Override
+	public Iterator<WidgetNode> iterator() {
+		return widgets.iterator();
+	}
 }

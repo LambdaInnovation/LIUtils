@@ -17,7 +17,7 @@ public class LIGuiScreen extends GuiScreen {
 	protected LIGui gui;
 	
 	public LIGuiScreen() {
-		gui = new LIGui(this);
+		gui = new LIGui();
 	}
 	
     public void drawScreen(int mx, int my, float w)
@@ -25,7 +25,7 @@ public class LIGuiScreen extends GuiScreen {
     	this.drawDefaultBackground();
     	GL11.glPushMatrix(); {
     		GL11.glTranslated(0, 0, 100);
-    		gui.drawElements(mx, my);
+    		gui.draw(mx, my);
     	} GL11.glPopMatrix();
     }
     
@@ -39,7 +39,6 @@ public class LIGuiScreen extends GuiScreen {
     }
     
     public void onGuiClosed() {
-    	gui.onDispose();
     }
 	
     public LIGui getGui() {

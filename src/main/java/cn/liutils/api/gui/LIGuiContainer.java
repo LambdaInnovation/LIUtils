@@ -10,14 +10,14 @@ public class LIGuiContainer extends GuiContainer {
 	
 	public LIGuiContainer(Container c) {
 		super(c);
-		gui = new LIGui(this);
+		gui = new LIGui();
 	}
 
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {
 		this.drawDefaultBackground();
-		gui.drawElements(var2, var3);
+		gui.draw(var2, var3);
 	}
 
 	@Override
@@ -32,6 +32,5 @@ public class LIGuiContainer extends GuiContainer {
     }
     
     public void onGuiClosed() {
-    	gui.onDispose();
     }
 }

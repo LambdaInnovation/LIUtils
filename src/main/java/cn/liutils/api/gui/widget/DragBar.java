@@ -4,7 +4,9 @@
 package cn.liutils.api.gui.widget;
 
 import net.minecraft.util.ResourceLocation;
-import cn.liutils.api.gui.LIGui;
+import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.draw.prop.AssignTexture;
+import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.gui.Widget;
 
 /**
@@ -16,22 +18,27 @@ import cn.liutils.api.gui.Widget;
 public class DragBar extends Widget {
 	
 	private class Bar extends Widget {
+		
+		public GUIRect rect = new GUIRect();
+		public AssignTexture tex;
 
 		public Bar() {
-			super("bar", DragBar.this, 0, 0, DragBar.this.getArea().width, barHeight);
+			super(0, 0, DragBar.this.width, barHeight);
+			this.drawer = new DrawObject();
+			drawer.addHandler(rect);
 		}
 		
 		public void draw(double mx, double my, boolean mouseHovering) {
-			this.area.y = progress * (DragBar.this.area.height - barHeight);
-			screen.updateWidgetPos(this);
+			this.posY = progress * (DragBar.this.height - barHeight);
+			this.updatePos();
 			super.draw(mx, my, mouseHovering);
 		}
 		
 		public void onMouseDrag(double x0, double y0) {
 			if(!enableDragging)
 				return;
-			double full = DragBar.this.getArea().height - barHeight;
-			double y = Math.max(Math.min(area.y + y0, full), 0) / full;
+			double full = DragBar.this.height - barHeight;
+			double y = Math.max(Math.min(posY + y0, full), 0) / full;
 			setProgress(y);
 			onProgressChanged();
 		}
@@ -51,19 +58,10 @@ public class DragBar extends Widget {
 	/**
 	 * @param sh The bar drawing height
 	 */
-	public DragBar(String id, Widget par, double x, double y, double w,
+	public DragBar(double x, double y, double w,
 			double h, double sh) {
-		super(id, par, x, y, w, h);
+		super(x, y, w, h);
 		barHeight = sh;
-		bar = new Bar();
-	}
-
-	/**
-	 * @param sh The bar drawing height
-	 */
-	public DragBar(String id, LIGui scr, double x, double y, double w,
-			double h, double sh) {
-		super(id, scr, x, y, w, h);
 		bar = new Bar();
 	}
 	
@@ -77,12 +75,23 @@ public class DragBar extends Widget {
 	}
 
 	public Widget setTexMapping(double u, double v, double tw, double th) {
-		bar.setTexMapping(u, v, tw, th);
+		bar.rect.map.setBySize(u, v, tw, th);
 		return this;
 	}
 	
-	public Widget setTexture(ResourceLocation tex, int width, int height) {
-		bar.setTexture(tex, width, height);
+	public Widget setResolution(double w, double h) {
+		bar.rect.setResolution(w, h);
+		return this;
+	}
+	
+	public Widget setTexture(ResourceLocation tex) {
+		if(bar.tex == null) {
+			bar.tex = new AssignTexture(tex);
+			bar.drawer.addHandler(bar.tex);
+		} else {
+			bar.tex.texture = tex;
+		}
+		
 		return this;
 	}
 	

@@ -11,7 +11,7 @@ import javax.vecmath.Vector2d;
  */
 public class RectMapping {
 
-	double u0, v0, u1, v1;
+	public double u0, v0, u1, v1;
 	
 	public RectMapping() {
 		this(0, 0, 1, 1);
@@ -30,6 +30,14 @@ public class RectMapping {
 	
 	public void setBySize(double u, double v, double tw, double th) {
 		set(u, v, u + tw, v + th);
+	}
+	
+	public double getWidth() {
+		return u1 - u0;
+	}
+	
+	public double getHeight() {
+		return v1 - v0;
 	}
 	
 	/**

@@ -12,6 +12,8 @@ import cn.liutils.api.draw.DrawObject.EventType;
  * @author WeathFolD
  */
 public abstract class DrawHandler {
+	
+	public boolean enabled = true;
 
 	public DrawHandler() {}
 	

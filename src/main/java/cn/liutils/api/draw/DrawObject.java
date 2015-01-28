@@ -31,8 +31,8 @@ public class DrawObject {
 		IN_TESS /* To be called by any DrawHandler that handles tessellating. */
 	};
 	
-	protected static Map<EventType, List<DrawHandler> > table = new HashMap();
-	protected static Map<String, DrawHandler> nameTable = new HashMap();
+	protected Map<EventType, List<DrawHandler> > table = new HashMap();
+	protected Map<String, DrawHandler> nameTable = new HashMap();
 	
 	public DrawObject() {}
 	
@@ -53,6 +53,12 @@ public class DrawObject {
 			post(EventType.POST_TESS);
 		} GL11.glPopMatrix();
 		post(EventType.POST_DRAW);
+	}
+	
+	public void addHandlers(DrawHandler... dhs) {
+		for(DrawHandler dh : dhs) {
+			addHandler(dh);
+		}
 	}
 	
 	public void addHandler(DrawHandler dh) {
@@ -96,7 +102,8 @@ public class DrawObject {
 		List<DrawHandler> res = table.get(et);
 		if(res != null) {
 			for(DrawHandler dh : res) {
-				dh.onEvent(et, this);
+				if(dh.enabled)
+					dh.onEvent(et, this);
 			}
 		}
 	}

@@ -3,169 +3,137 @@
  */
 package cn.liutils.api.gui;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.client.Minecraft;
+import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.gui.LIGui.WidgetNode;
 
-import org.lwjgl.opengl.GL11;
-
-import cn.liutils.api.gui.LIGui.WidgetCoord;
-import cn.liutils.core.LIUtils;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
 
 /**
- * <code>Widget</code> describes an arbitrary GUI element specifying an area on screen.
- * Widget is registered and handled by a LIGui. You can specify either a LIGuiScreen or Widget as its parent.</br>
- * A widget can own multiple subWidgets. This enables page-like widget placement
- * (The coords specified serve as relative coordinate to its first parent).
- * <br/> The ID is the widget's universal identifier. Don't make it collide.
  * @author WeathFolD
- * @see cn.liutils.api.gui.LIGui
+ *
  */
-public class Widget implements Comparable<Widget>, Iterable<Widget> {
+public class Widget {
+	
+	public enum AlignStyle { LEFT, CENTER };
+	
+	public AlignStyle alignStyle = AlignStyle.LEFT; //Align style. Only applicable when 
+	
+	public double posX, posY; // relative position to its first parent
+	public double width, height; // size
+	public double scale = 1.0;
+	
+	public boolean 
+		doesDraw = true, 
+		doesListenKey = true;
+	public boolean disposed = false;
+	
+	public DrawObject drawer;
 
-	public enum Alignment { TOPLEFT, CENTER };
-	Alignment style = Alignment.CENTER;
+	LIGui gui;
+	Widget lastParent;
 	
-	public final LIGui screen; //Uppermost screen parent.
-	private Widget parent; //Last parent, maybe null
-	List<Widget> subWidgets = new ArrayList<Widget>();
-	Set<Widget> widgetToAdd = new HashSet<Widget>();
+	WidgetNode node;
 	
-	public final String ID; //THE universal identifier.
+	public Widget() {}
 	
-	protected final DrawArea area; //Drawing area.
-	protected int zOrder; //The zOrder automatically assigned by LIGuiScreen.
-	
-	public boolean visible = true; //If this widget appears in draw and judgement at all
-	public boolean receiveEvent = true; //Whether this widget receives events
-	public boolean draw = false;
-	
-	protected ResourceLocation texture; //Texture to be automatically bind, if any
-	protected int texWidth, texHeight; //Texture resolution, if specified
-	
-	protected WidgetCoord wcoord; //Calculated by LIGuiScreen for drawing
-	
-	boolean disposed;
-	boolean iterating;
-	
-	
-	public Widget(String id, Widget par, double x, double y) {
-		this(id, par, x, y, 0, 0);
+	public Widget(double x, double y, double w, double h) {
+		this.setPos(x, y);
+		this.setSize(w, h);
 	}
 	
-	public Widget(String id, Widget par, double x, double y, double w, double h) {
-		screen = par.getScreen();
-		parent = par;
-		area = new DrawArea(x, y, w, h);
-		ID = id;
-		par.addChild(this);
-	}
-	
-	public Widget(String id, LIGui scr, double x, double y) {
-		this(id, scr, x, y, 0, 0);
-	}
-	
-	public Widget(String id, LIGui scr, double x, double y, double w, double h) {
-		screen = scr;
-		parent = null;
-		area = new DrawArea(x, y, w, h);
-		ID = id;
-		//System.out.println("Init " + id + "/" + DebugUtils.formatArray(x, y, w, h));
-		scr.addWidget(this);
-	}
-	
-	public Widget setTexMapping(double u, double v, double tw, double th) {
-		area.setTexMapping(u, v, tw, th);
-		draw = true;
-		return this;
-	}
-	
-	public Widget setTexture(ResourceLocation tex, int width, int height) {
-		texture = tex;
-		texWidth = width;
-		texHeight = height;
-		draw = true;
-		return this;
+	public Widget(double w, double h) {
+		this.setSize(w, h);
 	}
 	
 	/**
-	 * Define the widget offset behavior. Only applies when father is the screen.
+	 * Called when added into a GUI.
 	 */
-	public void setAlignStyle(Alignment align) {
-		style = align;
+	protected void onAdded() {
+		
 	}
 	
-	/**
-	 * Get the last widget parent, maybe null.
-	 */
+	protected WidgetNode getNode() {
+		return node;
+	}
+	
+	public boolean initialized() {
+		return gui != null;
+	}
+	
+	public boolean isWidgetParent() {
+		return lastParent != null;
+	}
+	
 	public Widget getWidgetParent() {
-		return parent;
+		return lastParent;
+	}
+	
+	public LIGui getGui() {
+		return gui;
+	}
+	
+	public void addWidget(Widget child) {
+		gui.addSubWidget(this, child);
+	}
+	
+	public void setSize(double w, double h) {
+		width = w;
+		height = h;
+	}
+	
+	public void setPos(double x, double y) {
+		posX = x;
+		posY = y;
+	}
+	
+	protected List<WidgetNode> getSubNodes() {
+		return node.getSubNodes();
 	}
 	
 	/**
-	 * Get the screen this widget belongs to.
+	 * Announce to LIGui to let it update this widget's position.
 	 */
-	public LIGui getScreen() {
-		return screen;
+	public final void updatePos() {
+		gui.updateNode(node);
 	}
 	
-	public List<Widget> getSubWidgets() {
-		return subWidgets;
+	public void setDrawer(DrawObject dor) {
+		drawer = dor;
 	}
 	
 	public void dispose() {
 		disposed = true;
 	}
 	
-	public boolean hasDisposed() {
-		return disposed;
-	}
-	
 	/**
-	 * Return the drawing priority, typically 1-10. Widgets with higher drawing priority are bound to be rendered first, 
-	 * while drawing order of the same priority is automatically assigned.
+	 * Get the relative drawing priority
+	 * If two widgets share the same parent, the one with higher priority will be drawn first.
 	 */
 	public int getDrawPriority() {
 		return 1;
 	}
 	
-	public DrawArea getArea() {
-		return area;
-	}
-	
-	final void checkUpdate() {
-		for(Widget w : widgetToAdd) {
-			this.addChild(w);
-		}
-		widgetToAdd.clear();
-	}
-	
+	//Draw Event
 	/**
-	 * Draw the widget!
-	 * @param mx mouse posX (Widget origin)
-	 * @param my mouse posY (Widget origin)
-	 * @param mouseHovering true if the mouse is on the widget
+	 * @param mx mouse X coordinate, transformed to widget coord
+	 * @param my mouse Y coordinate, transformed to widget coord
+	 * @param hovering is the mouse on the widget?
 	 */
-	public void draw(double mx, double my, boolean mouseHovering) {
-		GL11.glEnable(GL11.GL_BLEND);
-		if(texture != null) {
-			RenderUtils.loadTexture(texture);
+	public void draw(double mx, double my, boolean hovering) {
+		if(drawer != null) {
+			drawer.draw();
 		}
-		if(texWidth != 0 && texHeight != 0) {
-			HudUtils.setTextureResolution(texWidth, texHeight);
-		}
-		GL11.glColor4d(1, 1, 1, 1);
-		area.draw();
 	}
 	
-	//---------EVENT RECEIVERS---------
+	//Control Events
+	/**
+	 * Called when the mouse peforms a 'drag' action(Starting in this widget's area)
+	 * @param x1 widget-coordinate endX
+	 * @param y1 widget-coordinate endY
+	 */
+	public void onMouseDrag(double x, double y) {}
 	
 	/**
 	 * Called when the mouse button is clicked within the widget area.
@@ -180,58 +148,5 @@ public class Widget implements Comparable<Widget>, Iterable<Widget> {
 	 * @param my widget-coordinate mouseY
 	 */
 	public void onMouseUp(double mx, double my) {}
-	
-	/**
-	 * Called when the mouse peforms a 'drag' action(Starting in this widget's area)
-	 * @param x1 widget-coordinate endX
-	 * @param y1 widget-coordinate endY
-	 */
-	public void onMouseDrag(double x0, double y0) {}
-	
-	//---------INTERNAL----------
-	/**
-	 * Called when widget is created, usually not called by itself.
-	 */
-	protected void addChild(Widget child) {
-		if(iterating) {
-			this.widgetToAdd.add(child);
-			return;
-		}
-		for(Widget w : subWidgets) {
-			if(w.ID.equals(child.ID)) {
-				throw new RuntimeException("Widget ID collision: " + w.ID);
-			}
-		}
-		subWidgets.add(child);
-		screen.addSubWidget(child);
-		Collections.sort(subWidgets);
-	}
-	
-	@Override
-	public int compareTo(Widget o) {
-		return this.zOrder > o.zOrder ? 1 : this.zOrder == o.zOrder ? 0 : -1;
-	}
-	
-	@Override
-	public boolean equals(Object w) {
-		if(!(w instanceof Widget))
-			return false;
-		return ((Widget)w).ID.equals(ID);
-	}
-	
-	@Override
-	public int hashCode() {
-		return ID.hashCode();
-	}
 
-	@Override
-	public Iterator<Widget> iterator() {
-		return subWidgets.iterator();
-	}
-	
-	@Override
-	public String toString() {
-		return "[WID:" + ID + "]";
-	}
-	
 }

@@ -17,7 +17,7 @@ import cn.liutils.api.draw.DrawObject.EventType;
  * (0, 0, 0) -> (width, height, 0) with a offset (tx, ty, tz)
  * @author WeathFolD
  */
-public class TessRect extends TessBase {
+public class Rect extends TessBase {
 
 	public double width, height;
 	
@@ -25,11 +25,11 @@ public class TessRect extends TessBase {
 	
 	public RectMapping map = new RectMapping(); //Texture mapping data.
 
-	public TessRect() {
+	public Rect() {
 		super("simple_rect");
 	}
 	
-	public TessRect(double w, double h) {
+	public Rect(double w, double h) {
 		super("simple_rect");
 		setSize(w, h);
 	}

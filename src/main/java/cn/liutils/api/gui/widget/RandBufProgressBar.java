@@ -3,13 +3,18 @@
  */
 package cn.liutils.api.gui.widget;
 
+import java.util.EnumSet;
 import java.util.Random;
+
+import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import cn.liutils.api.gui.DrawArea;
-import cn.liutils.api.gui.LIGui;
+import cn.liutils.api.draw.DrawHandler;
+import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.api.draw.tess.GUIRect;
+import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -19,7 +24,7 @@ import cn.liutils.util.RenderUtils;
  * The bar supports buffering, you can specify how much progress per s is allowed.</br>
  * Also it supports random fluctuating for display effect purpose. You can set the fluctuating speed
  * and the relative fluct region of the random(When set any of two to 0, there is no effect).</br>
- * Using of closure subClass is recommended.
+ * The drawer is pre-initialized. You should directly add <code>DrawHandler</code> into it.
  * @author WeathFolD
  */
 public abstract class RandBufProgressBar extends Widget {
@@ -44,26 +49,88 @@ public abstract class RandBufProgressBar extends Widget {
 	
 	private static final Random rand = new Random();
 	
-	public RandBufProgressBar(String id, Widget par, double x, double y,
-			double w, double h) {
-		super(id, par, x, y, w, h);
-		setup();
+	private GUIRect rect;
+	
+	public RandBufProgressBar(double x, double y, double w, double h,
+			double u, double v, double tw, double th) {
+		super(x, y, w, h);
+		
+		lastDrawTime = Minecraft.getSystemTime();
+		
+		this.drawer = new DrawObject();
+		rect = new GUIRect(w, h);
+		rect.map.setBySize(u, v, tw, th);
+		drawer.addHandler(rect);
+		
+		drawer.addHandler(new DrawHandler() { //setup the size of the object
+			@Override
+			public EnumSet<EventType> getEvents() {
+				return EnumSet.of(EventType.PRE_TESS);
+			}
+			@Override
+			public String getID() {
+				return "setup";
+			}
+			@Override
+			public void onEvent(EventType event, DrawObject obj) {
+				double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
+				double x, y, u, v, w, h, tw, th;
+				RectMapping mapping = rect.map;
+				switch(dir) {
+				case RIGHT:
+					w = width * disp;
+					h = height;
+					x = y = 0;
+					u = mapping.u0;
+					v = mapping.v0;
+					tw = mapping.getWidth() * disp;
+					th = mapping.getHeight();
+					break;
+				case LEFT:
+					w = width * disp;
+					h = height;
+					x = width - w;
+					y = 0;
+					u = mapping.u0 + mapping.getWidth() * (1 - disp);
+					v = mapping.v0;
+					tw = mapping.getWidth() * disp;
+					th = mapping.getHeight();
+					break;
+				case UP:
+					w = width;
+					h = height * disp;
+					x = 0;
+					y = height * (1 - disp);
+					u = mapping.u0;
+					v = mapping.v0 + mapping.getHeight() * (1 - disp);
+					tw = mapping.getWidth();
+					th = mapping.getHeight() * disp;
+					break;
+				case DOWN:
+					w = width;
+					h = height * disp;
+					x = y = 0;
+					u = mapping.u0;
+					v = mapping.v0;
+					tw = mapping.getWidth();
+					th = mapping.getHeight() * disp;
+					break;
+				default:
+					throw new RuntimeException("niconiconi, WTF??");
+				}
+			}
+		});
 	}
 
-	public RandBufProgressBar(String id, LIGui scr, double x, double y,
-			double w, double h) {
-		super(id, scr, x, y, w, h);
-		setup();
+	public void setResolution(double w, double h) {
+		this.rect.setResolution(w, h);
 	}
 	
 	public void setDirection(Direction dir) {
 		this.dir = dir;
 	}
 	
-	private void setup() {
-		lastDrawTime = Minecraft.getSystemTime();
-	}
-	
+	@Override
 	public void draw(double mx, double my, boolean mh) {
 		double prog = getProgress();
 		long time = Minecraft.getSystemTime();
@@ -87,63 +154,7 @@ public abstract class RandBufProgressBar extends Widget {
 			curFluct = Math.max(-0.5 * fluctRegion, Math.min(curFluct, 0.5 * fluctRegion));
 		}
 		
-		{ //Area setting
-			double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
-			double x, y, u, v, w, h, tw, th;
-			
-			switch(dir) {
-			case RIGHT:
-				w = area.width * disp;
-				h = area.height;
-				x = y = 0;
-				u = area.u;
-				v = area.v;
-				tw = area.tWidth * disp;
-				th = area.tHeight;
-				break;
-			case LEFT:
-				w = area.width * disp;
-				h = area.height;
-				x = area.width - w;
-				y = 0;
-				u = area.u + area.tWidth * (1 - disp);
-				v = area.v;
-				tw = area.tWidth * disp;
-				th = area.tHeight;
-				break;
-			case UP:
-				w = area.width;
-				h = area.height * disp;
-				x = 0;
-				y = area.height * (1 - disp);
-				u = area.u;
-				v = area.v + area.tHeight * (1 - disp);
-				tw = area.tWidth;
-				th = area.tHeight * disp;
-				break;
-			case DOWN:
-				w = area.width;
-				h = area.height * disp;
-				x = y = 0;
-				u = area.u;
-				v = area.v;
-				tw = area.tWidth;
-				th = area.tHeight * disp;
-				break;
-			default:
-				throw new RuntimeException("niconiconi, WTF??");
-			}
-			
-			GL11.glEnable(GL11.GL_BLEND);
-			if(texture != null) {
-				RenderUtils.loadTexture(texture);
-			}
-			if(texWidth != 0 && texHeight != 0) {
-				HudUtils.setTextureResolution(texWidth, texHeight);
-			}
-			GL11.glColor4d(1, 1, 1, 1);
-			HudUtils.drawRect(x, y, u, v, w, h, tw, th);
-		} 
+		super.draw(mx, my, mh);
 		lastDrawTime = time;
 	}
 	

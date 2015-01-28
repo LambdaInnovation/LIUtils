@@ -29,7 +29,7 @@ public class DisableLight extends DrawHandler {
 		return INSTANCE;
 	}
 
-	private DisableLight() {}
+	public DisableLight() {}
 
 	@Override
 	public EnumSet<EventType> getEvents() {

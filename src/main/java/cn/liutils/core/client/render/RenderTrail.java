@@ -11,11 +11,9 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.render.piece.Piece;
-import cn.liutils.api.render.piece.PieceCrossed;
-import cn.liutils.api.render.piece.property.AssignColor;
-import cn.liutils.api.render.piece.property.DisableLight;
-import cn.liutils.api.render.piece.property.Transform;
+import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.draw.prop.AssignColor;
+import cn.liutils.api.draw.prop.DisableLight;
 import cn.liutils.core.entity.SamplePoint;
 import cn.liutils.template.entity.EntityTrailFX;
 import cn.liutils.util.RenderUtils;
@@ -23,15 +21,16 @@ import cn.liutils.util.RenderUtils;
 public class RenderTrail extends Render {
 	
 	private static Tessellator t = Tessellator.instance;
-	private Piece piece = new PieceCrossed();
+	private DrawObject drawer = new DrawObject();
 	private AssignColor color;
 	private Transform transform;
 	private DisableLight lightSwitch;
 
 	public RenderTrail() {
-		color = new AssignColor(piece);
-		transform = new Transform(piece);
-		lightSwitch = new DisableLight(piece);
+		color = new AssignColor();
+		transform = new Transform();
+		lightSwitch = new DisableLight();
+		drawer.addHandlers(color, transform, lightSwitch);
 	}
 
 	@Override
@@ -41,7 +40,7 @@ public class RenderTrail extends Render {
 		
 		GL11.glPushMatrix(); {
 			piece.hHeight = ent.getTrailWidth() / 2;
-			lightSwitch.setEnabled(!ent.getHasLight());
+			lightSwitch.enabled = !ent.getHasLight();
 			
 			GL11.glTranslated(x, y, z);
 			for (int i = 0; i != list.size() - 1; ++i) {

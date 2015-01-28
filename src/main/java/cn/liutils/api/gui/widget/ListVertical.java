@@ -4,12 +4,11 @@
 package cn.liutils.api.gui.widget;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.util.MathHelper;
-import cn.liutils.api.gui.DrawArea;
 import cn.liutils.api.gui.LIGui;
+import cn.liutils.api.gui.LIGui.WidgetNode;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
@@ -23,8 +22,11 @@ public class ListVertical extends Widget {
 	int progress;
 	int maxProgress;
 	double perHeight;
-	List<Widget> widgets = new ArrayList<Widget>(); //real list
+	
 	private DragBar bar;
+	List<WidgetNode> aliveNodes = new ArrayList(); //real list
+	
+	String ID;
 
 	/**
 	 * @param id
@@ -34,52 +36,43 @@ public class ListVertical extends Widget {
 	 * @param w
 	 * @param h
 	 */
-	public ListVertical(String id, Widget par, double x, double y, double w,
-			double h) {
-		super(id, par, x, y, w, h);
-		setup();
-	}
-
-	public ListVertical(String id, LIGui scr, double x, double y, double w,
-			double h) {
-		super(id, scr, x, y, w, h);
-		setup();
+	public ListVertical(String ID, double x, double y, double w, double h) {
+		super(x, y, w, h);
+		this.ID = ID;
 	}
 	
 	public void setDragBar(DragBar db) {
 		bar = db;
 	}
 	
-	private void setup() {
+	@Override
+	protected void onAdded() {
 		//add mouse wheel handlings
-		screen.addKeyHandler("scr_up_" + ID, LIKeyProcess.MWHEELUP, false, new IKeyHandler() {
+		final LIGui gui = getGui();
+		final WidgetNode node = getNode();
+		
+		gui.addKeyHandler("scr_up_" + ID, LIKeyProcess.MWHEELUP, false, new IKeyHandler() {
 			@Override
 			public void onKeyDown(int keyCode, boolean tickEnd) {
-				if(screen.isVisible(ListVertical.this) && wcoord.coordWithin(screen.mouseX, screen.mouseY))
+				if(gui.isVisible(ListVertical.this) && node.pointWithin(gui.mouseX, gui.mouseY))
 					progressLast();
 			}
 			@Override public void onKeyUp(int keyCode, boolean tickEnd) {}
 			@Override public void onKeyTick(int keyCode, boolean tickEnd) {}
 		});
 		
-		screen.addKeyHandler("scr_dn_" + ID, LIKeyProcess.MWHEELDOWN, false, new IKeyHandler() {
+		gui.addKeyHandler("scr_dn_" + ID, LIKeyProcess.MWHEELDOWN, false, new IKeyHandler() {
 			@Override
 			public void onKeyDown(int keyCode, boolean tickEnd) {
-				if(screen.isVisible(ListVertical.this) && wcoord.coordWithin(screen.mouseX, screen.mouseY)) {
+				if(gui.isVisible(ListVertical.this) && node.pointWithin(gui.mouseX, gui.mouseY)) {
 					progressNext();
 				}
 			}
 			@Override public void onKeyUp(int keyCode, boolean tickEnd) {}
 			@Override public void onKeyTick(int keyCode, boolean tickEnd) {}
 		});
-		
-		this.draw = true;
 	}
-	
-	public void addElements(Widget ...ws) {
-		widgets.addAll(Arrays.asList(ws));
-	}
-	
+
 	public void progressNext() {
 		setProgress(progress + 1);
 	}
@@ -116,24 +109,28 @@ public class ListVertical extends Widget {
 	}
 	
 	private void updateList() {
-		List<Widget> handles = this.getSubWidgets();
-		handles.clear();
+		List<WidgetNode> all = this.getSubNodes();
+		aliveNodes.clear();
+		
+		for(WidgetNode node : all) {
+			node.widget.doesDraw = false;
+		}
+		
 		int n = getMaxShow() + progress;
-		for(int i = progress; i < n && i < widgets.size(); ++i) {
-			Widget w = widgets.get(i);
-			DrawArea da = w.getArea();
-			da.x = 0;
-			da.y = (i - progress) * perHeight;
-			w.visible = true;
-			handles.add(w);
-			screen.updateWidgetPos(w);
+		for(int i = progress; i < n && i < aliveNodes.size(); ++i) {
+			WidgetNode w = aliveNodes.get(i);
+			w.widget.posX = 0;
+			w.widget.posY = (i - progress) * perHeight;
+			w.widget.doesDraw = true;
+			aliveNodes.add(w);
+			w.widget.updatePos();
 		}
 	}
 	
 	public void draw(double a, double b, boolean c) {}
 	
 	private int getMaxShow() {
-		return perHeight == 0 ? 0 : MathHelper.floor_double(area.height / perHeight);
+		return perHeight == 0 ? 0 : MathHelper.floor_double(height / perHeight);
 	}
 	
 	public void setPerHeight(double d) {
@@ -141,14 +138,10 @@ public class ListVertical extends Widget {
 	}
 	
 	@Override
-	protected void addChild(Widget child) {
-		if(widgets.contains(child)) {
-			throw new RuntimeException("Widget ID collision: " + child.ID);
-		}
-		widgets.add(child);
-		perHeight = Math.max(perHeight, child.getArea().height);
-		maxProgress = Math.max(0, widgets.size() - getMaxShow());
-		screen.addSubWidget(child);
+	public void addWidget(Widget child) {
+		perHeight = Math.max(perHeight, child.height * child.scale);
+		maxProgress = Math.max(0, aliveNodes.size() - getMaxShow());
+		super.addWidget(child);
 		updateList();
 	}
 	
