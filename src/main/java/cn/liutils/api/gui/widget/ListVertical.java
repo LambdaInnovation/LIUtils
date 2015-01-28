@@ -15,7 +15,6 @@ import cn.liutils.api.key.LIKeyProcess;
 
 /**
  * @author WeathFolD
- *
  */
 public class ListVertical extends Widget {
 	
@@ -28,14 +27,6 @@ public class ListVertical extends Widget {
 	
 	String ID;
 
-	/**
-	 * @param id
-	 * @param par
-	 * @param x
-	 * @param y
-	 * @param w
-	 * @param h
-	 */
 	public ListVertical(String ID, double x, double y, double w, double h) {
 		super(x, y, w, h);
 		this.ID = ID;

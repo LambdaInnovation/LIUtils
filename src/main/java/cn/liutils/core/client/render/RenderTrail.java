@@ -14,8 +14,10 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.prop.AssignColor;
 import cn.liutils.api.draw.prop.DisableLight;
+import cn.liutils.api.draw.tess.CrossedSquare;
 import cn.liutils.core.entity.SamplePoint;
 import cn.liutils.template.entity.EntityTrailFX;
+import cn.liutils.util.GenericUtils;
 import cn.liutils.util.RenderUtils;
 
 public class RenderTrail extends Render {
@@ -23,14 +25,14 @@ public class RenderTrail extends Render {
 	private static Tessellator t = Tessellator.instance;
 	private DrawObject drawer = new DrawObject();
 	private AssignColor color;
-	private Transform transform;
 	private DisableLight lightSwitch;
+	private CrossedSquare square;
 
 	public RenderTrail() {
 		color = new AssignColor();
-		transform = new Transform();
 		lightSwitch = new DisableLight();
-		drawer.addHandlers(color, transform, lightSwitch);
+		square = new CrossedSquare();
+		drawer.addHandlers(color, square, lightSwitch);
 	}
 
 	@Override
@@ -39,7 +41,8 @@ public class RenderTrail extends Render {
 		LinkedList<SamplePoint> list = ent.getSamplePoints();
 		
 		GL11.glPushMatrix(); {
-			piece.hHeight = ent.getTrailWidth() / 2;
+			square.height = ent.getTrailWidth();
+			square.ty = -square.height / 2;
 			lightSwitch.enabled = !ent.getHasLight();
 			
 			GL11.glTranslated(x, y, z);
@@ -58,10 +61,18 @@ public class RenderTrail extends Render {
 				}
 				
 				//Set up the piece
-				transform.setOrient(sp1.x, sp1.y, sp1.z, sp2.x, sp2.y, sp2.z);
-				color.setColor4f(1, 1, 1, alpha);
+				double dist = GenericUtils.distance(sp1.x, sp1.y, sp1.z, sp2.x, sp2.y, sp2.z);
+				square.width = dist;
+				double yaw = Math.atan2(sp2.x - sp1.x, sp2.z - sp1.z) * 180 / Math.PI;
+				double pitch = Math.atan2(sp2.y - sp1.y, GenericUtils.planeDistance(sp2.x - sp1.x, sp2.z - sp1.z)) * 180 / Math.PI;
+				
+				GL11.glTranslated(sp1.x, sp1.y, sp1.z);
+				GL11.glRotated(yaw, 0, 1, 0);
+				GL11.glRotated(pitch, 1, 0, 0);
+				
+				color.set(1, 1, 1, alpha);
 	
-				piece.draw();
+				drawer.draw();
 			}
 		} GL11.glPopMatrix();
 	}

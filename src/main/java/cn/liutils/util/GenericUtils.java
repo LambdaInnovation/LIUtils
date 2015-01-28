@@ -171,6 +171,14 @@ public class GenericUtils {
 		return distance(x0 - x1, y0 - y1, z0 - z1);
 	}
 	
+	public static double planeDistance(double dx, double dy) {
+		return Math.sqrt(dx * dx + dy * dy);
+	}
+	
+	public static double planeDistance(double x0, double y0, double x1, double y1) {
+		return planeDistance(x1 - x0, y1 - y0);
+	}
+	
 	/**
 	 * An alias of Minecraft.getSystemTime() in case of server calls
 	 * @return

@@ -14,7 +14,7 @@ import cn.liutils.api.draw.DrawObject.EventType;
 
 /**
  * A most simple rectangle drawer that takes rect's width and height, then draw it in
- * (0, 0, 0) -> (width, height, 0) with a offset (tx, ty, tz)
+ * (0, 0, 0) -> (0, height, width) with a offset (tx, ty, tz)
  * @author WeathFolD
  */
 public class Rect extends TessBase {
@@ -35,7 +35,7 @@ public class Rect extends TessBase {
 	}
 	
 	public void setCentered() {
-		tx = -width / 2;
+		tz = -width / 2;
 		ty = -height / 2;
 	}
 	
@@ -61,10 +61,10 @@ public class Rect extends TessBase {
 		GL11.glTranslated(tx, ty, tz); //built in offset, usually in order to move it to center
 		t.startDrawingQuads(); {
 			obj.post(EventType.IN_TESS);
-			t.addVertexWithUV(0, 	 0, 	 0, map.u0, map.v1);
-			t.addVertexWithUV(width, 0, 	 0, map.u1, map.v1);
-			t.addVertexWithUV(width, height, 0, map.u1, map.v0);
-			t.addVertexWithUV(0, 	 height, 0, map.u0, map.v0);
+			t.addVertexWithUV(0, 0, 	 0, 	map.u0, map.v1);
+			t.addVertexWithUV(0, 0,  	 width, map.u1, map.v1);
+			t.addVertexWithUV(0, height, width, map.u1, map.v0);
+			t.addVertexWithUV(0, height, 0, 	map.u0, map.v0);
 		} t.draw();
 	}
 
