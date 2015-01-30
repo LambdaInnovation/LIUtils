@@ -3,43 +3,61 @@
  */
 package cn.liutils.api.draw.tess;
 
+import java.util.EnumSet;
+
 import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.util.HudUtils;
 
 /**
  * @author WeathFolD
  *
  */
-public class GUIRect extends Rect {
+public class GUIRect extends DrawHandler {
 	
-	double umul = 1, vmul = 1;
-
+	protected RectMapping map = new RectMapping();
+	double width, height;
+	
+	public GUIRect(double w, double h, double u, double v, double tw, double th) {
+		setSize(w, h);
+		setMappingBySize(u, v, tw, th);
+	}
+	
 	public GUIRect() {}
+	
+	public GUIRect setSize(double w, double h) {
+		width = w;
+		height = h;
+		return this;
+	}
+	
+	public GUIRect setMappingBySize(double u, double v, double tw, double th) {
+		map.setBySize(u, v, tw, th);
+		return this;
+	}
+	
+	public RectMapping getMap() {
+		return map;
+	}
 
-	public GUIRect(double w, double h) {
-		super(w, h);
+	@Override
+	public EnumSet<EventType> getEvents() {
+		return EnumSet.of(EventType.DO_TESS);
 	}
-	
-	public void setResolution(double w, double h) {
-		umul = 1 / w;
-		vmul = 1 / h;
+
+	@Override
+	public String getID() {
+		return "rect_2d";
 	}
-	
+
 	@Override
 	public void onEvent(EventType event, DrawObject obj) {
-		Tessellator t = Tessellator.instance;
-		GL11.glTranslated(tx, ty, tz); //built in offset, usually in order to move it to center
-		t.startDrawingQuads(); {
-			obj.post(EventType.IN_TESS);
-			t.addVertexWithUV(0, 	 0, 	 0, map.u0 * umul, map.v0 * umul);
-			t.addVertexWithUV(0, 	 height, 0, map.u0 * umul, map.v1 * umul);
-			t.addVertexWithUV(width, height, 0, map.u1 * umul, map.v1 * umul);
-			t.addVertexWithUV(width, 0, 	 0, map.u1 * umul, map.v0 * umul);
-		} t.draw();
+		HudUtils.drawRect(0, 0, width, height, map);
 	}
 
 }

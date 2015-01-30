@@ -3,10 +3,16 @@
  */
 package cn.liutils.api.gui;
 
+import java.util.EnumSet;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
+import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.api.draw.prop.AssignTexture;
+import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.gui.LIGui.WidgetNode;
 
 
@@ -78,6 +84,12 @@ public class Widget {
 		gui.addSubWidget(this, child);
 	}
 	
+	public void addWidgets(Widget ...wigs) {
+		for(Widget w : wigs) {
+			addWidget(w);
+		}
+	}
+	
 	public void setSize(double w, double h) {
 		width = w;
 		height = h;
@@ -124,6 +136,31 @@ public class Widget {
 	public void draw(double mx, double my, boolean hovering) {
 		if(drawer != null) {
 			drawer.draw();
+		}
+	}
+	
+	/**
+	 * Init a built-in default drawer that draws the texture to the widget area.
+	 * tex can be null, which means we don't explicitly bind texture
+	 */
+	public void initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
+		this.drawer = new DrawObject();
+		final GUIRect rect = new GUIRect(width, height, u, v, tw, th);
+		drawer.addHandler(rect);
+		drawer.addHandler(new DrawHandler() { //Make the size consistent
+			@Override public EnumSet<EventType> getEvents() {
+				return EnumSet.of(EventType.PRE_TESS);
+			}
+			@Override public String getID() {
+				return "size_adjust";
+			}
+			@Override
+			public void onEvent(EventType event, DrawObject obj) {
+				rect.setSize(width, height);
+			}
+		});
+		if(tex != null) {
+			drawer.addHandler(new AssignTexture(tex));
 		}
 	}
 	

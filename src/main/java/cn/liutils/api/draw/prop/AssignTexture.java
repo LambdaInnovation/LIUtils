@@ -9,6 +9,7 @@ import net.minecraft.util.ResourceLocation;
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 
 /**
@@ -19,7 +20,15 @@ public class AssignTexture extends DrawHandler {
 
 	public ResourceLocation texture;
 	
+	public double texWidth, texHeight;
+	
 	public AssignTexture() {}
+	
+	public AssignTexture(ResourceLocation res, double tw, double th) {
+		set(res);
+		texWidth = tw;
+		texHeight = th;
+	}
 	
 	public AssignTexture(ResourceLocation res) {
 		set(res);
@@ -43,6 +52,9 @@ public class AssignTexture extends DrawHandler {
 	public void onEvent(EventType event, DrawObject obj) {
 		if(texture != null)
 			RenderUtils.loadTexture(texture);
+		if(texWidth != 0 && texHeight != 0) {
+			HudUtils.setTextureResolution(texWidth, texHeight);
+		}
 	}
 
 }

@@ -22,6 +22,7 @@ public class LIGuiScreen extends GuiScreen {
 	
     public void drawScreen(int mx, int my, float w)
     {
+    	gui.resize(width, height);
     	this.drawDefaultBackground();
     	GL11.glPushMatrix(); {
     		GL11.glTranslated(0, 0, 100);

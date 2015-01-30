@@ -75,12 +75,7 @@ public class DragBar extends Widget {
 	}
 
 	public Widget setTexMapping(double u, double v, double tw, double th) {
-		bar.rect.map.setBySize(u, v, tw, th);
-		return this;
-	}
-	
-	public Widget setResolution(double w, double h) {
-		bar.rect.setResolution(w, h);
+		bar.rect.setMappingBySize(u, v, tw, th);
 		return this;
 	}
 	

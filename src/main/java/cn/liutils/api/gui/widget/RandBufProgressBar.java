@@ -58,8 +58,7 @@ public abstract class RandBufProgressBar extends Widget {
 		lastDrawTime = Minecraft.getSystemTime();
 		
 		this.drawer = new DrawObject();
-		rect = new GUIRect(w, h);
-		rect.map.setBySize(u, v, tw, th);
+		rect = new GUIRect(w, h, u, v, tw, th);
 		drawer.addHandler(rect);
 		
 		drawer.addHandler(new DrawHandler() { //setup the size of the object
@@ -75,7 +74,7 @@ public abstract class RandBufProgressBar extends Widget {
 			public void onEvent(EventType event, DrawObject obj) {
 				double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
 				double x, y, u, v, w, h, tw, th;
-				RectMapping mapping = rect.map;
+				RectMapping mapping = rect.getMap();
 				switch(dir) {
 				case RIGHT:
 					w = width * disp;
@@ -120,10 +119,6 @@ public abstract class RandBufProgressBar extends Widget {
 				}
 			}
 		});
-	}
-
-	public void setResolution(double w, double h) {
-		this.rect.setResolution(w, h);
 	}
 	
 	public void setDirection(Direction dir) {

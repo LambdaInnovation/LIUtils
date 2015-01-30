@@ -18,7 +18,7 @@ import cn.liutils.api.draw.tess.RectMapping;
  */
 public class HudUtils {
 
-	private static float SCALE_X = 1.0F, SCALE_Y = 1.0F;
+	private static double SCALE_X = 1.0F, SCALE_Y = 1.0F;
 	public static double zLevel = -90D;
 	
 	/**
@@ -26,7 +26,7 @@ public class HudUtils {
 	 * @param x
 	 * @param y
 	 */
-	public static void setTextureResolution(int x, int y) {
+	public static void setTextureResolution(double x, double y) {
 		SCALE_X = 1.0F/x;
 		SCALE_Y = 1.0F/y;
 	}
@@ -41,8 +41,8 @@ public class HudUtils {
      */
     public static void drawRect(double x, double y, double width, double height)
     {
-        float f = SCALE_X;
-        float f1 = SCALE_Y;
+        double f = SCALE_X;
+        double f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
         tessellator.startDrawingQuads();
         tessellator.addVertexWithUV(x + 0, y + height, zLevel, 0, 1);
@@ -66,8 +66,8 @@ public class HudUtils {
     }
     
     public static void drawModalRect(double x, double y, double width, double height) {
-    	float f = SCALE_X;
-        float f1 = SCALE_Y;
+    	double f = SCALE_X;
+    	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
         GL11.glDisable(GL11.GL_TEXTURE_2D);
         t.startDrawingQuads(); {
@@ -84,8 +84,8 @@ public class HudUtils {
      */
     public static void drawRect(double x, double y, double u, double v, double width, double height)
     {
-        float f = SCALE_X;
-        float f1 = SCALE_Y;
+    	double f = SCALE_X;
+    	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.addVertexWithUV(x + 0, y + height, zLevel, (u + 0) * f, (v + height) * f1);
@@ -104,8 +104,8 @@ public class HudUtils {
      */
     public static void drawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texHeight)
     {
-    	float f = SCALE_X;
-        float f1 = SCALE_Y;
+    	double f = SCALE_X;
+    	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
         t.addVertexWithUV(x + 0, y + height, zLevel, (u + 0) * f, (v + texHeight) * f1);

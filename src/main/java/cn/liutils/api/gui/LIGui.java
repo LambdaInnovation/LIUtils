@@ -234,6 +234,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 			nodesToAdd.clear();
 			Collections.sort(widgets);
 		}
+		updateTraverse(null, this);
 	}
 	
 	private void updateTraverse(WidgetNode cur, Iterable<WidgetNode> set) {
