@@ -49,7 +49,7 @@ public abstract class RandBufProgressBar extends Widget {
 	
 	private static final Random rand = new Random();
 	
-	private GUIRect rect;
+	private GUIRect orig;
 	
 	public RandBufProgressBar(double x, double y, double w, double h,
 			double u, double v, double tw, double th) {
@@ -58,13 +58,12 @@ public abstract class RandBufProgressBar extends Widget {
 		lastDrawTime = Minecraft.getSystemTime();
 		
 		this.drawer = new DrawObject();
-		rect = new GUIRect(w, h, u, v, tw, th);
-		drawer.addHandler(rect);
+		orig = new GUIRect(w, h, u, v, tw, th);
 		
 		drawer.addHandler(new DrawHandler() { //setup the size of the object
 			@Override
 			public EnumSet<EventType> getEvents() {
-				return EnumSet.of(EventType.PRE_TESS);
+				return EnumSet.of(EventType.DO_TESS);
 			}
 			@Override
 			public String getID() {
@@ -73,8 +72,9 @@ public abstract class RandBufProgressBar extends Widget {
 			@Override
 			public void onEvent(EventType event, DrawObject obj) {
 				double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
+				//System.out.println(progressDisplay + " " + curFluct + " " + disp);
 				double x, y, u, v, w, h, tw, th;
-				RectMapping mapping = rect.getMap();
+				RectMapping mapping = orig.getMap();
 				switch(dir) {
 				case RIGHT:
 					w = width * disp;
@@ -82,18 +82,18 @@ public abstract class RandBufProgressBar extends Widget {
 					x = y = 0;
 					u = mapping.u0;
 					v = mapping.v0;
-					tw = mapping.getWidth() * disp;
-					th = mapping.getHeight();
+					tw = mapping.tw * disp;
+					th = mapping.th;
 					break;
 				case LEFT:
 					w = width * disp;
 					h = height;
 					x = width - w;
 					y = 0;
-					u = mapping.u0 + mapping.getWidth() * (1 - disp);
+					u = mapping.u0 + mapping.tw * (1 - disp);
 					v = mapping.v0;
-					tw = mapping.getWidth() * disp;
-					th = mapping.getHeight();
+					tw = mapping.tw * disp;
+					th = mapping.th;
 					break;
 				case UP:
 					w = width;
@@ -101,9 +101,9 @@ public abstract class RandBufProgressBar extends Widget {
 					x = 0;
 					y = height * (1 - disp);
 					u = mapping.u0;
-					v = mapping.v0 + mapping.getHeight() * (1 - disp);
-					tw = mapping.getWidth();
-					th = mapping.getHeight() * disp;
+					v = mapping.v0 + mapping.th * (1 - disp);
+					tw = mapping.tw;
+					th = mapping.th * disp;
 					break;
 				case DOWN:
 					w = width;
@@ -111,12 +111,13 @@ public abstract class RandBufProgressBar extends Widget {
 					x = y = 0;
 					u = mapping.u0;
 					v = mapping.v0;
-					tw = mapping.getWidth();
-					th = mapping.getHeight() * disp;
+					tw = mapping.tw;
+					th = mapping.th * disp;
 					break;
 				default:
 					throw new RuntimeException("niconiconi, WTF??");
 				}
+				HudUtils.drawRect(x, y, u, v, w, h, tw, th);
 			}
 		});
 	}
@@ -149,7 +150,7 @@ public abstract class RandBufProgressBar extends Widget {
 			curFluct = Math.max(-0.5 * fluctRegion, Math.min(curFluct, 0.5 * fluctRegion));
 		}
 		
-		super.draw(mx, my, mh);
+		drawer.draw();
 		lastDrawTime = time;
 	}
 	

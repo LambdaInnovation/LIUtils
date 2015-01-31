@@ -25,7 +25,7 @@ public class GUIRect extends DrawHandler {
 	
 	public GUIRect(double w, double h, double u, double v, double tw, double th) {
 		setSize(w, h);
-		setMappingBySize(u, v, tw, th);
+		setMapping(u, v, tw, th);
 	}
 	
 	public GUIRect() {}
@@ -36,8 +36,8 @@ public class GUIRect extends DrawHandler {
 		return this;
 	}
 	
-	public GUIRect setMappingBySize(double u, double v, double tw, double th) {
-		map.setBySize(u, v, tw, th);
+	public GUIRect setMapping(double u, double v, double tw, double th) {
+		map.set(u, v, tw, th);
 		return this;
 	}
 	

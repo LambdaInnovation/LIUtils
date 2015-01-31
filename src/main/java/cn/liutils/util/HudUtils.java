@@ -96,7 +96,8 @@ public class HudUtils {
     }
     
     public static void drawRect(double x, double y, double width, double height, RectMapping rm) {
-    	drawRect(x, y, rm.u0, rm.v0, width, height, rm.u1 - rm.u0, rm.v1 - rm.v0);
+    	drawRect(x, y, rm.u0, rm.v0, width, height, rm.tw, rm.th);
+    	//System.out.println(DebugUtils.formatArray(x, y, rm.u0, rm.v0, width, height, rm.tw, rm.th));
     }
     
     /**

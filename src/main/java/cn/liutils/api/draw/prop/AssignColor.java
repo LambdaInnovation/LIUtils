@@ -17,7 +17,7 @@ import cn.liutils.api.draw.DrawObject.EventType;
  */
 public class AssignColor extends DrawHandler {
 	
-	public float r, g, b, a;
+	public float r = 1, g = 1, b = 1, a = 1;
 
 	public AssignColor() {}
 	

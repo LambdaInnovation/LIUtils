@@ -19,13 +19,13 @@ public class DragBar extends Widget {
 	
 	private class Bar extends Widget {
 		
-		public GUIRect rect = new GUIRect();
+		public GUIRect rect;
 		public AssignTexture tex;
 
 		public Bar() {
 			super(0, 0, DragBar.this.width, barHeight);
-			this.drawer = new DrawObject();
-			drawer.addHandler(rect);
+			this.initTexDraw(null, 0, 0, 0, 0);
+			rect = (GUIRect) drawer.getHandler("rect_2d");
 		}
 		
 		public void draw(double mx, double my, boolean mouseHovering) {
@@ -62,7 +62,11 @@ public class DragBar extends Widget {
 			double h, double sh) {
 		super(x, y, w, h);
 		barHeight = sh;
-		bar = new Bar();
+	}
+	
+	@Override
+	public void onAdded() {
+		addWidget(bar = new Bar());
 	}
 	
 	public void setProgress(double d) {
@@ -75,8 +79,12 @@ public class DragBar extends Widget {
 	}
 
 	public Widget setTexMapping(double u, double v, double tw, double th) {
-		bar.rect.setMappingBySize(u, v, tw, th);
+		bar.rect.setMapping(u, v, tw, th);
 		return this;
+	}
+	
+	public void addSetTexture(ResourceLocation tex) {
+		bar.addSetTexture(tex);
 	}
 	
 	public Widget setTexture(ResourceLocation tex) {

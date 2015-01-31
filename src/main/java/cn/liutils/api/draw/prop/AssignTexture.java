@@ -37,6 +37,11 @@ public class AssignTexture extends DrawHandler {
 	public void set(ResourceLocation tex) {
 		texture = tex;
 	}
+	
+	public void setResolution(double w, double h) {
+		texWidth = w;
+		texHeight = h;
+	}
 
 	@Override
 	public EnumSet<EventType> getEvents() {

@@ -108,8 +108,8 @@ public class ListVertical extends Widget {
 		}
 		
 		int n = getMaxShow() + progress;
-		for(int i = progress; i < n && i < aliveNodes.size(); ++i) {
-			WidgetNode w = aliveNodes.get(i);
+		for(int i = progress; i < n && i < all.size(); ++i) {
+			WidgetNode w = all.get(i);
 			w.widget.posX = 0;
 			w.widget.posY = (i - progress) * perHeight;
 			w.widget.doesDraw = true;
@@ -131,7 +131,7 @@ public class ListVertical extends Widget {
 	@Override
 	public void addWidget(Widget child) {
 		perHeight = Math.max(perHeight, child.height * child.scale);
-		maxProgress = Math.max(0, aliveNodes.size() - getMaxShow());
+		maxProgress = Math.max(0, getSubNodes().size() - getMaxShow());
 		super.addWidget(child);
 		updateList();
 	}

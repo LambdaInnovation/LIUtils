@@ -11,7 +11,7 @@ import javax.vecmath.Vector2d;
  */
 public class RectMapping {
 
-	public double u0, v0, u1, v1;
+	public double u0, v0, tw, th;
 	
 	public RectMapping() {
 		this(0, 0, 1, 1);
@@ -21,36 +21,31 @@ public class RectMapping {
 		set(u0, v0, u1, v1);
 	}
 	
-	public void set(double u0, double v0, double u1, double v1) {
+	public void set(double u0, double v0, double tw, double th) {
 		this.u0 = u0;
 		this.v0 = v0;
-		this.u1 = u1;
-		this.v1 = v1;
+		this.tw = tw;
+		this.th = th;
 	}
 	
-	public void setBySize(double u, double v, double tw, double th) {
-		set(u, v, u + tw, v + th);
+	public void setAbs(double u0, double v0, double u1, double v1) {
+		set(u0, v0, u1 - u0, v1 - v0);
 	}
 	
-	public double getWidth() {
-		return u1 - u0;
+	public double getMinU() {
+		return u0;
 	}
 	
-	public double getHeight() {
-		return v1 - v0;
+	public double getMaxU() {
+		return u0 + tw;
 	}
 	
-	/**
-	 * Set the mapping with a resolution multiple.
-	 * @param texWidth width of the texture
-	 * @param texHeight height of the texture
-	 * @param u uCoord
-	 * @param v vCoord
-	 * @param uw Mapping width
-	 * @param vw Mapping height
-	 */
-	public void setWithResolution(double texWidth, double texHeight, double u, double v, double uw, double vw) {
-		set(u / texWidth, v / texHeight, (u + uw) / texWidth, (v + vw) / texHeight);
+	public double getMinV() {
+		return v0;
+	}
+	
+	public double getMaxV() {
+		return v0 + th;
 	}
 
 }

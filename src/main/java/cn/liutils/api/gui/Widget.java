@@ -164,6 +164,26 @@ public class Widget {
 		}
 	}
 	
+	public void addSetTexture(ResourceLocation tex) {
+		assert(tex != null && drawer != null);
+		DrawHandler dh = drawer.getHandler("texture");
+		if(dh != null) {
+			((AssignTexture)dh).set(tex);
+		}
+		else drawer.addHandler(new AssignTexture(tex));
+	}
+	
+	public void setTexResolution(double w, double h) {
+		DrawHandler dh = drawer.getHandler("texture");
+		if(dh != null) {
+			((AssignTexture)dh).setResolution(w, h);
+		} else {
+			AssignTexture adh = new AssignTexture(null);
+			drawer.addHandler(adh);
+			adh.setResolution(w, h);
+		}
+	}
+	
 	//Control Events
 	/**
 	 * Called when the mouse peforms a 'drag' action(Starting in this widget's area)

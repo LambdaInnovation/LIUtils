@@ -141,7 +141,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
         	if(Math.abs(time - dt - lastStartTime) > DRAG_TIME_TOLE) {
         		lastStartTime = time;
         		draggingNode = getTopNode(mx, my);
-        		System.out.println(draggingNode);
+        		//System.out.println(draggingNode);
         		if(draggingNode == null)
         			return;
         		xOffset = mx - draggingNode.x;
@@ -165,6 +165,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		if(bid == 0) {
 			WidgetNode node = getTopNode(mx, my);
 			if(node != null) {
+				System.out.println("OnMouseDown " + node.widget);
 				node.widget.onMouseDown((mx - node.x) / node.scale, (my - node.y) / node.scale);
 			}
 		}
@@ -299,9 +300,12 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 	
 	private WidgetNode gtnTraverse(double x, double y, WidgetNode node, Iterable<WidgetNode> set) {
 		WidgetNode res = null;
-		if(node != null && node.pointWithin(x, y)) {
+		boolean sub = node == null || (node.widget.doesDraw && node.widget.doesListenKey);
+		if(sub && node != null && node.pointWithin(x, y)) {
 			res = node;
 		}
+		
+		if(!sub) return res;
 		
 		WidgetNode next = null;
 		for(WidgetNode wn : set) {
@@ -323,7 +327,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		
 		//Design same to LIGui main class
 		boolean iterating = false;
-		List<WidgetNode> toAdd;
+		List<WidgetNode> toAdd = new LinkedList();
 		
 		public WidgetNode(Widget wig) {
 			widget = wig;

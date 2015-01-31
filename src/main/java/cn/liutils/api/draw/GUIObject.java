@@ -21,7 +21,7 @@ public class GUIObject extends DrawObject {
 
 	public GUIObject(double x, double y, double w, double h, double u, double v, double tw, double th) {
 		rect = new GUIRect(w, h, u, v, tw, th);
-		rect.setMappingBySize(u, v, tw, th);
+		rect.setMapping(u, v, tw, th);
 		getTransform().setOffset(x, y, 0);
 		addHandlers(rect, transform);
 	}
