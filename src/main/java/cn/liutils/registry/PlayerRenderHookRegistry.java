@@ -15,6 +15,8 @@ import cn.annoreg.base.RegistrationInstance;
 import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.render.IPlayerRenderHook;
 import cn.liutils.core.LIUtils;
+import cn.liutils.core.entity.EntityPlayerHook;
+import cn.liutils.registry.PlayerRenderHookRegistry.RegPlayerRenderHook.Pass;
 import cn.liutils.template.LIClientRegistry;
 
 /**
@@ -29,7 +31,10 @@ public class PlayerRenderHookRegistry
 	@Target({ElementType.TYPE, ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
 	@SideOnly(Side.CLIENT)
-	public @interface RegPlayerRenderHook {}
+	public @interface RegPlayerRenderHook {
+		enum Pass { OPAQUE, ALPHA };
+		Pass value() default Pass.OPAQUE;
+	}
 
 	public PlayerRenderHookRegistry() {
 		super(RegPlayerRenderHook.class, LIUtils.REGISTER_TYPE_RENDER_HOOK);
@@ -37,7 +42,7 @@ public class PlayerRenderHookRegistry
 
 	@Override
 	protected void register(IPlayerRenderHook obj, RegPlayerRenderHook anno) throws Exception {
-		LIClientRegistry.addPlayerRenderingHook(obj);
+		EntityPlayerHook.regPlayerRenderHook(obj, anno.value() == Pass.ALPHA);
 	}
 
 }

@@ -23,7 +23,7 @@ public class TextUtils {
 		FONT_YAHEI_64;
 	
 	public static void init() {
-		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("Consolas", Font.PLAIN, 32), true);
+		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
 		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
 	}
 	

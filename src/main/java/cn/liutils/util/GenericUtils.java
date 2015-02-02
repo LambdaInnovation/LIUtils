@@ -297,7 +297,7 @@ public class GenericUtils {
 			for(int y = minY; y <= maxY; y++) {
 				for(int z = minZ; z <= maxZ; z++) {
 					Block id = world.getBlock(x, y, z);
-					if(id != Blocks.air && filter.accepts(id)) {
+					if(id != Blocks.air && filter.accepts(world, id, x, y, z)) {
 						set.add(new BlockPos(x, y, z, id));
 					}
 				}

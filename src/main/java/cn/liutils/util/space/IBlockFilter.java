@@ -4,6 +4,7 @@
 package cn.liutils.util.space;
 
 import net.minecraft.block.Block;
+import net.minecraft.world.World;
 
 /**
  * @author WeathFolD
@@ -12,10 +13,10 @@ import net.minecraft.block.Block;
 public interface IBlockFilter {
 	public static IBlockFilter always = new IBlockFilter() {
 		@Override
-		public boolean accepts(Block block) {
+		public boolean accepts(World world, Block block, int x, int y, int z) {
 			return true;
 		}
 	};
 	
-	boolean accepts(Block block);
+	boolean accepts(World world, Block block, int x, int y, int z);
 }

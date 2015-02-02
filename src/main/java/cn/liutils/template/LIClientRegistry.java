@@ -21,9 +21,5 @@ public class LIClientRegistry {
 		LIKeyProcess.instance.addKey(s, key, isRep, process);
 	}
 	
-	public static void addPlayerRenderingHook(IPlayerRenderHook helper) {
-		EntityPlayerHook.addRenderHelper(helper);
-	}
-	
 	
 }

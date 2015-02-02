@@ -119,6 +119,8 @@ public class LIUtils {
 	@EventHandler()
 	public void init(FMLInitializationEvent Init) {
 		proxy.init();
+		
+		RegistrationManager.INSTANCE.registerAll(this, "Entity");
 	}
 	
 	@EventHandler()

@@ -8,9 +8,7 @@ import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.client.render.RenderPlayerHook;
 import cn.liutils.core.client.render.RenderTrail;
-import cn.liutils.core.entity.EntityPlayerHook;
 import cn.liutils.core.event.LIClientEvents;
 import cn.liutils.core.player.MouseHelperX;
 import cn.liutils.template.client.render.block.RenderEmptyBlock;
@@ -44,7 +42,6 @@ public class LIClientProxy extends LICommonProxy {
 		}
 		.setIgnoreLight(true));
 		
-		RenderingRegistry.registerEntityRenderingHandler(EntityPlayerHook.class, new RenderPlayerHook());
 		RenderingRegistry.registerEntityRenderingHandler(EntityTrailFX.class, new RenderTrail());
 		
 	}

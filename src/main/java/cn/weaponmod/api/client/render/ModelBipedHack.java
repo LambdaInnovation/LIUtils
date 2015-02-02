@@ -19,14 +19,17 @@ import cn.weaponmod.api.weapon.WeaponGeneric;
 public class ModelBipedHack extends ModelBiped {
 
 	public ModelBipedHack() {
+		this.isChild = false;
 	}
 
 	public ModelBipedHack(float par1) {
 		super(par1);
+		this.isChild = false;
 	}
 
 	public ModelBipedHack(float par1, float par2, int par3, int par4) {
 		super(par1, par2, par3, par4);
+		this.isChild = false;
 	}
 	
 	@Override
