@@ -391,9 +391,9 @@ public class RenderUtils {
     		GL11.glDisable(GL11.GL_TEXTURE_2D);
     	GL11.glPushMatrix(); {
     		for(int i = 0; i < arr.length; ++i) {
-    			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+    			//OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
     			t.startDrawingQuads();
-    			t.setBrightness(15728880);
+    			//t.setBrightness(15728880);
     			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
     			
     			int[] va = arr[i];
