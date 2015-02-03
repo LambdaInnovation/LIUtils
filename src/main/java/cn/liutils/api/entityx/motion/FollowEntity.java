@@ -12,10 +12,18 @@ import cn.liutils.api.entityx.EntityX;
 public class FollowEntity<T extends EntityX> extends ApplyPos<T> {
 	
 	Entity target;
+	double offsetX, offsetY, offsetZ;
 
 	public FollowEntity(T ent, Entity targ) {
 		super(ent, targ.posX, targ.posY, targ.posZ);
 		target = targ;
+	}
+	
+	public FollowEntity setOffset(double ox, double oy, double oz) {
+		offsetX = ox;
+		offsetY = oy;
+		offsetZ = oz;
+		return this;
 	}
 	
 	@Override
@@ -24,7 +32,7 @@ public class FollowEntity<T extends EntityX> extends ApplyPos<T> {
 			this.alive = false;
 			return;
 		}
-		this.setPos(target.posX, target.posY, target.posZ);
+		this.setPos(target.posX + offsetX, target.posY + offsetY, target.posZ + offsetZ);
 		super.onUpdate();
 	}
 	

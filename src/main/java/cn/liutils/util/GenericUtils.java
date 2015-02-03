@@ -63,6 +63,10 @@ public class GenericUtils {
 		}
 	}
 	
+	public static int randIntv(int fr, int to) {
+		return RNG.nextInt(to - fr) + fr;
+	}
+	
 	/**
 	 * Return: how many not merged
 	 */

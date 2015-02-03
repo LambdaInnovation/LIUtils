@@ -187,8 +187,8 @@ public class Motion3D {
 		e.motionY = this.motionY;
 		e.motionZ = this.motionZ;
 		double tmp = Math.sqrt(motionX * motionX + motionZ * motionZ);
-		e.prevRotationYaw = e.rotationYaw = (float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
-        e.prevRotationPitch = e.rotationPitch = (float)(Math.atan2(motionY, (double)tmp) * 180.0D / Math.PI);
+		e.prevRotationYaw = e.rotationYaw = -(float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
+        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(motionY, (double)tmp) * 180.0D / Math.PI);
 	}
 	
 	/**

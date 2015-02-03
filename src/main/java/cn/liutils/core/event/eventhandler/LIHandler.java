@@ -18,6 +18,10 @@ public abstract class LIHandler<T extends Event> {
 	public final void setDead() {
 		dead = true;
 	}
+	
+	public final void setAlive() {
+		dead = false;
+	}
 
 	public final void trigger(T event) {
 		if (!onEvent(event))

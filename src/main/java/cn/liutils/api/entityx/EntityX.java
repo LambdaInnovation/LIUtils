@@ -31,8 +31,6 @@ public abstract class EntityX extends Entity {
 
 	public EntityX(World world) {
 		super(world);
-		addDaemonHandler(new VelocityUpdate(this));
-		addDaemonHandler(new CollisionCheck(this));
 	}
 
 	@Override

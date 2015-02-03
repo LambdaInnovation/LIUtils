@@ -110,6 +110,7 @@ public class RenderIcon extends Render {
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef((float) par2, (float) par4, (float) par6);
 				GL11.glScalef(size, size, size);
+				postTranslate(par1Entity);
 				
 				if(this.viewOptimize) {
 					boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
@@ -132,6 +133,8 @@ public class RenderIcon extends Render {
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_CULL_FACE);
 	}
+	
+	protected void postTranslate(Entity ent) {}
 
 	private void func_77026_a(Tessellator tessllator) {
 		float f4 = 1.0F;
