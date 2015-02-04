@@ -4,15 +4,22 @@
 package cn.weaponry.api.info;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.util.GenericUtils;
 import cn.weaponry.api.action.Action;
+import cn.weaponry.api.client.render.RenderEffect;
 import cn.weaponry.api.item.WeaponBase;
 import cn.weaponry.api.state.WeaponState;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author WeathFolD
@@ -28,6 +35,7 @@ public final class InfWeapon {
 	NBTTagCompound data = new NBTTagCompound(); //any weapon runtime data
 	
 	Map<String, ActionNode> activeActions = new HashMap();
+	Set<EffectNode> activeEffects = new HashSet();
 	
 	private int ticksExisted;
 
@@ -56,12 +64,32 @@ public final class InfWeapon {
 			}
 		}
 		
+		if(player.worldObj.isRemote) {
+			updateRender();
+		}
+		
 		++ticksExisted;
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private void updateRender() {
+		Iterator<EffectNode> iter = activeEffects.iterator();
+		long time = GenericUtils.getSystemTime();
+		while(iter.hasNext()) {
+			EffectNode node = iter.next();
+			long dt = time - node.timeAdded;
+			if(node.life > 0 && dt > node.life) {
+				iter.remove();
+			}
+		}
 	}
 	
 	public void transitState(WeaponState state) {
 		curState.leaveState(this);
 		curState = state;
+		if(curState != null) {
+			curState.enterState(this);
+		}
 	}
 	
 	public boolean addAction(Action act, int life) {
@@ -90,6 +118,11 @@ public final class InfWeapon {
 		}
 	}
 	
+	public void addRenderEffect(RenderEffect eff, long time) {
+		activeEffects.add(new EffectNode(eff, time));
+		eff.startEffect(this);
+	}
+	
 	public void handleRawInput(int keyid, boolean down) {
 		if(active()) {
 			curState.keyChanged(this, keyid, down);
@@ -99,6 +132,13 @@ public final class InfWeapon {
 	public void handleKeyTick(int keyid) {
 		if(active()) {
 			curState.keyTick(this, keyid);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public void postRenderEvent(EventType type, String part) {
+		for(EffectNode node : activeEffects) {
+			node.eff.onEvent(type, part, this, GenericUtils.getSystemTime() - node.timeAdded);
 		}
 	}
 	
@@ -115,10 +155,14 @@ public final class InfWeapon {
 		data = new NBTTagCompound();
 		ticksExisted = 0;
 		activeActions.clear();
+		activeEffects.clear();
 		
 		if(lastStack != null && lastStack.getItem() instanceof WeaponBase) {
 			WeaponBase weapon = (WeaponBase) lastStack.getItem();
 			curState = weapon.getInitialState();
+			if(curState != null) {
+				curState.enterState(this);
+			}
 		} else {
 			curState = null;
 		}
@@ -131,6 +175,17 @@ public final class InfWeapon {
 		public ActionNode(Action _act, int _life) {
 			action = _act;
 			tickAdded = ticksExisted;
+			life = _life;
+		}
+	}
+	
+	private class EffectNode {
+		public final RenderEffect eff;
+		public final long timeAdded;
+		public final long life;
+		public EffectNode(RenderEffect _eff, long _life) {
+			eff = _eff;
+			timeAdded = GenericUtils.getSystemTime();
 			life = _life;
 		}
 	}

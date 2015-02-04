@@ -44,7 +44,6 @@ public class Weaponry {
 	
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		config = new Configuration(event.getSuggestedConfigurationFile());
 		
 		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
 		
@@ -55,6 +54,7 @@ public class Weaponry {
 	
 	@EventHandler
 	public void init(FMLPreInitializationEvent event) {
+		config = new Configuration(event.getSuggestedConfigurationFile());
 		RegistrationManager.INSTANCE.registerAll(this, "Init");
 	}
 	

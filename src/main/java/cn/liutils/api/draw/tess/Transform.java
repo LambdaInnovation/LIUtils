@@ -86,5 +86,14 @@ public class Transform extends DrawHandler {
 			break;
 		}
 	}
+	
+	public void perform() {
+		GL11.glTranslated(tx, ty, tz);
+		GL11.glTranslated(pivotX, pivotY, pivotZ);
+		GL11.glRotated(yaw, 0, 1, 0);
+		GL11.glRotated(pitch, 1, 0, 0);
+		GL11.glRotated(roll, 0, 0, 1);
+		GL11.glTranslated(-pivotX, -pivotY, -pivotZ);
+	}
 
 }
