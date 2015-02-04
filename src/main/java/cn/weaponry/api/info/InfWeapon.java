@@ -136,9 +136,9 @@ public final class InfWeapon {
 	}
 	
 	@SideOnly(Side.CLIENT)
-	public void postRenderEvent(EventType type, String part) {
+	public void postRenderEvent(String part) {
 		for(EffectNode node : activeEffects) {
-			node.eff.onEvent(type, part, this, GenericUtils.getSystemTime() - node.timeAdded);
+			node.eff.beforeDraw(part, this, GenericUtils.getSystemTime() - node.timeAdded);
 		}
 	}
 	
@@ -148,6 +148,10 @@ public final class InfWeapon {
 	
 	public NBTTagCompound getData() {
 		return data;
+	}
+	
+	public ItemStack getCurStack() {
+		return lastStack;
 	}
 	
 	private void reset() {

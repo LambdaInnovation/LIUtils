@@ -7,15 +7,17 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.IItemRenderer;
+
+import org.lwjgl.opengl.GL11;
+
+import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.tess.Transform;
-import cn.weaponry.api.info.InfWeapon;
-import cn.weaponry.api.item.WeaponBase;
 
 /**
  * @author WeathFolD
  *
  */
-public abstract class WeaponRenderBase implements IItemRenderer {
+public abstract class WeaponRenderBase extends DrawObject implements IItemRenderer {
 	
 	public Transform 
 		transModel = new Transform(),
@@ -48,6 +50,7 @@ public abstract class WeaponRenderBase implements IItemRenderer {
 
 	@Override
 	public final void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+		GL11.glPushMatrix();
 		switch(type) {
 		case EQUIPPED_FIRST_PERSON:
 			transFirst.perform();
@@ -69,6 +72,7 @@ public abstract class WeaponRenderBase implements IItemRenderer {
 			break;
 		default:
 		}
+		GL11.glPopMatrix();
 	}
 	
 	public abstract void renderEquipped(EntityLivingBase holder, ItemStack stack);

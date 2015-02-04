@@ -3,7 +3,6 @@
  */
 package cn.weaponry.api.client.render;
 
-import cn.liutils.api.draw.DrawObject.EventType;
 import cn.weaponry.api.info.InfWeapon;
 
 /**
@@ -16,6 +15,6 @@ public abstract class RenderEffect {
 	
 	public void startEffect(InfWeapon inf) {}
 
-	public abstract void onEvent(EventType event, String part, InfWeapon inf, long passed);
+	public abstract void beforeDraw(String part, InfWeapon inf, long passed);
 
 }
