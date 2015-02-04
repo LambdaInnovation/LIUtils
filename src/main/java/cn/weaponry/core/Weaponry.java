@@ -27,8 +27,8 @@ import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 @Mod(modid = "weaponry", name = "LIUtils-Weaponry", version = LIUtils.VERSION)
 @RegistrationMod(pkg = "cn.weaponry.", res = "weaponry", prefix = "mw_")
 public class Weaponry {
-
-	public static final String VERSION = "1.0.0";
+	
+	public static final String DEPENDENCY = "required-after:weaponry@" + LIUtils.VERSION;
 	
 	private static final String NET_CHANNEL = "weaponry";
 	

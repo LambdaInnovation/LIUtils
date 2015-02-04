@@ -9,6 +9,7 @@ import java.util.Queue;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import cn.liutils.api.entityx.motion.CollisionCheck;
@@ -101,6 +102,22 @@ public abstract class EntityX extends Entity {
 	public void setPosition(double x, double y, double z) {
 		super.setPosition(x, y, z);
 	}
+	
+    public void setHeading(double dx, double dy, double dz, float vel) {
+        float f2 = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
+        dx /= (double)f2;
+        dy /= (double)f2;
+        dz /= (double)f2;
+        dx *= (double)vel;
+        dy *= (double)vel;
+        dz *= (double)vel;
+        this.motionX = dx;
+        this.motionY = dy;
+        this.motionZ = dz;
+        float f3 = MathHelper.sqrt_double(dx * dx + dz * dz);
+        this.prevRotationYaw = this.rotationYaw = -(float)(Math.atan2(dx, dz) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = -(float)(Math.atan2(dy, (double)f3) * 180.0D / Math.PI);
+    }
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound var1) { }

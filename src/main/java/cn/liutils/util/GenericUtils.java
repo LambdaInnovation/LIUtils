@@ -5,35 +5,31 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
-import org.lwjgl.Sys;
-import org.lwjgl.input.Keyboard;
-
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
-import cn.liutils.template.selector.EntitySelectorLiving;
-import cn.liutils.template.selector.EntitySelectorPlayer;
-import cn.liutils.util.space.BlockPos;
-import cn.liutils.util.space.IBlockFilter;
-import cn.liutils.util.space.Motion3D;
 import net.minecraft.block.Block;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.init.Blocks;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
+
+import org.lwjgl.Sys;
+
+import cn.liutils.template.selector.EntitySelectorLiving;
+import cn.liutils.template.selector.EntitySelectorPlayer;
+import cn.liutils.util.space.BlockPos;
+import cn.liutils.util.space.IBlockFilter;
+import cn.liutils.util.space.Motion3D;
 
 /**
  * All sorts of utility functions.
@@ -61,6 +57,13 @@ public class GenericUtils {
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
 		}
+	}
+	
+	public static MovingObjectPosition tracePlayer(EntityPlayer player, double dist) {
+		Motion3D mo = new Motion3D(player, true);
+		Vec3 v1 = mo.getPosVec(player.worldObj),
+				v2 = mo.move(dist).getPosVec(player.worldObj);
+		return player.worldObj.rayTraceBlocks(v1, v2);
 	}
 	
 	public static int randIntv(int fr, int to) {
