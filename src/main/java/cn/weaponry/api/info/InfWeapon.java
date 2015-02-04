@@ -20,7 +20,7 @@ import cn.weaponry.api.state.WeaponState;
  */
 public final class InfWeapon {
 	
-	final EntityPlayer player;
+	public final EntityPlayer player;
 	ItemStack lastStack; //For validity check
 	
 	WeaponState curState;

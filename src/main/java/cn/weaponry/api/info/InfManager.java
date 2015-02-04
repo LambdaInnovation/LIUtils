@@ -18,7 +18,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
  */
 @RegistrationClass
 @RegEventHandler(Bus.FML)
-public class WeaponInfManager {
+public class InfManager {
 	
 	private static Map<EntityPlayer, InfWeapon> 
 		table_client = new HashMap(),
