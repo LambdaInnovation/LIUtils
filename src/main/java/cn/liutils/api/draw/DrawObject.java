@@ -8,6 +8,7 @@ import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import org.lwjgl.opengl.GL11;
 
@@ -33,6 +34,8 @@ public class DrawObject {
 	
 	protected Map<EventType, List<DrawHandler> > table = new HashMap();
 	protected Map<String, DrawHandler> nameTable = new HashMap();
+	
+	static final Random RNG = new Random();
 	
 	public DrawObject() {}
 	

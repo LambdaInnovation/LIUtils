@@ -392,6 +392,7 @@ public class RenderUtils {
     	GL11.glPushMatrix(); {
     		for(int i = 0; i < arr.length; ++i) {
     			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+    			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
     			t.startDrawingQuads();
     			t.setBrightness(15728880);
     			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
@@ -402,10 +403,11 @@ public class RenderUtils {
     				t.addVertexWithUV(v.xCoord, v.yCoord, v.zCoord, uvs[j][0], uvs[j][1]);
     			}
     			t.draw();
+    			
+    			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
     		}
     	} GL11.glPopMatrix();
     	GL11.glEnable(GL11.GL_TEXTURE_2D);
-    	GL11.glDisable(GL11.GL_BLEND);
     }
     
     //Implementations

@@ -70,6 +70,10 @@ public class GenericUtils {
 		return RNG.nextInt(to - fr) + fr;
 	}
 	
+	public static double randIntv(double fr, double to) {
+		return (to - fr) * RNG.nextDouble() + fr;
+	}
+	
 	/**
 	 * Return: how many not merged
 	 */
@@ -254,13 +258,13 @@ public class GenericUtils {
             Entity entity1 = (Entity)list.get(j);
 
             Boolean b = entity1.canBeCollidedWith();
-            if(!b)
-            	continue;
             for(Entity e : exclusion) {
-            	if(e == entity1)
+            	if(entity1.equals(e))
             		b = false;
             }
-            if (b && entity1.canBeCollidedWith())
+            if(!b) continue;
+            
+            if (entity1.canBeCollidedWith())
             {
                 float f = 0.3F;
                 AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
