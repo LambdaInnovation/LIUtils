@@ -103,14 +103,14 @@ public abstract class EntityX extends Entity {
 		super.setPosition(x, y, z);
 	}
 	
-    public void setHeading(double dx, double dy, double dz, float vel) {
+    public void setHeading(double dx, double dy, double dz, double vel) {
         float f2 = MathHelper.sqrt_double(dx * dx + dy * dy + dz * dz);
-        dx /= (double)f2;
-        dy /= (double)f2;
-        dz /= (double)f2;
-        dx *= (double)vel;
-        dy *= (double)vel;
-        dz *= (double)vel;
+        dx /= f2;
+        dy /= f2;
+        dz /= f2;
+        dx *= vel;
+        dy *= vel;
+        dz *= vel;
         this.motionX = dx;
         this.motionY = dy;
         this.motionZ = dz;

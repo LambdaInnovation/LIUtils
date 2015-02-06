@@ -52,6 +52,9 @@ public final class InfWeapon {
 		if(!active())
 			return;
 		
+		//Update cur state
+		curState.update(this);
+		
 		//Update actions
 		Iterator<ActionNode> iter = activeActions.values().iterator();
 		while(iter.hasNext()) {
@@ -64,6 +67,7 @@ public final class InfWeapon {
 			}
 		}
 		
+		//Update render
 		if(player.worldObj.isRemote) {
 			updateRender();
 		}
@@ -82,6 +86,10 @@ public final class InfWeapon {
 				iter.remove();
 			}
 		}
+	}
+	
+	public WeaponState getCurState() {
+		return curState;
 	}
 	
 	public void transitState(WeaponState state) {
@@ -167,6 +175,7 @@ public final class InfWeapon {
 			if(curState != null) {
 				curState.enterState(this);
 			}
+			weapon.onActivated(this);
 		} else {
 			curState = null;
 		}

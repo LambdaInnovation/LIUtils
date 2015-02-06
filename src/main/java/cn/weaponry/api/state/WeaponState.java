@@ -16,8 +16,13 @@ public abstract class WeaponState {
 	
 	public abstract void keyChanged(InfWeapon info, int keyid, boolean down);
 	public abstract void keyTick(InfWeapon info, int keyid);
+	public abstract void update(InfWeapon info);	
 	
 	public void enterState(InfWeapon info) {}
 	public void leaveState(InfWeapon info) {}
+	
+	public boolean doesCancelSwing(InfWeapon info) {
+		return true;
+	}
 
 }
