@@ -92,13 +92,34 @@ public final class InfWeapon {
 		return curState;
 	}
 	
-	public void transitState(WeaponState state) {
-		curState.leaveState(this);
-		curState = state;
-		if(curState != null) {
+	public void transitState(String name) {
+//		if(!active())
+//			return;
+		System.out.println("Transit to: " + name);
+		WeaponBase wb = (WeaponBase) lastStack.getItem();
+		if(curState != null)
+			curState.leaveState(this);
+		curState = wb.getState(name);
+		if(curState != null)
 			curState.enterState(this);
-		}
+		saveTick("_stateTick");
 	}
+	
+	//---Ticker
+	
+	public void saveTick(String channel) {
+		data.setInteger(channel, ticksExisted);
+	}
+	
+	public int getTickChange(String channel) {
+		return ticksExisted - data.getInteger(channel);
+	}
+	
+	public int getStateAliveTick() {
+		return getTickChange("_stateTick");
+	}
+	
+	//---
 	
 	public boolean addAction(Action act, int life) {
 		if(!active()) {
@@ -171,10 +192,7 @@ public final class InfWeapon {
 		
 		if(lastStack != null && lastStack.getItem() instanceof WeaponBase) {
 			WeaponBase weapon = (WeaponBase) lastStack.getItem();
-			curState = weapon.getInitialState();
-			if(curState != null) {
-				curState.enterState(this);
-			}
+			transitState(weapon.getInitStateName());
 			weapon.onActivated(this);
 		} else {
 			curState = null;

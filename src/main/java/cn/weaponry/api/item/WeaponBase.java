@@ -3,6 +3,9 @@
  */
 package cn.weaponry.api.item;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
@@ -26,18 +29,32 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @RegistrationClass
 public abstract class WeaponBase extends ItemSword {
+	
+	private Map<String, WeaponState> states = new HashMap();
 
 	public WeaponBase() {
 		super(ToolMaterial.EMERALD);
 	}
+
+	public void addState(String id, WeaponState state) {
+		states.put(id, state);
+	}
 	
-	public abstract WeaponState getInitialState();
+	public final WeaponState getInitState() {
+		return states.get(getInitStateName());
+	}
+	
+	public abstract String getInitStateName();
 	
 	/**
 	 * Called when player has switched current item to this weapon.
 	 * @param inf weapon information
 	 */
 	public void onActivated(InfWeapon inf) {}
+	
+	public WeaponState getState(String name) {
+		return states.get(name);
+	}
 	
 	//---Internal process
 	@Override

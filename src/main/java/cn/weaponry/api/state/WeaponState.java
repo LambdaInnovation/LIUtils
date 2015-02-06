@@ -14,9 +14,9 @@ public abstract class WeaponState {
 
 	public WeaponState() {}
 	
-	public abstract void keyChanged(InfWeapon info, int keyid, boolean down);
-	public abstract void keyTick(InfWeapon info, int keyid);
-	public abstract void update(InfWeapon info);	
+	public void keyChanged(InfWeapon info, int keyid, boolean down) {}
+	public void keyTick(InfWeapon info, int keyid) {}
+	public void update(InfWeapon info) {}
 	
 	public void enterState(InfWeapon info) {}
 	public void leaveState(InfWeapon info) {}

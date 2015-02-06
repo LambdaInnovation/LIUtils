@@ -8,6 +8,7 @@ import java.lang.reflect.Constructor;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import cn.weaponry.api.action.Action;
+import cn.weaponry.api.entity.EntityBullet;
 import cn.weaponry.api.info.InfWeapon;
 
 /**
@@ -16,7 +17,7 @@ import cn.weaponry.api.info.InfWeapon;
  */
 public abstract class ActionShoot extends Action {
 	
-	Class<? extends Entity> entClass;
+	Class<? extends Entity> entClass = EntityBullet.class;
 	
 	public float dmg;
 
@@ -26,7 +27,8 @@ public abstract class ActionShoot extends Action {
 	
 	public void onActionBegin(InfWeapon inf, int life) {
 		if(consumeAmmo(inf)) {
-			inf.player.worldObj.spawnEntityInWorld(spawnEntity(inf));
+			if(!inf.player.worldObj.isRemote)
+				inf.player.worldObj.spawnEntityInWorld(spawnEntity(inf));
 		}
 	}
 	
