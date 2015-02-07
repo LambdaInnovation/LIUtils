@@ -17,6 +17,7 @@ public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 	protected static Random RNG = new Random();
 	protected double yOffset = 0F;
 	protected boolean reverse = true;
+	protected double scale = 0.0625F;
 	
 	public RenderTileEntityModel(ITileEntityModel mo, ResourceLocation tex) {
 		model = mo;
@@ -39,9 +40,9 @@ public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 		GL11.glPushMatrix(); {
 			GL11.glTranslated(d0 + .5, d1 + yOffset + (reverse ? 0 : 1.5), d2 + .5);
 			if(reverse) {
-				GL11.glScalef(-0.0625F, -0.0625F, 0.0625F);
+				GL11.glScaled(-scale, -scale, scale);
 			} else {
-				GL11.glScalef(0.0625F, 0.0625F, 0.0625F);
+				GL11.glScaled(scale, scale, scale);
 			}
 			RenderUtils.loadTexture(texture);
 			model.render(tileentity, 0F, 0F);
