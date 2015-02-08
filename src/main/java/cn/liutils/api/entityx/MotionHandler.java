@@ -3,6 +3,7 @@
  */
 package cn.liutils.api.entityx;
 
+import cn.liutils.util.GenericUtils;
 import net.minecraft.util.Vec3;
 
 /**
@@ -21,7 +22,7 @@ public abstract class MotionHandler<T extends EntityX> implements Comparable<Mot
 	/**
 	 * Called when the MotionHandler is constructed and added into world.
 	 */
-	public abstract void onCreated();
+	public void onCreated() {}
 	public abstract void onUpdate();
 	/**
 	 * Get the identifier of this MotionHandler. Within an entity,
