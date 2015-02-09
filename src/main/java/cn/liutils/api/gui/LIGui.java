@@ -271,7 +271,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		this.mouseY = my;
 	}
 	
-	private WidgetNode getTopNode(double x, double y) {
+	public WidgetNode getTopNode(double x, double y) {
 		return gtnTraverse(x, y, null, this);
 	}
 	

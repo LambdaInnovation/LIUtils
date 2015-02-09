@@ -23,8 +23,8 @@ public class TextUtils {
 		FONT_YAHEI_64;
 	
 	public static void init() {
-		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
-		FONT_YAHEI_64 = new TrueTypeFont(new Font("微软雅黑", Font.PLAIN, 32), true);
+		FONT_CONSOLAS_64 = new TrueTypeFont(new Font("Microsoft YaHei", Font.PLAIN, 32), true);
+		FONT_YAHEI_64 = new TrueTypeFont(new Font("Microsoft YaHei", Font.PLAIN, 32), true);
 	}
 	
 	public static void drawText(TrueTypeFont font, String text, double x, double y, float size) {
@@ -42,7 +42,7 @@ public class TextUtils {
 	}
 	
 	public static float getWidth(TrueTypeFont font, String str, float size) {
-		return font.getWidth(str) * size / font.getLineHeight();
+		return font.getWidth(str) * size / font.getHeight(str);
 	}
 	
 	public static float getHeight(TrueTypeFont font, String str, float size) {
