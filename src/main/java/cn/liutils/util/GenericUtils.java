@@ -1,5 +1,6 @@
 package cn.liutils.util;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
@@ -25,6 +26,7 @@ import net.minecraft.world.World;
 
 import org.lwjgl.Sys;
 
+import scala.Char;
 import cn.liutils.template.selector.EntitySelectorLiving;
 import cn.liutils.template.selector.EntitySelectorPlayer;
 import cn.liutils.util.space.BlockPos;
@@ -57,6 +59,52 @@ public class GenericUtils {
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
 		}
+	}
+	
+	final static Set<Character> exclChars  = new HashSet();
+	static {
+		exclChars.add(' ');
+		exclChars.add(',');
+		exclChars.add('.');
+		exclChars.add(';');
+		exclChars.add('-');
+		exclChars.add('。');
+		exclChars.add('；');
+		exclChars.add('，');
+		exclChars.add('、');
+		exclChars.add('—');
+	}
+	
+	/**
+	 * split the string into multiple lines, each line has no more char than MAXCHARS.
+	 * It should be guaranteed that any word within the paragraph is no longer than MAXCHARS.
+	 */
+	public static List<String> chopString(String str, int MAXCHARS) {
+		List<String> ret = new ArrayList();
+		String[] chop = str.split(" ");
+		String cur = "";
+		for(int i = 0; i < chop.length; ++i) {
+			if(chop[i].length() > MAXCHARS) {
+				ret.addAll(rawChop(str, MAXCHARS));
+			} else if(cur.length() + chop[i].length() <= MAXCHARS) {
+				cur += chop[i] + " ";
+			} else {
+				ret.add(cur);
+				cur = chop[i] + " ";
+			}
+		}
+		if(cur != "") ret.add(cur);
+		return ret;
+	}
+	
+	public static List<String> rawChop(String str, int MAXCHARS) {
+		List<String> ret = new ArrayList<String>();
+		int cur = 0;
+		while(cur < str.length()) {
+			ret.add(str.substring(cur, Math.min(cur + MAXCHARS, str.length())));
+			cur += MAXCHARS;
+		}
+		return ret;
 	}
 	
 	public static MovingObjectPosition tracePlayer(EntityPlayer player, double dist) {

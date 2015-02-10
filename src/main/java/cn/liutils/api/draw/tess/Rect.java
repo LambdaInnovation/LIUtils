@@ -61,10 +61,11 @@ public class Rect extends TessBase {
 		GL11.glTranslated(tx, ty, tz); //built in offset, usually in order to move it to center
 		t.startDrawingQuads(); {
 			obj.post(EventType.IN_TESS);
-			t.addVertexWithUV(0, 0, 	 0, 	map.u0, 	   map.getMaxV());
+			t.setNormal(1, 0, 0);
+			t.addVertexWithUV(0, 0, 	 0, 	map.getMinU(), map.getMaxV());
 			t.addVertexWithUV(0, 0,  	 width, map.getMaxU(), map.getMaxV());
-			t.addVertexWithUV(0, height, width, map.getMaxU(), map.v0);
-			t.addVertexWithUV(0, height, 0, 	map.u0, 	   map.v0);
+			t.addVertexWithUV(0, height, width, map.getMaxU(), map.getMinV());
+			t.addVertexWithUV(0, height, 0, 	map.getMinU(), map.getMinV());
 		} t.draw();
 	}
 
