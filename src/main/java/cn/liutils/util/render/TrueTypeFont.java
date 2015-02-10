@@ -250,19 +250,18 @@ public class TrueTypeFont {
     }
  
     public int getWidth(String whatchars) {
-        int totalwidth = 0;
-        IntObject intObject = null;
-        int currentChar = 0;
-        for (int i = 0; i < whatchars.length(); i++) {
-            currentChar = whatchars.charAt(i);
-            if (currentChar < 256) {
-                intObject = charArray[currentChar];
+    	char charCurrent;
+    	IntObject intObject = null;
+    	int totalwidth = 0;
+    	for (int l = 0; l < whatchars.length(); l++) {
+            charCurrent = whatchars.charAt(l);
+            if (charCurrent == '\n') break;
+            if (charCurrent < 256) {
+                intObject = charArray[charCurrent];
             } else {
-                intObject = (IntObject)customChars.get( new Character( (char) currentChar ) );
+                intObject = (IntObject)customChars.get( new Character( (char) charCurrent ) );
             }
-             
-            if( intObject != null )
-                totalwidth += intObject.width;
+            totalwidth += intObject.width-correctL;
         }
         return totalwidth;
     }

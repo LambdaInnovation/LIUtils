@@ -205,5 +205,21 @@ public class Widget {
 	 * @param my widget-coordinate mouseY
 	 */
 	public void onMouseUp(double mx, double my) {}
+	
+	/**
+	 * Handle the key input. This will only be called when doesNeedFocus() returns true and this widget gains focus.
+	 */
+	public void handleKeyInput(char ch, int kid) {}
+	
+	/**
+	 * Return whether this widget can be focused and receive keyboard input or not.
+	 */
+	public boolean doesNeedFocus() {
+		return false;
+	}
+	
+	public final boolean isFocused() {
+		return getGui().focus == this.node;
+	}
 
 }

@@ -9,7 +9,10 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
+import net.minecraft.util.ResourceLocation;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.gui.Widget.AlignStyle;
@@ -40,6 +43,8 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 	
 	LIKeyProcess keyProcess;
 	LIKeyProcess.Trigger trigger;
+	
+	WidgetNode focus; //last input focus
 
 	public LIGui() {}
 	
@@ -165,10 +170,32 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		if(bid == 0) {
 			WidgetNode node = getTopNode(mx, my);
 			if(node != null) {
-				System.out.println("OnMouseDown " + node.widget);
+				if(node.widget.doesNeedFocus()) {
+					focus = node;
+				} else {
+					focus = null;
+				}
 				node.widget.onMouseDown((mx - node.x) / node.scale, (my - node.y) / node.scale);
+			} else {
+				focus = null;
 			}
 		}
+	}
+	
+	protected void keyTyped(char ch, int key) {
+		if(focus != null) {
+			focus.widget.handleKeyInput(ch, key);
+		}
+	}
+	
+	/**
+	 * Quick alias for playing sound
+	 * @param src
+	 * @param volume
+	 */
+	public void playSound(ResourceLocation src, float volume) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(
+			PositionedSoundRecord.func_147674_a(src, volume));
 	}
 	
 	//---Key Handling
