@@ -61,20 +61,6 @@ public class GenericUtils {
 		}
 	}
 	
-	final static Set<Character> exclChars  = new HashSet();
-	static {
-		exclChars.add(' ');
-		exclChars.add(',');
-		exclChars.add('.');
-		exclChars.add(';');
-		exclChars.add('-');
-		exclChars.add('。');
-		exclChars.add('；');
-		exclChars.add('，');
-		exclChars.add('、');
-		exclChars.add('—');
-	}
-	
 	/**
 	 * split the string into multiple lines, each line has no more char than MAXCHARS.
 	 * It should be guaranteed that any word within the paragraph is no longer than MAXCHARS.
