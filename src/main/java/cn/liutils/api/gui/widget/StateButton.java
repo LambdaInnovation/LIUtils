@@ -98,7 +98,6 @@ public abstract class StateButton extends Widget {
 	
 	@Override
 	public final void onMouseDown(double mx, double my) {
-		System.out.println("omd" + this);
 		if(state != ButtonState.INVALID) {
 			buttonPressed(mx, my);
 		}
