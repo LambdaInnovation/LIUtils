@@ -17,6 +17,7 @@ public class LIGuiContainer extends GuiContainer {
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {
 		this.drawDefaultBackground();
+		gui.resize(width, height);
 		gui.draw(var2, var3);
 	}
 
@@ -31,6 +32,5 @@ public class LIGuiContainer extends GuiContainer {
     	gui.mouseClickMove(mx, my, btn, time);
     }
     
-    public void onGuiClosed() {
-    }
+    public void onGuiClosed() {}
 }

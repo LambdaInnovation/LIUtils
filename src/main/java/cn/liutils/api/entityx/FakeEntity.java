@@ -23,6 +23,7 @@ public class FakeEntity extends EntityX {
 	public FakeEntity(Entity target) {
 		super(target.worldObj);
 		this.clearDaemonHandlers();
+		setPosition(target.posX, target.posY, target.posZ);
 		this.addDaemonHandler(new FollowEntity(this, target));
 	}
 	

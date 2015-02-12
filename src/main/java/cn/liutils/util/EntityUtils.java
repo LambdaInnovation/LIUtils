@@ -91,6 +91,10 @@ public class EntityUtils {
 		return ent;
 	}
 	
+	public static Entity getNearestEntityTo(Entity e, double rad, IEntitySelector sel, Entity ...exclusions) {
+		return getNearestEntityTo(e, getEntitiesAround(e.worldObj, e.posX, e.posY, e.posZ, rad, sel, exclusions));
+	}
+	
 	/**
 	 * Get all entities around space point(x, y, z) in radius [rad], with exclusion and filter.
 	 */

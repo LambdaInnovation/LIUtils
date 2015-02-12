@@ -131,7 +131,7 @@ public class ListVertical extends Widget {
 	@Override
 	public void addWidget(Widget child) {
 		perHeight = Math.max(perHeight, child.height * child.scale);
-		maxProgress = Math.max(0, getSubNodes().size() - getMaxShow());
+		maxProgress = Math.max(0, getSubNodes().size() - getMaxShow() + 1);
 		super.addWidget(child);
 		updateList();
 	}
