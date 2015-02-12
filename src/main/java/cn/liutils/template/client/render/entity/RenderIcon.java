@@ -124,7 +124,7 @@ public class RenderIcon extends Render {
 				if(icon != null) RenderUtils.loadTexture(icon);
 				
 				Tessellator t = Tessellator.instance;
-				this.func_77026_a(t);
+				this.func_77026_a(par1Entity, t);
 				
 			} GL11.glPopMatrix();
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
@@ -135,8 +135,10 @@ public class RenderIcon extends Render {
 	}
 	
 	protected void postTranslate(Entity ent) {}
+	
+	protected void firstTranslate(Entity ent) {}
 
-	private void func_77026_a(Tessellator tessllator) {
+	private void func_77026_a(Entity e, Tessellator tessllator) {
 		float f4 = 1.0F;
 		float f5 = 0.5F;
 		float f6 = 0.25F;
@@ -144,6 +146,7 @@ public class RenderIcon extends Render {
 		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
 		if(!hasLight) 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+		firstTranslate(e);
 		tessllator.startDrawingQuads();
 		tessllator.setColorRGBA_F(r, g, b, alpha);
 		if(!hasLight) 

@@ -3,7 +3,9 @@
  */
 package cn.liutils.api.entityx;
 
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
@@ -25,7 +27,7 @@ import cn.liutils.util.DebugUtils;
 public abstract class EntityX extends Entity {
 	
 	private MotionHandler curMotion;
-	private Queue<MotionHandler> daemonHandlers = new PriorityQueue<MotionHandler>();
+	private Map<String, MotionHandler> daemonHandlers = new HashMap();
 	
 	protected boolean updated = false;
 	public boolean handleClient = true;
@@ -58,7 +60,7 @@ public abstract class EntityX extends Entity {
 	}
 	
 	public boolean removeDaemonHandler(String ID) {
-		for(MotionHandler mh : daemonHandlers) {
+		for(MotionHandler mh : daemonHandlers.values()) {
 			if(mh.getID().equals(ID)) {
 				daemonHandlers.remove(mh);
 				return true;
@@ -76,8 +78,12 @@ public abstract class EntityX extends Entity {
 			throw new RuntimeException("ID Collision: trying to add [" + 
 				mh.getID() + "] into " + this);
 		}
-		daemonHandlers.add(mh);
+		daemonHandlers.put(mh.getID(), mh);
 		mh.onCreated();
+	}
+	
+	public MotionHandler getDaemonHandler(String id) {
+		return daemonHandlers.get(id);
 	}
 	
 	public void setCurMotion(MotionHandler mh) {
@@ -86,13 +92,7 @@ public abstract class EntityX extends Entity {
 	
 	public boolean hasMotionHandler(String str) {
 		//TODO: Naive algorithm, consider HashMap?
-		if(curMotion != null && curMotion.getID().equals(str))
-			return true;
-		for(MotionHandler mh : daemonHandlers) {
-			if(mh.getID().equals(str))
-				return true;
-		}
-		return false;
+		return daemonHandlers.containsKey(str);
 	}
 	
 	@Override
@@ -155,9 +155,9 @@ public abstract class EntityX extends Entity {
 				cb.invoke(curMotion);
 			}
 		}
-		Iterator<MotionHandler> iter = daemonHandlers.iterator();
+		Iterator<Map.Entry<String, MotionHandler>> iter = daemonHandlers.entrySet().iterator();
 		while(iter.hasNext()) {
-			MotionHandler mh = iter.next();
+			MotionHandler mh = iter.next().getValue();
 			if(!mh.alive) {
 				iter.remove();
 				continue;
