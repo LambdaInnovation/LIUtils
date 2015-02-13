@@ -32,6 +32,7 @@ public class FollowEntity<T extends EntityX> extends ApplyPos<T> {
 			this.alive = false;
 			return;
 		}
+		//System.out.println(offsetY);
 		this.setPos(target.posX + offsetX, target.posY + offsetY, target.posZ + offsetZ);
 		super.onUpdate();
 	}
