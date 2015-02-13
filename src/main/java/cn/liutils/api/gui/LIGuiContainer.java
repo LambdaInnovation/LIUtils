@@ -32,5 +32,7 @@ public class LIGuiContainer extends GuiContainer {
     	gui.mouseClickMove(mx, my, btn, time);
     }
     
-    public void onGuiClosed() {}
+    public void onGuiClosed() {
+    	gui.dispose();
+    }
 }

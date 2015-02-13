@@ -40,6 +40,7 @@ public class LIGuiScreen extends GuiScreen {
     }
     
     public void onGuiClosed() {
+    	gui.dispose();
     }
 	
     public LIGui getGui() {
