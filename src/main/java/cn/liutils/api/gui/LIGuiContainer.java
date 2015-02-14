@@ -3,6 +3,8 @@ package cn.liutils.api.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
+import org.lwjgl.opengl.GL11;
+
 public class LIGuiContainer extends GuiContainer {
 	
 	protected LIGui gui;
@@ -16,6 +18,8 @@ public class LIGuiContainer extends GuiContainer {
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		this.drawDefaultBackground();
 		gui.resize(width, height);
 		gui.draw(var2, var3);

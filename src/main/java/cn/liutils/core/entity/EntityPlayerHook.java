@@ -4,6 +4,7 @@
 package cn.liutils.core.entity;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.client.renderer.entity.Render;
@@ -11,7 +12,6 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
@@ -20,7 +20,6 @@ import cn.annoreg.mc.RegEntity;
 import cn.annoreg.mc.RegEventHandler;
 import cn.annoreg.mc.RegEventHandler.Bus;
 import cn.liutils.api.render.IPlayerRenderHook;
-import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -118,6 +117,17 @@ public class EntityPlayerHook extends Entity {
 			EntityPlayer player = event.player;
 			if(!player.worldObj.isRemote)
 				return;
+			//Check if instance is out of date
+			//TODO:Low efficiency
+			Iterator<EntityPlayer> iter = initTable.iterator();
+			while(iter.hasNext()) {
+				EntityPlayer p = iter.next();
+				if(p.equals(player) && !(p == player)) {
+					iter.remove();
+					break;
+				}
+			}
+			
 			if(!initTable.contains(player)) {
 				initTable.add(player);
 				player.worldObj.spawnEntityInWorld(new EntityPlayerHook(player, true));
