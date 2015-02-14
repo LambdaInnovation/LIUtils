@@ -47,7 +47,7 @@ public class RenderIcon extends Render {
 	
 	protected ResourceLocation icon;
 	private boolean renderBlend = false;
-	protected float alpha = 1.0F;
+	protected double alpha = 1.0F;
 	private float size = 0.5F;
 	protected boolean enableDepth = true;
 	protected boolean hasLight = false;
@@ -147,8 +147,8 @@ public class RenderIcon extends Render {
 		if(!hasLight) 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		firstTranslate(e);
+		GL11.glColor4d(r, g, b, alpha);
 		tessllator.startDrawingQuads();
-		tessllator.setColorRGBA_F(r, g, b, alpha);
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);
 		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 1);

@@ -3,11 +3,12 @@
  */
 package cn.liutils.api.entityx.motion;
 
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.api.entityx.EntityX;
 import cn.liutils.api.entityx.MotionHandler;
+import cn.liutils.util.GenericUtils;
 
 /**
  * @author WeathFolD
@@ -17,6 +18,7 @@ public class CollisionCheck extends MotionHandler {
 	
 	boolean resetVel = true;
 	public static final String ID = "collision";
+	IEntitySelector selector = null;
 
 	public CollisionCheck(EntityX ent) {
 		super(ent);
@@ -35,12 +37,18 @@ public class CollisionCheck extends MotionHandler {
 		return this;
 	}
 
+	public CollisionCheck setSelector(IEntitySelector sel) {
+		selector = sel;
+		return this;
+	}
+	
 	@Override
 	public void onUpdate() {
 		MovingObjectPosition res = 
-			entity.worldObj.rayTraceBlocks(
+			GenericUtils.rayTraceBlocksAndEntities(selector, entity.worldObj,
 				this.createVector(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), 
-				this.createVector(entity.posX, entity.posY, entity.posZ));
+				this.createVector(entity.posX, entity.posY, entity.posZ), 
+				entity);
 		if(res == null) return;
 		onCollided(res);
 	}

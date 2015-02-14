@@ -12,7 +12,7 @@ import cn.liutils.api.entityx.MotionHandler;
  */
 public class VelocityUpdate extends MotionHandler {
 	
-	double decrRate = 0.98; //Mutiplied to entity's motion each tick;
+	public double decrRate = 0.98; //Mutiplied to entity's motion each tick;
 	public static final String ID = "velupdate";
 	
 	public VelocityUpdate(EntityX ent, double decr) {
@@ -35,6 +35,11 @@ public class VelocityUpdate extends MotionHandler {
 		entity.motionX *= decrRate;
 		entity.motionX *= decrRate;
 		entity.motionX *= decrRate;
+	}
+	
+	public VelocityUpdate setDecr(double rate) {
+		decrRate = rate;
+		return this;
 	}
 	
 	public int getPriority() {

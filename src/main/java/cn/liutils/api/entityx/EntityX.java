@@ -60,13 +60,8 @@ public abstract class EntityX extends Entity {
 	}
 	
 	public boolean removeDaemonHandler(String ID) {
-		for(MotionHandler mh : daemonHandlers.values()) {
-			if(mh.getID().equals(ID)) {
-				daemonHandlers.remove(mh);
-				return true;
-			}
-		}
-		return false;
+		MotionHandler rem = daemonHandlers.remove(ID);
+		return rem != null;
 	}
 	
 	public void clearDaemonHandlers() {
@@ -93,14 +88,6 @@ public abstract class EntityX extends Entity {
 	public boolean hasMotionHandler(String str) {
 		//TODO: Naive algorithm, consider HashMap?
 		return daemonHandlers.containsKey(str);
-	}
-	
-	@Override
-	/**
-	 * In EntityX, use setPos(x, y, z) instead.
-	 */
-	public void setPosition(double x, double y, double z) {
-		super.setPosition(x, y, z);
 	}
 	
     public void setHeading(double dx, double dy, double dz, double vel) {
