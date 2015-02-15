@@ -6,21 +6,19 @@ package cn.liutils.api.gui.widget;
 import java.util.Arrays;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
+
+import org.lwjgl.input.Keyboard;
+
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.TextUtils;
-import cn.liutils.util.render.TrueTypeFont;
+import cn.liutils.util.render.LambdaFont;
 
 /**
  * @author WeathFolD
  */
 public class InputBox extends Widget {
-	
-	TrueTypeFont DEFAULT_FONT = TextUtils.FONT_YAHEI_32;
 	
 	final float fontSize;
 	final int maxLines;
@@ -30,7 +28,7 @@ public class InputBox extends Widget {
 	String[] contents;
 	int editLine = 0;
 
-	TrueTypeFont font = DEFAULT_FONT;
+	LambdaFont font = null;
 	int[] textColor = new int[] { 255, 255, 255, 255 };
 	
 	boolean echo = false;
@@ -63,7 +61,7 @@ public class InputBox extends Widget {
 		return this;
 	}
 	
-	public InputBox setFont(TrueTypeFont font) {
+	public InputBox setFont(LambdaFont font) {
 		this.font = font;
 		return this;
 	}
@@ -75,7 +73,7 @@ public class InputBox extends Widget {
 		RenderUtils.bindColor(textColor);
 		for(int i = 0; i < contents.length; ++i) {
 			String str = contents[i];
-			TextUtils.drawText(font, 
+			font.draw(
 				(focus && editLine == i && Minecraft.getSystemTime() % 1000 < 500) ? str + "|" : str, 0, y, fontSize);
 			y += lineHeight;
 		}

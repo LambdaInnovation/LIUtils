@@ -9,8 +9,8 @@ import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.TextUtils;
-import cn.liutils.util.render.TrueTypeFont;
+import cn.liutils.util.render.LambdaFont;
+import cn.liutils.util.render.LambdaFont.Align;
 
 /**
  * @author WeathFolD
@@ -26,7 +26,7 @@ public abstract class StateButton extends Widget {
 	private GUIRect rect;
 	protected double[][] maps;
 	
-	protected TrueTypeFont font;
+	protected LambdaFont font;
 	protected String text;
 	protected float textSize;
 	protected int[][] colors = {
@@ -42,7 +42,7 @@ public abstract class StateButton extends Widget {
 		rect = (GUIRect) drawer.getHandler("rect_2d");
 	}
 	
-	public void setFont(TrueTypeFont ttf) {
+	public void setFont(LambdaFont ttf) {
 		font = ttf;
 	}
 	
@@ -90,8 +90,8 @@ public abstract class StateButton extends Widget {
 				return;
 			}
 			RenderUtils.bindColor(colors[index]);
-			TextUtils.drawText(font, StatCollector.translateToLocal(text), 
-				width / 2, height / 2 - textSize / 2, textSize, TrueTypeFont.ALIGN_CENTER);
+			font.draw(StatCollector.translateToLocal(text), 
+				width / 2, height / 2 - textSize / 2, textSize, Align.CENTER);
 			RenderUtils.bindIdentity();
 		}
 	}

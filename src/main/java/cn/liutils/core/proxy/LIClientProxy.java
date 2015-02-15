@@ -15,7 +15,6 @@ import cn.liutils.template.client.render.block.RenderEmptyBlock;
 import cn.liutils.template.client.render.entity.RenderCrossedProjectile;
 import cn.liutils.template.entity.EntityBulletFX;
 import cn.liutils.template.entity.EntityTrailFX;
-import cn.liutils.util.render.TextUtils;
 import cpw.mods.fml.client.registry.RenderingRegistry;
 
 /**
@@ -50,7 +49,6 @@ public class LIClientProxy extends LICommonProxy {
 	public void preInit() {
 		super.preInit();
 		MinecraftForge.EVENT_BUS.register(new LIClientEvents());
-		TextUtils.init();
 	}
 	
 	@Override

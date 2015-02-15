@@ -18,7 +18,7 @@ import cn.liutils.api.draw.tess.RectMapping;
  */
 public class HudUtils {
 
-	private static double SCALE_X = 1.0F, SCALE_Y = 1.0F;
+	public static double SCALE_X = 1.0F, SCALE_Y = 1.0F;
 	public static double zLevel = -90D;
 	
 	/**
