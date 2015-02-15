@@ -27,9 +27,10 @@ public class LambdaFont {
 	
 	static final int PER_LINE = 16;
 	final ResourceLocation png;
-	final Map<Character, Integer> table = new HashMap();
-	int fontSize, texWidth, texHeight;
-	double narrowStep = 0.5, wideStep = 1.0;
+	final Map<Character, CharExtent> table = new HashMap();
+	int fontSize, spacing, texWidth, texHeight;
+	
+	double ratio;
 
 	public LambdaFont(ResourceLocation _png, String file) {
 		png = _png;
@@ -40,11 +41,6 @@ public class LambdaFont {
 	private int udiv(int a, int b) {
 		int ret = a / b;
 		return ret * b == a ? ret : ret + 1;
-	}
-	
-	public void setStep(double narrow, double wide) {
-		narrowStep = narrow;
-		wideStep = wide;
 	}
 	
 	private void init(InputStream stm) {
@@ -60,12 +56,13 @@ public class LambdaFont {
 						value = ind == str.length() - 1 ? "" : str.substring(ind + 1, str.length());
 					
 					//Start proc
-					int val = Integer.valueOf(value);
 					if(key.charAt(0) == '_') {
-						props.put(key, val);
+						props.put(key, Integer.valueOf(value));
 					} else {
 						if(key.length() == 1) {
-							table.put(Character.valueOf(key.charAt(0)), val);
+							String[] toparse = value.split(",");
+							table.put(key.charAt(0), 
+								new CharExtent(Integer.valueOf(toparse[0]), Double.valueOf(toparse[1])));
 						}
 					}
 				}
@@ -75,14 +72,16 @@ public class LambdaFont {
 		}
 		
 		fontSize = props.get("_size");
+		spacing = props.get("_spacing");
 		int csSize = props.get("_charset_size");
 		
-		for(Map.Entry<Character, Integer> entry : table.entrySet()) {
-			System.out.println(entry.getKey() + " -> " + entry.getValue());
-		}
-		
 		texWidth = fontSize * PER_LINE;
-		texHeight = fontSize * udiv(csSize, PER_LINE);
+		texHeight = (spacing + fontSize) * udiv(csSize, PER_LINE);
+		ratio = (double)(spacing + fontSize) / fontSize;
+		
+		for(Map.Entry<Character, CharExtent> ent : table.entrySet()) {
+			System.out.println(ent.getKey() + " -> " + ent.getValue().id);
+		}
 	}
 	
 	public void draw(String str, double x, double y, double size) {
@@ -100,7 +99,7 @@ public class LambdaFont {
 			String[] ss = str.split("\n");
 			for(int i = 0; i < ss.length; ++i) {
 				GL11.glPushMatrix(); {
-					double dy = i * fontSize;
+					double dy = i * (fontSize + spacing);
 					GL11.glTranslated(0, dy, 0);
 					drawSingleLine(ss[i], align);
 				} GL11.glPopMatrix();
@@ -116,13 +115,13 @@ public class LambdaFont {
 		for(String s : strs) {
 			ret = Math.max(ret, widthSingleLine(s));
 		}
-		return ret;
+		return ret * size;
 	}
 	
 	private double widthSingleLine(String str) {
 		double ret = 0.0;
 		for(int i = 0; i < str.length(); ++i) {
-			ret += getStep(str.codePointAt(i));
+			ret += getExtent(str.charAt(i)).getStep();
 		}
 		return ret;
 	}
@@ -131,37 +130,49 @@ public class LambdaFont {
 		double x0 = 0, y0 = 0;
 		switch(align) {
 		case CENTER:
-			y0 = 0;
 			x0 = -widthSingleLine(line) / 2;
 			break;
 		case LEFT:
-			y0 = 0;
 			x0 = 0;
 			break;
 		case RIGHT:
-			y0 = 0;
 			x0 = -widthSingleLine(line);
 			break;
 		default:
 			break;
 		}
 		HudUtils.setTextureResolution(texWidth, texHeight);
+		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		for(int i = 0; i < line.length(); ++i) {
-			int ind = getMapping(line.charAt(i));
+			CharExtent ext = getExtent(line.charAt(i));
+			int ind = ext.id;
 			//System.out.println(ind + " <- " + line.charAt(i));
 			double u = fontSize * (ind % PER_LINE),
-					v = fontSize * (ind / PER_LINE);
-			HudUtils.drawRect(x0, y0, u, v, 1, 1, fontSize, fontSize);
-			x0 += getStep(line.codePointAt(i));
+					v = (fontSize + spacing) * (ind / PER_LINE);
+			HudUtils.drawRect(x0, y0, u, v, 1, ratio, fontSize, fontSize + spacing);
+			x0 += ext.getStep();
+		}
+		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
+	private CharExtent getExtent(char ch) {
+		//here we assert that ' ' already have a mapping.
+		CharExtent ret = table.get(ch);
+		//System.out.println(ch + "->" + ret.id);
+		return ret == null ? table.get(' ') : ret;
+	}
+
+	private class CharExtent {
+		public final int id;
+		private final double step;
+		public CharExtent(int _id, double _step) {
+			id = _id;
+			step = _step;
+		}
+		
+		public double getStep() {
+			return step / fontSize;
 		}
 	}
 	
-	private double getStep(int cp) {
-		return Character.isIdeographic(cp) ? wideStep : narrowStep;
-	}
-	
-	private int getMapping(char ch) {
-		return table.containsKey(ch) ? table.get(ch) : 0;
-	}
-
 }
