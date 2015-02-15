@@ -6,6 +6,7 @@ Basic Properties
 =====
 "_size" (int): font size in pixels. This is the size of each drawing block square.
 "_charset_size"(int): How many characters this font contains. Used to derive texture resolution.
+"_spacing" (int): Additional spacing between lines. Used to prevent space collision. Pixels in Additional space should be rendered as well.
 
 .png file
 =====
@@ -24,8 +25,11 @@ Mapping: row&col pair of index i is: (i / 16, i % 16), its tex mapping(_size * r
 When key begins with '_', it is a font property. Otherwise, it's a font mapping.
 
 Font mapping:
-[Char]=i, where i is the Mapping index mentioned above.
+```
+[Char]=i,step
+```
+where i is the Mapping index mentioned above, and the step is the real x step of this character.
 
 Undefined characters
 =====
-For undefined characters, always automatically assign index to 0.
+For undefined characters, always automatically assign to index to 0, and use a step of the font size.
