@@ -18,7 +18,9 @@ Mapping: row&col pair of index i is: (i / 16, i % 16), its tex mapping(_size * r
 .lf file
 =====
 .lf file uses  properties-like representation, like:
-```[key]=[value]```
+```
+[key]=[value]
+```
 When key begins with '_', it is a font property. Otherwise, it's a font mapping.
 
 Font mapping:
