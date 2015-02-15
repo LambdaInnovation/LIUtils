@@ -6,14 +6,18 @@ package cn.liutils.api.gui;
 import java.util.EnumSet;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
 import cn.liutils.api.draw.prop.AssignTexture;
 import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.gui.LIGui.WidgetNode;
+import cn.liutils.util.HudUtils;
+import cn.liutils.util.RenderUtils;
 
 
 /**
@@ -220,6 +224,21 @@ public class Widget {
 	
 	public final boolean isFocused() {
 		return getGui().focus == this.node;
+	}
+	
+	//Sandbox utils
+	/**
+	 * Should be called at this widget's draw() function.
+	 */
+	protected void drawBlackout() {
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glPushMatrix();
+		GL11.glColor4d(0, 0, 0, 0.6);
+		GL11.glTranslated(-node.x, -node.y, 0);
+		HudUtils.drawModalRect(0, 0, gui.width, gui.height);
+		GL11.glPopMatrix();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		RenderUtils.bindIdentity();
 	}
 
 }

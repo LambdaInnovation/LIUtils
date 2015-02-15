@@ -3,7 +3,11 @@
  */
 package cn.liutils.api.entityx.motion;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.api.entityx.EntityX;
@@ -19,9 +23,11 @@ public class CollisionCheck extends MotionHandler {
 	boolean resetVel = true;
 	public static final String ID = "collision";
 	IEntitySelector selector = null;
+	List<Entity> excls = new ArrayList();
 
 	public CollisionCheck(EntityX ent) {
 		super(ent);
+		excls.add(entity);
 	}
 	
 	@Override
@@ -42,13 +48,20 @@ public class CollisionCheck extends MotionHandler {
 		return this;
 	}
 	
+	public CollisionCheck addExclusion(Entity ...ents) {
+		for(Entity e : ents) {
+			excls.add(e);
+		}
+		return this;
+	}
+	
 	@Override
 	public void onUpdate() {
 		MovingObjectPosition res = 
 			GenericUtils.rayTraceBlocksAndEntities(selector, entity.worldObj,
 				this.createVector(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), 
 				this.createVector(entity.posX, entity.posY, entity.posZ), 
-				entity);
+				excls.toArray(new Entity[excls.size()]));
 		if(res == null) return;
 		onCollided(res);
 	}
