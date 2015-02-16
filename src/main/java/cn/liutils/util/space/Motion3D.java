@@ -133,6 +133,7 @@ public class Motion3D {
 			motionZ = entity.motionZ;
 			setMotionOffset(offset);
 		}
+		this.normalize();
 	}
 	
 	public void update(Entity entity, boolean dirFlag) {

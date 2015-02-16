@@ -20,8 +20,8 @@ public class LIGuiScreen extends GuiScreen {
 		gui = new LIGui();
 	}
 	
-    public void drawScreen(int mx, int my, float w)
-    {
+	@Override
+    public void drawScreen(int mx, int my, float w) {
     	gui.resize(width, height);
     	this.drawDefaultBackground();
     	GL11.glPushMatrix(); {
@@ -30,17 +30,25 @@ public class LIGuiScreen extends GuiScreen {
     	} GL11.glPopMatrix();
     }
     
+    @Override
     protected void mouseClicked(int mx, int my, int btn) {
     	gui.mouseClicked(mx, my, btn);
-    	
     }
     
+    @Override
     protected void mouseClickMove(int mx, int my, int btn, long time) {
     	gui.mouseClickMove(mx, my, btn, time);
     }
     
+    @Override
     public void onGuiClosed() {
     	gui.dispose();
+    }
+    
+    @Override
+    protected void keyTyped(char par1, int par2) {
+    	super.keyTyped(par1, par2);
+    	gui.keyTyped(par1, par2);
     }
 	
     public LIGui getGui() {

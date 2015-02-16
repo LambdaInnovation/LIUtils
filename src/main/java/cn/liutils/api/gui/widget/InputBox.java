@@ -41,6 +41,14 @@ public class InputBox extends Widget {
 		cpl = _charPerLine;
 		lineHeight = _lineHeight;
 		contents = new String[maxLines];
+		for(int i = 0; i < contents.length; ++i) {
+			contents[i] = "";
+		}
+	}
+	
+	@Override
+	public boolean doesNeedFocus() {
+		return true;
 	}
 	
 	public InputBox setTextColor(int r, int g, int b, int a) {
@@ -73,8 +81,15 @@ public class InputBox extends Widget {
 		RenderUtils.bindColor(textColor);
 		for(int i = 0; i < contents.length; ++i) {
 			String str = contents[i];
+			if(echo) {
+				StringBuilder sb = new StringBuilder();
+				for(int l = 0; l < str.length(); ++l) {
+					sb.append(echoChar);
+				}
+				str = sb.toString();
+			}
 			font.draw(
-				(focus && editLine == i && Minecraft.getSystemTime() % 1000 < 500) ? str + "|" : str, 0, y, fontSize);
+				(focus && editLine == i && (Minecraft.getSystemTime() % 1000 < 500)) ? str + "|" : str, 0, y, fontSize);
 			y += lineHeight;
 		}
 	}

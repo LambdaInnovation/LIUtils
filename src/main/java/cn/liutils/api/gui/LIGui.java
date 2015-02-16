@@ -177,7 +177,9 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		if(bid == 0) {
 			WidgetNode node = getTopNode(mx, my);
 			if(node != null) {
+				System.out.println(node);
 				if(node.widget.doesNeedFocus()) {
+					System.out.println("focused");
 					focus = node;
 				} else {
 					focus = null;
@@ -189,7 +191,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		}
 	}
 	
-	protected void keyTyped(char ch, int key) {
+	public void keyTyped(char ch, int key) {
 		if(focus != null) {
 			focus.widget.handleKeyInput(ch, key);
 		}
