@@ -109,6 +109,15 @@ public class LambdaFont {
 		HudUtils.SCALE_Y = psy;
 	}
 	
+	public void drawAdjusted(String str, double x, double y, double size, double cst) {
+		drawAdjusted(str, x, y, size, Align.LEFT, cst);
+	}
+	
+	public void drawAdjusted(String str, double x, double y, double size, Align align, double cst) {
+		size = adjustFontSize(this, str, size, cst);
+		draw(str, x, y, size, align);
+	}
+	
 	public double getWidth(String str, double size) {
 		double ret = 0.0;
 		String[] strs = str.split("\n");
@@ -116,6 +125,11 @@ public class LambdaFont {
 			ret = Math.max(ret, widthSingleLine(s));
 		}
 		return ret * size;
+	}
+	
+	public static double adjustFontSize(LambdaFont font, String str, double expSize, double lenCst) {
+		double len = font.getWidth(str, expSize);
+		return len > lenCst ? (expSize * (lenCst / len)) : expSize;
 	}
 	
 	private double widthSingleLine(String str) {
