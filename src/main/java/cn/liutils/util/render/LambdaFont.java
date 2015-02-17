@@ -6,9 +6,13 @@ package cn.liutils.util.render;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.vecmath.Vector2d;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -16,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
+import cn.liutils.util.misc.Pair;
 
 /**
  * Java+LIUtils implementation of LambdaFont.
@@ -56,7 +61,8 @@ public class LambdaFont {
 						value = ind == str.length() - 1 ? "" : str.substring(ind + 1, str.length());
 					
 					//Start proc
-					if(key.charAt(0) == '_') {
+					if(key.length() == 0) continue;
+					if(key.length() != 1 && key.charAt(0) == '_') {
 						props.put(key, Integer.valueOf(value));
 					} else {
 						if(key.length() == 1) {
@@ -114,6 +120,98 @@ public class LambdaFont {
 		draw(str, x, y, size, align);
 	}
 	
+	/**
+	 * It must be guaranteed that the string contains no line-break characters
+	 * @returns area of drawing
+	 */
+	public Vector2d drawLinebreak(String str, double x, double y, double size, double cst) {
+		GL11.glEnable(GL11.GL_BLEND);
+		RenderUtils.loadTexture(png);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		double psx = HudUtils.SCALE_X, psy = HudUtils.SCALE_Y;
+		GL11.glPushMatrix();
+			GL11.glTranslated(x, y, 0);
+			GL11.glScaled(size, size, 1);
+			
+			HudUtils.setTextureResolution(texWidth, texHeight);
+			
+			List<Pair<String, Boolean>> arr = dlbPreProc(str, size, cst);
+			
+			double spcstp = getExtent(' ').getStep();
+			
+			double y0 = 0;
+			double curLen = 0;
+			double maxLen = 0;
+			for(int i = 0; i < arr.size(); ++i) {
+				Pair<String, Boolean> pair = arr.get(i);
+				double len = widthSingleLine(pair.first);
+				if(size * len < cst && size * (curLen + len) > cst) {
+					--i;
+					maxLen = Math.max(curLen, maxLen);
+					curLen = 0;
+					y0 += 1.0;
+					continue;
+				}
+				
+				GL11.glPushMatrix(); {
+					GL11.glTranslated(curLen, y0, 0);
+					drawSingleLine(pair.first, Align.LEFT);
+				} GL11.glPopMatrix();
+				curLen += len + (pair.second ? spcstp : 0);
+				
+				if(size * len > cst) {
+					maxLen = Math.max(curLen, maxLen);
+					curLen = 0;
+					y0 += 1.0;
+				}
+			}
+			maxLen = Math.max(curLen, maxLen);
+		GL11.glPopMatrix();
+		HudUtils.SCALE_X = psx;
+		HudUtils.SCALE_Y = psy;
+		
+		return new Vector2d(maxLen * size, y0 * size + size + spacing * size / fontSize);
+	}
+	
+	/**
+	 * Chop up over-length words.
+	 */
+	private List<Pair<String, Boolean>> dlbPreProc(String str, double size, double cst) {
+		String[] raw = str.split(" ");
+		List<Pair<String, Boolean>> res = new ArrayList();
+		for(int i = 0; i < raw.length; ++i) {
+			String to = raw[i];
+			double len = widthSingleLine(to);
+			if(len * size < cst) {
+				res.add(new Pair(to, true));
+			} else {
+				double cur = 0.0;
+				int li = 0;
+				//System.out.println("st: " + to);
+				//System.out.println("---");
+				for(int j = 1; j < to.length(); ++j) {
+					double l = getExtent(to.charAt(j)).getStep() * size;
+					//System.out.println(cur);
+					if(cur + l > cst) {
+						cur = 0.0;
+						res.add(new Pair(to.substring(li, j), false));
+						li = j;
+						continue;
+					}
+					cur += l;
+				}
+				//System.out.println("---");
+				if(li != to.length() - 1) {
+					res.add(new Pair(to.substring(li, to.length()), true));
+				} else {
+					res.get(res.size() - 1).second = true;
+				}
+			}
+		}
+		
+		return res;
+	}
+	
 	public double getWidth(String str, double size) {
 		double ret = 0.0;
 		String[] strs = str.split("\n");
@@ -152,23 +250,25 @@ public class LambdaFont {
 			break;
 		}
 		HudUtils.setTextureResolution(texWidth, texHeight);
-		//GL11.glDisable(GL11.GL_TEXTURE_2D);
 		for(int i = 0; i < line.length(); ++i) {
 			CharExtent ext = getExtent(line.charAt(i));
 			int ind = ext.id;
-			//System.out.println(ind + " <- " + line.charAt(i));
 			double u = fontSize * (ind % PER_LINE),
 					v = (fontSize + spacing) * (ind / PER_LINE);
 			HudUtils.drawRect(x0, y0, u, v, 1, ratio, fontSize, fontSize + spacing);
 			x0 += ext.getStep();
 		}
-		//GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
+	private void drawSingleChar(char ch) {
+		CharExtent ext = getExtent(ch);
+		int ind = ext.id;
+		HudUtils.drawRect(0, 0, fontSize * (ind % PER_LINE), (fontSize + spacing) * (ind / PER_LINE), 1, ratio, fontSize, fontSize + spacing);
 	}
 	
 	private CharExtent getExtent(char ch) {
-		//here we assert that ' ' already have a mapping.
+		//here we assert that '?' already have a mapping.
 		CharExtent ret = table.get(ch);
-		//System.out.println(ch + "->" + ret.id);
 		return ret == null ? table.get(' ') : ret;
 	}
 
