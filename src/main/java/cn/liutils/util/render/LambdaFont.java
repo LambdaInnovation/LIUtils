@@ -269,7 +269,7 @@ public class LambdaFont {
 	private CharExtent getExtent(char ch) {
 		//here we assert that '?' already have a mapping.
 		CharExtent ret = table.get(ch);
-		return ret == null ? table.get(' ') : ret;
+		return ret == null ? table.get('?') : ret;
 	}
 
 	private class CharExtent {
