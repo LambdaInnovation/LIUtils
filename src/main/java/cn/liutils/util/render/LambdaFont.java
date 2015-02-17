@@ -78,10 +78,6 @@ public class LambdaFont {
 		texWidth = fontSize * PER_LINE;
 		texHeight = (spacing + fontSize) * udiv(csSize, PER_LINE);
 		ratio = (double)(spacing + fontSize) / fontSize;
-		
-		for(Map.Entry<Character, CharExtent> ent : table.entrySet()) {
-			System.out.println(ent.getKey() + " -> " + ent.getValue().id);
-		}
 	}
 	
 	public void draw(String str, double x, double y, double size) {

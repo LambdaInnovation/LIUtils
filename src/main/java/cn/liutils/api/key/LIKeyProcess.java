@@ -97,6 +97,8 @@ public class LIKeyProcess {
 			String res = Keyboard.getKeyName(code);
 			return res == null ? "" : res;
 		}
+		if(code == -100) { return "MR"; }
+		if(code == -99) { return "ML"; }
 		return "M" + (code + 100);
 	}
 	
