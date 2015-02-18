@@ -177,9 +177,9 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		if(bid == 0) {
 			WidgetNode node = getTopNode(mx, my);
 			if(node != null) {
-				System.out.println(node);
+				//System.out.println(node);
 				if(node.widget.doesNeedFocus()) {
-					System.out.println("focused");
+					//System.out.println("focused");
 					focus = node;
 				} else {
 					focus = null;

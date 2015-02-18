@@ -62,11 +62,12 @@ public class DragBar extends Widget {
 			double h, double sh) {
 		super(x, y, w, h);
 		barHeight = sh;
+		bar = new Bar();
 	}
 	
 	@Override
 	public void onAdded() {
-		addWidget(bar = new Bar());
+		addWidget(bar);
 	}
 	
 	public void setProgress(double d) {
@@ -85,6 +86,12 @@ public class DragBar extends Widget {
 	
 	public void addSetTexture(ResourceLocation tex) {
 		bar.addSetTexture(tex);
+	}
+	
+	@Override
+	public void initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
+		setTexMapping(u, v, tw, th);
+		addSetTexture(tex);
 	}
 	
 	public Widget setTexture(ResourceLocation tex) {
