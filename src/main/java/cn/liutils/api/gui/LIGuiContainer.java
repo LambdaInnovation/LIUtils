@@ -23,6 +23,7 @@ public class LIGuiContainer extends GuiContainer {
 		gui.draw(var2, var3);
 	}
 	
+	@Override
     public void drawScreen(int a, int b, float c) {
     	if(isSlotActive()) {
     		super.drawScreen(a, b, c);
@@ -38,19 +39,28 @@ public class LIGuiContainer extends GuiContainer {
     	gui.mouseClicked(par1, par2, par3);
     }
 	
+	@Override
     protected void mouseClickMove(int mx, int my, int btn, long time) {
     	if(isSlotActive()) super.mouseClickMove(mx, my, btn, time);
     	gui.mouseClickMove(mx, my, btn, time);
     }
     
+    @Override
     public void onGuiClosed() {
     	gui.dispose();
     }
     
+    @Override
     protected void mouseMovedOrUp(int a, int b, int c) {
     	if(isSlotActive()) {
     		super.mouseMovedOrUp(a, b, c);
     	}
+    }
+    
+    @Override
+    public void keyTyped(char ch, int key) {
+    	gui.keyTyped(ch, key);
+    	super.keyTyped(ch, key);
     }
     
     public boolean isSlotActive() {

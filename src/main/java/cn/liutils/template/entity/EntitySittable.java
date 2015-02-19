@@ -70,6 +70,10 @@ public class EntitySittable extends Entity {
 
 	@Override
 	public void onUpdate() {
+		if(mountedPlayer != null && mountedPlayer.isDead) {
+			mountedPlayer = null;
+		}
+		
 		if (!worldObj.isRemote) {
 			TileEntity te = worldObj.getTileEntity(bx, by, bz);
 			if (te == null || !(te instanceof ISittable)) {

@@ -96,6 +96,7 @@ public class InputBox extends Widget {
 	
 	@Override
 	public void handleKeyInput(char par1, int par2) {
+		System.out.println("hki " + this);
 		if (par2 == Keyboard.KEY_UP) {
 			this.editLine--;
 			if(editLine < 0) editLine = 0;
