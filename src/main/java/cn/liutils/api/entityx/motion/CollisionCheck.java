@@ -12,6 +12,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.api.entityx.EntityX;
 import cn.liutils.api.entityx.MotionHandler;
+import cn.liutils.util.DebugUtils;
 import cn.liutils.util.GenericUtils;
 
 /**

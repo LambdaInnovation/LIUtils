@@ -2,6 +2,8 @@ package cn.liutils.template.client.render.item;
 
 import java.util.Random;
 
+import javax.vecmath.Vector2d;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.client.renderer.Tessellator;
@@ -14,7 +16,6 @@ import net.minecraft.util.Vec3;
 import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector2f;
 
 import cn.liutils.api.render.model.IItemModel;
 import cn.liutils.util.RenderUtils;
@@ -79,7 +80,7 @@ public class RenderModelItem implements IItemRenderer {
 	/**
 	 * Inventory Offset
 	 */
-	public Vector2f invOffset = new Vector2f();
+	public Vector2d invOffset = new Vector2d();
 	
 	/**
 	 * Inventory Rotation
@@ -156,12 +157,12 @@ public class RenderModelItem implements IItemRenderer {
 		return this;
 	}
 	
-	public RenderModelItem setOffset(float offsetX, float offsetY, float offsetZ) {
+	public RenderModelItem setOffset(double offsetX, double offsetY, double offsetZ) {
 		initVec(stdOffset, offsetX, offsetY, offsetZ);
 		return this;
 	}
 	
-	public RenderModelItem setInvOffset(float offsetX, float offsetY) {
+	public RenderModelItem setInvOffset(double offsetX, double offsetY) {
 		this.invOffset.set(offsetX, offsetY);
 		return this;
 	}
@@ -240,7 +241,7 @@ public class RenderModelItem implements IItemRenderer {
 			
 			RenderUtils.loadTexture(texturePath);
 			
-			GL11.glTranslatef(8.0F + invOffset.x, 8.0F + invOffset.y, 0.0F);
+			GL11.glTranslated(8.0F + invOffset.x, 8.0F + invOffset.y, 0.0F);
 			GL11.glScaled(16F * invScale, 16F * invScale, 16F * invScale);
 			float rotation = 145F;
 			if(inventorySpin) rotation = Minecraft.getSystemTime() / 100F;
@@ -286,7 +287,7 @@ public class RenderModelItem implements IItemRenderer {
 		renderAtStdPosition(0.0F);
 	}
 	
-	protected final void renderAtStdPosition(float i) {
+	protected void renderAtStdPosition(float i) {
 		GL11.glScaled(scale, scale, scale);
 		GL11.glDisable(GL11.GL_CULL_FACE);
 		this.doTransformation(stdOffset);

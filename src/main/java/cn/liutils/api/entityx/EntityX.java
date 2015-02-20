@@ -86,7 +86,6 @@ public abstract class EntityX extends Entity {
 	}
 	
 	public boolean hasMotionHandler(String str) {
-		//TODO: Naive algorithm, consider HashMap?
 		return daemonHandlers.containsKey(str);
 	}
 	
@@ -143,14 +142,16 @@ public abstract class EntityX extends Entity {
 			}
 		}
 		Iterator<Map.Entry<String, MotionHandler>> iter = daemonHandlers.entrySet().iterator();
-		while(iter.hasNext()) {
-			MotionHandler mh = iter.next().getValue();
-			if(!mh.alive) {
-				iter.remove();
-				continue;
-			}
-			if(mh != exclusion) {
-				cb.invoke(mh);
+		synchronized(this) {
+			while(iter.hasNext()) {
+				MotionHandler mh = iter.next().getValue();
+				if(!mh.alive) {
+					iter.remove();
+					continue;
+				}
+				if(mh != exclusion) {
+					cb.invoke(mh);
+				}
 			}
 		}
 	}

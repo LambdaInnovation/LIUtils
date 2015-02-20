@@ -292,28 +292,27 @@ public class GenericUtils {
         {
             Entity entity1 = (Entity)list.get(j);
 
-            Boolean b = entity1.canBeCollidedWith();
+            if(!entity1.canBeCollidedWith())
+            	continue;
+            
+            boolean b = true;
             for(Entity e : exclusion) {
             	if(entity1.equals(e))
             		b = false;
             }
             if(!b) continue;
             
-            if (entity1.canBeCollidedWith())
-            {
-                float f = 0.3F;
-                AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
-                MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec1, vec2);
+            float f = 0.3F;
+            AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
+            MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec1, vec2);
 
-                if (movingobjectposition1 != null)
+            if (movingobjectposition1 != null) {
+                double d1 = vec1.distanceTo(movingobjectposition1.hitVec);
+
+                if (d1 < d0 || d0 == 0.0D)
                 {
-                    double d1 = vec1.distanceTo(movingobjectposition1.hitVec);
-
-                    if (d1 < d0 || d0 == 0.0D)
-                    {
-                        entity = entity1;
-                        d0 = d1;
-                    }
+                    entity = entity1;
+                    d0 = d1;
                 }
             }
         }

@@ -14,6 +14,7 @@ public class VelocityUpdate extends MotionHandler {
 	
 	public double decrRate = 0.98; //Mutiplied to entity's motion each tick;
 	public static final String ID = "velupdate";
+	public boolean updateRotation = true;
 	
 	public VelocityUpdate(EntityX ent, double decr) {
 		super(ent);
@@ -33,12 +34,22 @@ public class VelocityUpdate extends MotionHandler {
 		entity.posY += entity.motionY;
 		entity.posZ += entity.motionZ;
 		entity.motionX *= decrRate;
-		entity.motionX *= decrRate;
-		entity.motionX *= decrRate;
+		entity.motionY *= decrRate;
+		entity.motionZ *= decrRate;
+		if(updateRotation) {
+			double tmp = entity.motionX * entity.motionX + entity.motionZ * entity.motionZ;
+			entity.rotationPitch = -(float) (Math.atan2(entity.motionY, Math.sqrt(tmp)) * 180 / Math.PI);
+			entity.rotationYaw = -(float) (Math.atan2(entity.motionX, entity.motionZ) * 180 / Math.PI);
+		}
 	}
 	
 	public VelocityUpdate setDecr(double rate) {
 		decrRate = rate;
+		return this;
+	}
+	
+	public VelocityUpdate setUpdateRot(boolean b) {
+		updateRotation = b;
 		return this;
 	}
 	
