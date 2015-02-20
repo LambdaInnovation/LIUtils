@@ -176,18 +176,19 @@ public class GenericUtils {
 	}
 	
 	public static void doRangeDamage(World world, DamageSource src, Vec3 pos, float strengh, double radius, Entity... exclusion) {
-		AxisAlignedBB par2 = AxisAlignedBB.getBoundingBox(pos.xCoord - 4, pos.yCoord - 4,
-				pos.zCoord - 4, pos.xCoord + 4, pos.yCoord + 4, pos.zCoord + 4);
-		List entitylist = world
-				.getEntitiesWithinAABBExcludingEntity(null, par2);
-		if (entitylist.size() > 0) {
-			for (int i = 0; i < entitylist.size(); i++) {
-				Entity ent = (Entity) entitylist.get(i);
-				if (ent instanceof EntityLivingBase) {
-					double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
-					int damage = (int) ((1 - distance / 6.928) * strengh);
-					ent.attackEntityFrom(src , damage);
-				}
+		AxisAlignedBB par2 = AxisAlignedBB.getBoundingBox(pos.xCoord - radius, pos.yCoord - radius,
+				pos.zCoord - radius, pos.xCoord + radius, pos.yCoord + radius, pos.zCoord + radius);
+		System.out.println("rad " + radius);
+		List entitylist = world.getEntitiesWithinAABBExcludingEntity(null, par2);
+		System.out.println(entitylist.size());
+		for (int i = 0; i < entitylist.size(); i++) {
+			Entity ent = (Entity) entitylist.get(i);
+			if (ent instanceof EntityLivingBase) {
+				double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
+				//currently used linear attn, 1->0.1
+				float damage = (float) Math.max(0, strengh * ( 1 - 0.9 * distance / radius));
+				System.out.println(damage);
+				ent.attackEntityFrom(src , damage);
 			}
 		}
 	}
