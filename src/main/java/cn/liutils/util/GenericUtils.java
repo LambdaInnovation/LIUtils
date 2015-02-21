@@ -100,6 +100,13 @@ public class GenericUtils {
 		return player.worldObj.rayTraceBlocks(v1, v2);
 	}
 	
+	public static MovingObjectPosition tracePlayerWithEntities(EntityPlayer player, double dist, IEntitySelector ies) {
+		Motion3D mo = new Motion3D(player, true);
+		Vec3 v1 = mo.getPosVec(player.worldObj),
+			v2 = mo.move(dist).getPosVec(player.worldObj);
+		return GenericUtils.rayTraceBlocksAndEntities(ies, player.worldObj, v1, v2, player);
+	}
+	
 	public static int randIntv(int fr, int to) {
 		return RNG.nextInt(to - fr) + fr;
 	}
