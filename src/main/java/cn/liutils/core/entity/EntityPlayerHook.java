@@ -7,19 +7,15 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
-import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.util.ResourceLocation;
-
-import org.lwjgl.opengl.GL11;
-
 import cn.annoreg.core.RegistrationClass;
 import cn.annoreg.mc.RegEntity;
 import cn.annoreg.mc.RegEventHandler;
 import cn.annoreg.mc.RegEventHandler.Bus;
 import cn.liutils.api.render.IPlayerRenderHook;
+import cn.liutils.core.client.render.RenderPlayerHook;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -38,12 +34,12 @@ public class EntityPlayerHook extends Entity {
 	public final boolean blend;
 	
 	static Set<EntityPlayer> initTable = new HashSet();
-	static Set<IPlayerRenderHook> helpers_op = new HashSet(),
+	public static Set<IPlayerRenderHook> helpers_op = new HashSet(),
 			helpers_al = new HashSet();
 	
 	@SideOnly(Side.CLIENT)
 	@RegEntity.Render
-	public static HookRender render;
+	public static RenderPlayerHook render;
 	
 	/**
 	 */
@@ -76,39 +72,6 @@ public class EntityPlayerHook extends Entity {
 
 	@Override
 	protected void writeEntityToNBT(NBTTagCompound nbttagcompound) {}
-	
-	public static class HookRender extends Render {
-
-		@Override
-		public void doRender(Entity ent, double x, double y,
-				double z, float wtf, float var9) {
-			EntityPlayerHook hook = (EntityPlayerHook) ent;
-			GL11.glPushMatrix();
-			GL11.glTranslated(x, y, z);
-			traverse(hook, hook.blend ? helpers_al : helpers_op);
-			GL11.glPopMatrix();
-		}
-		
-		private void traverse(EntityPlayerHook ent, Set<IPlayerRenderHook> hooks) {
-			for(IPlayerRenderHook hook : hooks) {
-				GL11.glPushMatrix();
-				GL11.glRotatef(ent.rotationYaw, 0.0F, -1.0F, 0.0F);
-				GL11.glPushMatrix(); {
-					GL11.glTranslated(0, -1.67, 0);
-					hook.renderBody(ent.player, ent.worldObj);
-				} GL11.glPopMatrix();
-				GL11.glTranslatef(0.0F, 0.5F, 0.0F);
-				hook.renderHead(ent.player, ent.worldObj);
-				GL11.glPopMatrix();
-			}
-		}
-
-		@Override
-		protected ResourceLocation getEntityTexture(Entity var1) {
-			return null;
-		}
-		
-	}
 
 	@RegEventHandler(Bus.FML)
 	public static final class Tick {
