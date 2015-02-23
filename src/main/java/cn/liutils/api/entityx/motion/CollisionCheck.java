@@ -9,6 +9,7 @@ import java.util.List;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.api.entityx.EntityX;
 import cn.liutils.api.entityx.MotionHandler;
@@ -21,7 +22,7 @@ import cn.liutils.util.GenericUtils;
  */
 public class CollisionCheck extends MotionHandler {
 	
-	boolean resetVel = true;
+	boolean resetVel = true, blockOnly = false;
 	public static final String ID = "collision";
 	IEntitySelector selector = null;
 	List<Entity> excls = new ArrayList();
@@ -58,11 +59,15 @@ public class CollisionCheck extends MotionHandler {
 	
 	@Override
 	public void onUpdate() {
+		Vec3 v1 = this.createVector(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ),
+			v2 = this.createVector(entity.posX, entity.posY, entity.posZ);
 		MovingObjectPosition res = 
+			blockOnly ? entity.worldObj.rayTraceBlocks(v1, v2) :
 			GenericUtils.rayTraceBlocksAndEntities(selector, entity.worldObj,
-				this.createVector(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ), 
-				this.createVector(entity.posX, entity.posY, entity.posZ), 
+				v1, 
+				v2, 
 				excls.toArray(new Entity[excls.size()]));
+		
 		if(res == null) return;
 		onCollided(res);
 	}
@@ -86,6 +91,11 @@ public class CollisionCheck extends MotionHandler {
 				entity.motionZ = 0;
 			}
 		}
+	}
+	
+	public CollisionCheck setBlockOnly() {
+		blockOnly = true;
+		return this;
 	}
 
 	@Override

@@ -139,13 +139,6 @@ public class GenericUtils {
 		return 0;
 	}
 	
-	public static void Explode(World world, Entity entity, float strengh,
-			double radius, double posX, double posY, double posZ,
-			int additionalDamage) {
-		explode(world, entity, strengh, radius, posX, posY, posZ, additionalDamage, 1.0, 1.0F);
-	}
-	
-	
 	public static AxisAlignedBB getBoundingBox(double minX, double minY,double minZ,double maxX,double maxY, double maxZ) {
 		double i;
 		if(minX > maxX) {
@@ -168,11 +161,13 @@ public class GenericUtils {
 
 	public static void explode(World world, Entity entity, float strengh,
 			double radius, double posX, double posY, double posZ,
-			int additionalDamage, double velocityRadius, float soundRadius) {
+			float additionalDamage) {
 		if(world.isRemote) //Ignore client operations
 			return;
 		
 		Explosion explosion = world.createExplosion(entity, posX, posY, posZ, strengh, true);
+		explosion.doExplosionA();
+		explosion.doExplosionB(true);
 		
 		if (additionalDamage <= 0)
 			return;
@@ -185,7 +180,6 @@ public class GenericUtils {
 	public static void doRangeDamage(World world, DamageSource src, Vec3 pos, float strengh, double radius, Entity... exclusion) {
 		AxisAlignedBB par2 = AxisAlignedBB.getBoundingBox(pos.xCoord - radius, pos.yCoord - radius,
 				pos.zCoord - radius, pos.xCoord + radius, pos.yCoord + radius, pos.zCoord + radius);
-		System.out.println("rad " + radius);
 		List entitylist = world.getEntitiesWithinAABBExcludingEntity(null, par2);
 		System.out.println(entitylist.size());
 		for (int i = 0; i < entitylist.size(); i++) {
