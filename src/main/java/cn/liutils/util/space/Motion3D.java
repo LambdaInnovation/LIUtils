@@ -15,13 +15,14 @@ package cn.liutils.util.space;
 
 import java.util.Random;
 
-import cn.liutils.util.DebugUtils;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import cn.liutils.util.DebugUtils;
 
 /**
  * A entity that has its position and motion properties. used for all kinds of spacial calculations.
@@ -107,6 +108,9 @@ public class Motion3D {
 		this.posX = entity.posX;
 		this.posY = entity.posY + entity.getEyeHeight();
 		this.posZ = entity.posZ;
+//		if(!entity.worldObj.isRemote && entity instanceof EntityPlayer) {
+//			posY += 1.6;
+//		}
 
 		if (dirFlag) {
 			float var3 = 1.0F, var4 = 0.0F;
