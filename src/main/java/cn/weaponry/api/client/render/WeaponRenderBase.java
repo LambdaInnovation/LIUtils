@@ -11,7 +11,7 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.draw.DrawObject;
-import cn.liutils.api.draw.tess.Transform;
+import cn.liutils.api.draw.prop.Transform;
 
 /**
  * @author WeathFolD

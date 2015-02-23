@@ -1,7 +1,7 @@
 /**
  * 
  */
-package cn.liutils.api.draw.tess;
+package cn.liutils.api.draw.prop;
 
 import java.util.EnumSet;
 

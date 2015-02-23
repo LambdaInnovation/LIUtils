@@ -7,8 +7,8 @@ import net.minecraft.util.ResourceLocation;
 import cn.liutils.api.draw.prop.AssignColor;
 import cn.liutils.api.draw.prop.AssignTexture;
 import cn.liutils.api.draw.prop.DisableTexture;
+import cn.liutils.api.draw.prop.Transform;
 import cn.liutils.api.draw.tess.GUIRect;
-import cn.liutils.api.draw.tess.Transform;
 
 /**
  * @author WeathFolD

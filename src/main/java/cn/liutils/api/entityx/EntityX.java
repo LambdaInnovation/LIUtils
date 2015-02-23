@@ -3,20 +3,17 @@
  */
 package cn.liutils.api.entityx;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import cn.liutils.api.entityx.motion.CollisionCheck;
-import cn.liutils.api.entityx.motion.VelocityUpdate;
-import cn.liutils.util.DebugUtils;
 
 /**
  * Enhanced entity motion mechanism. Allow us to handle entity position&motion in
@@ -25,6 +22,8 @@ import cn.liutils.util.DebugUtils;
  * @author WeathFolD
  */
 public abstract class EntityX extends Entity {
+	
+	Map<Integer, List<EntityCallback>> events = new HashMap();
 	
 	private MotionHandler curMotion;
 	private Map<String, MotionHandler> daemonHandlers = new HashMap();
@@ -38,6 +37,15 @@ public abstract class EntityX extends Entity {
 
 	@Override
 	protected void entityInit() {}
+	
+	public void execAfter(int ticks, EntityCallback bc) {
+		List<EntityCallback> res = events.get(ticks);
+		if(res == null) {
+			res = new ArrayList();
+			events.put(ticks + ticksExisted, res);
+		}
+		res.add(bc);
+	}
 	
 	@Override
 	public void onUpdate() {
@@ -56,6 +64,12 @@ public abstract class EntityX extends Entity {
 		
 		if(doesUpdate) {
 			updateAll(onUpdate);
+		}
+		
+		List<EntityCallback> res = events.get(ticksExisted);
+		if(res != null) {
+			for(EntityCallback cb : res)
+				cb.execute(this);
 		}
 	}
 	
@@ -154,6 +168,10 @@ public abstract class EntityX extends Entity {
 				}
 			}
 		}
+	}
+	
+	public static interface EntityCallback<T extends EntityX> {
+		void execute(T ent);
 	}
 	
 	private static interface Callback {
