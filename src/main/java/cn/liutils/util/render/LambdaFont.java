@@ -15,6 +15,7 @@ package cn.liutils.util.render;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -58,10 +59,16 @@ public class LambdaFont {
 	}
 	
 	private void init(InputStream stm) {
-		BufferedReader reader = new BufferedReader(new InputStreamReader(stm));
+		BufferedReader reader = null;
+		try {
+			reader = new BufferedReader(new InputStreamReader(stm, "utf-8"));
+		} catch (UnsupportedEncodingException e1) {
+			e1.printStackTrace();
+		}
 		Map<String, Integer> props = new HashMap();
 		
 		String str;
+		System.out.println("LambdaFont is loading charset.");
 		try{
 			while((str = reader.readLine()) != null) {
 				int ind;
@@ -76,15 +83,21 @@ public class LambdaFont {
 					} else {
 						if(key.length() == 1) {
 							String[] toparse = value.split(",");
+							//System.out.print(key.charAt(0));
 							table.put(key.charAt(0), 
 								new CharExtent(Integer.valueOf(toparse[0]), Double.valueOf(toparse[1])));
 						}
 					}
+				} else {
+					System.err.println("Wrong line: " + str);
 				}
 			}
 		} catch(Exception e) {
+			System.err.println("Exception occured during font loading");
 			e.printStackTrace();
 		}
+		System.out.println("Charset Loading ended.");
+		System.out.println();
 		
 		fontSize = props.get("_size");
 		spacing = props.get("_spacing");
@@ -278,6 +291,9 @@ public class LambdaFont {
 	private CharExtent getExtent(char ch) {
 		//here we assert that '?' already have a mapping.
 		CharExtent ret = table.get(ch);
+		if(ret == null) {
+			System.err.println("no mapping " + ch);
+		}
 		return ret == null ? table.get('?') : ret;
 	}
 

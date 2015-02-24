@@ -72,7 +72,12 @@ public class LIGuiContainer extends GuiContainer {
     @Override
     public void keyTyped(char ch, int key) {
     	gui.keyTyped(ch, key);
-    	super.keyTyped(ch, key);
+    	if(containerAcceptsKey(key))
+    		super.keyTyped(ch, key);
+    }
+    
+    protected boolean containerAcceptsKey(int key) {
+    	return true;
     }
     
     public boolean isSlotActive() {

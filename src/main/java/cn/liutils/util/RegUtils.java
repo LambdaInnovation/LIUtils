@@ -23,9 +23,9 @@ import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
  * Elegant and fast way to register specific kinds of items/blocks.
+ * (Although less elegant than AnnoReg)
  * @author WeathFolD
  */
-@Deprecated
 public class RegUtils {
 
 	/**
