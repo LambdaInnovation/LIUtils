@@ -52,7 +52,7 @@ public class LIUtils {
 	/**
 	 * Version Number.
 	 */
-	public static final String VERSION = "1.7.2.321+dev";
+	public static final String VERSION = "1.7.2.400_tmp";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.
