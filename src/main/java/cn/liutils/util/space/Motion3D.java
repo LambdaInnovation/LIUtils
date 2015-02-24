@@ -1,15 +1,14 @@
-/** 
- * Copyright (c) Lambda Innovation Team, 2013
- * 版权许可：LambdaCraft 制作小组， 2013.
- * http://lambdacraft.cn/
- * 
- * The mod is open-source. It is distributed under the terms of the
- * Lambda Innovation Open Source License. It grants rights to read, modify, compile
- * or run the code. It does *NOT* grant the right to redistribute this software
- * or its modifications in any form, binary or source, except if expressively
- * granted by the copyright holder.
+/**
+ * Copyright (c) Lambda Innovation, 2013-2015
+ * 本作品版权由Lambda Innovation所有。
+ * http://www.lambdacraft.cn/
  *
- * 本Mod是完全开源的，你允许参考、使用、引用其中的任何代码段，但不允许将其用于商业用途，在引用的时候，必须注明原作者。
+ * LIUtils is open-source, and it is distributed under 
+ * the terms of GNU General Public License. You can modify
+ * and distribute freely as long as you follow the license.
+ * LIUtils是一个开源项目，且遵循GNU通用公共授权协议。
+ * 在遵照该协议的情况下，您可以自由传播和修改。
+ * http://www.gnu.org/licenses/gpl.html
  */
 package cn.liutils.util.space;
 

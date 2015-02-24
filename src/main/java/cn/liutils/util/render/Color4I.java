@@ -1,16 +1,14 @@
-/** 
- * Copyright (c) LambdaCraft Modding Team, 2013
- * 版权许可：LambdaCraft 制作小组， 2013.
- * http://lambdacraft.half-life.cn/
- * 
- * LambdaCraft is open-source. It is distributed under the terms of the
- * LambdaCraft Open Source License. It grants rights to read, modify, compile
- * or run the code. It does *NOT* grant the right to redistribute this software
- * or its modifications in any form, binary or source, except if expressively
- * granted by the copyright holder.
+/**
+ * Copyright (c) Lambda Innovation, 2013-2015
+ * 本作品版权由Lambda Innovation所有。
+ * http://www.lambdacraft.cn/
  *
- * LambdaCraft是完全开源的。它的发布遵从《LambdaCraft开源协议》。你允许阅读，修改以及调试运行
- * 源代码， 然而你不允许将源代码以另外任何的方式发布，除非你得到了版权所有者的许可。
+ * LIUtils is open-source, and it is distributed under 
+ * the terms of GNU General Public License. You can modify
+ * and distribute freely as long as you follow the license.
+ * LIUtils是一个开源项目，且遵循GNU通用公共授权协议。
+ * 在遵照该协议的情况下，您可以自由传播和修改。
+ * http://www.gnu.org/licenses/gpl.html
  */
 package cn.liutils.util.render;
 
