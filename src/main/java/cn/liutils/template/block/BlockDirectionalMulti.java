@@ -250,7 +250,6 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)
     {
     	TileEntity te = world.getTileEntity(x, y, z);
-    	//metadata = this.getMetadata(world, x, y, z);
     	int[] crds = this.getOrigin(world, x, y, z, metadata);
     	if(crds != null) {
     		x = crds[0];
@@ -264,8 +263,6 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
     				bp2.destroyMe(world, x, y, z);
     		}
     	}
-    	//world.removeTileEntity(x, y, z);
-    	//super.breakBlock(world, x, y, z, block, metadata);
     }
 	
 	@Override

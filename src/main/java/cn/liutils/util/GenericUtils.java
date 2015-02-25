@@ -238,15 +238,6 @@ public class GenericUtils {
 		return planeDistance(x1 - x0, y1 - y0);
 	}
 	
-	/**
-	 * An alias of Minecraft.getSystemTime() in case of server calls
-	 * @return
-	 */
-    public static long getSystemTime()
-    {
-        return Sys.getTime() * 1000L / Sys.getTimerResolution();
-    }
-	
 	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {
 		MovingObjectPosition mop = rayTraceEntities(null, world, vec1, vec2);
 		if(mop == null)
