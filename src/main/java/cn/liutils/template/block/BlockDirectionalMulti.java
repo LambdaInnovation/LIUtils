@@ -45,6 +45,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Because MC use bytes to store metadata we often find the value overflows. Thus,
  * A <code>IMetadataProvider</code> interface is used upon block's TileEntity to override metadata.
  * You can use <code>TileDirectionalMulti</code> for fast impl.<br/>
+ * You should use <code>ItemBlockDirMulti</code> as your block instance's ItemBlock.
  * BTW, Z+ is always parallel to the player placing direction~
  * @author WeAthFolD
  * @see cn.liutils.template.block.TileDirectionalMulti
@@ -52,6 +53,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @see cn.liutils.template.client.render.block.RenderDirMultiModelled
  * @see cn.liutils.template.block.IMetadataProvider
  * @see cn.liutils.template.block.TileDirectionalMulti
+ * @see cn.liutils.template.item.ItemBlockDirMulti
  */
 public abstract class BlockDirectionalMulti extends BlockContainer {
 	
@@ -197,6 +199,14 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
 		return subBlocks;
 	}
 	
+	public List<SubBlockPos> getSubRotated(int dir) {
+		List<SubBlockPos> ret = new ArrayList();
+		for(SubBlockPos sbp : subBlocks) {
+			ret.add(this.applyRotation(sbp, dir));
+		}
+		return ret;
+	}
+	
 	//---------------------Internal Impl.---------------------------
 	private static final int[] dirMap = { 2, 5, 3, 4 };
 	
@@ -213,6 +223,7 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         	SubBlockPos bp = subBlocks.get(i);
         	SubBlockPos bp2 = this.applyRotation(bp, dir);
         	Block block = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
+        	//Drop if unable to place. This normally won't happen, just for safety check.
         	if(!block.isReplaceable(world, x + bp2.offX, y + bp2.offY, z + bp2.offZ)) {
         		this.dropBlockAsItem(world, x, y, z, new ItemStack(this));
         		world.setBlockToAir(x, y, z);
@@ -248,7 +259,9 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
     		int dir = BlockDirectionalMulti.getFacingDirection(metadata).ordinal();
     		for(SubBlockPos bp : this.subBlocks) {
     			SubBlockPos bp2 = this.applyRotation(bp, dir);
-    			bp2.destroyMe(world, x, y, z);
+    			Block inst = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
+    			if(inst == this) //safe check in order not to destroy other blocks
+    				bp2.destroyMe(world, x, y, z);
     		}
     	}
     	//world.removeTileEntity(x, y, z);
