@@ -15,11 +15,11 @@ package cn.weaponry.core.control;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import cn.annoreg.core.RegistrationClass;
 import cn.annoreg.mc.RegEventHandler;
 import cn.annoreg.mc.RegEventHandler.Bus;
-import cn.liutils.util.GenericUtils;
 import cn.weaponry.api.info.InfManager;
 import cn.weaponry.core.Weaponry;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
@@ -64,7 +64,7 @@ public class ControlManager {
 				ks.down = true;
 				InfManager.getInfo(player).handleRawInput(id, true);
 			}
-			ks.beatTime = GenericUtils.getSystemTime();
+			ks.beatTime = Minecraft.getSystemTime();
 		} else {
 			if(ks.down) {
 				ks.down = false;
@@ -76,7 +76,7 @@ public class ControlManager {
 	public void onKeyTick(EntityPlayer player, int id) {
 		KeyState ks = getFor(player).stateArr[id];
 		if(ks.down) {
-			ks.beatTime = GenericUtils.getSystemTime();
+			ks.beatTime = Minecraft.getSystemTime();
 		}
 	}
 	
@@ -87,7 +87,7 @@ public class ControlManager {
 		for(int i = 0; i < 3; ++i) {
 			KeyState ks = state.stateArr[i];
 			if(ks.down) {
-				long dt = GenericUtils.getSystemTime() - ks.beatTime;
+				long dt = Minecraft.getSystemTime() - ks.beatTime;
 				if(dt > BEAT_TIMEOUT) {
 					Weaponry.log.error("Cancelled control of " + player.getCommandSenderName() + " because of timeout.");
 					InfManager.getInfo(player).handleRawInput(i, false);

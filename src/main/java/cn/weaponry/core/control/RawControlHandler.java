@@ -58,7 +58,7 @@ public class RawControlHandler {
 				//System.out.println("KeyDown");
 				ControlManager.instance.onKeyState(Minecraft.getMinecraft().thePlayer, id, true);
 				Weaponry.network.sendToServer(new MsgControl(id, 0));
-				lastBeat = GenericUtils.getSystemTime();
+				lastBeat = Minecraft.getSystemTime();
 			}
 		}
 
@@ -74,7 +74,7 @@ public class RawControlHandler {
 		public void onKeyTick(int keyCode, boolean tickEnd) {
 			if(accepts()) {
 				ControlManager.instance.onKeyTick(Minecraft.getMinecraft().thePlayer, id);
-				long time = GenericUtils.getSystemTime();
+				long time = Minecraft.getSystemTime();
 				if(time - lastBeat > ControlManager.BEAT_RATE) {
 					lastBeat = time;
 					Weaponry.network.sendToServer(new MsgControl(id, 2));

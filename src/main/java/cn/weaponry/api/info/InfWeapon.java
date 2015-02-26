@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
@@ -87,7 +88,7 @@ public final class InfWeapon {
 	@SideOnly(Side.CLIENT)
 	private void updateRender() {
 		Iterator<EffectNode> iter = activeEffects.iterator();
-		long time = GenericUtils.getSystemTime();
+		long time = Minecraft.getSystemTime();
 		while(iter.hasNext()) {
 			EffectNode node = iter.next();
 			long dt = time - node.timeAdded;
@@ -176,7 +177,7 @@ public final class InfWeapon {
 	@SideOnly(Side.CLIENT)
 	public void postRenderEvent(String part) {
 		for(EffectNode node : activeEffects) {
-			node.eff.beforeDraw(part, this, GenericUtils.getSystemTime() - node.timeAdded);
+			node.eff.beforeDraw(part, this, Minecraft.getSystemTime() - node.timeAdded);
 		}
 	}
 	
@@ -225,7 +226,7 @@ public final class InfWeapon {
 		public final long life;
 		public EffectNode(RenderEffect _eff, long _life) {
 			eff = _eff;
-			timeAdded = GenericUtils.getSystemTime();
+			timeAdded = Minecraft.getSystemTime();
 			life = _life;
 		}
 	}
