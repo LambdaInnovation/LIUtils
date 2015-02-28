@@ -40,6 +40,8 @@ public class LIClientEvents {
 	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
+		GL11.glDepthFunc(GL11.GL_ALWAYS);
+		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		 if(event.type == ElementType.CROSSHAIRS) {
 			 for(AuxGui gui : auxGuiList) {
@@ -47,6 +49,8 @@ public class LIClientEvents {
 			 }
 		 }
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glDepthMask(true);
+		GL11.glDepthFunc(GL11.GL_LEQUAL);
 	}
 	
 }
