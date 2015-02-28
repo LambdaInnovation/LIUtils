@@ -38,11 +38,11 @@ public class ClientUtils {
 	/**
 	 * Quick alias for playing sound
 	 * @param src
-	 * @param volume
+	 * @param pitch
 	 */
-	public static void playSound(ResourceLocation src, float volume) {
+	public static void playSound(ResourceLocation src, float pitch) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(
-			PositionedSoundRecord.func_147674_a(src, volume));
+			PositionedSoundRecord.func_147674_a(src, pitch));
 	}
 
 }
