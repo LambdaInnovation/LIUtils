@@ -65,6 +65,15 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		this.height = height;
 	}
 	
+	protected void clear() {
+		dispose();
+		widgets.clear();
+		iterating = false;
+		nodesToAdd.clear();
+		zOrderProg.clear();
+		focus = null;
+	}
+	
 	/**
 	 * Called when screen is being resized.
 	 * @param w new width
@@ -217,6 +226,10 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 	public void playSound(ResourceLocation src, float volume) {
 		Minecraft.getMinecraft().getSoundHandler().playSound(
 			PositionedSoundRecord.func_147674_a(src, volume));
+	}
+	
+	public Widget getFocus() {
+		return focus == null ? null : focus.widget;
 	}
 	
 	//---Key Handling

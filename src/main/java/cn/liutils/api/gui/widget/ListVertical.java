@@ -129,7 +129,7 @@ public class ListVertical extends Widget {
 	
 	public void draw(double a, double b, boolean c) {}
 	
-	private int getMaxShow() {
+	protected int getMaxShow() {
 		return perHeight == 0 ? 0 : MathHelper.floor_double(height / perHeight);
 	}
 	

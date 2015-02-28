@@ -123,7 +123,7 @@ public class LambdaFont {
 			String[] ss = str.split("\n");
 			for(int i = 0; i < ss.length; ++i) {
 				GL11.glPushMatrix(); {
-					double dy = i * (fontSize + spacing);
+					double dy = i * (fontSize + spacing) / fontSize;
 					GL11.glTranslated(0, dy, 0);
 					drawSingleLine(ss[i], align);
 				} GL11.glPopMatrix();

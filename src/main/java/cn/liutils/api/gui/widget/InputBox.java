@@ -97,15 +97,14 @@ public class InputBox extends Widget {
 				}
 				str = sb.toString();
 			}
-			font.draw(
-				(focus && editLine == i && (Minecraft.getSystemTime() % 1000 < 500)) ? str + "|" : str, 0, y, fontSize);
+			font.drawAdjusted(
+				(focus && editLine == i && (Minecraft.getSystemTime() % 1000 < 500)) ? str + "|" : str, 0, y, fontSize, width);
 			y += lineHeight;
 		}
 	}
 	
 	@Override
 	public void handleKeyInput(char par1, int par2) {
-		System.out.println("hki " + this);
 		if (par2 == Keyboard.KEY_UP) {
 			this.editLine--;
 			if(editLine < 0) editLine = 0;

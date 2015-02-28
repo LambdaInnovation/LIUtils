@@ -24,15 +24,26 @@ import org.lwjgl.opengl.GL11;
 public class LIGuiScreen extends GuiScreen {
 
 	protected LIGui gui;
+	protected boolean drawBack = true;
+	
+	public LIGuiScreen(LIGui _gui) {
+		gui = _gui;
+	}
 	
 	public LIGuiScreen() {
-		gui = new LIGui();
+		this(new LIGui());
+	}
+	
+	public LIGuiScreen setDrawBack(boolean b) {
+		drawBack = b;
+		return this;
 	}
 	
 	@Override
     public void drawScreen(int mx, int my, float w) {
     	gui.resize(width, height);
-    	this.drawDefaultBackground();
+    	if(drawBack)
+    		this.drawDefaultBackground();
     	GL11.glPushMatrix(); {
     		GL11.glTranslated(0, 0, 100);
     		gui.draw(mx, my);
