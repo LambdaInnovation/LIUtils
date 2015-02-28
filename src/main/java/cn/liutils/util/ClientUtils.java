@@ -13,7 +13,9 @@
 package cn.liutils.util;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.ResourceLocation;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,6 +33,16 @@ public class ClientUtils {
 	public static boolean isPlayerInGame() {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
 		return player != null && Minecraft.getMinecraft().currentScreen == null;
+	}
+	
+	/**
+	 * Quick alias for playing sound
+	 * @param src
+	 * @param volume
+	 */
+	public static void playSound(ResourceLocation src, float volume) {
+		Minecraft.getMinecraft().getSoundHandler().playSound(
+			PositionedSoundRecord.func_147674_a(src, volume));
 	}
 
 }

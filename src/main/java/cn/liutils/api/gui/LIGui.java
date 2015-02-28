@@ -218,16 +218,6 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		}
 	}
 	
-	/**
-	 * Quick alias for playing sound
-	 * @param src
-	 * @param volume
-	 */
-	public void playSound(ResourceLocation src, float volume) {
-		Minecraft.getMinecraft().getSoundHandler().playSound(
-			PositionedSoundRecord.func_147674_a(src, volume));
-	}
-	
 	public Widget getFocus() {
 		return focus == null ? null : focus.widget;
 	}
