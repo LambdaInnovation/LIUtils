@@ -20,6 +20,7 @@ import net.minecraft.block.Block;
 import net.minecraft.block.BlockContainer;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.MathHelper;
@@ -225,7 +226,9 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         	Block block = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
         	//Drop if unable to place. This normally won't happen, just for safety check.
         	if(!block.isReplaceable(world, x + bp2.offX, y + bp2.offY, z + bp2.offZ)) {
-        		this.dropBlockAsItem(world, x, y, z, new ItemStack(this));
+        		if(placer instanceof EntityPlayer) 
+        			if(!((EntityPlayer) placer).capabilities.isCreativeMode)
+        				this.dropBlockAsItem(world, x, y, z, new ItemStack(this));
         		world.setBlockToAir(x, y, z);
         		return;
         	}
