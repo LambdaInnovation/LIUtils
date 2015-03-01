@@ -29,12 +29,15 @@ import net.minecraftforge.client.IItemRenderer;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import cn.liutils.api.render.model.IItemModel;
 import cn.liutils.util.RenderUtils;
 
 /**
  * Item model render. Implemented lots of methods to adjust rendering and positioning.
  */
+@SideOnly(Side.CLIENT)
 public class RenderModelItem implements IItemRenderer {
 
 	protected Tessellator t = Tessellator.instance;

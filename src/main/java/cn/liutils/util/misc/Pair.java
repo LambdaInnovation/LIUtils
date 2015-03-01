@@ -25,6 +25,8 @@ public class Pair<U, V> {
 		second = v;
 	}
 	
+	public Pair() {}
+	
 	@Override
 	public String toString() {
 		return first + "," + second;
