@@ -116,6 +116,7 @@ public class LambdaFont {
 		GL11.glEnable(GL11.GL_BLEND);
 		RenderUtils.loadTexture(png);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glDepthMask(false);
 		double psx = HudUtils.SCALE_X, psy = HudUtils.SCALE_Y;
 		GL11.glPushMatrix(); {
 			GL11.glTranslated(x, y, 0);
@@ -129,6 +130,7 @@ public class LambdaFont {
 				} GL11.glPopMatrix();
 			}
 		} GL11.glPopMatrix();
+		GL11.glDepthMask(true);
 		HudUtils.SCALE_X = psx;
 		HudUtils.SCALE_Y = psy;
 	}
@@ -274,10 +276,11 @@ public class LambdaFont {
 		HudUtils.setTextureResolution(texWidth, texHeight);
 		for(int i = 0; i < line.length(); ++i) {
 			CharExtent ext = getExtent(line.charAt(i));
+			double HT_RATIO = 0.95;
 			int ind = ext.id;
 			double u = fontSize * (ind % PER_LINE),
 					v = (fontSize + spacing) * (ind / PER_LINE);
-			HudUtils.drawRect(x0, y0, u, v, 1, ratio, fontSize, fontSize + spacing);
+			HudUtils.drawRect(x0, y0, u, v, 1, ratio * HT_RATIO, fontSize, (fontSize + spacing) * HT_RATIO);
 			x0 += ext.getStep();
 		}
 	}
@@ -285,7 +288,8 @@ public class LambdaFont {
 	private void drawSingleChar(char ch) {
 		CharExtent ext = getExtent(ch);
 		int ind = ext.id;
-		HudUtils.drawRect(0, 0, fontSize * (ind % PER_LINE), (fontSize + spacing) * (ind / PER_LINE), 1, ratio, fontSize, fontSize + spacing);
+		double HT_RATIO = 1;
+		HudUtils.drawRect(0, 0, fontSize * (ind % PER_LINE), (fontSize + spacing) * (ind / PER_LINE), 1, ratio * HT_RATIO, fontSize, (fontSize + spacing) * HT_RATIO);
 	}
 	
 	private CharExtent getExtent(char ch) {

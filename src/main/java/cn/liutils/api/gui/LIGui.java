@@ -143,12 +143,14 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		frameUpdate();
 		updateMouse(mx, my);
 		iterating = true;
+		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
 		drawTraverse(mx, my, null, this, getTopNode(mx, my));
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		iterating = false;
 	}
 	
