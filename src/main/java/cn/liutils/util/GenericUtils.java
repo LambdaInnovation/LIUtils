@@ -196,13 +196,10 @@ public class GenericUtils {
 		System.out.println(entitylist.size());
 		for (int i = 0; i < entitylist.size(); i++) {
 			Entity ent = (Entity) entitylist.get(i);
-			if (ent instanceof EntityLivingBase) {
-				double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
-				//currently used linear attn, 1->0.1
-				float damage = (float) Math.max(0, strengh * ( 1 - 0.9 * distance / radius));
-				System.out.println(damage);
-				ent.attackEntityFrom(src , damage);
-			}
+			double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
+			//currently used linear attn, 1->0.1
+			float damage = (float) Math.max(0, strengh * ( 1 - 0.9 * distance / radius));
+			ent.attackEntityFrom(src , damage);
 		}
 	}
 	
