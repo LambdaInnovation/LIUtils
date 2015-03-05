@@ -1,7 +1,7 @@
 /**
  * Copyright (c) Lambda Innovation, 2013-2015
  * 本作品版权由Lambda Innovation所有。
- * http://www.lambdacraft.cn/
+ * http://www.li-dev.cn/
  *
  * LIUtils is open-source, and it is distributed under 
  * the terms of GNU General Public License. You can modify
@@ -93,7 +93,7 @@ public class LIUtils {
 		
 		log.info("Starting LIUtils " + VERSION);
 		log.info("Copyright (c) Lambda Innovation, 2013-2014");
-		log.info("http://www.lambdacraft.cn");
+		log.info("http://www.li-dev.cn");
 		
 		//Initialize FMLGameEvent dispatcher
 		LIFMLGameEventDispatcher.init();
