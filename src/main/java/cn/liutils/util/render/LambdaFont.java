@@ -116,7 +116,7 @@ public class LambdaFont {
 		GL11.glEnable(GL11.GL_BLEND);
 		RenderUtils.loadTexture(png);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
-		GL11.glDepthMask(false);
+		//GL11.glDepthMask(false);
 		double psx = HudUtils.SCALE_X, psy = HudUtils.SCALE_Y;
 		GL11.glPushMatrix(); {
 			GL11.glTranslated(x, y, 0);
@@ -130,7 +130,7 @@ public class LambdaFont {
 				} GL11.glPopMatrix();
 			}
 		} GL11.glPopMatrix();
-		GL11.glDepthMask(true);
+		//GL11.glDepthMask(true);
 		HudUtils.SCALE_X = psx;
 		HudUtils.SCALE_Y = psy;
 	}
@@ -194,6 +194,36 @@ public class LambdaFont {
 		HudUtils.SCALE_X = psx;
 		HudUtils.SCALE_Y = psy;
 		
+		return new Vector2d(maxLen * size, y0 * size + size + spacing * size / fontSize);
+	}
+	
+	public Vector2d simDrawLinebreak(String str, double x, double y, double size, double cst) {
+		List<Pair<String, Boolean>> arr = dlbPreProc(str, size, cst);
+		
+		double spcstp = getExtent(' ').getStep();
+		
+		double y0 = 0;
+		double curLen = 0;
+		double maxLen = 0;
+		for(int i = 0; i < arr.size(); ++i) {
+			Pair<String, Boolean> pair = arr.get(i);
+			double len = widthSingleLine(pair.first);
+			if(size * len < cst && size * (curLen + len) > cst) {
+				--i;
+				maxLen = Math.max(curLen, maxLen);
+				curLen = 0;
+				y0 += 1.0;
+				continue;
+			}
+			curLen += len + (pair.second ? spcstp : 0);
+			
+			if(size * len > cst) {
+				maxLen = Math.max(curLen, maxLen);
+				curLen = 0;
+				y0 += 1.0;
+			}
+		}
+		maxLen = Math.max(curLen, maxLen);
 		return new Vector2d(maxLen * size, y0 * size + size + spacing * size / fontSize);
 	}
 	
