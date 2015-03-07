@@ -245,7 +245,7 @@ public class GenericUtils {
 	public static MovingObjectPosition rayTraceBlocksAndEntities(IEntitySelector selector, World world, Vec3 vec1, Vec3 vec2, Entity... exclusion) {
 		MovingObjectPosition mop = rayTraceEntities(selector, world, vec1, vec2, exclusion);
 		if(mop == null)
-			return world.rayTraceBlocks(vec1, vec2);
+			return world.func_147447_a(vec1, vec2, false, true, false);
 		return mop;
 	}
 	
