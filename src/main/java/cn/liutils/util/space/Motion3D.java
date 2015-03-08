@@ -139,33 +139,42 @@ public class Motion3D {
 		this.normalize();
 	}
 	
+	public Motion3D setPosition(double x, double y, double z) {
+		posX = x;
+		posY = y;
+		posZ = z;
+		return this;
+	}
+	
 	public void update(Entity entity, boolean dirFlag) {
 		this.posX = entity.posX;
 		this.posY = entity.posY + entity.getEyeHeight();
 		this.posZ = entity.posZ;
 
 		if (dirFlag) {
-			float var3 = 1.0F, var4 = 0.0F;
-			
-			double rotationYaw = entity.rotationYaw;
-			double rotationPitch = entity.rotationYaw;
-			this.motionX = -MathHelper.sin(entity.rotationYaw / 180.0F
-					* (float) Math.PI)
-					* MathHelper.cos(entity.rotationPitch / 180.0F
-							* (float) Math.PI) * var3;
-			this.motionZ = MathHelper.cos(entity.rotationYaw / 180.0F
-					* (float) Math.PI)
-					* MathHelper.cos(entity.rotationPitch / 180.0F
-							* (float) Math.PI) * var3;
-			this.motionY = -MathHelper.sin((entity.rotationPitch + var4)
-					/ 180.0F * (float) Math.PI)
-					* var3;
-			
+			calcMotionByRotation(entity.rotationYaw, entity.rotationPitch);
 		} else {
 			motionX = entity.motionX;
 			motionY = entity.motionY;
 			motionZ = entity.motionZ;
 		}
+	}
+	
+	public Motion3D calcMotionByRotation(float yaw, float pitch) {
+		float var3 = 1.0f;
+		this.motionX = -MathHelper.sin(yaw / 180.0F
+				* (float) Math.PI)
+				* MathHelper.cos(yaw / 180.0F
+						* (float) Math.PI) * var3;
+		this.motionZ = MathHelper.cos(yaw / 180.0F
+				* (float) Math.PI)
+				* MathHelper.cos(pitch / 180.0F
+						* (float) Math.PI) * var3;
+		this.motionY = -MathHelper.sin((pitch)
+				/ 180.0F * (float) Math.PI)
+				* var3;
+		this.normalize();
+		return this;
 	}
 
 	

@@ -25,12 +25,12 @@ public abstract class LICommandBase extends CommandBase {
 	public LICommandBase() {
 	}
 	
-	public static void sendChat(ICommandSender ics, String st) {
-		ics.addChatMessage(new ChatComponentTranslation(st));
+	public static void sendChat(ICommandSender ics, String st, Object ...pars) {
+		ics.addChatMessage(new ChatComponentTranslation(st, pars));
 	}
 	
 	public static void sendError(ICommandSender ics, String st) {
-		ics.addChatMessage(new ChatComponentTranslation("\u00a7c" + st));
+		ics.addChatMessage(new ChatComponentTranslation(st));
 	}
 	
 	public static void sendWithTranslation(ICommandSender ics, String unlStr, Object... args) {
