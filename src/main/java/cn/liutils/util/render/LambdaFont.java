@@ -28,6 +28,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.misc.Pair;
@@ -68,7 +69,7 @@ public class LambdaFont {
 		Map<String, Integer> props = new HashMap();
 		
 		String str;
-		System.out.println("LambdaFont is loading charset.");
+		LIUtils.log.info("LambdaFont is loading a charset.");
 		try{
 			while((str = reader.readLine()) != null) {
 				int ind;
@@ -89,15 +90,14 @@ public class LambdaFont {
 						}
 					}
 				} else {
-					System.err.println("Wrong line: " + str);
+					LIUtils.log.error("LambdaFont meets a wrong line: " + str);
 				}
 			}
 		} catch(Exception e) {
-			System.err.println("Exception occured during font loading");
+			LIUtils.log.error("Exception occured during font loading");
 			e.printStackTrace();
 		}
-		System.out.println("Charset Loading ended.");
-		System.out.println();
+		LIUtils.log.info("Charset Loading ended.");
 		
 		fontSize = props.get("_size");
 		spacing = props.get("_spacing");
@@ -325,9 +325,6 @@ public class LambdaFont {
 	private CharExtent getExtent(char ch) {
 		//here we assert that '?' already have a mapping.
 		CharExtent ret = table.get(ch);
-		if(ret == null) {
-			System.err.println("no mapping " + ch);
-		}
 		return ret == null ? table.get('?') : ret;
 	}
 

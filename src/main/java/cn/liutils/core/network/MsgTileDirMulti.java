@@ -98,7 +98,8 @@ public class MsgTileDirMulti implements IMessage {
 				World wrld = ctx.getServerHandler().playerEntity.worldObj;
 				TileEntity te = wrld.getTileEntity(msg.x, msg.y, msg.z);
 				if(te == null || !(te instanceof IMetadataProvider)) {
-					System.err.println("It seems we don't have the correspond tile entity for the client sync request");
+					LIUtils.log.error("It seems we don't have the correspond tile "
+							+ "entity for the client sync request.");
 					return null;
 				}
 				LIUtils.netHandler.sendTo(new MsgTileDirMulti(te), ctx.getServerHandler().playerEntity);

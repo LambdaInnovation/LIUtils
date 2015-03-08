@@ -193,7 +193,6 @@ public class GenericUtils {
 		AxisAlignedBB par2 = AxisAlignedBB.getBoundingBox(pos.xCoord - radius, pos.yCoord - radius,
 				pos.zCoord - radius, pos.xCoord + radius, pos.yCoord + radius, pos.zCoord + radius);
 		List entitylist = world.getEntitiesWithinAABBExcludingEntity(null, par2);
-		System.out.println(entitylist.size());
 		for (int i = 0; i < entitylist.size(); i++) {
 			Entity ent = (Entity) entitylist.get(i);
 			double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));

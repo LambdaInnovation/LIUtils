@@ -234,7 +234,6 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
     		keyProcess.mouseOverride = false;
     		trigger = new Trigger(keyProcess);
     		LIFMLGameEventDispatcher.INSTANCE.registerClientTick(trigger);
-    		System.out.println("Loaded key handler");
     	}
     	keyProcess.addKey(name, keyCode, isRep, ikh);
     }

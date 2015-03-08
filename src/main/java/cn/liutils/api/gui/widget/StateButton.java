@@ -17,6 +17,7 @@ import net.minecraft.util.StatCollector;
 import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.LambdaFont;
 import cn.liutils.util.render.LambdaFont.Align;
@@ -95,7 +96,7 @@ public abstract class StateButton extends Widget {
 		
 		if(text != null) {
 			if(font == null) {
-				System.err.println("NULL FONT in " + this);
+				LIUtils.log.error("NULL FONT in " + this);
 				return;
 			}
 			RenderUtils.bindColor(colors[index]);
