@@ -174,12 +174,28 @@ public class GenericUtils {
 	public static void explode(World world, Entity entity, float strengh,
 			double radius, double posX, double posY, double posZ,
 			float additionalDamage) {
+		explode(world, entity, strengh, radius, posX, posY, posZ, additionalDamage, true);
+	}
+	
+	public static void explode(World world, Entity entity, float strengh,
+			double radius, double posX, double posY, double posZ,
+			float additionalDamage, boolean destroyTerrain) {
 		if(world.isRemote) //Ignore client operations
 			return;
 		
-		Explosion explosion = world.createExplosion(entity, posX, posY, posZ, strengh, true);
-		explosion.doExplosionA();
-		explosion.doExplosionB(true);
+		Explosion explosion = new Explosion(world, entity, posX, posY, posZ, strengh);
+        //explosion.isFlaming = true;
+        explosion.isSmoking = true;
+        
+		if(destroyTerrain) {
+			System.out.println("real expl");
+			explosion.doExplosionA();
+			explosion.doExplosionB(true);
+		} else { //Fix the damage using multiplyer. TODO: Test the actual value
+			System.out.println("fake expl");
+			additionalDamage += strengh * .3;
+			additionalDamage *= 1.2;
+		}
 		
 		if (additionalDamage <= 0)
 			return;
