@@ -22,7 +22,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.eventhandler.EventPriority;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -34,8 +33,6 @@ import cpw.mods.fml.relauncher.SideOnly;
 import cn.annoreg.core.RegistrationClass;
 import cn.annoreg.mc.RegSubmoduleInit;
 import cn.liutils.api.player.ControlData;
-import cn.liutils.core.LIUtils;
-import cn.liutils.core.proxy.LIClientProps;
 
 /**
  * 

@@ -215,8 +215,7 @@ public class HudUtils {
         }
     }
     
-    public static void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6)
-    {
+    public static void drawGradientRect(int par1, int par2, int par3, int par4, int par5, int par6) {
         float f = (par5 >> 24 & 255) / 255.0F;
         float f1 = (par5 >> 16 & 255) / 255.0F;
         float f2 = (par5 >> 8 & 255) / 255.0F;

@@ -17,8 +17,6 @@ import java.util.Random;
 
 import net.minecraft.client.Minecraft;
 
-import org.lwjgl.opengl.GL11;
-
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
@@ -26,7 +24,6 @@ import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
 
 /**
  * A progress bar drawer. provide the progress value through abstract getProgress() method.</br>

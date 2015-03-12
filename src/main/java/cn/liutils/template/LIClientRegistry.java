@@ -14,8 +14,6 @@ package cn.liutils.template;
 
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
-import cn.liutils.api.render.IPlayerRenderHook;
-import cn.liutils.core.entity.EntityPlayerHook;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

@@ -29,7 +29,6 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.core.proxy.LIClientProps;
-import cn.liutils.util.DebugUtils;
 import cn.liutils.util.GenericUtils;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;

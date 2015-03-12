@@ -12,9 +12,7 @@
  */
 package cn.liutils.api.player.state;
 
-import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import cpw.mods.fml.common.eventhandler.Event;
 

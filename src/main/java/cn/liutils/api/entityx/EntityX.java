@@ -125,7 +125,7 @@ public abstract class EntityX extends Entity {
         this.motionZ = dz;
         float f3 = MathHelper.sqrt_double(dx * dx + dz * dz);
         this.prevRotationYaw = this.rotationYaw = -(float)(Math.atan2(dx, dz) * 180.0D / Math.PI);
-        this.prevRotationPitch = this.rotationPitch = -(float)(Math.atan2(dy, (double)f3) * 180.0D / Math.PI);
+        this.prevRotationPitch = this.rotationPitch = -(float)(Math.atan2(dy, f3) * 180.0D / Math.PI);
     }
 
 	@Override

@@ -14,7 +14,6 @@ package cn.liutils.api.gui;
 
 import net.minecraft.client.gui.GuiScreen;
 
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 /**

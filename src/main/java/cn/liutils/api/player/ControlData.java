@@ -22,14 +22,12 @@ import cn.liutils.api.player.state.StateLockControlSpin;
 import cn.liutils.api.player.state.StateLockPosition;
 import cn.liutils.api.player.state.StateLockRotation;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.player.MouseHelperX;
 import cn.liutils.core.player.MsgControlSyncAll;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.MouseEvent;
 import net.minecraftforge.common.IExtendedEntityProperties;
 
 /**

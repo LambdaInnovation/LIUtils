@@ -16,8 +16,6 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
-import java.lang.reflect.Field;
-
 import cn.annoreg.base.RegistrationFieldSimple;
 import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.key.IKeyHandler;
@@ -51,7 +49,7 @@ public class AttachKeyHandlerRegistry
 
 	@Override
 	protected void register(Integer value, RegAttachKeyHandler anno, String field) throws Exception {
-		IKeyHandler ikh = (IKeyHandler) anno.clazz().newInstance();
+		IKeyHandler ikh = anno.clazz().newInstance();
 		LIKeyProcess.instance.addKey(this.getSuggestedName(), value, anno.isRep(), ikh);
 	}
 

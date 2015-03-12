@@ -12,15 +12,8 @@
  */
 package cn.liutils.util;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
@@ -28,11 +21,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import cn.liutils.util.render.Vertex;
-
-import com.google.common.collect.Maps;
 
 import cpw.mods.fml.relauncher.SideOnly;
 import cpw.mods.fml.relauncher.Side;
@@ -45,7 +34,6 @@ import cpw.mods.fml.relauncher.Side;
 @SideOnly(Side.CLIENT)
 public class RenderUtils {
 
-	public static final ResourceLocation STEVE_TEXTURE = new ResourceLocation("textures/entity/steve.png");
 	private static ResourceLocation src_glint = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 	
 	private static Tessellator t = Tessellator.instance;
@@ -147,7 +135,7 @@ public class RenderUtils {
 	}
 
 	/**
-	 * 将Item渲染成一个有厚度的薄片。（默认渲染风格）
+	 * Render an item in default preference. However you can specify the special icon or item width.
 	 */
 	public static void renderItemIn2d(ItemStack stackToRender, double w, IIcon specialIcon) {
 		IIcon icon = stackToRender.getIconIndex();
@@ -358,6 +346,8 @@ public class RenderUtils {
     /**
      * Draw a cube with xwidth=w zwidth=l height=h at (0, 0, 0) with no texture.
      * <br/>Often used for debugging? ^^
+     * Currently, the cube has been FORCE set to the no-lighting state. 
+     * DrawObject may take over this in further versions.
      * @param w xwidth
      * @param l zwidth
      * @param h height

@@ -12,8 +12,6 @@
  */
 package cn.liutils.core.player;
 
-import org.lwjgl.input.Mouse;
-
 import net.minecraft.util.MouseHelper;
 
 /**

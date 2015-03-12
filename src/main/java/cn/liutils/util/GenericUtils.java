@@ -21,10 +21,8 @@ import java.util.Set;
 import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
@@ -36,9 +34,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 
-import org.lwjgl.Sys;
-
-import scala.Char;
 import cn.liutils.template.selector.EntitySelectorLiving;
 import cn.liutils.template.selector.EntitySelectorPlayer;
 import cn.liutils.util.space.BlockPos;
@@ -46,21 +41,24 @@ import cn.liutils.util.space.IBlockFilter;
 import cn.liutils.util.space.Motion3D;
 
 /**
- * All sorts of utility functions.
+ * Many sorts of utility functions.
  * @warning 处于RBQ模式中，即将经历大量重构，慎用
  * @author WeAthFolD
  */
 public class GenericUtils {
 
-	public static IEntitySelector selectorLiving = new EntitySelectorLiving(),
-			selectorPlayer = new EntitySelectorPlayer();
+	public static IEntitySelector 
+		selectorLiving = new EntitySelectorLiving(),
+		selectorPlayer = new EntitySelectorPlayer();
 	
 	private static Random RNG = new Random();
 	
-	public static void doEntityAttack(Entity ent, DamageSource ds, float damage) {
-		ent.attackEntityFrom(ds, damage);
-	}
-	
+	//World interact
+	/**
+	 * Simulate a player's attack.
+	 * @param player
+	 * @param damage
+	 */
 	public static void doPlayerAttack(EntityPlayer player, float damage) {
 		Motion3D mo = new Motion3D(player, true);
 		MovingObjectPosition mop = GenericUtils.rayTraceBlocksAndEntities(GenericUtils.selectorLiving,
@@ -71,38 +69,6 @@ public class GenericUtils {
 		if(mop != null && mop.typeOfHit == MovingObjectType.ENTITY) {
 			mop.entityHit.attackEntityFrom(DamageSource.causePlayerDamage(player), damage);
 		}
-	}
-	
-	/**
-	 * split the string into multiple lines, each line has no more char than MAXCHARS.
-	 * It should be guaranteed that any word within the paragraph is no longer than MAXCHARS.
-	 */
-	public static List<String> chopString(String str, int MAXCHARS) {
-		List<String> ret = new ArrayList();
-		String[] chop = str.split(" ");
-		String cur = "";
-		for(int i = 0; i < chop.length; ++i) {
-			if(chop[i].length() > MAXCHARS) {
-				ret.addAll(rawChop(str, MAXCHARS));
-			} else if(cur.length() + chop[i].length() <= MAXCHARS) {
-				cur += chop[i] + " ";
-			} else {
-				ret.add(cur);
-				cur = chop[i] + " ";
-			}
-		}
-		if(cur != "") ret.add(cur);
-		return ret;
-	}
-	
-	public static List<String> rawChop(String str, int MAXCHARS) {
-		List<String> ret = new ArrayList<String>();
-		int cur = 0;
-		while(cur < str.length()) {
-			ret.add(str.substring(cur, Math.min(cur + MAXCHARS, str.length())));
-			cur += MAXCHARS;
-		}
-		return ret;
 	}
 	
 	public static MovingObjectPosition tracePlayer(EntityPlayer player, double dist) {
@@ -188,11 +154,10 @@ public class GenericUtils {
         explosion.isSmoking = true;
         
 		if(destroyTerrain) {
-			System.out.println("real expl");
 			explosion.doExplosionA();
 			explosion.doExplosionB(true);
-		} else { //Fix the damage using multiplyer. TODO: Test the actual value
-			System.out.println("fake expl");
+		} else { //Fix the damage using multiplyer. TODO: Test the value
+			//System.out.println("fake expl");
 			additionalDamage += strengh * .3;
 			additionalDamage *= 1.2;
 		}
@@ -224,30 +189,6 @@ public class GenericUtils {
 		else if(f < -180.0F)
 			f = (360.0F - f) % 360F;
 		return f;
-	}
-	
-	public static double distance(double dx, double dy, double dz) {
-		return Math.sqrt(distanceSq(dx, dy, dz));
-	}
-	
-	public static double distanceSq(double dx, double dy, double dz) {
-		return dx * dx + dy * dy + dz * dz;
-	}
-	
-	public static double distanceSq(double x0, double y0, double z0, double x1, double y1, double z1) {
-		return distanceSq(x0 - x1, y0 - y1, z0 - z1);
-	}
-	
-	public static double distance(double x0, double y0, double z0, double x1, double y1, double z1) {
-		return distance(x0 - x1, y0 - y1, z0 - z1);
-	}
-	
-	public static double planeDistance(double dx, double dy) {
-		return Math.sqrt(dx * dx + dy * dy);
-	}
-	
-	public static double planeDistance(double x0, double y0, double x1, double y1) {
-		return planeDistance(x1 - x0, y1 - y0);
 	}
 	
 	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {
@@ -384,22 +325,43 @@ public class GenericUtils {
 		return sndPath.concat(String.valueOf((char)('a' + a)));
 	}
 	
-	/**
-	 * get MC-namespace splitted string.
-	 * @param str
-	 * @param isNamespace
-	 * @return splitted string
-	 */
-	public static String splitString(String str, boolean isNamespace) {
-		String[] strs = str.split(":");
-		if(strs.length < 2) return str;
-		return isNamespace ? strs[0] : strs[1];
+	//Math
+	public static double vecLen(double ...ds) {
+		return Math.sqrt(vecLenSq(ds));
 	}
 	
-	public static <T> T safeFetchFrom(List<T> list, int id) {
-		if(id >= 0 && id < list.size())
-			return list.get(id);
-		return null;
+	public static double vecLenSq(double ...ds) {
+		double ret = 0.0d;
+		for(double d : ds) {
+			ret += d * d;
+		}
+		return ret;
+	}
+	
+	public static double distanceSq(double[] vec1, double[] vec2) {
+		if(vec1.length != vec2.length) {
+			throw new RuntimeException("Inconsistent length");
+		}
+		
+		double ret = 0.0;
+		for(int i = 0; i < vec1.length; ++i) {
+			double d = vec2[i] - vec1[i];
+			ret += d * d;
+		}
+		
+		return ret;
+	}
+	
+	public static double distance(double x0, double y0, double z0, double x1, double y1, double z1) {
+		return Math.sqrt(distanceSq(x0, y0, z0, x1, y1, z1));
+	}
+	
+	public static double distanceSq(double x0, double y0, double z0, double x1, double y1, double z1) {
+		return distanceSq(new double[] { x0, y0, z0 }, new double[] { x1, y1, z1 });
+	}
+	
+	public static double distance(double[] vec1, double[] vec2) {
+		return Math.sqrt(distanceSq(vec1, vec2));
 	}
 	
 	public static Vec3 multiply(Vec3 vec, double factor) {
@@ -417,11 +379,65 @@ public class GenericUtils {
 		return min;
 	}
 	
+	//Debug
 	public static <T> T assertObj(T obj) {
 		if (obj == null) {
 			throw new NullPointerException();
 		}
 		return obj;
+	}
+	
+	/**
+	 * get MC-namespace splitted string.
+	 * @param str
+	 * @param isNamespace
+	 * @return splitted string
+	 */
+	public static String splitString(String str, boolean isNamespace) {
+		String[] strs = str.split(":");
+		if(strs.length < 2) return str;
+		return isNamespace ? strs[0] : strs[1];
+	}
+	
+	/**
+	 * split the string into multiple lines, each line has no more char than MAXCHARS.
+	 * It should be guaranteed that any word within the paragraph is no longer than MAXCHARS.
+	 */
+	public static List<String> chopString(String str, int MAXCHARS) {
+		List<String> ret = new ArrayList();
+		String[] chop = str.split(" ");
+		String cur = "";
+		for(int i = 0; i < chop.length; ++i) {
+			if(chop[i].length() > MAXCHARS) {
+				ret.addAll(rawChop(str, MAXCHARS));
+			} else if(cur.length() + chop[i].length() <= MAXCHARS) {
+				cur += chop[i] + " ";
+			} else {
+				ret.add(cur);
+				cur = chop[i] + " ";
+			}
+		}
+		if(cur != "") ret.add(cur);
+		return ret;
+	}
+	
+	/**
+	 * Chop a string, doesn't care at all about seperators(spaces)
+	 */
+	public static List<String> rawChop(String str, int MAXCHARS) {
+		List<String> ret = new ArrayList<String>();
+		int cur = 0;
+		while(cur < str.length()) {
+			ret.add(str.substring(cur, Math.min(cur + MAXCHARS, str.length())));
+			cur += MAXCHARS;
+		}
+		return ret;
+	}
+	
+	public static <T> T safeFetchFrom(List<T> list, int id) {
+		if(id >= 0 && id < list.size())
+			return list.get(id);
+		return null;
 	}
 
 }

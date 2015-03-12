@@ -12,22 +12,16 @@
  */
 package cn.liutils.core.client.render;
 
-import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.annoreg.mc.RegEventHandler;
-import cn.annoreg.mc.RegEventHandler.Bus;
 import cn.liutils.api.render.IPlayerRenderHook;
 import cn.liutils.core.entity.EntityPlayerHook;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
 
 public class RenderPlayerHook extends Render {
 

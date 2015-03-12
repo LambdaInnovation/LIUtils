@@ -15,7 +15,6 @@ package cn.liutils.util.space;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
@@ -202,7 +201,7 @@ public class Motion3D {
 		e.motionZ = this.motionZ;
 		double tmp = Math.sqrt(motionX * motionX + motionZ * motionZ);
 		e.prevRotationYaw = e.rotationYaw = -(float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
-        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(motionY, (double)tmp) * 180.0D / Math.PI);
+        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(motionY, tmp) * 180.0D / Math.PI);
 	}
 	
 	/**

@@ -98,12 +98,14 @@ public class TileGenericSink extends TileEntity implements IEnergySink {
 		return maxInput;
 	}
 	
-    public void readFromNBT(NBTTagCompound nbt) {
+    @Override
+	public void readFromNBT(NBTTagCompound nbt) {
     	super.readFromNBT(nbt);
     	curEnergy = nbt.getDouble("energy");
     }
     
-    public void writeToNBT(NBTTagCompound nbt) {
+    @Override
+	public void writeToNBT(NBTTagCompound nbt) {
     	super.writeToNBT(nbt);
     	nbt.setDouble("energy", curEnergy);
     }

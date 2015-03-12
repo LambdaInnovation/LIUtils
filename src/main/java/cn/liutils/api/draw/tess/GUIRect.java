@@ -14,10 +14,6 @@ package cn.liutils.api.draw.tess;
 
 import java.util.EnumSet;
 
-import net.minecraft.client.renderer.Tessellator;
-
-import org.lwjgl.opengl.GL11;
-
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;

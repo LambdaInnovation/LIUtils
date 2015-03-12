@@ -19,8 +19,6 @@ import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.draw.DrawObject.EventType;
-
 /**
  * delegate events to a subset of DrawObjects.
  * This enables us to set the DrawObject generic properties at once, and then do the seperate rendering.
@@ -45,6 +43,7 @@ public class DrawObjectList extends DrawObject {
 		objs.addAll(Arrays.asList(dos));
 	}
 	
+	@Override
 	public void draw() {
 		postAll(EventType.PRE_DRAW);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);

@@ -42,14 +42,14 @@ public class LambdaFont {
 	public enum Align { LEFT, CENTER, RIGHT };
 	
 	static final int PER_LINE = 16;
-	final ResourceLocation png;
+	final ResourceLocation[] png;
 	final Map<Character, CharExtent> table = new HashMap();
-	int fontSize, spacing, texWidth, texHeight;
+	int fontSize, spacing, texWidth, texHeight, maxlines;
 	
 	double ratio;
 
-	public LambdaFont(ResourceLocation _png, String file) {
-		png = _png;
+	public LambdaFont(String file, ResourceLocation[] pngs) {
+		png = pngs;
 		Properties prop = new Properties();
 		init(LambdaFont.class.getResourceAsStream(file));
 	}
@@ -66,7 +66,7 @@ public class LambdaFont {
 		} catch (UnsupportedEncodingException e1) {
 			e1.printStackTrace();
 		}
-		Map<String, Integer> props = new HashMap();
+		Map<String, String> props = new HashMap();
 		
 		String str;
 		LIUtils.log.info("LambdaFont is loading a charset.");
@@ -80,13 +80,13 @@ public class LambdaFont {
 					//Start proc
 					if(key.length() == 0) continue;
 					if(key.length() != 1 && key.charAt(0) == '_') {
-						props.put(key, Integer.valueOf(value));
+						props.put(key, value);
 					} else {
 						if(key.length() == 1) {
 							String[] toparse = value.split(",");
 							//System.out.print(key.charAt(0));
 							table.put(key.charAt(0), 
-								new CharExtent(Integer.valueOf(toparse[0]), Double.valueOf(toparse[1])));
+								new CharExtent(Integer.valueOf(toparse[0]), Integer.valueOf(toparse[1]), Double.valueOf(toparse[2])));
 						}
 					}
 				} else {
@@ -99,12 +99,13 @@ public class LambdaFont {
 		}
 		LIUtils.log.info("Charset Loading ended.");
 		
-		fontSize = props.get("_size");
-		spacing = props.get("_spacing");
-		int csSize = props.get("_charset_size");
+		fontSize = Integer.valueOf(props.get("_size"));
+		spacing = Integer.valueOf(props.get("_spacing"));
+		int csSize = Integer.valueOf(props.get("_charset_size"));
+		maxlines = Integer.valueOf(props.get("_maxlines"));
 		
 		texWidth = fontSize * PER_LINE;
-		texHeight = (spacing + fontSize) * udiv(csSize, PER_LINE);
+		texHeight = (spacing + fontSize) * maxlines;
 		ratio = (double)(spacing + fontSize) / fontSize;
 	}
 	
@@ -114,7 +115,6 @@ public class LambdaFont {
 	
 	public void draw(String str, double x, double y, double size, Align align) {
 		GL11.glEnable(GL11.GL_BLEND);
-		RenderUtils.loadTexture(png);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		//GL11.glDepthMask(false);
 		double psx = HudUtils.SCALE_X, psy = HudUtils.SCALE_Y;
@@ -150,7 +150,6 @@ public class LambdaFont {
 	 */
 	public Vector2d drawLinebreak(String str, double x, double y, double size, double cst) {
 		GL11.glEnable(GL11.GL_BLEND);
-		RenderUtils.loadTexture(png);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 		double psx = HudUtils.SCALE_X, psy = HudUtils.SCALE_Y;
 		GL11.glPushMatrix();
@@ -310,16 +309,10 @@ public class LambdaFont {
 			int ind = ext.id;
 			double u = fontSize * (ind % PER_LINE),
 					v = (fontSize + spacing) * (ind / PER_LINE);
+			RenderUtils.loadTexture(png[ext.pid]);
 			HudUtils.drawRect(x0, y0, u, v, 1, ratio * HT_RATIO, fontSize, (fontSize + spacing) * HT_RATIO);
 			x0 += ext.getStep();
 		}
-	}
-	
-	private void drawSingleChar(char ch) {
-		CharExtent ext = getExtent(ch);
-		int ind = ext.id;
-		double HT_RATIO = 1;
-		HudUtils.drawRect(0, 0, fontSize * (ind % PER_LINE), (fontSize + spacing) * (ind / PER_LINE), 1, ratio * HT_RATIO, fontSize, (fontSize + spacing) * HT_RATIO);
 	}
 	
 	private CharExtent getExtent(char ch) {
@@ -329,9 +322,10 @@ public class LambdaFont {
 	}
 
 	private class CharExtent {
-		public final int id;
+		public final int id, pid;
 		private final double step;
-		public CharExtent(int _id, double _step) {
+		public CharExtent(int _pid, int _id, double _step) {
+			pid = _pid;
 			id = _id;
 			step = _step;
 		}

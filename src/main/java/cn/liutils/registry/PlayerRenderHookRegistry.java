@@ -12,7 +12,6 @@
  */
 package cn.liutils.registry;
 
-import java.lang.annotation.Annotation;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -26,7 +25,6 @@ import cn.liutils.api.render.IPlayerRenderHook;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.entity.EntityPlayerHook;
 import cn.liutils.registry.PlayerRenderHookRegistry.RegPlayerRenderHook.Pass;
-import cn.liutils.template.LIClientRegistry;
 
 /**
  * Register of PlayerRenderHook

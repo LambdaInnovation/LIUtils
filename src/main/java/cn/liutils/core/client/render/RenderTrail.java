@@ -14,13 +14,10 @@ package cn.liutils.core.client.render;
 
 import java.util.LinkedList;
 
-import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.Vec3;
-
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.draw.DrawObject;
@@ -30,7 +27,6 @@ import cn.liutils.api.draw.tess.CrossedSquare;
 import cn.liutils.core.entity.SamplePoint;
 import cn.liutils.template.entity.EntityTrailFX;
 import cn.liutils.util.GenericUtils;
-import cn.liutils.util.RenderUtils;
 
 public class RenderTrail extends Render {
 	
@@ -76,7 +72,7 @@ public class RenderTrail extends Render {
 				double dist = GenericUtils.distance(sp1.x, sp1.y, sp1.z, sp2.x, sp2.y, sp2.z);
 				square.width = dist;
 				double yaw = Math.atan2(sp2.x - sp1.x, sp2.z - sp1.z) * 180 / Math.PI;
-				double pitch = Math.atan2(sp2.y - sp1.y, GenericUtils.planeDistance(sp2.x - sp1.x, sp2.z - sp1.z)) * 180 / Math.PI;
+				double pitch = Math.atan2(sp2.y - sp1.y, GenericUtils.vecLen(sp2.x - sp1.x, sp2.z - sp1.z)) * 180 / Math.PI;
 				
 				GL11.glTranslated(sp1.x, sp1.y, sp1.z);
 				GL11.glRotated(yaw, 0, 1, 0);

@@ -15,10 +15,7 @@ package cn.liutils.util;
 import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.Item;
-import net.minecraft.world.World;
-import cpw.mods.fml.common.ObfuscationReflectionHelper;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**

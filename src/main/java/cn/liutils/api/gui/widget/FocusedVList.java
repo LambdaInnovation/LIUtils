@@ -26,10 +26,12 @@ public class FocusedVList extends ListVertical {
 		super(ID, x, y, w, h);
 	}
 	
+	@Override
 	public void progressNext() {
 		setFocus(focus + 1);
 	}
 	
+	@Override
 	public void progressLast() {
 		setFocus(focus - 1);
 	}

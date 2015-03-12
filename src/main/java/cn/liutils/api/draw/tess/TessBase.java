@@ -12,11 +12,7 @@
  */
 package cn.liutils.api.draw.tess;
 
-import java.util.EnumSet;
-
 import cn.liutils.api.draw.DrawHandler;
-import cn.liutils.api.draw.DrawObject;
-import cn.liutils.api.draw.DrawObject.EventType;
 
 /**
  * @author WeathFolD

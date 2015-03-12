@@ -14,7 +14,6 @@ package cn.liutils.api.player.state;
 
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
-import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.entity.player.EntityPlayer;
 

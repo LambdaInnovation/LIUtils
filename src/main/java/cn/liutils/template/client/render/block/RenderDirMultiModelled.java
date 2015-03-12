@@ -17,8 +17,6 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL14;
-
 import cn.liutils.api.render.model.ITileEntityModel;
 import cn.liutils.template.block.BlockDirectionalMulti;
 import cn.liutils.util.RenderUtils;

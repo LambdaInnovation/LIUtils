@@ -12,7 +12,6 @@
  */
 package cn.liutils.api.entityx;
 
-import cn.liutils.util.GenericUtils;
 import net.minecraft.util.Vec3;
 
 /**

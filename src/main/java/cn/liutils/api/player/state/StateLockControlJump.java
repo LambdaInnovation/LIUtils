@@ -18,7 +18,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.EntityPlayer;
-import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
 
 /**

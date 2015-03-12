@@ -21,12 +21,34 @@ import net.minecraft.entity.player.EntityPlayer;
  */
 public class ExpUtils {
 	
-	private static int dp[] = new int[2333];
+	private static int dp[] = new int[666];
 	static {
 		dp[0] = xpBarCap(0);
 		for(int i = 1; i < dp.length; ++i) {
 			dp[i] += dp[i - 1] + xpBarCap(i);
 		}
+	}
+	
+	/**
+	 * Returns the ceiling level value for the given exp.
+	 * @param exp experience
+	 * @return level that this exp corresponds to, counting start from 1
+	 */
+	public static int getLevel(int exp) {
+		int l = 0, r = dp.length - 1;
+		if(exp >= dp[dp.length - 1]) return dp.length;
+		//Perform a binary search.
+		while(l < r) {
+			int m = (l + r) / 2;
+			boolean a = dp[m] <= exp;
+			if(a) {
+				if(exp < dp[m + 1]) return m; //basic assumption: not over level 665
+				l = m + 1;
+			} else {
+				r = m - 1;
+			}
+		}
+		return l + 1;
 	}
 	
 	public static int getTotalExp(EntityPlayer player) {

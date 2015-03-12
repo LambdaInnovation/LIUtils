@@ -12,7 +12,6 @@
  */
 package cn.liutils.api.entityx.motion;
 
-import net.minecraft.entity.Entity;
 import cn.liutils.api.entityx.EntityX;
 import cn.liutils.api.entityx.MotionHandler;
 

@@ -12,13 +12,8 @@
  */
 package cn.liutils.api.player.state;
 
-import java.util.Set;
-
-import org.lwjgl.input.Keyboard;
-
 import cpw.mods.fml.common.eventhandler.Event;
 import cpw.mods.fml.common.gameevent.InputEvent.KeyInputEvent;
-import cn.liutils.api.player.state.StateBase.StateType;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.GameSettings;

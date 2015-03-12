@@ -13,7 +13,6 @@
 package cn.liutils.api.gui.widget;
 
 import net.minecraft.util.ResourceLocation;
-import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.prop.AssignTexture;
 import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.gui.Widget;
@@ -37,12 +36,14 @@ public class DragBar extends Widget {
 			rect = (GUIRect) drawer.getHandler("rect_2d");
 		}
 		
+		@Override
 		public void draw(double mx, double my, boolean mouseHovering) {
 			this.posY = progress * (DragBar.this.height - barHeight);
 			this.updatePos();
 			super.draw(mx, my, mouseHovering);
 		}
 		
+		@Override
 		public void onMouseDrag(double x0, double y0) {
 			if(!enableDragging)
 				return;
@@ -93,6 +94,7 @@ public class DragBar extends Widget {
 		return this;
 	}
 	
+	@Override
 	public void addSetTexture(ResourceLocation tex) {
 		bar.addSetTexture(tex);
 	}

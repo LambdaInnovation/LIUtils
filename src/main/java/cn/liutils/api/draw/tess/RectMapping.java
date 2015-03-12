@@ -12,8 +12,6 @@
  */
 package cn.liutils.api.draw.tess;
 
-import javax.vecmath.Vector2d;
-
 /**
  * Represents texture mapping info of a rectangle.
  * @author WeathFolD
