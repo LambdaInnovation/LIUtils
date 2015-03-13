@@ -16,7 +16,9 @@ import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
+
 import cn.annoreg.base.RegistrationFieldSimple;
+import cn.annoreg.core.LoadStage;
 import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
@@ -45,6 +47,7 @@ public class AttachKeyHandlerRegistry
 	
 	public AttachKeyHandlerRegistry() {
 		super(RegAttachKeyHandler.class, LIUtils.REGISTER_TYPE_KEYHANDLER);
+		setLoadStage(LoadStage.INIT);
 	}
 
 	@Override

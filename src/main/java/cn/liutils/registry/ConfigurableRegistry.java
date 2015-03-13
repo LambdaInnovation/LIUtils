@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Lambda Innovation, 2013-2015
+ha * Copyright (c) Lambda Innovation, 2013-2015
  * 本作品版权由Lambda Innovation所有。
  * http://www.li-dev.cn/
  *
@@ -23,6 +23,7 @@ import java.util.Map;
 
 import net.minecraftforge.common.config.Configuration;
 import cn.annoreg.core.AnnotationData;
+import cn.annoreg.core.LoadStage;
 import cn.annoreg.core.RegModInformation;
 import cn.annoreg.core.RegistryType;
 import cn.annoreg.core.RegistryTypeDecl;
@@ -39,6 +40,7 @@ public class ConfigurableRegistry extends RegistryType {
 
 	public ConfigurableRegistry() {
 		super(RegConfigurable.class, LIUtils.REGISTER_TYPE_CONFIGURABLE);
+		this.setLoadStage(LoadStage.PRE_INIT);
 	}
 
 	@Override

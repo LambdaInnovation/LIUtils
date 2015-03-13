@@ -2,7 +2,7 @@
 {
   "modid": "LIUtils",
   "name": "LIUtils",
-  "description": "A Minecraft Utility Mod that is the dependency of many LI MC Mods.",
+  "description": "An utility API mod that gives better modding experience for modders.",
   "version": "${version}",
   "mcversion": "${mcversion}",
   "url": "https://github.com/LambdaInnovation",
