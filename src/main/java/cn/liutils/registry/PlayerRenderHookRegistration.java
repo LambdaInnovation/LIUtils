@@ -23,7 +23,7 @@ import cn.annoreg.core.RegistryTypeDecl;
 import cn.liutils.api.render.IPlayerRenderHook;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.entity.EntityPlayerHook;
-import cn.liutils.registry.PlayerRenderHookRegistry.RegPlayerRenderHook.Pass;
+import cn.liutils.registry.PlayerRenderHookRegistration.RegPlayerRenderHook.Pass;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -31,20 +31,19 @@ import cpw.mods.fml.relauncher.SideOnly;
  * Register of PlayerRenderHook
  * @author WeathFolD
  */
-@RegistryTypeDecl
 @SideOnly(Side.CLIENT)
-public class PlayerRenderHookRegistry 
-		extends RegistrationInstance<PlayerRenderHookRegistry.RegPlayerRenderHook, IPlayerRenderHook> {
+@RegistryTypeDecl
+public class PlayerRenderHookRegistration 
+		extends RegistrationInstance<PlayerRenderHookRegistration.RegPlayerRenderHook, IPlayerRenderHook> {
 	
 	@Target({ElementType.TYPE, ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
-	@SideOnly(Side.CLIENT)
 	public @interface RegPlayerRenderHook {
 		enum Pass { OPAQUE, ALPHA };
 		Pass value() default Pass.OPAQUE;
 	}
 
-	public PlayerRenderHookRegistry() {
+	public PlayerRenderHookRegistration() {
 		super(RegPlayerRenderHook.class, LIUtils.REGISTER_TYPE_RENDER_HOOK);
 		setLoadStage(LoadStage.INIT);
 	}

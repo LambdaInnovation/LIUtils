@@ -88,15 +88,13 @@ public class LIUtils {
 	public void preInit(FMLPreInitializationEvent event) {
 		
 		log.info("Starting LIUtils " + VERSION);
-		log.info("Copyright (c) Lambda Innovation, 2013-2014");
-		log.info("http://www.li-dev.cn");
+		log.info("Copyright (c) Lambda Innovation, 2013-2015");
+		log.info("http://www.li-dev.cn/");
 		
 		//Initialize FMLGameEvent dispatcher
 		LIFMLGameEventDispatcher.init();
 		
-		RegistrationManager.INSTANCE.registerAll(this, "EventHandler");
-		RegistrationManager.INSTANCE.registerAll(this, "SubmoduleInit");
-		RegistrationManager.INSTANCE.registerAll(this, "MessageHandler");
+		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
 		
 		//Try and see if IC2 implementation exists
 		{
@@ -127,18 +125,22 @@ public class LIUtils {
 	public void init(FMLInitializationEvent Init) {
 		proxy.init();
 		
-		RegistrationManager.INSTANCE.registerAll(this, "Entity");
+		RegistrationManager.INSTANCE.registerAll(this, "Init");
 	}
 	
 	@EventHandler()
 	public void postInit(FMLPostInitializationEvent event) {
 		proxy.postInit();
+		
+		RegistrationManager.INSTANCE.registerAll(this, "PostInit");
 	}
 	
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
 		proxy.cmdInit(cm);
+		
+		RegistrationManager.INSTANCE.registerAll(this, "ServerStarting");
 	}
 	
 	private void registerEntity(Class<? extends Entity> cl, String name, int id) {
