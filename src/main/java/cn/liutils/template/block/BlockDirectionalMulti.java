@@ -122,6 +122,7 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
 	public SubBlockPos applyRotation(SubBlockPos pos, int dir) {
 		if(pos == null)
 			return null;
+		System.out.println(dir);
 		if(dir == 3) 
 			return new SubBlockPos(pos.offX, pos.offY, pos.offZ, pos.id);
 		if(dir == 4)
@@ -216,6 +217,7 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int metadata = l;
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
+        System.out.println(l);
        
         int dir = getFacingDirection(metadata).ordinal();
         SubBlockPos arr[] = new SubBlockPos[subBlocks.size()];
@@ -236,7 +238,10 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         
         for(int i = 1; i < subBlocks.size(); ++i) {
         	arr[i].setMe(world, x, y, z, metadata | (arr[i].id << 2), this);
+        	System.out.println(world.getTileEntity(arr[i].offX + x, arr[i].offY + y, arr[i].offZ + z));
         }
+        
+        System.out.println(world.getTileEntity(x, y, z) + " " + world.isRemote);
     }
 	
 	private void clearAll(World world, int x, int y, int z, int dir) {
