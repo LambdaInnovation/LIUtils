@@ -84,12 +84,15 @@ public class ItemBlockDirMulti extends ItemBlock {
         else if (world.canPlaceEntityOnSide(this.field_150939_a, x, y, z, false, side, player, stack))  {
         	//Inject: check if satisfies multiblock structure
         	int l = MathHelper.floor_double(player.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+        	System.out.println(x + " " + y + " " + z + " " + l);
         	for(SubBlockPos sbp : bdm.getSubRotated(l)) {
         		int nx = sbp.offX + x, ny = sbp.offY + y, nz = sbp.offZ + z;
         		if(!this.isBlockIgnorable(world, nx, ny, nz)) {
+        			System.out.println("ignored");
         			return false;
         		}
         	}
+        	System.out.println("passed");
         	
             int i1 = this.getMetadata(stack.getItemDamage());
             int j1 = this.field_150939_a.onBlockPlaced(world, x, y, z, side, a, b, c, i1);
@@ -108,11 +111,7 @@ public class ItemBlockDirMulti extends ItemBlock {
     
     private boolean isBlockIgnorable(World world, int x, int y, int z) {
     	Block before = world.getBlock(x, y, z);
-    	return 
-    		before == Blocks.vine || 
-    		before == Blocks.tallgrass || 
-    		before == Blocks.deadbush || 
-    		before.isReplaceable(world, x, y, z);
+    	return before.isReplaceable(world, x, y, z);
     }
 
 }

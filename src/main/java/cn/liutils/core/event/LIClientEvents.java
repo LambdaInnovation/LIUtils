@@ -53,4 +53,12 @@ public class LIClientEvents {
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 	}
 	
+	public static boolean hasForegroundGui() {
+		for(AuxGui ag : auxGuiList) {
+			if(ag.isOpen() && ag.isForeground())
+				return true;
+		}
+		return false;
+	}
+	
 }

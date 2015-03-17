@@ -60,6 +60,10 @@ public abstract class AuxGui {
 	}
 	
 	public abstract boolean isOpen();
+	/**
+	 * Judge if this GUI is a foreground GUI and interrupts key listening.
+	 */
+	public abstract boolean isForeground();
 	public abstract void draw(ScaledResolution sr);
 	
 	protected boolean needKeyListening() {

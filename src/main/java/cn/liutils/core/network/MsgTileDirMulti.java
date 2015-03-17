@@ -89,23 +89,22 @@ public class MsgTileDirMulti implements IMessage {
 			buf.writeInt(y);
 			buf.writeInt(z);
 		}
-		
-		@RegMessageHandler(msg = MsgTileDirMulti.Request.class, side = RegMessageHandler.Side.SERVER)
-		public static class Handler implements IMessageHandler<Request, IMessage> {
+	}
+	
+	@RegMessageHandler(msg = MsgTileDirMulti.Request.class, side = RegMessageHandler.Side.SERVER)
+	public static class RequestHandler implements IMessageHandler<Request, IMessage> {
 
-			@Override
-			public IMessage onMessage(Request msg, MessageContext ctx) {
-				World wrld = ctx.getServerHandler().playerEntity.worldObj;
-				TileEntity te = wrld.getTileEntity(msg.x, msg.y, msg.z);
-				if(te == null || !(te instanceof IMetadataProvider)) {
-					LIUtils.log.error("It seems we don't have the correspond tile "
-							+ "entity for the client sync request.");
-					return null;
-				}
-				LIUtils.netHandler.sendTo(new MsgTileDirMulti(te), ctx.getServerHandler().playerEntity);
+		@Override
+		public IMessage onMessage(Request msg, MessageContext ctx) {
+			World wrld = ctx.getServerHandler().playerEntity.worldObj;
+			TileEntity te = wrld.getTileEntity(msg.x, msg.y, msg.z);
+			if(te == null || !(te instanceof IMetadataProvider)) {
+				//LIUtils.log.error("It seems we don't have the correspond tile "
+				//		+ "entity for the client sync request.");
 				return null;
 			}
-			
+			LIUtils.netHandler.sendTo(new MsgTileDirMulti(te), ctx.getServerHandler().playerEntity);
+			return null;
 		}
 		
 	}

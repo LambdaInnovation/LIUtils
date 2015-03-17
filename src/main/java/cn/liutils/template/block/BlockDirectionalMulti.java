@@ -202,7 +202,7 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
 	public List<SubBlockPos> getSubRotated(int dir) {
 		List<SubBlockPos> ret = new ArrayList();
 		for(SubBlockPos sbp : subBlocks) {
-			ret.add(this.applyRotation(sbp, dir));
+			ret.add(this.applyRotation(sbp, getFacingDirection(dir).ordinal()));
 		}
 		return ret;
 	}
@@ -258,6 +258,7 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
     		y = crds[1];
     		z = crds[2];
     		int dir = BlockDirectionalMulti.getFacingDirection(metadata).ordinal();
+    		System.out.println("brk " + (metadata >> 2));
     		for(SubBlockPos bp : this.subBlocks) {
     			SubBlockPos bp2 = this.applyRotation(bp, dir);
     			Block inst = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);
