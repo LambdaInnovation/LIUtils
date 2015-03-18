@@ -168,6 +168,14 @@ task deobfJar(type: Jar, dependsOn: 'setupMavenRepo') {
 // add api classes to main package
 jar {
     dependsOn 'setupMavenRepo'
+
+    from {
+        configurations.compile.collectMany {
+            it.getName().contains('industrialcraft') ? 
+                [it.isDirectory() ? it : zipTree(it)] :
+                []
+        }
+    }
 }
 
 // make sure all of these happen when we run build
