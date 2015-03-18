@@ -16,6 +16,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.mc.network.RegNetworkCall;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Class that stores and handles per-block orientation&sub block ID info. You should delegate the
@@ -52,7 +54,14 @@ public class InfoBlockMulti {
 	 */
 	public void update() {
 		if(te.getWorldObj().isRemote) {
-			
+			if(!loaded) {
+				if(syncCD == 0) {
+					//Delegate sync method
+					syncCD = 10;
+				} else {
+					--syncCD;
+				}
+			}
 		}
 	}
 	
@@ -64,6 +73,16 @@ public class InfoBlockMulti {
 	public void load(NBTTagCompound tag) {
 		dir = ForgeDirection.values()[tag.getByte("dir")];
 		subID = tag.getInteger("sub");
+	}
+	
+	@RegNetworkCall(side = Side.SERVER)
+	public static void requestedByClient(int x, int y, int z) {
+		
+	}
+	
+	@RegNetworkCall(side = Side.CLIENT)
+	public static void receiveReply(byte dir, byte sid) {
+		
 	}
 
 }
