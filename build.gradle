@@ -155,7 +155,6 @@ task removeMavenRepoAfterUpload(dependsOn: 'uploadGithubArchives') << {
 // add a source jar
 task sourceJar(type: Jar, dependsOn: 'setupMavenRepo') {
     from sourceSets.main.allSource
-    from sourceSets.api.allSource
     classifier = 'sources'
 }
 
