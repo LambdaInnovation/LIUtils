@@ -75,18 +75,28 @@ archivesBaseName = "LIUtils"
 //---------------------------------
 
 repositories {
-	maven {
-		name = "ic2"
-		url = "http://maven.ic2.player.to/"
-	}
-	maven {
-		name = "annoreg"
-		url = "https://raw.github.com/LambdaInnovation/AnnotationRegistry/mvn_repo/AnnotationRegistry"
-	}
+    maven {
+        name = "ic2"
+        url = "http://maven.ic2.player.to/"
+    }
+    maven {
+        name = "annoreg"
+        url = "https://raw.github.com/LambdaInnovation/AnnotationRegistry/mvn_repo/AnnotationRegistry"
+    }
 }
+
 dependencies {
-	compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
-	compile 'cn.annoreg:AnnotationRegistry:[1.7.2.1,1.7.3.0):sources'
+    compile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
+    compile 'cn.annoreg:AnnotationRegistry:[1.7.2.1,1.7.3.0):sources'
+}
+
+configurations {
+    inJarDependencies
+}
+
+dependencies {
+    //This dependency should be copied to jar
+    inJarDependencies 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
 }
 
 //---------------------------------
@@ -169,10 +179,8 @@ jar {
     dependsOn 'setupMavenRepo'
 
     from {
-        configurations.compile.collectMany {
-            it.getName().contains('industrialcraft') ? 
-                [it.isDirectory() ? it : zipTree(it)] :
-                []
+        configurations.inJarDependencies.collect {
+            it.isDirectory() ? it : zipTree(it)
         }
     }
 }
