@@ -33,9 +33,9 @@ import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
-
 import cn.liutils.template.selector.EntitySelectorLiving;
 import cn.liutils.template.selector.EntitySelectorPlayer;
+import cn.liutils.util.misc.CustomExplosion;
 import cn.liutils.util.space.BlockPos;
 import cn.liutils.util.space.IBlockFilter;
 import cn.liutils.util.space.Motion3D;
@@ -137,37 +137,17 @@ public class GenericUtils {
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 
-	public static void explode(World world, Entity entity, float strengh,
-			double radius, double posX, double posY, double posZ,
-			float additionalDamage) {
-		explode(world, entity, strengh, radius, posX, posY, posZ, additionalDamage, true);
+	public static void explode(World world, Entity entity, float strengh, double posX, double posY, double posZ, double multiplier) {
+		explode(world, entity, strengh, posX, posY, posZ, multiplier, true);
 	}
 	
-	public static void explode(World world, Entity entity, float strengh,
-			double radius, double posX, double posY, double posZ,
-			float additionalDamage, boolean destroyTerrain) {
-		if(world.isRemote) //Ignore client operations
+	public static void explode(World world, Entity entity, float strengh, double posX, double posY, double posZ, double multiplier, boolean destroyTerrain) {
+		if(world.isRemote)
 			return;
-		
-		Explosion explosion = new Explosion(world, entity, posX, posY, posZ, strengh);
-        //explosion.isFlaming = true;
-        explosion.isSmoking = true;
-        
-		if(destroyTerrain) {
-			explosion.doExplosionA();
-			explosion.doExplosionB(true);
-		} else { //Fix the damage using multiplyer. TODO: Test the value
-			//System.out.println("fake expl");
-			additionalDamage += strengh * .3;
-			additionalDamage *= 1.2;
-		}
-		
-		if (additionalDamage <= 0)
-			return;
-
-		doRangeDamage(world, DamageSource.setExplosionSource(explosion), 
-				world.getWorldVec3Pool().getVecFromPool(posX, posY, posZ), 
-				additionalDamage, radius, entity);
+		CustomExplosion exp = new CustomExplosion(world, entity, posX, posY, posZ, strengh)
+			.setDamageMultiplyer(multiplier).setDestroyTerrain(destroyTerrain);
+		exp.doExplosionA();
+		exp.doExplosionB(true);
 	}
 	
 	public static void doRangeDamage(World world, DamageSource src, Vec3 pos, float strengh, double radius, Entity... exclusion) {
