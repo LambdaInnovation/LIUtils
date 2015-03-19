@@ -122,7 +122,6 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
 	public SubBlockPos applyRotation(SubBlockPos pos, int dir) {
 		if(pos == null)
 			return null;
-		System.out.println(dir);
 		if(dir == 3) 
 			return new SubBlockPos(pos.offX, pos.offY, pos.offZ, pos.id);
 		if(dir == 4)
