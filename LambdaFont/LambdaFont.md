@@ -9,6 +9,7 @@ Basic Properties
 "_spacing" (int): Additional spacing between lines. Used to prevent space collision. Pixels in Additional space should be rendered as well.
 "_maxlines" (int): How many lines that should be stored within one png.
 "_file_%ID%" (string): The file name of the png file with id %ID%.
+"_per_line" (int): characters allowed to draw in a line.
 
 .png file
 =====
@@ -16,7 +17,7 @@ the resolution of the file is always (_size * upper(_charset_size / 16), this_fi
 If the character in a block is narrow, it is drawn in the left part of the block, else, it fills the whole block.
 The offset of each character to the left-down origin of the block should be identical.
 
-Mapping: row-col pair of index i is: (i / 16, i % 16), its tex mapping(_size * row, (_size + _spacing) * (col % _maxlines)) in file: floor(col / maxlines).
+Mapping: row-col pair of index i is: (i / _per_line, i % _per_line), its tex mapping(_size * row, (_size + _spacing) * (col % _maxlines)) in file: floor(col / maxlines).
 
 .lf file
 =====

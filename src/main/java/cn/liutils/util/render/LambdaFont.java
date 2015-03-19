@@ -41,10 +41,9 @@ public class LambdaFont {
 	
 	public enum Align { LEFT, CENTER, RIGHT };
 	
-	static final int PER_LINE = 16;
 	final ResourceLocation[] png;
 	final Map<Character, CharExtent> table = new HashMap();
-	int fontSize, spacing, texWidth, texHeight, maxlines;
+	int perLine, fontSize, spacing, texWidth, texHeight, maxlines;
 	
 	double ratio;
 
@@ -99,12 +98,13 @@ public class LambdaFont {
 		}
 		LIUtils.log.info("Charset Loading ended.");
 		
+		perLine = Integer.valueOf(props.get("_per_line"));
 		fontSize = Integer.valueOf(props.get("_size"));
 		spacing = Integer.valueOf(props.get("_spacing"));
 		int csSize = Integer.valueOf(props.get("_charset_size"));
 		maxlines = Integer.valueOf(props.get("_maxlines"));
 		
-		texWidth = fontSize * PER_LINE;
+		texWidth = fontSize * perLine;
 		texHeight = (spacing + fontSize) * maxlines;
 		ratio = (double)(spacing + fontSize) / fontSize;
 	}
@@ -307,8 +307,8 @@ public class LambdaFont {
 			CharExtent ext = getExtent(line.charAt(i));
 			double HT_RATIO = 0.95;
 			int ind = ext.id;
-			double u = fontSize * (ind % PER_LINE),
-					v = (fontSize + spacing) * (ind / PER_LINE);
+			double u = fontSize * (ind % perLine),
+					v = (fontSize + spacing) * (ind / perLine);
 			RenderUtils.loadTexture(png[ext.pid]);
 			HudUtils.drawRect(x0, y0, u, v, 1, ratio * HT_RATIO, fontSize, (fontSize + spacing) * HT_RATIO);
 			x0 += ext.getStep();
