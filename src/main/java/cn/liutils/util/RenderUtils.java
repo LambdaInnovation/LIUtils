@@ -19,12 +19,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
+import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
-import cn.liutils.util.render.Vertex;
 
-import cpw.mods.fml.relauncher.SideOnly;
+import cn.liutils.api.draw.DrawObject;
+import cn.liutils.api.draw.prop.DisableLight;
+import cn.liutils.api.draw.tess.Rect;
+import cn.liutils.util.render.Vertex;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Utilities of generic world rendering. Defined quick aliaes for binding and rending, and some generic rendering routine. 
@@ -34,7 +38,7 @@ import cpw.mods.fml.relauncher.Side;
 @SideOnly(Side.CLIENT)
 public class RenderUtils {
 
-	private static ResourceLocation src_glint = new ResourceLocation("textures/misc/enchanted_item_glint.png");
+	public static ResourceLocation src_glint = new ResourceLocation("textures/misc/enchanted_item_glint.png");
 	
 	private static Tessellator t = Tessellator.instance;
 	private static int textureState = -1;
@@ -216,29 +220,33 @@ public class RenderUtils {
 	}
 	
 	public static void renderOverlay_Equip(ResourceLocation src) {
+		//Setup
 		GL11.glDepthFunc(GL11.GL_EQUAL);
     	GL11.glDisable(GL11.GL_LIGHTING);
     	loadTexture(src);
     	GL11.glEnable(GL11.GL_BLEND);
     	GL11.glBlendFunc(GL11.GL_SRC_COLOR, GL11.GL_ONE);
     	float f7 = 0.76F;
-    	//GL11.glColor4f(0.5F * f7, 0.25F * f7, 0.8F * f7, 1.0F);
     	GL11.glMatrixMode(GL11.GL_TEXTURE);
+    	//Push texture mat
     	GL11.glPushMatrix();
         float f8 = 0.125F;
         GL11.glScalef(f8, f8, f8);
         float f9 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
-        GL11.glTranslatef(f9, 0.0F, 0.0F);
+        GL11.glTranslatef(f9, 0.0F, 0.0F); //xOffset loops between 0.0 and 8.0
         GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
         ItemRenderer.renderItemIn2D(t, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
         GL11.glPopMatrix();
+        
+        //Second pass
         GL11.glPushMatrix();
         GL11.glScalef(f8, f8, f8);
-        f9 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F;
-        GL11.glTranslatef(-f9, 0.0F, 0.0F);
-        GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
+        f9 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F; //Loop between 0 and 8, longer loop
+        GL11.glTranslatef(-f9, 0.0F, 0.0F); //Still xOffset
+        GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F); //However, different rotation!
         ItemRenderer.renderItemIn2D(t, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
         GL11.glPopMatrix();
+        //Pop texture mat
         GL11.glMatrixMode(GL11.GL_MODELVIEW);
         GL11.glDisable(GL11.GL_BLEND);
         GL11.glEnable(GL11.GL_LIGHTING);
@@ -340,8 +348,6 @@ public class RenderUtils {
     public static void drawCube(double w, double l, double h) {
     	drawCube(w, l, h, false);
     }
-    
-    
    
     /**
      * Draw a cube with xwidth=w zwidth=l height=h at (0, 0, 0) with no texture.
@@ -408,3 +414,4 @@ public class RenderUtils {
     }
 
 }
+ 

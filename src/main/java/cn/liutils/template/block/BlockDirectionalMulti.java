@@ -216,7 +216,6 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
         int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         int metadata = l;
         world.setBlockMetadataWithNotify(x, y, z, metadata, 0x03);
-        System.out.println(l);
        
         int dir = getFacingDirection(metadata).ordinal();
         SubBlockPos arr[] = new SubBlockPos[subBlocks.size()];
@@ -262,7 +261,6 @@ public abstract class BlockDirectionalMulti extends BlockContainer {
     		y = crds[1];
     		z = crds[2];
     		int dir = BlockDirectionalMulti.getFacingDirection(metadata).ordinal();
-    		System.out.println("brk " + (metadata >> 2));
     		for(SubBlockPos bp : this.subBlocks) {
     			SubBlockPos bp2 = this.applyRotation(bp, dir);
     			Block inst = world.getBlock(x + bp2.offX, y + bp2.offY, z + bp2.offZ);

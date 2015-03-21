@@ -156,7 +156,7 @@ public class CustomExplosion extends Explosion {
                     float dmg = (float)(dmgMultiplier * (int)((d11 * d11 + d11) 
                     	/ 2.0 * 8.0 * (double)this.explosionSize + 1.0D));
                     entity.attackEntityFrom(DamageSource.setExplosionSource(this), dmg);
-                    System.out.println("Attack " + entity + " " + dmg);
+                    //System.out.println("Attack " + entity + " " + dmg);
                     
                     double d8 = EnchantmentProtection.func_92092_a(entity, d11);
                     entity.motionX += d5 * d8;
