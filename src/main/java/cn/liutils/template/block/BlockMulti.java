@@ -30,16 +30,23 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.core.LIUtils;
+import cn.liutils.core.proxy.LIClientProps;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author WeathFolD
  */
 public abstract class BlockMulti extends BlockContainer {
 	
-	private List<SubBlockPos> subList = new ArrayList();
-	private List<SubBlockPos>[] buffer;
+	List<SubBlockPos> subList = new ArrayList();
+	List<SubBlockPos>[] buffer;
 	
-	private boolean init = false;
+	@SideOnly(Side.CLIENT)
+	double[][] rotCenters;
+	
+	boolean init = false;
 	
 	public class SubBlockPos {
 		public final int dx, dy, dz;
@@ -64,7 +71,7 @@ public abstract class BlockMulti extends BlockContainer {
 	public abstract void initSubBlock();
 	
 	public void addSubBlock(int dx, int dy, int dz) {
-		if(!init) {
+		if(init) {
 			throw new RuntimeException("Trying to add a sub block after block init finished");
 		}
 		subList.add(new SubBlockPos(dx, dy, dz));
@@ -84,11 +91,22 @@ public abstract class BlockMulti extends BlockContainer {
 		buffer = new ArrayList[6];
 		
 		for(int i = 2; i <= 5; ++i) {
-			ForgeDirection dir = rotMap[i];
+			ForgeDirection dir = ForgeDirection.values()[i];
 			buffer[i] = new ArrayList();
 			for(SubBlockPos s : subList) {
 				buffer[i].add(rotate(s, dir));
 			}
+		}
+		
+		if(FMLCommonHandler.instance().getSide().isClient()) {
+			double[] arr = getRotCenter();
+			rotCenters = new double[][] {
+					{}, {},
+					{arr[0],  arr[1], arr[2]},
+					{-arr[0], arr[1], -arr[2]},
+					{arr[2],  arr[1], -arr[0]},
+					{-arr[2], arr[1], arr[0]}
+			};
 		}
 		//Finished, set the flag and encapsulate the instance.
 		init = true;
@@ -99,7 +117,7 @@ public abstract class BlockMulti extends BlockContainer {
 	private static final ForgeDirection[] rotMap = { NORTH, EAST, SOUTH, WEST }; //-Z, +X, +Z, -X
 	private static final double[] drMap = {
 		0, 0, 
-		0, 180, -90, 90
+		180, 0, -90, 90
 	};
 	private static final double[][] offsetMap = {
 		{}, {}, //placeholder
@@ -113,6 +131,10 @@ public abstract class BlockMulti extends BlockContainer {
 		return getPivotOffset(info.dir);
 	}
 	
+	public ForgeDirection getRotation(int l) {
+		return rotMap[l];
+	}
+	
 	/**
 	 * Get the whole structure's (minX, minZ) point coord, in [dir = 0] (a.k.a: facing z-) point of view.
 	 * @param side
@@ -120,6 +142,19 @@ public abstract class BlockMulti extends BlockContainer {
 	 */
 	public double[] getPivotOffset(ForgeDirection dir) {
 		return offsetMap[dir.ordinal()];
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public abstract double[] getRotCenter();
+	
+	@SideOnly(Side.CLIENT)
+	public double[] getOffsetRotated(ForgeDirection dir) {
+		double arr[] = getRotCenter();
+		switch(dir) {
+		
+		default:
+			throw new RuntimeException("Invalid rotate direction");
+		}
 	}
 	
 	//Placement API
@@ -151,7 +186,15 @@ public abstract class BlockMulti extends BlockContainer {
     		LIUtils.log.error("Didn't find correct tile when breaking a BlockMulti.");
     		return;
     	}
-    	
+    	InfoBlockMulti info = ((IMultiTile)te).getBlockInfo();
+    	int[] origin = getOrigin(te);
+    	if(origin == null)
+    		return;
+
+    	List<SubBlockPos> rotatedList = buffer[info.dir.ordinal()];
+    	for(SubBlockPos pos : rotatedList) {
+    		world.setBlockToAir(origin[0] + pos.dx, origin[1] + pos.dy, origin[2] + pos.dz);
+    	}
     }
     
     //A series of getOrigin funcs.
@@ -171,8 +214,9 @@ public abstract class BlockMulti extends BlockContainer {
     }
     
     public TileEntity getOriginTile(TileEntity now) {
-    	if(!(now instanceof IMultiTile) || now.blockType != this)
+    	if(!(now instanceof IMultiTile)) {
     		return null;
+    	}
     	InfoBlockMulti info = ((IMultiTile)now).getBlockInfo();
     	SubBlockPos sbp = buffer[info.dir.ordinal()].get(info.subID);
     	TileEntity ret = validate(now.getWorldObj().getTileEntity(now.xCoord - sbp.dx, now.yCoord - sbp.dy, now.zCoord - sbp.dz));
@@ -195,11 +239,26 @@ public abstract class BlockMulti extends BlockContainer {
 		}
 	}
 	
-	private double getRotation(InfoBlockMulti info) {
+	double getRotation(InfoBlockMulti info) {
 		return drMap[info.dir.ordinal()];
 	}
 	
 	private TileEntity validate(TileEntity te) {
-		return te instanceof IMultiTile && te.blockType == this ? te : null;
+		return te instanceof IMultiTile ? te : null;
+	}
+	
+	@Override
+    public boolean isOpaqueCube() {
+        return false;
+    }
+    
+	@Override
+    public int getRenderType() {
+        return LIClientProps.RENDER_TYPE_EMPTY;
+    }
+	
+	@Override
+	public boolean renderAsNormalBlock() {
+		return false;
 	}
 }
