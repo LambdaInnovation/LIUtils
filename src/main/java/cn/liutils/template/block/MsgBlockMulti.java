@@ -121,7 +121,7 @@ public class MsgBlockMulti implements IMessage {
 			if(info != null) {
 				info.dir = msg.dir;
 				info.subID = msg.s;
-				info.loaded = true;
+				info.setLoaded();
 			}
 			return null;
 		}

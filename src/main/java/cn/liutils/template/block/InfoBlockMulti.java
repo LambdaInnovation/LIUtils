@@ -30,7 +30,7 @@ public class InfoBlockMulti {
 	ForgeDirection dir;
 	int subID;
 	
-	boolean loaded; //Client-Only flag. Indicate if it was synced.
+	private boolean loaded; //Client-Only flag. Indicate if it was synced.
 	int syncCD; //Ticks until sending next sync request.
 
 	InfoBlockMulti(TileEntity _te, ForgeDirection _dir, int sid) {
@@ -75,13 +75,27 @@ public class InfoBlockMulti {
 				fail = true;
 			} else {
 				TileEntity ori = ((BlockMulti) b).getOriginTile(te);
-				if(ori == null)
+				if(ori == null) {
 					fail = true;
+				}
 			}
 			if(fail) { //Kill this block.
 				te.getWorldObj().setBlockToAir(te.xCoord, te.yCoord, te.zCoord);
+				te.getWorldObj().removeTileEntity(te.xCoord, te.yCoord, te.zCoord);
 			}
 		}
+	}
+	
+	public boolean isLoaded() {
+		return te.getWorldObj().isRemote ? loaded : true;
+	}
+	
+	public int getSubID() { return subID; }
+	
+	public ForgeDirection getDir() { return dir; }
+	
+	public void setLoaded() {
+		loaded = true;
 	}
 	
 	public void save(NBTTagCompound tag) {
@@ -92,6 +106,7 @@ public class InfoBlockMulti {
 	public void load(NBTTagCompound tag) {
 		dir = ForgeDirection.values()[tag.getByte("dir")];
 		subID = tag.getInteger("sub");
+		loaded = true;
 	}
 
 }

@@ -120,7 +120,8 @@ public abstract class BlockMulti extends BlockContainer {
 		180, 0, -90, 90
 	};
 	private static final double[][] offsetMap = {
-		{}, {}, //placeholder
+		{0, 0}, //placeholder
+		{0, 0}, //placeholder
 		{0, 0},
 		{1, 1},
 		{0, 1},
@@ -159,15 +160,17 @@ public abstract class BlockMulti extends BlockContainer {
 	
 	//Placement API
 	@Override
-    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack)
-    {
-        int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
+    public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
+    	if(world.isRemote)
+    		return;
+    	
+    	int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         ForgeDirection dir = rotMap[l];
         
-        //Set the origin block.
+    	//Set the origin block.
         TileEntity te = world.getTileEntity(x, y, z);
     	((IMultiTile)te).setBlockInfo(new InfoBlockMulti(te, dir, 0));
-        
+    	
         List<SubBlockPos> rotatedList = buffer[dir.ordinal()];
         //Check done in ItemBlockMulti, brutely replace here.
         for(int i = 1; i < rotatedList.size(); ++i) {
@@ -181,6 +184,9 @@ public abstract class BlockMulti extends BlockContainer {
 	
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)  {
+    	if(world.isRemote)
+    		return;
+    	
     	TileEntity te = world.getTileEntity(x, y, z);
     	if(!(te instanceof IMultiTile)) {
     		LIUtils.log.error("Didn't find correct tile when breaking a BlockMulti.");
@@ -218,6 +224,8 @@ public abstract class BlockMulti extends BlockContainer {
     		return null;
     	}
     	InfoBlockMulti info = ((IMultiTile)now).getBlockInfo();
+    	if(info == null || !info.isLoaded())
+    		return null;
     	SubBlockPos sbp = buffer[info.dir.ordinal()].get(info.subID);
     	TileEntity ret = validate(now.getWorldObj().getTileEntity(now.xCoord - sbp.dx, now.yCoord - sbp.dy, now.zCoord - sbp.dz));
     	return ret;
