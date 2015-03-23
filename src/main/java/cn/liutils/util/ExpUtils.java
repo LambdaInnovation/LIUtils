@@ -52,7 +52,7 @@ public class ExpUtils {
 	}
 	
 	public static int getTotalExp(EntityPlayer player) {
-		return dp[player.experienceLevel] + (int) (player.experience * player.xpBarCap());
+		return (player.experienceLevel > 0 ? dp[player.experienceLevel - 1] : 0) + (int) (player.experience * player.xpBarCap());
 	}
 
     public static int xpBarCap(int experienceLevel) {
@@ -60,7 +60,6 @@ public class ExpUtils {
     }
     
     public static boolean consumeExp(EntityPlayer player, int exp) {
-    	//TODO: Currently, change not shown in lower bar, our mistake or MC's mistake?
     	int total = getTotalExp(player);
     	if(exp > total) {
     		return false;

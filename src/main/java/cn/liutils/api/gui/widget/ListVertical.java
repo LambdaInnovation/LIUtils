@@ -100,7 +100,7 @@ public class ListVertical extends Widget {
 	}
 	
 	public double getRelativeProgress() {
-		return (double)progress / maxProgress;
+		return maxProgress == 0 ? 0 : (double)progress / maxProgress;
 	}
 	
 	public void setByRelativeProgress(double d) {
@@ -148,7 +148,7 @@ public class ListVertical extends Widget {
 	
 	//---------EVENT LISTENER------------
 	public void onProgressChanged() {
-		if(bar != null) {
+		if(bar != null && this.maxProgress != 0) { //Prevent dividing by 0.
 			bar.setProgress(this.progress / (double)this.maxProgress);
 		}
 	}
