@@ -45,7 +45,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
  * <code>cn.liutils.core</code> is core registration module, and should not be modified or invoked normally.
  * @author WeAthFolD
  */
-@Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
+@Mod(modid = "LIUtils", name = "LIUtils")
 @RegistrationMod(pkg = "cn.liutils.", res = "liutils", prefix = "liu_")
 public class LIUtils {
 	
@@ -57,14 +57,10 @@ public class LIUtils {
 		REGISTER_TYPE_CONFIGURABLE = "liu_configurable";
 	
 	/**
-	 * Version Number.
-	 */
-	public static final String VERSION = "1.7.2.402";
-	
-	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.
 	 */
-	public static final String DEPENDENCY = "required-after:LIUtils@" + VERSION;
+	//public static final String DEPENDENCY = "required-after:LIUtils@" + VERSION;
+	//IMPORTANT FIXME check if this is used
 	
 	/**
 	 * Does open debug mode. turn to false when compiling.
@@ -87,7 +83,7 @@ public class LIUtils {
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
 		
-		log.info("Starting LIUtils " + VERSION);
+		log.info("Starting LIUtils");
 		log.info("Copyright (c) Lambda Innovation, 2013-2015");
 		log.info("http://www.li-dev.cn/");
 		
