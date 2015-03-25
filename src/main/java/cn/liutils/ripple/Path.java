@@ -41,6 +41,21 @@ public final class Path {
             throw new RippleException("Invalid path");
     }
     
+    public boolean hasParent() {
+        return path != null;
+    }
+    
+    public Path getParent() {
+        if (!hasParent()) {
+            throw new RuntimeException("Try to get parent of the root namespace");
+        }
+        int id = path.lastIndexOf('.');
+        if (id == -1) {
+            return new Path(null);
+        }
+        return new Path(path.substring(0, id));
+    }
+    
     public static boolean isValid(String path) {
         return path == null || path.matches(pathRegex);
     }

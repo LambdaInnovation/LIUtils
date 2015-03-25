@@ -15,5 +15,29 @@ public class RippleException extends RuntimeException {
         super(message, cause);
     }
     
-    //TODO add constructors receiving script object
+    public static class ScriptCompilerException extends RippleException {
+        
+        /* Parser instance here */
+        
+        public ScriptCompilerException(String message /* Parser instance here */) {
+            super(message);
+        }
+        
+    }
+    
+    public static class ScriptRuntimeException extends RippleException {
+        
+        public final ScriptStacktrace stacktrace;
+        
+        public ScriptRuntimeException(String message) {
+            super(message);
+            this.stacktrace = ScriptStacktrace.getStacktrace();
+        }
+        
+        public ScriptRuntimeException(String message, Throwable cause) {
+            super(message, cause);
+            this.stacktrace = ScriptStacktrace.getStacktrace();
+        }
+        
+    }
 }

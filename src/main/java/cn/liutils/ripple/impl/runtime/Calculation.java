@@ -21,4 +21,9 @@ public final class Calculation {
         return (Boolean) value;
     }
     
+    public static boolean checkType(Object value) {
+        if (value == null) return false;
+        return value instanceof Integer || 
+                value instanceof Double || value instanceof Boolean;
+    }
 }
