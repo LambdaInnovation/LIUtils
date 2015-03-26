@@ -1,5 +1,6 @@
 package cn.liutils.ripple.impl.runtime;
 
+import cn.liutils.ripple.Path;
 import cn.liutils.ripple.ScriptNamespace;
 import cn.liutils.ripple.ScriptStacktrace;
 
@@ -12,6 +13,6 @@ import cn.liutils.ripple.ScriptStacktrace;
 public interface IFunction {
     
     Object call(Object[] args);
-    void bind(ScriptNamespace env);
+    void bind(ScriptNamespace path);
     
 }

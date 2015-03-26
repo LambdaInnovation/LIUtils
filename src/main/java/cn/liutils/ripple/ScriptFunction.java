@@ -11,15 +11,17 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
  */
 public final class ScriptFunction {
     
-    private final ScriptProgram parent;
+    private final ScriptNamespace path;
     private IFunction[] internalFunc;
     
-    public ScriptFunction(ScriptProgram parent) {
-        this.parent = parent;
+    public ScriptFunction(ScriptNamespace path) {
+        this.path = path;
         this.internalFunc = new IFunction[0];
     }
     
     public void merge(IFunction newFunc, int sizeArg) {
+        // At this point of time, the thread may also hold a lock on the program object.
+        // As the program is always locked before a function, no deadlocks.
         synchronized (this) {
             if (internalFunc.length <= sizeArg) {
                 IFunction[] newFuncArray = new IFunction[sizeArg + 1];
@@ -34,6 +36,7 @@ public final class ScriptFunction {
                 throw new ScriptRuntimeException("Function overloading fails. Argument number " + sizeArg);
             }
         }
+        newFunc.bind(path);
     }
     
     private IFunction getOverload(int sizeArg) {

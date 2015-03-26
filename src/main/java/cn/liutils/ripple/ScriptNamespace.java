@@ -11,12 +11,24 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
  */
 public final class ScriptNamespace {
     
-    private final ScriptProgram program;
-    private final Path path;
+    public final ScriptProgram program;
+    public final Path path;
     
     ScriptNamespace(ScriptProgram program, Path path) {
         this.program = program;
         this.path = path;
+    }
+
+    public ScriptFunction getFunction(String key) {
+        Object func = program.getObjectAt(new Path(this.path, key));
+        if (func != null) {
+            if (func instanceof ScriptFunction)
+                return (ScriptFunction) func;
+            else {
+                throw new ScriptRuntimeException("Try to convert a value to function");
+            }
+        }
+        throw new ScriptRuntimeException("Function not found");
     }
 
     public ScriptFunction getFunction(Path path) {
@@ -34,6 +46,18 @@ public final class ScriptNamespace {
         return null;
     }
     
+    public Object getValue(String key) {
+        Object value = program.getObjectAt(new Path(this.path, key));
+        if (value != null) {
+            if (Calculation.checkType(value)) {
+                return value;
+            } else {
+                throw new ScriptRuntimeException("Try to convert a function to value");
+            }
+        }
+        throw new ScriptRuntimeException("Value not found");
+    }
+    
     public Object getValue(Path path) {
         Object value = program.getObjectAt(new Path(this.path, path));
         if (value != null) {
@@ -46,19 +70,31 @@ public final class ScriptNamespace {
         if (this.path.hasParent()) {
             return program.at(this.path.getParent()).getValue(path);
         }
-        return null;
+        throw new ScriptRuntimeException("Value not found");
     }
     
     public int getInteger(Path path) {
         return Calculation.castInt(getValue(path));
     }
     
+    public int getInteger(String key) {
+        return Calculation.castInt(getValue(key));
+    }
+    
     public double getDouble(Path path) {
         return Calculation.castDouble(getValue(path));
     }
     
+    public double getDouble(String key) {
+        return Calculation.castDouble(getValue(key));
+    }
+    
     public boolean getBoolean(Path path) {
         return Calculation.castBoolean(getValue(path));
+    }
+    
+    public boolean getBoolean(String key) {
+        return Calculation.castBoolean(getValue(key));
     }
     
     public void setConst(String key, Object value) {
@@ -80,5 +116,9 @@ public final class ScriptNamespace {
      */
     public ScriptNamespace getSubNamespace(Path path) {
         return new ScriptNamespace(program, new Path(this.path, path));
+    }
+    
+    public ScriptNamespace getSubNamespace(String path) {
+        return getSubNamespace(new Path(path));
     }
 }

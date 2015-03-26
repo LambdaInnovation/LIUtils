@@ -56,18 +56,23 @@ public abstract class NativeFunction implements IFunction {
                     parameterMap.size() + " expected, " + args.length + " received.");
         }
         NativeFunctionFrame frame = new NativeFunctionFrame(args);
-        ScriptStacktrace.pushNativeFrame(frame);
+        
+        ScriptStacktrace.pushFrame(env.path);
         Object ret = call(frame);
         if (!Calculation.checkType(ret)) {
             throw new ScriptRuntimeException("Invalid return value");
         }
-        ScriptStacktrace.popNativeFrame();
+        ScriptStacktrace.popFrame();
+        
         return ret;
     }
-
+    
     @Override
-    public void bind(ScriptNamespace env) {
-        this.env = env;
+    public void bind(ScriptNamespace path) {
+        if (this.env != null) {
+            throw new ScriptRuntimeException("Try to rebind a native function");
+        }
+        this.env = path;
     }
     
     public int getParamterCount() {
