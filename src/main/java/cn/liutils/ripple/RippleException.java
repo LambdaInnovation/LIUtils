@@ -11,6 +11,10 @@ public class RippleException extends RuntimeException {
         super(message);
     }
     
+    public RippleException(Throwable cause) {
+        super(cause);
+    }
+    
     public RippleException(String message, Throwable cause) {
         super(message, cause);
     }
@@ -28,6 +32,11 @@ public class RippleException extends RuntimeException {
     public static class ScriptRuntimeException extends RippleException {
         
         public final ScriptStacktrace stacktrace;
+        
+        public ScriptRuntimeException(Throwable cause) {
+            super(cause);
+            this.stacktrace = ScriptStacktrace.getStacktrace();
+        }
         
         public ScriptRuntimeException(String message) {
             super(message);

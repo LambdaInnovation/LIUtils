@@ -29,12 +29,19 @@ public final class ScriptStacktrace {
         return new ScriptStacktrace();
     }
     
-    static void pushFrame(Path path) {
-        threadStacktrace.get().push(path);
+    static int pushFrame(Path path) {
+        Stack<Path> s = threadStacktrace.get();
+        int ret = s.size();
+        s.push(path);
+        return ret;
     }
     
     static void popFrame() {
         threadStacktrace.get().pop();
     }
     
+    static void adjustFrame(int count) {
+        Stack<Path> s = threadStacktrace.get();
+        s.setSize(count);
+    }
 }

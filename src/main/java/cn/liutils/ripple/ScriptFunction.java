@@ -49,7 +49,19 @@ public final class ScriptFunction {
     }
     
     public Object callObject(Object... args) {
-        return getOverload(args.length).call(args);
+        IFunction f = getOverload(args.length);
+        int frameCount = ScriptStacktrace.pushFrame(path.path);
+        try {
+            Object ret = f.call(args);
+            ScriptStacktrace.popFrame();
+            return ret;
+        } catch (ScriptRuntimeException e) {
+            ScriptStacktrace.adjustFrame(frameCount);
+            throw e;
+        } catch (Throwable t) {
+            ScriptStacktrace.adjustFrame(frameCount);
+            throw new ScriptRuntimeException(t);
+        }
     }
     
     public int callInteger(Object... args) {

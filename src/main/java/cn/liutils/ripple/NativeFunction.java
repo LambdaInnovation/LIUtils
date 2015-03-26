@@ -52,18 +52,21 @@ public abstract class NativeFunction implements IFunction {
     @Override
     public Object call(Object[] args) {
         if (args.length != parameterMap.size()) {
-            throw new ScriptRuntimeException("Invalid argument count. " + 
+            throw new ScriptRuntimeException("Invalid argument count for function " + env.path.path + ". " + 
                     parameterMap.size() + " expected, " + args.length + " received.");
         }
-        NativeFunctionFrame frame = new NativeFunctionFrame(args);
+        for (Object arg : args) {
+            if (!Calculation.checkType(arg)) {
+                throw new ScriptRuntimeException("Invalid argument type for function " + env.path.path + ".");
+            }
+        }
         
-        ScriptStacktrace.pushFrame(env.path);
+        NativeFunctionFrame frame = new NativeFunctionFrame(args);
         Object ret = call(frame);
+        
         if (!Calculation.checkType(ret)) {
             throw new ScriptRuntimeException("Invalid return value");
         }
-        ScriptStacktrace.popFrame();
-        
         return ret;
     }
     
