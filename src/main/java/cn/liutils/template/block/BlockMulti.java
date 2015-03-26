@@ -60,15 +60,7 @@ public abstract class BlockMulti extends BlockContainer {
 	public BlockMulti(Material p_i45386_1_) {
 		super(p_i45386_1_);
 		addSubBlock(0, 0, 0);
-		initSubBlock();
-		finishInit();
 	}
-	
-	//SubBlock definition API
-	/**
-	 * ONLY add sub blocks in this method (Called via super Ctor)
-	 */
-	public abstract void initSubBlock();
 	
 	public void addSubBlock(int dx, int dy, int dz) {
 		if(init) {
@@ -86,7 +78,10 @@ public abstract class BlockMulti extends BlockContainer {
 		}
 	}
 	
-	private void finishInit() {
+	/**
+	 * You MUST call this via your ctor, after init all the blocks.
+	 */
+	protected void finishInit() {
 		//Pre-init rotated position offset list.
 		buffer = new ArrayList[6];
 		

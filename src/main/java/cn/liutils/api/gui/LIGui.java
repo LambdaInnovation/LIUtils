@@ -328,6 +328,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
 			//System.out.println(cur.widget + " " + DebugUtils.formatArray(cur.x, cur.y, cur.scale));
+			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
 			cur.widget.draw((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top);
 			GL11.glPopMatrix();
 		}
