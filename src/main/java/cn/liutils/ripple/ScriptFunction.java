@@ -1,0 +1,80 @@
+package cn.liutils.ripple;
+
+import cn.liutils.ripple.impl.runtime.Calculation;
+import cn.liutils.ripple.impl.runtime.IFunction;
+import cn.liutils.ripple.RippleException.ScriptRuntimeException;
+
+/**
+ * A wrapped function object compiled from script.
+ * @author acaly
+ *
+ */
+public final class ScriptFunction {
+    
+    private final ScriptNamespace path;
+    private IFunction[] internalFunc;
+    
+    public ScriptFunction(ScriptNamespace path) {
+        this.path = path;
+        this.internalFunc = new IFunction[0];
+    }
+    
+    public void merge(IFunction newFunc, int sizeArg) {
+        // At this point of time, the thread may also hold a lock on the program object.
+        // As the program is always locked before a function, no deadlocks.
+        synchronized (this) {
+            if (internalFunc.length <= sizeArg) {
+                IFunction[] newFuncArray = new IFunction[sizeArg + 1];
+                for (int i = 0; i < internalFunc.length; ++i) {
+                    newFuncArray[i] = internalFunc[i];
+                }
+                newFuncArray[sizeArg] = newFunc;
+                internalFunc = newFuncArray;
+            } else if (internalFunc[sizeArg] == null) {
+                internalFunc[sizeArg] = newFunc;
+            } else {
+                throw new ScriptRuntimeException("Function overloading fails. Argument number " + sizeArg);
+            }
+        }
+        newFunc.bind(path);
+    }
+    
+    private IFunction getOverload(int sizeArg) {
+        synchronized (this) {
+            if (sizeArg >= internalFunc.length || internalFunc[sizeArg] == null) {
+                throw new ScriptRuntimeException("Function overload not found. Argument number " + sizeArg);
+            }
+            return internalFunc[sizeArg];
+        }
+    }
+    
+    public Object callObject(Object... args) {
+        IFunction f = getOverload(args.length);
+        int frameCount = ScriptStacktrace.pushFrame(path.path);
+        try {
+            Object ret = f.call(args);
+            ScriptStacktrace.popFrame();
+            return ret;
+        } catch (ScriptRuntimeException e) {
+            ScriptStacktrace.adjustFrame(frameCount);
+            throw e;
+        } catch (Throwable t) {
+            ScriptStacktrace.adjustFrame(frameCount);
+            throw new ScriptRuntimeException(t);
+        }
+    }
+    
+    public int callInteger(Object... args) {
+        return Calculation.castInt(callObject(args));
+    }
+    
+    public double callDouble(Object... args) {
+        return Calculation.castDouble(callObject(args));
+    }
+    
+    public boolean callBoolean(Object... args) {
+        return Calculation.castBoolean(callObject(args));
+    }
+    
+}
+
