@@ -5,8 +5,6 @@ import java.util.Stack;
 
 import com.google.common.collect.ImmutableList;
 
-import cn.liutils.ripple.NativeFunction.NativeFunctionFrame;
-
 /**
  * Stack trace of the current thread. 
  * @author acaly

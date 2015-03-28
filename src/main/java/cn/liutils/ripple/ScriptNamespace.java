@@ -1,6 +1,5 @@
 package cn.liutils.ripple;
 
-import cn.liutils.ripple.impl.runtime.Calculation;
 import cn.liutils.ripple.RippleException.ScriptRuntimeException;
 
 /**
@@ -106,6 +105,7 @@ public final class ScriptNamespace {
     
     public void setNativeFunction(String key, NativeFunction func) {
         program.mergeFunctionAt(new Path(path, key), func, func.getParamterCount());
+        func.bind(program, new Path(path, key));
     }
     
     /**

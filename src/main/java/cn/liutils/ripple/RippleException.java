@@ -1,5 +1,7 @@
 package cn.liutils.ripple;
 
+import cn.liutils.ripple.impl.compiler.Parser;
+
 /**
  * Super class for all exceptions that may be thrown in Ripple.
  * @author acaly
@@ -23,10 +25,13 @@ public class RippleException extends RuntimeException {
         
         /* Parser instance here */
         
-        public ScriptCompilerException(String message /* Parser instance here */) {
+        public ScriptCompilerException(String message, Parser parser) {
             super(message);
         }
         
+        public ScriptCompilerException(String message, Parser parser, Throwable cause) {
+            super(message, cause);
+        }
     }
     
     public static class ScriptRuntimeException extends RippleException {

@@ -2,8 +2,6 @@ package cn.liutils.ripple;
 
 import java.util.HashMap;
 
-import cn.liutils.ripple.impl.runtime.Calculation;
-import cn.liutils.ripple.impl.runtime.IFunction;
 import cn.liutils.ripple.RippleException.ScriptRuntimeException;
 
 /**
@@ -13,7 +11,7 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
  */
 public abstract class NativeFunction implements IFunction {
     
-    public class NativeFunctionFrame {
+    class NativeFunctionFrame {
         
         private Object[] args;
         
@@ -39,7 +37,8 @@ public abstract class NativeFunction implements IFunction {
         //get value or get function can also be added here if really needed
     }
     
-    private ScriptNamespace env;
+    private ScriptProgram env;
+    private Path functionPath;
     private final HashMap<String, Integer> parameterMap;
 
     protected NativeFunction(String[] parameters) {
@@ -52,12 +51,12 @@ public abstract class NativeFunction implements IFunction {
     @Override
     public Object call(Object[] args) {
         if (args.length != parameterMap.size()) {
-            throw new ScriptRuntimeException("Invalid argument count for function " + env.path.path + ". " + 
+            throw new ScriptRuntimeException("Invalid argument count for function " + functionPath.path + ". " + 
                     parameterMap.size() + " expected, " + args.length + " received.");
         }
         for (Object arg : args) {
             if (!Calculation.checkType(arg)) {
-                throw new ScriptRuntimeException("Invalid argument type for function " + env.path.path + ".");
+                throw new ScriptRuntimeException("Invalid argument type for function " + functionPath.path + ".");
             }
         }
         
@@ -70,15 +69,15 @@ public abstract class NativeFunction implements IFunction {
         return ret;
     }
     
-    @Override
-    public void bind(ScriptNamespace path) {
+    void bind(ScriptProgram env, Path path) {
         if (this.env != null) {
             throw new ScriptRuntimeException("Try to rebind a native function");
         }
-        this.env = path;
+        this.env = env;
+        this.functionPath = path;
     }
     
-    public int getParamterCount() {
+    int getParamterCount() {
         return parameterMap.size();
     }
     

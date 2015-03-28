@@ -2,11 +2,11 @@ package cn.liutils.ripple;
 
 import java.io.InputStream;
 import java.util.HashMap;
+import java.util.List;
 
 import cn.liutils.ripple.impl.compiler.FunctionClassLoader;
-import cn.liutils.ripple.impl.runtime.Calculation;
-import cn.liutils.ripple.impl.runtime.IFunction;
-import cn.liutils.ripple.impl.runtime.Library;
+import cn.liutils.ripple.impl.compiler.Parser;
+import cn.liutils.ripple.impl.compiler.Parser.ScriptObject;
 import cn.liutils.ripple.RippleException.ScriptRuntimeException;
 
 /**
@@ -17,8 +17,8 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
  */
 public final class ScriptProgram {
     
+    public final ScriptNamespace root = new ScriptNamespace(this, new Path(null));
     private final FunctionClassLoader classLoader = new FunctionClassLoader();
-    private final ScriptNamespace rootNamespace = new ScriptNamespace(this, new Path(null));
     private final HashMap<String, Object> objectMap = new HashMap();
     
     public ScriptProgram() {
@@ -26,20 +26,22 @@ public final class ScriptProgram {
     }
     
     public void loadScript(InputStream input) {
-        //TODO
-        //Call parse. Use classLoader to initialize a new environment.
-    }
-    
-    //Never returns null
-    public ScriptNamespace root() {
-        return rootNamespace;
+        List<ScriptObject> objects = Parser.parse(this, input, classLoader);
+        for (ScriptObject object : objects) {
+            if (object.value == null) {
+                this.mergeFunctionAt(new Path(object.path), object.func, object.funcArgNum);
+            } else {
+                this.setValueAt(new Path(object.path), object.value);
+            }
+        }
+        //TODO make it thread safe
     }
     
     public ScriptNamespace at(Path path) {
         return new ScriptNamespace(this, path);
     }
     
-    //may return an ScriptFunction, Integer, Double, Boolean or null.
+    //may return an FunctionWrapper, Integer, Double, Boolean or null.
     Object getObjectAt(Path path) {
         synchronized (this) {
             return objectMap.get(path.path);
@@ -62,7 +64,7 @@ public final class ScriptProgram {
         synchronized (this) {
             Object objInMap = objectMap.get(path.path);
             if (objInMap == null) {
-                ScriptFunction sf = new ScriptFunction(new ScriptNamespace(this, path));
+                ScriptFunction sf = new ScriptFunction(this, path);
                 sf.merge(value, nargs);
                 objectMap.put(path.path, sf);
             } else if (objInMap instanceof ScriptFunction) {

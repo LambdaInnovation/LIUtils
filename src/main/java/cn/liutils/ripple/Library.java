@@ -1,8 +1,5 @@
-package cn.liutils.ripple.impl.runtime;
+package cn.liutils.ripple;
 
-import cn.liutils.ripple.NativeFunction;
-import cn.liutils.ripple.ScriptNamespace;
-import cn.liutils.ripple.ScriptProgram;
 
 /**
  * Implementations of standard library.
@@ -13,8 +10,8 @@ public final class Library {
     
     private Library() {}
 
-    public static void openLibrary(ScriptProgram program) {
-        ScriptNamespace root = program.root();
+    static void openLibrary(ScriptProgram program) {
+        ScriptNamespace root = program.root;
         
         root.setNativeFunction("test", new NativeFunction(new String[] {}) {
             @Override

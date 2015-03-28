@@ -1,7 +1,5 @@
 package cn.liutils.ripple;
 
-import cn.liutils.ripple.impl.runtime.Calculation;
-import cn.liutils.ripple.impl.runtime.IFunction;
 import cn.liutils.ripple.RippleException.ScriptRuntimeException;
 
 /**
@@ -11,15 +9,15 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
  */
 public final class ScriptFunction {
     
-    private final ScriptNamespace path;
+    private Path path;
     private IFunction[] internalFunc;
     
-    public ScriptFunction(ScriptNamespace path) {
+    ScriptFunction(ScriptProgram program, Path path) {
         this.path = path;
         this.internalFunc = new IFunction[0];
     }
     
-    public void merge(IFunction newFunc, int sizeArg) {
+    void merge(IFunction newFunc, int sizeArg) {
         // At this point of time, the thread may also hold a lock on the program object.
         // As the program is always locked before a function, no deadlocks.
         synchronized (this) {
@@ -36,7 +34,6 @@ public final class ScriptFunction {
                 throw new ScriptRuntimeException("Function overloading fails. Argument number " + sizeArg);
             }
         }
-        newFunc.bind(path);
     }
     
     private IFunction getOverload(int sizeArg) {
@@ -50,7 +47,7 @@ public final class ScriptFunction {
     
     public Object callObject(Object... args) {
         IFunction f = getOverload(args.length);
-        int frameCount = ScriptStacktrace.pushFrame(path.path);
+        int frameCount = ScriptStacktrace.pushFrame(path);
         try {
             Object ret = f.call(args);
             ScriptStacktrace.popFrame();
@@ -76,5 +73,13 @@ public final class ScriptFunction {
         return Calculation.castBoolean(callObject(args));
     }
     
+    /**
+     * This function is for internal use only.
+     * @param nargs
+     * @return
+     */
+    IFunction cacheOverload(int nargs) {
+        return getOverload(nargs);
+    }
 }
 

@@ -1,8 +1,5 @@
-package cn.liutils.ripple.impl.runtime;
+package cn.liutils.ripple;
 
-import cn.liutils.ripple.Path;
-import cn.liutils.ripple.ScriptNamespace;
-import cn.liutils.ripple.ScriptStacktrace;
 
 /**
  * Super class for all compiled function, used by code generator.
@@ -13,6 +10,5 @@ import cn.liutils.ripple.ScriptStacktrace;
 public interface IFunction {
     
     Object call(Object[] args);
-    void bind(ScriptNamespace path);
     
 }

@@ -7,12 +7,23 @@ package cn.liutils.ripple.impl.compiler;
  */
 public enum UnaryOperator {
     
-    UNKNOWN,
+    UNKNOWN(null),
     
-    MINUS,
-    NOT,
+    MINUS("unMinus"),
+    NOT("unNot"),
 
-    EQUAL, NOT_EQUAL, GREATER, LESSER, GREATER_EQUAL, LESSER_EQUAL;
+    U_EQUAL("unEqual"),
+    U_NOT_EQUAL("unNotEqual"),
+    U_GREATER("unGreater"),
+    U_LESSER("unLesser"),
+    U_GREATER_EQUAL("unGreaterEqual"),
+    U_LESSER_EQUAL("unLesserEqual");
+    
+    public final String methodName;
+    
+    private UnaryOperator(String methodName) {
+        this.methodName = methodName;
+    }
     
     static UnaryOperator fromToken(Object /*Token*/ token) {
         return UNKNOWN;
