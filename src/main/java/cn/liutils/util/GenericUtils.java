@@ -31,7 +31,6 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import cn.liutils.template.selector.EntitySelectorLiving;
 import cn.liutils.template.selector.EntitySelectorPlayer;
@@ -39,6 +38,8 @@ import cn.liutils.util.misc.CustomExplosion;
 import cn.liutils.util.space.BlockPos;
 import cn.liutils.util.space.IBlockFilter;
 import cn.liutils.util.space.Motion3D;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.relauncher.Side;
 
 /**
  * Many sorts of utility functions.
@@ -52,6 +53,13 @@ public class GenericUtils {
 		selectorPlayer = new EntitySelectorPlayer();
 	
 	private static Random RNG = new Random();
+	
+	/**
+	 * Return the running environment side.
+	 */
+	public static Side getSide() {
+		return FMLCommonHandler.instance().getSide();
+	}
 	
 	//World interact
 	/**

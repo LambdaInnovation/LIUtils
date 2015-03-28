@@ -26,14 +26,16 @@ import cn.liutils.util.RenderUtils;
  */
 public class RenderBlockMultiModel extends RenderBlockMulti {
 	
-	ITileEntityModel mdl;
-	ResourceLocation tex;
+	protected ITileEntityModel mdl;
+	protected ResourceLocation tex;
 	protected double scale;
 	
 	public RenderBlockMultiModel(ITileEntityModel _mdl, ResourceLocation _tex) {
 		mdl = _mdl;
 		tex = _tex;
 	}
+	
+	public RenderBlockMultiModel() {}
 	
 	public RenderBlockMultiModel setScale(double f) {
 		scale = f;
