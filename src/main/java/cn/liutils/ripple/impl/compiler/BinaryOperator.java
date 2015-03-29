@@ -7,28 +7,25 @@ package cn.liutils.ripple.impl.compiler;
  */
 public enum BinaryOperator {
     
-    UNKNOWN(null),
-    
-    ADD("binAdd"),
-    SUBSTRACT("binSubstract"),
-    MULTIPLY("binMultiply"),
-    DIVIDE("binDivide"),
-    EQUAL("binEqual"),
-    NOT_EQUAL("binNotEqual"),
-    GREATER("binGreater"),
-    LESSER("binLesser"),
-    GREATER_EQUAL("binGreaterEqual"),
-    LESSER_EQUAL("binLesserEqual"), 
-    AND("binAnd"),
-    OR("binOr");
+    UNKNOWN("", 0),
+    ADD("binAdd", 3),
+    SUBSTRACT("binSubstract", 3),
+    MULTIPLY("binMultiply", 4),
+    DIVIDE("binDivide", 4),
+    EQUAL("binEqual", 2),
+    NOT_EQUAL("binNotEqual", 2),
+    GREATER("binGreater", 2),
+    LESSER("binLesser", 2),
+    GREATER_EQUAL("binGreaterEqual", 2),
+    LESSER_EQUAL("binLesserEqual", 2), 
+    AND("binAnd", 1),
+    OR("binOr", 1);
 
     public final String methodName;
-    
-    private BinaryOperator(String methodName) {
+    public final int priority;
+
+    private BinaryOperator(String methodName, int priority) {
         this.methodName = methodName;
-    }
-    
-    static BinaryOperator fromToken(Object /*Token*/ token) {
-        return UNKNOWN;
+        this.priority = priority;
     }
 }

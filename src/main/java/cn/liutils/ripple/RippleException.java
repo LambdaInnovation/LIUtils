@@ -1,5 +1,7 @@
 package cn.liutils.ripple;
 
+import java.io.IOException;
+
 import cn.liutils.ripple.impl.compiler.Parser;
 
 /**
@@ -31,6 +33,10 @@ public class RippleException extends RuntimeException {
         
         public ScriptCompilerException(String message, Parser parser, Throwable cause) {
             super(message, cause);
+        }
+
+        public ScriptCompilerException(Throwable cause, Parser parser) {
+            super(cause);
         }
     }
     

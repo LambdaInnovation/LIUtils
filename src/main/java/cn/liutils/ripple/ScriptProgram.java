@@ -1,6 +1,6 @@
 package cn.liutils.ripple;
 
-import java.io.InputStream;
+import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 
@@ -25,7 +25,7 @@ public final class ScriptProgram {
         Library.openLibrary(this);
     }
     
-    public void loadScript(InputStream input) {
+    public void loadScript(Reader input) {
         List<ScriptObject> objects = Parser.parse(this, input, classLoader);
         for (ScriptObject object : objects) {
             if (object.value == null) {

@@ -74,4 +74,21 @@ public final class Calculation {
         }
         throw new ScriptRuntimeException("Unsupported operand type in binary add");
     }
+    
+    public static Object binMultiply(Object a, Object b) {
+        if (a instanceof Integer) {
+            if (b instanceof Integer) {
+                return (Integer) a * (Integer) b;
+            } else if (b instanceof Integer) {
+                return ((Integer) a).doubleValue() * ((Double) b);
+            }
+        } else if (a instanceof Double) {
+            if (b instanceof Double) {
+                return (Double) a * (Double) b;
+            } else if (b instanceof Integer) {
+                return (Double) a * ((Integer) b).doubleValue();
+            }
+        }
+        throw new ScriptRuntimeException("Unsupported operand type in binary multiply");
+    }
 }
