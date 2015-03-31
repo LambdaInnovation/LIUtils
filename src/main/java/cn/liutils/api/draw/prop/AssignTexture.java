@@ -29,14 +29,10 @@ public class AssignTexture extends DrawHandler {
 
 	public ResourceLocation texture;
 	
-	public double texWidth, texHeight;
-	
 	public AssignTexture() {}
 	
 	public AssignTexture(ResourceLocation res, double tw, double th) {
 		set(res);
-		texWidth = tw;
-		texHeight = th;
 	}
 	
 	public AssignTexture(ResourceLocation res) {
@@ -45,11 +41,6 @@ public class AssignTexture extends DrawHandler {
 	
 	public void set(ResourceLocation tex) {
 		texture = tex;
-	}
-	
-	public void setResolution(double w, double h) {
-		texWidth = w;
-		texHeight = h;
 	}
 
 	@Override
@@ -66,9 +57,6 @@ public class AssignTexture extends DrawHandler {
 	public void onEvent(EventType event, DrawObject obj) {
 		if(texture != null)
 			RenderUtils.loadTexture(texture);
-		if(texWidth != 0 && texHeight != 0) {
-			HudUtils.setTextureResolution(texWidth, texHeight);
-		}
 	}
 
 }

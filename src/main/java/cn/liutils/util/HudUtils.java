@@ -38,7 +38,7 @@ public class HudUtils {
 	 * @param x
 	 * @param y
 	 */
-	public static void setTextureResolution(double x, double y) {
+	private static void setTextureResolution(double x, double y) {
 		SCALE_X = 1.0F/x;
 		SCALE_Y = 1.0F/y;
 	}
@@ -47,12 +47,21 @@ public class HudUtils {
 		zLevel = z;
 	}
 	
+	public static void checkResolution() {
+	    int width = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH),
+	        height = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
+	    System.out.println(width + " " + height);
+	    if(width != 0 && height != 0)
+	        setTextureResolution(width, height);
+	}
+	
     /**
      * Draws a textured rectangle at the stored z-value. Mapping the full texture to the rect.
      * Args: x, y, width, height
      */
     public static void drawRect(double x, double y, double width, double height)
     {
+        checkResolution();
         double f = SCALE_X;
         double f1 = SCALE_Y;
         Tessellator tessellator = Tessellator.instance;
@@ -78,6 +87,7 @@ public class HudUtils {
     }
     
     public static void drawModalRect(double x, double y, double width, double height) {
+        
     	double f = SCALE_X;
     	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
@@ -96,6 +106,7 @@ public class HudUtils {
      */
     public static void drawRect(double x, double y, double u, double v, double width, double height)
     {
+        checkResolution();
     	double f = SCALE_X;
     	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
@@ -117,6 +128,7 @@ public class HudUtils {
      */
     public static void drawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texHeight)
     {
+        checkResolution();
     	double f = SCALE_X;
     	double f1 = SCALE_Y;
         Tessellator t = Tessellator.instance;
