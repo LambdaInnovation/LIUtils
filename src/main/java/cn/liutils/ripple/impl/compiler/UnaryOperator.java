@@ -7,25 +7,28 @@ package cn.liutils.ripple.impl.compiler;
  */
 public enum UnaryOperator {
     
-    UNKNOWN(null),
+    UNKNOWN(""),
     
     MINUS("unMinus"),
     NOT("unNot"),
 
-    U_EQUAL("unEqual"),
-    U_NOT_EQUAL("unNotEqual"),
-    U_GREATER("unGreater"),
-    U_LESSER("unLesser"),
-    U_GREATER_EQUAL("unGreaterEqual"),
-    U_LESSER_EQUAL("unLesserEqual");
+    U_EQUAL(BinaryOperator.EQUAL),
+    U_NOT_EQUAL(BinaryOperator.NOT_EQUAL),
+    U_GREATER(BinaryOperator.GREATER),
+    U_LESSER(BinaryOperator.LESSER),
+    U_GREATER_EQUAL(BinaryOperator.GREATER_EQUAL),
+    U_LESSER_EQUAL(BinaryOperator.LESSER_EQUAL);
     
     public final String methodName;
+    public final BinaryOperator caseOp;
     
     private UnaryOperator(String methodName) {
         this.methodName = methodName;
+        this.caseOp = null;
     }
     
-    static UnaryOperator fromToken(Object /*Token*/ token) {
-        return UNKNOWN;
+    private UnaryOperator(BinaryOperator caseOp) {
+        this.methodName = null;
+        this.caseOp = caseOp;
     }
 }

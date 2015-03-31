@@ -16,8 +16,9 @@ import cn.liutils.ripple.Calculation;
 import cn.liutils.ripple.IFunction;
 import cn.liutils.ripple.Path;
 import cn.liutils.ripple.ScriptNamespace;
-import cn.liutils.ripple.RippleException.ScriptCompilerException;
+import cn.liutils.ripple.RippleException.RippleCompilerException;
 import cn.liutils.ripple.ScriptProgram;
+import cn.liutils.ripple.ScriptStacktrace;
 
 /**
  * The code generator for a single function. Used by parser.
@@ -44,7 +45,6 @@ public final class CodeGenerator {
     
     private static class SwitchBlockInfo {
         int localId;
-        Label labelBegin;
         Label labelEnd;
         Label labelNext;
         boolean hasDefault;
@@ -58,7 +58,6 @@ public final class CodeGenerator {
     
     private final ScriptProgram program;
     private final Parser parser;
-    private final FunctionClassLoader classLoader;
     
     private final HashMap<String, Integer> paramMap = new HashMap();
     
@@ -78,18 +77,17 @@ public final class CodeGenerator {
     private static final Type objectType = Type.getType(Object.class);
     private static final String funcCacheFieldPrefix = "funcCache_";
     
-    CodeGenerator(Parser parser, FunctionClassLoader classLoader, Path functionPath) {
+    CodeGenerator(Parser parser, Path functionPath) {
         this.parser = parser;
         this.program = parser.program;
-        this.classLoader = classLoader;
     }
 
     void addParameter(String name) {
         if (methodVisitor != null) {
-            throw new ScriptCompilerException("Try to add parameter in function body", parser);
+            throw new RippleCompilerException("Try to add parameter in function body", parser);
         }
         if (paramMap.size() >= 120) {
-            throw new ScriptCompilerException("Too many parameters", parser);
+            throw new RippleCompilerException("Too many parameters", parser);
         }
         paramMap.put(name, paramMap.size());
     }
@@ -97,7 +95,7 @@ public final class CodeGenerator {
     void functionBodyBegin() {
         int classId;
         synchronized (classNextId) {
-            classId = classNextId++;
+            classId = 0;// classNextId++;
         }
         visitCodeBegin(Integer.toString(classId));
     }
@@ -109,10 +107,10 @@ public final class CodeGenerator {
         
         this.visitCodeEnd();
         try {
-            Class<?> clazz = classLoader.defineClass(classType.getClassName(), classWriter.toByteArray());
+            Class<?> clazz = new FunctionClassLoader().defineClass(classType.getClassName(), classWriter.toByteArray());
             return (IFunction) clazz.getConstructor(ScriptProgram.class).newInstance(program);
         } catch (Throwable t) {
-            throw new ScriptCompilerException("Cannot generate function", this.parser, t);
+            throw new RippleCompilerException("Cannot generate function", this.parser, t);
         }
     }
 
@@ -155,7 +153,7 @@ public final class CodeGenerator {
         this.newTemp();
         Integer id = paramMap.get(name);
         if (id == null) {
-            throw new ScriptCompilerException("Parameter not found", this.parser);
+            throw new RippleCompilerException("Parameter not found", this.parser);
         }
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);
         methodVisitor.visitIntInsn(Opcodes.BIPUSH, id);
@@ -173,22 +171,31 @@ public final class CodeGenerator {
 
     //STACK -1+1
     void calcUnary(UnaryOperator op) {
-        this.transformTemp();
-        methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC,
-                Type.getInternalName(Calculation.class),
-                op.methodName,
-                Type.getMethodDescriptor(objectType, objectType));
+        if (op.caseOp == null) {
+            this.transformTemp();
+            methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC,
+                    Type.getInternalName(Calculation.class),
+                    op.methodName,
+                    Type.getMethodDescriptor(objectType, objectType));
+        } else {
+            this.pushSwitchValue();
+            //swap
+            methodVisitor.visitInsn(Opcodes.DUP_X1);
+            methodVisitor.visitInsn(Opcodes.POP);
+            
+            this.calcBinary(op.caseOp);
+        }
     }
     
     //STACK 0
-    void beforeCallFunction(String path) {
-        suspendedFunctionCall.push(new FunctionCallInfo()).path = path;
+    void beforeCallFunction(Path path) {
+        suspendedFunctionCall.push(new FunctionCallInfo()).path = path.path;
     }
     
     //STACK -nargs+1
     void afterCallFunction(int nargs) {
         if (nargs > 250) {
-            throw new ScriptCompilerException("Too many arguments", this.parser);
+            throw new RippleCompilerException("Too many arguments", this.parser);
         }
         
         String path = suspendedFunctionCall.pop().path;
@@ -221,12 +228,26 @@ public final class CodeGenerator {
         //exchange IFunction and arguments
         methodVisitor.visitInsn(Opcodes.DUP_X1);
         methodVisitor.visitInsn(Opcodes.POP);
+
+        //push frame
+        methodVisitor.visitLdcInsn(path);
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC,
+                Type.getInternalName(ScriptStacktrace.class),
+                "pushFrame",
+                Type.getMethodDescriptor(Type.INT_TYPE, Type.getType(String.class)));
+        methodVisitor.visitInsn(Opcodes.POP);
         
         //call
-        methodVisitor.visitMethodInsn(Opcodes.INVOKEVIRTUAL, 
+        methodVisitor.visitMethodInsn(Opcodes.INVOKEINTERFACE, 
                 Type.getInternalName(IFunction.class), 
                 "call", 
                 Type.getMethodDescriptor(objectType, Type.getType(Object[].class)));
+        
+        //pop frame
+        methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC, 
+                Type.getInternalName(ScriptStacktrace.class),
+                "popFrame",
+                Type.getMethodDescriptor(Type.VOID_TYPE));
     }
 
     //STACK -1
@@ -234,12 +255,10 @@ public final class CodeGenerator {
         this.popTemp();
         
         SwitchBlockInfo s = new SwitchBlockInfo();
-        s.localId = suspendedSwitchBlock.size();
-        s.labelBegin = new Label();
+        s.localId = suspendedSwitchBlock.size() + 2; //local starts from 2 (this, args)
         s.labelEnd = new Label();
         suspendedSwitchBlock.push(s);
         
-        methodVisitor.visitLabel(s.labelBegin);
         methodVisitor.visitVarInsn(Opcodes.ASTORE, s.localId);
     }
     
@@ -248,34 +267,38 @@ public final class CodeGenerator {
         SwitchBlockInfo s = suspendedSwitchBlock.pop();
         if (!s.hasDefault) {
             //throw exception
-            methodVisitor.visitLdcInsn("No case is meet");
+            methodVisitor.visitLdcInsn("Invalid switch input value");
             methodVisitor.visitMethodInsn(Opcodes.INVOKESTATIC,
                     Type.getInternalName(Calculation.class),
                     "throwRuntimeException", 
                     Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(String.class)));
+            //We have to push a value onto the stack, or jvm will throw an exception in control flow analysis
+            methodVisitor.visitInsn(Opcodes.ACONST_NULL);
         }
 
         this.newTemp();
         
         methodVisitor.visitLabel(s.labelEnd);
-        methodVisitor.visitLocalVariable(
-                "switch_" + s.localId, 
-                objectType.getDescriptor(),
-                null, s.labelBegin, s.labelEnd, s.localId);
+    }
+    
+    private void pushSwitchValue() {
+        SwitchBlockInfo s = suspendedSwitchBlock.peek();
+        this.newTemp();
+        methodVisitor.visitVarInsn(Opcodes.ALOAD, s.localId);
     }
     
     //STACK -1
     void switchCase(boolean hasWhen) {
         SwitchBlockInfo s = suspendedSwitchBlock.peek();
         if (s.hasDefault) {
-            throw new ScriptCompilerException("Default must be the last case", this.parser);
+            throw new RippleCompilerException("Default must be the last case", this.parser);
         }
         
         this.popTemp();
         
         if (!hasWhen) {
             //first compare
-            methodVisitor.visitVarInsn(Opcodes.ALOAD, s.localId);
+            this.pushSwitchValue();
             this.calcBinary(BinaryOperator.EQUAL);
         }
         
@@ -291,7 +314,7 @@ public final class CodeGenerator {
     void switchCaseDefault() {
         SwitchBlockInfo s = suspendedSwitchBlock.peek();
         if (s.hasDefault) {
-            throw new ScriptCompilerException("Default must be the last case", this.parser);
+            throw new RippleCompilerException("Default must be the last case", this.parser);
         }
         s.hasDefault = true;
     }
@@ -331,14 +354,14 @@ public final class CodeGenerator {
     
     private void popTemp() {
         if (tempVars.empty()) {
-            throw new ScriptCompilerException("Stack error", this.parser);
+            throw new RippleCompilerException("Stack error", this.parser);
         }
         tempVars.pop();
     }
     
     private void mergeTemp() {
         if (tempVars.empty()) {
-            throw new ScriptCompilerException("Stack error", this.parser);
+            throw new RippleCompilerException("Stack error", this.parser);
         }
         tempVars.pop();
     }
@@ -348,7 +371,7 @@ public final class CodeGenerator {
         
         for (int i = 0; i < merged; ++i) {
             if (tempVars.empty()) {
-                throw new ScriptCompilerException("Stack error", this.parser);
+                throw new RippleCompilerException("Stack error", this.parser);
             }
             tempVars.pop();
         }
@@ -356,13 +379,13 @@ public final class CodeGenerator {
     
     private void transformTemp() {
         if (tempVars.empty()) {
-            throw new ScriptCompilerException("Stack error", this.parser);
+            throw new RippleCompilerException("Stack error", this.parser);
         }
     }
     
     private void swapTopTemp() {
         if (tempVars.size() < 2) {
-            throw new ScriptCompilerException("Stack error", this.parser);
+            throw new RippleCompilerException("Stack error", this.parser);
         }
     }
     
@@ -371,7 +394,7 @@ public final class CodeGenerator {
     }
     
     private void visitCodeBegin(String id) {
-        classWriter = new ClassWriter(ClassWriter.COMPUTE_FRAMES);
+        classWriter = new ClassWriter(0);
         classType = Type.getType("cn/liutils/ripple/Function_" + id);
         //class ? implements IFunction
         classWriter.visit(Opcodes.V1_5, 
@@ -405,23 +428,6 @@ public final class CodeGenerator {
                 "program",
                 Type.getDescriptor(ScriptProgram.class),
                 null, null);
-        
-        //@Override public void bind(ScriptProgram program) {
-        //    this.program = program;
-        //}
-        /*
-        {
-            MethodVisitor mv = classWriter.visitMethod(Opcodes.ACC_PUBLIC, "bind",
-                    Type.getMethodDescriptor(Type.VOID_TYPE, Type.getType(ScriptProgram.class)),
-                    null, null);
-            mv.visitCode();
-            mv.visitVarInsn(Opcodes.ALOAD, 0);
-            mv.visitVarInsn(Opcodes.ALOAD, 1);
-            mv.visitFieldInsn(Opcodes.PUTFIELD, classType.getInternalName(), 
-                    "program", Type.getDescriptor(ScriptProgram.class));
-            mv.visitInsn(Opcodes.RETURN);
-            mv.visitEnd();
-        }*/
         
         //public Object call(Object[] params) {
         methodVisitor = classWriter.visitMethod(Opcodes.ACC_PUBLIC, "call", 

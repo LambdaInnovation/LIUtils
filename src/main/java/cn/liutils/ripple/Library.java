@@ -3,7 +3,7 @@ package cn.liutils.ripple;
 
 /**
  * Implementations of standard library.
- * @author acaly, WeAthFold
+ * @author acaly
  *
  */
 public final class Library {

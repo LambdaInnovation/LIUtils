@@ -1,6 +1,6 @@
 package cn.liutils.ripple;
 
-import cn.liutils.ripple.RippleException.ScriptRuntimeException;
+import cn.liutils.ripple.RippleException.RippleRuntimeException;
 
 /**
  * A wrapped function object compiled from script.
@@ -31,7 +31,7 @@ public final class ScriptFunction {
             } else if (internalFunc[sizeArg] == null) {
                 internalFunc[sizeArg] = newFunc;
             } else {
-                throw new ScriptRuntimeException("Function overloading fails. Argument number " + sizeArg);
+                throw new RippleRuntimeException("Function overloading fails. Argument number " + sizeArg);
             }
         }
     }
@@ -39,7 +39,7 @@ public final class ScriptFunction {
     private IFunction getOverload(int sizeArg) {
         synchronized (this) {
             if (sizeArg >= internalFunc.length || internalFunc[sizeArg] == null) {
-                throw new ScriptRuntimeException("Function overload not found. Argument number " + sizeArg);
+                throw new RippleRuntimeException("Function overload not found. Argument number " + sizeArg);
             }
             return internalFunc[sizeArg];
         }
@@ -47,17 +47,17 @@ public final class ScriptFunction {
     
     public Object callObject(Object... args) {
         IFunction f = getOverload(args.length);
-        int frameCount = ScriptStacktrace.pushFrame(path);
+        int frameCount = ScriptStacktrace.pushFrame(path.path);
         try {
             Object ret = f.call(args);
             ScriptStacktrace.popFrame();
             return ret;
-        } catch (ScriptRuntimeException e) {
+        } catch (RippleRuntimeException e) {
             ScriptStacktrace.adjustFrame(frameCount);
             throw e;
         } catch (Throwable t) {
             ScriptStacktrace.adjustFrame(frameCount);
-            throw new ScriptRuntimeException(t);
+            throw new RippleRuntimeException(t);
         }
     }
     

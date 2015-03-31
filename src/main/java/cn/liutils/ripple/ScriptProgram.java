@@ -7,7 +7,7 @@ import java.util.List;
 import cn.liutils.ripple.impl.compiler.FunctionClassLoader;
 import cn.liutils.ripple.impl.compiler.Parser;
 import cn.liutils.ripple.impl.compiler.Parser.ScriptObject;
-import cn.liutils.ripple.RippleException.ScriptRuntimeException;
+import cn.liutils.ripple.RippleException.RippleRuntimeException;
 
 /**
  * The global object of a ripple program.
@@ -18,7 +18,6 @@ import cn.liutils.ripple.RippleException.ScriptRuntimeException;
 public final class ScriptProgram {
     
     public final ScriptNamespace root = new ScriptNamespace(this, new Path(null));
-    private final FunctionClassLoader classLoader = new FunctionClassLoader();
     private final HashMap<String, Object> objectMap = new HashMap();
     
     public ScriptProgram() {
@@ -26,7 +25,7 @@ public final class ScriptProgram {
     }
     
     public void loadScript(Reader input) {
-        List<ScriptObject> objects = Parser.parse(this, input, classLoader);
+        List<ScriptObject> objects = Parser.parse(this, input);
         for (ScriptObject object : objects) {
             if (object.value == null) {
                 this.mergeFunctionAt(new Path(object.path), object.func, object.funcArgNum);
@@ -34,7 +33,11 @@ public final class ScriptProgram {
                 this.setValueAt(new Path(object.path), object.value);
             }
         }
-        //TODO make it thread safe
+    }
+    
+    public void setNativeFunction(Path path, NativeFunction func) {
+        this.mergeFunctionAt(path, func, func.getParamterCount());
+        func.bind(this, path);
     }
     
     public ScriptNamespace at(Path path) {
@@ -50,11 +53,11 @@ public final class ScriptProgram {
     
     void setValueAt(Path path, Object value) {
         if (!Calculation.checkType(value)) {
-            throw new ScriptRuntimeException("Invalid value type");
+            throw new RippleRuntimeException("Invalid value type");
         }
         synchronized (this) {
             if (objectMap.containsKey(path.path)) {
-                throw new ScriptRuntimeException("Try to modify an existing object");
+                throw new RippleRuntimeException("Try to modify an existing object");
             }
             objectMap.put(path.path, value);
         }
@@ -70,7 +73,7 @@ public final class ScriptProgram {
             } else if (objInMap instanceof ScriptFunction) {
                 ((ScriptFunction) objInMap).merge(value, nargs);
             } else {
-                throw new ScriptRuntimeException("Try to override a value with a function");
+                throw new RippleRuntimeException("Try to override a value with a function");
             }
         }
     }

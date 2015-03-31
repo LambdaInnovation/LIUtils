@@ -17,7 +17,7 @@ public final class Path {
     
     public Path(String path) {
         this.path = path;
-        if (!isValid(path))
+        if (!isValid(this.path))
             throw new RippleException("Invalid path");
     }
     
@@ -27,7 +27,7 @@ public final class Path {
         } else {
             this.path = parent.path + '.' + sub;
         }
-        if (!isValid(path))
+        if (!isValid(this.path))
             throw new RippleException("Invalid path");
     }
     
@@ -37,7 +37,7 @@ public final class Path {
         } else {
             this.path = parent.path + '.' + sub.path;
         }
-        if (!isValid(path))
+        if (!isValid(this.path))
             throw new RippleException("Invalid path");
     }
     
@@ -58,5 +58,25 @@ public final class Path {
     
     public static boolean isValid(String path) {
         return path == null || path.matches(pathRegex);
+    }
+    
+    public static Path concatenate(Path a, Path b) {
+        if (b.path == null) {
+            throw new RuntimeException("Try to concatenate null paths");
+        }
+        if (a.path == null) {
+            return b;
+        }
+        String matchA = '.' + a.path + '.';
+        int indexInB = b.path.indexOf('.');
+        if (indexInB == -1) {
+            return b;
+        }
+        String matchB = b.path.substring(0, indexInB);
+        int matching = matchA.indexOf('.' + matchB + '.');
+        if (matching == -1) {
+            return b;
+        }
+        return new Path(a.path.substring(0, matching) + b.path);
     }
 }

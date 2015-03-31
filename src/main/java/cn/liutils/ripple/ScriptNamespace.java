@@ -1,6 +1,6 @@
 package cn.liutils.ripple;
 
-import cn.liutils.ripple.RippleException.ScriptRuntimeException;
+import cn.liutils.ripple.RippleException.RippleRuntimeException;
 
 /**
  * A helper class used to find objects (functions and values) from
@@ -24,10 +24,10 @@ public final class ScriptNamespace {
             if (func instanceof ScriptFunction)
                 return (ScriptFunction) func;
             else {
-                throw new ScriptRuntimeException("Try to convert a value to function");
+                throw new RippleRuntimeException("Try to convert a value to function");
             }
         }
-        throw new ScriptRuntimeException("Function not found");
+        throw new RippleRuntimeException("Function not found");
     }
 
     public ScriptFunction getFunction(Path path) {
@@ -36,7 +36,7 @@ public final class ScriptNamespace {
             if (func instanceof ScriptFunction)
                 return (ScriptFunction) func;
             else {
-                throw new ScriptRuntimeException("Try to convert a value to function");
+                throw new RippleRuntimeException("Try to convert a value to function");
             }
         }
         if (this.path.hasParent()) {
@@ -51,10 +51,10 @@ public final class ScriptNamespace {
             if (Calculation.checkType(value)) {
                 return value;
             } else {
-                throw new ScriptRuntimeException("Try to convert a function to value");
+                throw new RippleRuntimeException("Try to convert a function to value");
             }
         }
-        throw new ScriptRuntimeException("Value not found");
+        throw new RippleRuntimeException("Value not found");
     }
     
     public Object getValue(Path path) {
@@ -63,13 +63,13 @@ public final class ScriptNamespace {
             if (Calculation.checkType(value)) {
                 return value;
             } else {
-                throw new ScriptRuntimeException("Try to convert a function to value");
+                throw new RippleRuntimeException("Try to convert a function to value");
             }
         }
         if (this.path.hasParent()) {
             return program.at(this.path.getParent()).getValue(path);
         }
-        throw new ScriptRuntimeException("Value not found");
+        throw new RippleRuntimeException("Value not found");
     }
     
     public int getInteger(Path path) {
@@ -98,14 +98,15 @@ public final class ScriptNamespace {
     
     public void setConst(String key, Object value) {
         if (!Calculation.checkType(value)) {
-            throw new ScriptRuntimeException("Invalid const value type");
+            throw new RippleRuntimeException("Invalid const value type");
         }
         program.setValueAt(new Path(path, key), value);
     }
     
     public void setNativeFunction(String key, NativeFunction func) {
-        program.mergeFunctionAt(new Path(path, key), func, func.getParamterCount());
-        func.bind(program, new Path(path, key));
+        Path p = new Path(path, key);
+        program.mergeFunctionAt(p, func, func.getParamterCount());
+        func.bind(program, p);
     }
     
     /**

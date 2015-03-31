@@ -11,13 +11,13 @@ import com.google.common.collect.ImmutableList;
  *
  */
 public final class ScriptStacktrace {
-    private static final ThreadLocal<Stack<Path>> threadStacktrace = new ThreadLocal<Stack<Path>>() {
-        @Override protected Stack<Path> initialValue() {
-            return new Stack<Path>();
+    private static final ThreadLocal<Stack<String>> threadStacktrace = new ThreadLocal<Stack<String>>() {
+        @Override protected Stack<String> initialValue() {
+            return new Stack<String>();
         }
     };
     
-    public final ImmutableList<Path> stacktrace;
+    public final ImmutableList<String> stacktrace;
     
     private ScriptStacktrace() {
         this.stacktrace = ImmutableList.copyOf(threadStacktrace.get());
@@ -26,20 +26,34 @@ public final class ScriptStacktrace {
     public static ScriptStacktrace getStacktrace() {
         return new ScriptStacktrace();
     }
-    
-    static int pushFrame(Path path) {
-        Stack<Path> s = threadStacktrace.get();
+
+    //internal use only
+    public static int pushFrame(String path) {
+        Stack<String> s = threadStacktrace.get();
         int ret = s.size();
         s.push(path);
         return ret;
     }
     
-    static void popFrame() {
+    //internal use only
+    public static void popFrame() {
         threadStacktrace.get().pop();
     }
     
     static void adjustFrame(int count) {
-        Stack<Path> s = threadStacktrace.get();
-        s.setSize(count);
+        threadStacktrace.get().setSize(count);
+    }
+    
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Script stacktrace: \n");
+        for (int i = stacktrace.size() - 1; i >= 0; --i) {
+            String s = stacktrace.get(i);
+            sb.append("    in function ");
+            sb.append(s);
+            sb.append('\n');
+        }
+        return sb.toString();
     }
 }

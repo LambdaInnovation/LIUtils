@@ -23,6 +23,7 @@ public enum BinaryOperator {
 
     public final String methodName;
     public final int priority;
+    public static final int MAX_PRIORITY = 10;
 
     private BinaryOperator(String methodName, int priority) {
         this.methodName = methodName;

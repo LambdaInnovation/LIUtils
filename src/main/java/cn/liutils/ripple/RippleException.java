@@ -23,38 +23,38 @@ public class RippleException extends RuntimeException {
         super(message, cause);
     }
     
-    public static class ScriptCompilerException extends RippleException {
+    public static class RippleCompilerException extends RippleException {
         
         /* Parser instance here */
         
-        public ScriptCompilerException(String message, Parser parser) {
+        public RippleCompilerException(String message, Parser parser) {
             super(message);
         }
         
-        public ScriptCompilerException(String message, Parser parser, Throwable cause) {
+        public RippleCompilerException(String message, Parser parser, Throwable cause) {
             super(message, cause);
         }
 
-        public ScriptCompilerException(Throwable cause, Parser parser) {
+        public RippleCompilerException(Throwable cause, Parser parser) {
             super(cause);
         }
     }
     
-    public static class ScriptRuntimeException extends RippleException {
+    public static class RippleRuntimeException extends RippleException {
         
         public final ScriptStacktrace stacktrace;
         
-        public ScriptRuntimeException(Throwable cause) {
+        public RippleRuntimeException(Throwable cause) {
             super(cause);
             this.stacktrace = ScriptStacktrace.getStacktrace();
         }
         
-        public ScriptRuntimeException(String message) {
+        public RippleRuntimeException(String message) {
             super(message);
             this.stacktrace = ScriptStacktrace.getStacktrace();
         }
         
-        public ScriptRuntimeException(String message, Throwable cause) {
+        public RippleRuntimeException(String message, Throwable cause) {
             super(message, cause);
             this.stacktrace = ScriptStacktrace.getStacktrace();
         }

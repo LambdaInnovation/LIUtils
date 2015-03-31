@@ -15,9 +15,11 @@ import com.google.common.collect.Lists;
 import cn.liutils.ripple.IFunction;
 import cn.liutils.ripple.Path;
 import cn.liutils.ripple.ScriptProgram;
-import cn.liutils.ripple.RippleException.ScriptCompilerException;
+import cn.liutils.ripple.RippleException.RippleCompilerException;
+import cn.liutils.ripple.impl.compiler.Token.MultiCharSymbol;
 
 public class Parser {
+    
     public static class ScriptObject {
         public Object value;
         public String path;
@@ -25,149 +27,9 @@ public class Parser {
         public int funcArgNum;
     }
     
-    private enum TokenType {
-        EOS,
-        IDENTIFIER,
-        INTEGER,
-        DOUBLE,
-        SINGLE_SYMBOL,
-        MULTI_SYMBOL,
-        KEY_WORD,
-    }
-    
-    private enum MultiCharSymbol {
-        S_GE,
-        S_LE,
-        S_NE,
-        
-        S_AND,
-        S_OR,
-    }
-    
-    private static HashSet<String> keywords = new HashSet(Arrays.asList(
-            "switch",
-            "when",
-            "true",
-            "false"
-            ));
-    
-    
-    private static class Token {
-        TokenType type;
-        char sSymbol;
-        MultiCharSymbol mSymbol;
-        String str;
-        int integerValue;
-        double doubleValue;
-        
-        public boolean isSingleChar(char c) {
-            return type == TokenType.SINGLE_SYMBOL && c == sSymbol;
-        }
-        
-        public boolean isMultiChar(MultiCharSymbol m) {
-            return type == TokenType.MULTI_SYMBOL && m == mSymbol;
-        }
-        
-        public boolean isIdentifier() {
-            return type == TokenType.IDENTIFIER;
-        }
-        
-        public boolean isKeyword(String val) {
-            return type == TokenType.KEY_WORD && str.equals(val);
-        }
-        
-        public boolean isInteger() {
-            return type == TokenType.INTEGER;
-        }
-        
-        public boolean isDouble() {
-            return type == TokenType.DOUBLE;
-        }
-        
-        public boolean isEOS() {
-            return type == TokenType.EOS;
-        }
-        
-        public void setSingleChar(char c) {
-            type = TokenType.SINGLE_SYMBOL;
-            sSymbol = c;
-        }
-        
-        public void setMultiChar(MultiCharSymbol m) {
-            type = TokenType.MULTI_SYMBOL;
-            mSymbol = m;
-        }
-        
-        public void setInteger(int val) {
-            type = TokenType.INTEGER;
-            integerValue = val;
-        }
-        
-        public void setDouble(double val) {
-            type = TokenType.DOUBLE;
-            doubleValue = val;
-        }
-        
-        public void setString(String val) {
-            if (keywords.contains(val)) {
-                this.type = TokenType.KEY_WORD;
-            } else {
-                this.type = TokenType.IDENTIFIER;
-            }
-            this.str = val;
-        }
-        
-        public void setEOS() {
-            type = TokenType.EOS;
-        }
-        
-        public BinaryOperator toBinOp() {
-            if (this.type == TokenType.SINGLE_SYMBOL) {
-                switch (this.sSymbol) {
-                case '+': return BinaryOperator.ADD;
-                case '-': return BinaryOperator.SUBSTRACT;
-                case '*': return BinaryOperator.MULTIPLY;
-                case '/': return BinaryOperator.DIVIDE;
-                case '=': return BinaryOperator.EQUAL;
-                case '>': return BinaryOperator.GREATER;
-                case '<': return BinaryOperator.LESSER;
-                }
-            } else if (this.type == TokenType.MULTI_SYMBOL) {
-                switch (this.mSymbol) {
-                case S_AND: return BinaryOperator.AND;
-                case S_GE: return BinaryOperator.GREATER_EQUAL;
-                case S_LE: return BinaryOperator.LESSER_EQUAL;
-                case S_NE: return BinaryOperator.NOT_EQUAL;
-                case S_OR: return BinaryOperator.OR;
-                }
-            }
-            return BinaryOperator.UNKNOWN;
-        }
-        
-        public UnaryOperator toUnOp() {
-            if (this.type == TokenType.SINGLE_SYMBOL) {
-                switch (this.sSymbol) {
-                case '-': return UnaryOperator.MINUS;
-                case '!': return UnaryOperator.NOT;
-                case '=': return UnaryOperator.U_EQUAL;
-                case '>': return UnaryOperator.U_GREATER;
-                case '<': return UnaryOperator.U_LESSER;
-                }
-            } else if (this.type == TokenType.MULTI_SYMBOL){
-                switch (this.mSymbol) {
-                case S_GE: return UnaryOperator.U_GREATER_EQUAL;
-                case S_LE: return UnaryOperator.U_LESSER_EQUAL;
-                case S_NE: return UnaryOperator.U_NOT_EQUAL;
-                default:
-                }
-            }
-            return UnaryOperator.UNKNOWN;
-        }
-    }
-    
     public ScriptProgram program;
-    private FunctionClassLoader loader;
     
+    private Reader inputReader;
     private LineNumberReader lineNumberReader;
     private PushbackReader reader;
     private Token currentToken;
@@ -175,11 +37,12 @@ public class Parser {
     private ArrayList<ScriptObject> parsedObject = new ArrayList();
     private Path currentPath = new Path(null);
     
-    private Parser(ScriptProgram program, Reader input, FunctionClassLoader loader) {
+    private Parser(ScriptProgram program, Reader input) {
         this.program = program;
-        this.loader = loader;
+        
+        this.inputReader = input;
         this.lineNumberReader = new LineNumberReader(input);
-        this.reader = new PushbackReader(input);//TODO use linenumberreader
+        this.reader = new PushbackReader(lineNumberReader);
         
         this.currentToken = new Token();
     }
@@ -190,34 +53,56 @@ public class Parser {
         this.readToken();
         this.parseNamespace();
         if (!this.currentToken.isEOS()) {
-            throw new ScriptCompilerException("Invalid token. Should be end of stream", this);
+            throw new RippleCompilerException("Invalid token. Should be end of stream", this);
         }
+        this.reader.close();
+        this.lineNumberReader.close();
+        this.inputReader.close();
+    }
+    
+    private Path parsePath(String first) throws IOException {
+        StringBuilder sb = new StringBuilder();
+        sb.append(first);
+        //first has been skipped
+        while (currentToken.isSingleChar('.')) {
+            sb.append('.');
+            this.readToken();
+            if (!currentToken.isIdentifier()) {
+                throw new RippleCompilerException("Invalid token. Should be identifier", this);
+            }
+            sb.append(currentToken.str);
+            this.readToken();
+        }
+        return new Path(sb.toString());
     }
     
     private void parseNamespace() throws IOException {
         while (currentToken.isIdentifier()) {
             String name = currentToken.str;
             this.readToken();
+            Path path = this.parsePath(name);
             if (currentToken.isSingleChar('{')) {
                 this.readToken();
                 Path parentPath = currentPath;
-                currentPath = new Path(parentPath, name);
+                currentPath = new Path(parentPath, path);
                 
                 this.parseNamespace();
                 
                 this.currentPath = parentPath;
                 if (!currentToken.isSingleChar('}')) {
-                    throw new ScriptCompilerException("Invalid token. Should be '}'", this);
+                    throw new RippleCompilerException("Invalid token. Should be '}'", this);
                 }
                 this.readToken();
             } else if (currentToken.isSingleChar('(')) {
-                this.parseFunction(new Path(currentPath, name));
+                this.parseFunction(new Path(currentPath, path));
+            } else {
+                throw new RippleCompilerException("Invalid token. Should be function or namespace", this);
             }
         }
     }
     
     private void parseFunction(Path functionPath) throws IOException {
-        CodeGenerator gen = new CodeGenerator(this, this.loader, functionPath);
+        CodeGenerator gen = new CodeGenerator(this, functionPath);
         
         //param list
         this.readToken();
@@ -226,7 +111,7 @@ public class Parser {
             //has params
             while (true) {
                 if (!currentToken.isIdentifier()) {
-                    throw new ScriptCompilerException("Invalid token. Should be parameter name", this);
+                    throw new RippleCompilerException("Invalid token. Should be parameter name", this);
                 }
                 gen.addParameter(currentToken.str);
                 ++nargs;
@@ -235,21 +120,21 @@ public class Parser {
                     break;
                 }
                 if (!currentToken.isSingleChar(',')) {
-                    throw new ScriptCompilerException("Invalid token. Should be ','", this);
+                    throw new RippleCompilerException("Invalid token. Should be ','", this);
                 }
                 this.readToken();
             }
         }
         this.readToken(); //skip ')'
         if (!currentToken.isSingleChar('{')) {
-            throw new ScriptCompilerException("Invalid token. Should be '{'", this);
+            throw new RippleCompilerException("Invalid token. Should be '{'", this);
         }
         this.readToken(); //skip '{'
         gen.functionBodyBegin();
         this.parseExpression(gen);
         IFunction f = gen.functionBodyEnd();
         if (!currentToken.isSingleChar('}')) {
-            throw new ScriptCompilerException("Invalid token. Should be '}'", this);
+            throw new RippleCompilerException("Invalid token. Should be '}'", this);
         }
         this.readToken();
         
@@ -268,7 +153,7 @@ public class Parser {
         UnaryOperator unop = currentToken.toUnOp();
         if (unop != UnaryOperator.UNKNOWN) {
             this.readToken();
-            this.parseSubExpr(gen, 100); //only read following prefix unary operators
+            this.parseSubExpr(gen, BinaryOperator.MAX_PRIORITY);
             gen.calcUnary(unop);
         } else {
             this.parseSimpleExpr(gen);
@@ -299,50 +184,88 @@ public class Parser {
             this.readToken();
             this.parseExpression(gen);
             if (!currentToken.isSingleChar(')')) {
-                throw new ScriptCompilerException("Invalid token. Should be ')'", this);
+                throw new RippleCompilerException("Invalid token. Should be ')'", this);
             }
             this.readToken();
         } else if (currentToken.isKeyword("switch")) {
-            throw new ScriptCompilerException("Switch expression is not supported", this);
+            this.readToken();
+            if (!currentToken.isSingleChar('(')) {
+                throw new RippleCompilerException("Invalid token. Should be '('", this);
+            }
+            this.readToken();
+            
+            this.parseExpression(gen);
+            
+            if (!currentToken.isSingleChar(')')) {
+                throw new RippleCompilerException("Invalid token. Should be ')'", this);
+            }
+            this.readToken();
+            
+            gen.pushSwitchBlock();
+            if (!currentToken.isSingleChar('{')) {
+                throw new RippleCompilerException("Invalid token. Should be '{'", this);
+            }
+            
+            do {
+                this.readToken();
+                if (currentToken.isKeyword("default")) {
+                    this.readToken();
+                    gen.switchCaseDefault();
+                } else if (currentToken.isKeyword("when")) {
+                    this.readToken();
+                    this.parseExpression(gen);
+                    gen.switchCase(true);
+                } else {
+                    this.parseExpression(gen);
+                    gen.switchCase(false);
+                }
+                
+                if (!currentToken.isSingleChar(':')) {
+                    throw new RippleCompilerException("Invalid token. Should be ':'", this);
+                }
+                this.readToken();
+                
+                this.parseExpression(gen);
+                gen.switchCaseEnd();
+            } while (currentToken.isSingleChar(';'));
+
+            if (!currentToken.isSingleChar('}')) {
+                throw new RippleCompilerException("Invalid token. Should be '}'", this);
+            }
+            gen.popSwitchBlock();
         } else if (currentToken.isIdentifier()) {
-            //TODO in a separated function
             String name = currentToken.str;
             this.readToken();
-            if (currentToken.isSingleChar('.')) {
-                //path
-                StringBuilder sb = new StringBuilder(name);
-                sb.append('.');
-                this.readToken();
-                if (!currentToken.isIdentifier()) {
-                    throw new ScriptCompilerException("Invalid path", this);
-                }
-                sb.append(currentToken.str);
-                this.readToken();
-                while (currentToken.isSingleChar('.')) {
-                    sb.append('.');
-                    this.readToken();
-                    if (!currentToken.isIdentifier()) {
-                        throw new ScriptCompilerException("Invalid path", this);
-                    }
-                    sb.append(currentToken.str);
-                    this.readToken();
-                }
-                Path path = new Path(sb.toString());
+            if (currentToken.isSingleChar('.') || currentToken.isSingleChar('(')) {
+                Path path = this.parsePath(name);
                 if (currentToken.isSingleChar('(')) {
-                    //func
-                    throw new ScriptCompilerException("Function call is not supported", this);
+                    gen.beforeCallFunction(Path.concatenate(this.currentPath, path));
+                    this.readToken();
+                    int nargs = 0;
+                    if (!currentToken.isSingleChar(')')) {
+                        ++nargs;
+                        this.parseExpression(gen);
+                        while (currentToken.isSingleChar(',')) {
+                            this.readToken();
+                            ++nargs;
+                            this.parseExpression(gen);
+                        }
+                        if (!currentToken.isSingleChar(')')) {
+                            throw new RippleCompilerException("Invalid token. Should be ')'", this);
+                        }
+                    }
+                    this.readToken(); //skip ')'
+                    gen.afterCallFunction(nargs);
                 } else {
                     //namespace value
-                    throw new ScriptCompilerException("Value reference is not supported", this);
+                    throw new RippleCompilerException("Value reference is not supported", this);
                 }
-            } else if (currentToken.isSingleChar('(')) {
-                //func
-                throw new ScriptCompilerException("Function call is not supported", this);
             } else {
                 //param
                 gen.pushParameter(name);
-                //the name has been skipped, no readToken here
             }
+        } else {
+            throw new RippleCompilerException("Invalid token. Should be expression", this);
         }
     }
     
@@ -371,7 +294,7 @@ public class Parser {
             }
             String resultStr = sb.toString();
             if (resultStr.endsWith(".")) {
-                throw new ScriptCompilerException("Invalid number format", this);
+                throw new RippleCompilerException("Invalid number format", this);
             }
             //double
             currentToken.setDouble(Double.parseDouble(resultStr));
@@ -413,6 +336,8 @@ public class Parser {
         case '}':
         case '.':
         case ',':
+        case ';':
+        case ':':
         case '=': //currently no ==
             currentToken.setSingleChar(c);
             break;
@@ -472,35 +397,19 @@ public class Parser {
                 readIdentifier(c);
                 return;
             } else {
-                throw new ScriptCompilerException("Unknown token", this);
+                throw new RippleCompilerException("Unknown token", this);
             }
         }
     }
     
     //api
-    public static List<ScriptObject> parse(ScriptProgram program, Reader input, FunctionClassLoader loader) {
-        //try {
-            //char c = (char) input.read();
-            //char c1 = '今';
-        //} catch (IOException e) {
-            // TODO Auto-generated catch block
-        //    e.printStackTrace();
-        //}
-        
-        Parser p = new Parser(program, input, loader);
+    public static List<ScriptObject> parse(ScriptProgram program, Reader input) {
+        Parser p = new Parser(program, input);
         try {
             p.parseProgram();
         } catch (IOException e) {
-            throw new ScriptCompilerException(e, p);
+            throw new RippleCompilerException(e, p);
         }
-        /*
-        ScriptObject o = new ScriptObject();
-        CodeGenerator gen = new CodeGenerator(p, loader, new Path("main"));
-        o.path = "main";
-        o.func = gen.testCompile();
-        o.funcArgNum = 1;
-        return Arrays.asList(new ScriptObject[] { o });
-        */
         return p.parsedObject;
     }
 }
