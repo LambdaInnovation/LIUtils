@@ -156,8 +156,6 @@ public class LambdaFont {
 			GL11.glTranslated(x, y, 0);
 			GL11.glScaled(size, size, 1);
 			
-			HudUtils.setTextureResolution(texWidth, texHeight);
-			
 			List<Pair<String, Boolean>> arr = dlbPreProc(str, size, cst);
 			
 			double spcstp = getExtent(' ').getStep();
@@ -302,7 +300,6 @@ public class LambdaFont {
 		default:
 			break;
 		}
-		HudUtils.setTextureResolution(texWidth, texHeight);
 		for(int i = 0; i < line.length(); ++i) {
 			CharExtent ext = getExtent(line.charAt(i));
 			double HT_RATIO = 0.95;

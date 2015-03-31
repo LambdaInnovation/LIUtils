@@ -20,6 +20,7 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
+import cn.liutils.util.HudUtils;
 
 /**
  * A most simple rectangle drawer that takes rect's width and height, then draw it in
