@@ -50,7 +50,7 @@ public class HudUtils {
 	public static void checkResolution() {
 	    int width = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_WIDTH),
 	        height = GL11.glGetTexLevelParameteri(GL11.GL_TEXTURE_2D, 0, GL11.GL_TEXTURE_HEIGHT);
-	    System.out.println(width + " " + height);
+	    
 	    if(width != 0 && height != 0)
 	        setTextureResolution(width, height);
 	}

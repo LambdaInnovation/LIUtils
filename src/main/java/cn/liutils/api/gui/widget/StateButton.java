@@ -39,7 +39,7 @@ public abstract class StateButton extends Widget {
 	protected LambdaFont font;
 	protected String text;
 	protected float textSize;
-	protected int[][] colors = {
+	protected int[][] textColors = {
 		{255, 255, 255, 255},
 		{255, 255, 255, 255},
 		{255, 255, 255, 255}
@@ -63,10 +63,10 @@ public abstract class StateButton extends Widget {
 	/**
 	 * You can pass null into colorData means use default color
 	 */
-	public void setTextData(float size, int[][] colorData) {
+	public void setTextData(float size, int[][] texColorData) {
 		textSize = size;
-		if(colorData != null) {
-			colors = colorData;
+		if(texColorData != null) {
+			textColors = texColorData;
 		}
 	}
 	
@@ -99,7 +99,7 @@ public abstract class StateButton extends Widget {
 				LIUtils.log.error("NULL FONT in " + this);
 				return;
 			}
-			RenderUtils.bindColor(colors[index]);
+			RenderUtils.bindColor(textColors[index]);
 			font.draw(StatCollector.translateToLocal(text), 
 				width / 2, height / 2 - textSize / 2, textSize, Align.CENTER);
 			RenderUtils.bindIdentity();
