@@ -376,6 +376,7 @@ public class Parser {
             } else {
                 currentToken.setSingleChar(c);
             }
+            break;
         //number
         case '0':
         case '1':
