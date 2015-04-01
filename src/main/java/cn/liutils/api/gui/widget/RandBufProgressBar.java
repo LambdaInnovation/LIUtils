@@ -16,7 +16,7 @@ import java.util.EnumSet;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
-
+import net.minecraft.util.ResourceLocation;
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
 import cn.liutils.api.draw.DrawObject.EventType;
@@ -55,12 +55,14 @@ public abstract class RandBufProgressBar extends Widget {
 	
 	private static final Random rand = new Random();
 	
+	ResourceLocation tex;
+	
 	private GUIRect orig;
 	
 	public RandBufProgressBar(double x, double y, double w, double h,
-			double u, double v, double tw, double th) {
+			ResourceLocation _tex, double u, double v, double tw, double th) {
 		super(x, y, w, h);
-		
+		tex = _tex;
 		lastDrawTime = Minecraft.getSystemTime();
 		
 		this.drawer = new DrawObject();
@@ -128,9 +130,15 @@ public abstract class RandBufProgressBar extends Widget {
 		});
 	}
 	
-	public void setDirection(Direction dir) {
+	public RandBufProgressBar setDirection(Direction dir) {
 		this.dir = dir;
+		return this;
 	}
+	
+	public RandBufProgressBar setFluctRegion(double r) {
+        fluctRegion = r;
+        return this;
+    }
 	
 	@Override
 	public void draw(double mx, double my, boolean mh) {

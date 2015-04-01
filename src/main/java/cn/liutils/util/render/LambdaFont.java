@@ -145,6 +145,22 @@ public class LambdaFont {
 	}
 	
 	/**
+	 * Basic Assumption: No line breaks.
+	 */
+	public void drawTrimmed(String str, double x, double y, double size, Align align, double cst, String postfix) {
+	    double cur = 0.0;
+	    for(int i = 0; i < str.length(); ++i) {
+	        CharExtent ext = getExtent(str.charAt(i));
+	        cur += ext.getStep() * size;
+	        if(cur > cst) {
+	            str = str.substring(0, i).concat(postfix);
+	            break;
+	        }
+	    }
+	    draw(str, x, y, size, align);
+	}
+	
+	/**
 	 * It must be guaranteed that the string contains no line-break characters
 	 * @returns area of drawing
 	 */

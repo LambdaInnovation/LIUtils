@@ -152,11 +152,15 @@ public class Widget {
 		}
 	}
 	
+	public Widget initTexDraw(ResourceLocation tex, double u, double v) {
+	    return initTexDraw(tex, u, v, width, height);
+	}
+	
 	/**
 	 * Init a built-in default drawer that draws the texture to the widget area.
 	 * tex can be null, which means we don't explicitly bind texture
 	 */
-	public void initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
+	public Widget initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
 		this.drawer = new DrawObject();
 		final GUIRect rect = new GUIRect(width, height, u, v, tw, th);
 		drawer.addHandler(rect);
@@ -175,6 +179,7 @@ public class Widget {
 		if(tex != null) {
 			drawer.addHandler(new AssignTexture(tex));
 		}
+		return this;
 	}
 	
 	public void addSetTexture(ResourceLocation tex) {

@@ -100,9 +100,10 @@ public class DragBar extends Widget {
 	}
 	
 	@Override
-	public void initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
+	public Widget initTexDraw(ResourceLocation tex, double u, double v, double tw, double th) {
 		setTexMapping(u, v, tw, th);
 		addSetTexture(tex);
+		return this;
 	}
 	
 	public Widget setTexture(ResourceLocation tex) {

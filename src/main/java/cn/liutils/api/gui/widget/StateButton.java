@@ -45,10 +45,14 @@ public abstract class StateButton extends Widget {
 		{255, 255, 255, 255}
 	};
 	
+	public StateButton(double x, double y, double w, double h, ResourceLocation tex, double[][] mappingData) {
+	    this(x, y, w, h, tex, w, h, mappingData);
+	}
+	
 	public StateButton(double x, double y, double w, double h, ResourceLocation tex, double tw, double th, double[][] mappingData) {
 		super(x, y, w, h);
 		this.initTexDraw(tex, 0, 0, tw, th);
-		maps = mappingData;
+		loadMappingData(mappingData);
 		rect = (GUIRect) drawer.getHandler("rect_2d");
 	}
 	
@@ -58,6 +62,16 @@ public abstract class StateButton extends Widget {
 	
 	public void setText(String str) {
 		text = str;
+	}
+	
+	private void loadMappingData(double[][] data) {
+	    maps = new double[3][];
+	    for(int i = 0; i < 3; ++i) {
+	        double[] rep = data.length > i ? data[i] : null;
+	        if(maps[i] == null) {
+	            maps[i] = rep == null ? data[0] : rep;
+	        }
+	    }
 	}
 	
 	/**
