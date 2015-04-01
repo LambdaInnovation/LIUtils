@@ -29,6 +29,8 @@ public class DragBar extends Widget {
 		
 		public GUIRect rect;
 		public AssignTexture tex;
+		
+		public double[][] mapData;
 
 		public Bar() {
 			super(0, 0, DragBar.this.width, barHeight);
@@ -40,6 +42,9 @@ public class DragBar extends Widget {
 		public void draw(double mx, double my, boolean mouseHovering) {
 			this.posY = progress * (DragBar.this.height - barHeight);
 			this.updatePos();
+			double[] map = this == getGui().getDraggingWidget() ? mapData[1] : mapData[0];
+			rect.getMap().u0 = map[0];
+			rect.getMap().v0 = map[1];
 			super.draw(mx, my, mouseHovering);
 		}
 		
@@ -63,7 +68,7 @@ public class DragBar extends Widget {
 	protected double barHeight;
 	Bar bar;
 	
-	public boolean enableDragging = false;
+	public boolean enableDragging = true;
 
 	/**
 	 * @param sh The bar drawing height
@@ -88,9 +93,17 @@ public class DragBar extends Widget {
 	public double getProgress() {
 		return progress;
 	}
+	
+	public Widget setTexMapping(ResourceLocation rl, double u, double v, double u1, double v1, double tw, double th) {
+        bar.mapData = new double[][] { {u, v}, {u1, v1} };
+        bar.rect.setMapping(0, 0, tw, th);
+        bar.drawer.addHandler(new AssignTexture(rl));
+        return this;
+    }
 
 	public Widget setTexMapping(double u, double v, double tw, double th) {
-		bar.rect.setMapping(u, v, tw, th);
+	    bar.mapData = new double[][] { {u, v}, {u, v} };
+		bar.rect.setMapping(0, 0, tw, th);
 		return this;
 	}
 	

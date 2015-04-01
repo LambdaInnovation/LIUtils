@@ -30,6 +30,7 @@ public class ListVertical extends Widget {
 	int progress;
 	int maxProgress;
 	double perHeight;
+	double yMargin = 0;
 	
 	private DragBar bar;
 	List<WidgetNode> aliveNodes = new ArrayList(); //real list
@@ -41,8 +42,14 @@ public class ListVertical extends Widget {
 		this.ID = ID;
 	}
 	
-	public void setDragBar(DragBar db) {
+	public ListVertical setYMargin(double d) {
+	    yMargin = d;
+	    return this;
+	}
+	
+	public ListVertical setDragBar(DragBar db) {
 		bar = db;
+		return this;
 	}
 	
 	@Override
@@ -74,18 +81,18 @@ public class ListVertical extends Widget {
 	}
 
 	public void progressNext() {
-		setProgress(progress + 1);
+		setProgress(progress + 1, true);
 	}
 	
 	public void progressLast() {
-		setProgress(progress - 1);
+		setProgress(progress - 1, true);
 	}
 	
-	public void setProgress(int prog) {
+	public void setProgress(int prog, boolean notify) {
 		int np = Math.max(0, Math.min(maxProgress, prog));
 		boolean changed = np != progress;
 		progress = np;
-		if(changed) {
+		if(changed && notify) {
 			onProgressChanged();
 		}
 		updateList();
@@ -105,7 +112,7 @@ public class ListVertical extends Widget {
 	
 	public void setByRelativeProgress(double d) {
 		d *= maxProgress;
-		setProgress((int) d);
+		setProgress((int) d, true);
 	}
 	
 	private void updateList() {
@@ -120,7 +127,7 @@ public class ListVertical extends Widget {
 		for(int i = progress; i < n && i < all.size(); ++i) {
 			WidgetNode w = all.get(i);
 			w.widget.posX = 0;
-			w.widget.posY = (i - progress) * perHeight;
+			w.widget.posY = (i - progress) * getRealHeight();
 			w.widget.doesDraw = true;
 			aliveNodes.add(w);
 			w.widget.updatePos();
@@ -128,14 +135,24 @@ public class ListVertical extends Widget {
 	}
 	
 	@Override
-	public void draw(double a, double b, boolean c) {}
+	public void draw(double a, double b, boolean c) {
+	    //check drag bar
+	    if(bar != null) {
+	        int lastProgress = progress;
+	        setProgress((int) (this.maxProgress * bar.getProgress()), false);
+	    }
+	}
 	
 	protected int getMaxShow() {
-		return perHeight == 0 ? 0 : MathHelper.floor_double(height / perHeight);
+		return perHeight == 0 ? 0 : MathHelper.floor_double(height / getRealHeight());
 	}
 	
 	public void setPerHeight(double d) {
 		perHeight = d;
+	}
+	
+	private double getRealHeight() {
+	    return perHeight + yMargin;
 	}
 	
 	@Override

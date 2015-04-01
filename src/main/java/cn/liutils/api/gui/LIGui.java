@@ -153,7 +153,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 	}
 	
 	static final long DRAG_TIME_TOLE = 100;
-	long lastStartTime;
+	long lastStartTime, lastDragTime;
 	WidgetNode draggingNode;
 	double xOffset, yOffset;
 	/**
@@ -176,11 +176,17 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
         		xOffset = mx - draggingNode.x;
         		yOffset = my - draggingNode.y;
         	}
-        	if(draggingNode != null)
+        	if(draggingNode != null) {
+        	    lastDragTime = time;
         		draggingNode.widget.onMouseDrag(
         			(mx - draggingNode.x - xOffset) / draggingNode.scale, 
         			(my - draggingNode.y - yOffset) / draggingNode.scale);
+        	}
     	}
+    }
+    
+    public Widget getDraggingWidget() {
+        return Math.abs(Minecraft.getSystemTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode.widget;
     }
     
     /**

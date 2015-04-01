@@ -39,9 +39,9 @@ public class FocusedVList extends ListVertical {
 	public void setFocus(int i) {
 		focus = Math.max(0, Math.min(getSubNodes().size() - 1, i));
 		if(focus < progress) {
-			setProgress(focus);
+			setProgress(focus, true);
 		} else if(focus + getMaxShow() >= progress){
-			setProgress(focus - this.getMaxShow() + 1);
+			setProgress(focus - this.getMaxShow() + 1, true);
 		}
 	}
 	

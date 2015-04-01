@@ -18,6 +18,7 @@ import java.util.List;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 
 import cn.liutils.api.draw.DrawHandler;
 import cn.liutils.api.draw.DrawObject;
@@ -234,14 +235,31 @@ public class Widget {
 	 * Should be called at this widget's draw() function.
 	 */
 	protected void drawBlackout() {
-		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GLU.gluOrtho2D(1, 0, 1, 0);
+		
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		
 		GL11.glColor4d(0, 0, 0, 0.6);
-		GL11.glTranslated(-node.x, -node.y, 0);
-		HudUtils.drawModalRect(0, 0, gui.width, gui.height);
+		HudUtils.setZLevel(-1);
+		HudUtils.drawModalRect(0, 0, 1, 1);
+		
 		GL11.glPopMatrix();
+		
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glPopMatrix();
+		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		RenderUtils.bindIdentity();
+		
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 
 }
