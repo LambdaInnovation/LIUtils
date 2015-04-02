@@ -37,6 +37,7 @@ import cn.liutils.util.misc.Pair;
  * Java+LIUtils implementation of LambdaFont.
  * @author WeathFolD
  */
+@Deprecated
 public class LambdaFont {
 	
 	public enum Align { LEFT, CENTER, RIGHT };

@@ -40,8 +40,8 @@ public class LIGuiContainer extends GuiContainer {
     	if(isSlotActive()) {
     		super.drawScreen(a, b, c);
     	} else {
-    		this.drawDefaultBackground();
-    		gui.draw(a, b);
+    	    gui.resize(width, height);
+            gui.draw(a, b);
     	}
     }
 

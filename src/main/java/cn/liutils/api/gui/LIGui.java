@@ -121,6 +121,12 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		sub.onAdded();
 	}
 	
+	public void clearSubWidgets(Widget w) {
+	    for(WidgetNode node : w.node.sub) {
+	        node.widget.disposed = true;
+	    }
+	}
+	
 	public boolean isVisible(Widget wig) {
 		do {
 			if(!wig.doesDraw)

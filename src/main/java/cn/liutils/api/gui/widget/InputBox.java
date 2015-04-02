@@ -22,6 +22,8 @@ import org.lwjgl.input.Keyboard;
 
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.RenderUtils;
+import cn.liutils.util.render.Font;
+import cn.liutils.util.render.Font.Align;
 import cn.liutils.util.render.LambdaFont;
 
 /**
@@ -37,8 +39,8 @@ public class InputBox extends Widget {
 	String[] contents;
 	int editLine = 0;
 
-	LambdaFont font = null;
-	int[] textColor = new int[] { 255, 255, 255, 255 };
+	Font font = Font.font;
+	int textColor = 0xFFFFFF;
 	
 	boolean echo = false;
 	char echoChar = '*';
@@ -60,11 +62,8 @@ public class InputBox extends Widget {
 		return true;
 	}
 	
-	public InputBox setTextColor(int r, int g, int b, int a) {
-		textColor[0] = r;
-		textColor[1] = g;
-		textColor[2] = b;
-		textColor[3] = a;
+	public InputBox setTextColor(int c) {
+		textColor = c;
 		return this;
 	}
 	
@@ -78,16 +77,17 @@ public class InputBox extends Widget {
 		return this;
 	}
 	
-	public InputBox setFont(LambdaFont font) {
+	public InputBox setFont(Font font) {
 		this.font = font;
 		return this;
 	}
 	
 	@Override
 	public void draw(double mx, double my, boolean hover) {
+	    super.draw(mx, my, hover);
+	    
 		boolean focus = this.isFocused();
 		double y = 0.0;
-		RenderUtils.bindColor(textColor);
 		for(int i = 0; i < contents.length; ++i) {
 			String str = contents[i];
 			if(echo) {
@@ -97,8 +97,8 @@ public class InputBox extends Widget {
 				}
 				str = sb.toString();
 			}
-			font.drawAdjusted(
-				(focus && editLine == i && (Minecraft.getSystemTime() % 1000 < 500)) ? str + "|" : str, 0, y, fontSize, width);
+			font.drawTrimmed((focus && editLine == i && (Minecraft.getSystemTime() % 1000 < 500)) ? str + "|" : str, 
+				0, y + (lineHeight - fontSize), fontSize, textColor, Align.LEFT, width, "...");
 			y += lineHeight;
 		}
 	}
