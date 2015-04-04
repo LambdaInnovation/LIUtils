@@ -25,6 +25,7 @@ import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.core.proxy.LICommonProxy;
+import cn.liutils.debug.CmdMineStatistics;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -135,8 +136,10 @@ public class LIUtils {
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
 		proxy.cmdInit(cm);
-		
-		RegistrationManager.INSTANCE.registerAll(this, "ServerStarting");
+		if(DEBUG) {
+		    cm.registerCommand(new CmdMineStatistics());
+		}
+		RegistrationManager.INSTANCE.registerAll(this, "StartServer");
 	}
 	
 	private void registerEntity(Class<? extends Entity> cl, String name, int id) {
