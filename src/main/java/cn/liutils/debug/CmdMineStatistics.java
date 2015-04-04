@@ -34,8 +34,6 @@ import cn.liutils.template.command.LICommandBase;
  * @author WeathFolD
  *
  */
-@RegistrationClass
-@RegCommand
 public class CmdMineStatistics extends LICommandBase {
 
     public CmdMineStatistics() {}
