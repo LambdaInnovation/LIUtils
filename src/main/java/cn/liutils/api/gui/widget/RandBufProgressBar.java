@@ -24,6 +24,7 @@ import cn.liutils.api.draw.tess.GUIRect;
 import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.util.HudUtils;
+import cn.liutils.util.RenderUtils;
 
 /**
  * A progress bar drawer. provide the progress value through abstract getProgress() method.</br>
@@ -55,7 +56,7 @@ public abstract class RandBufProgressBar extends Widget {
 	
 	private static final Random rand = new Random();
 	
-	ResourceLocation tex;
+	final ResourceLocation tex;
 	
 	private GUIRect orig;
 	
@@ -125,6 +126,7 @@ public abstract class RandBufProgressBar extends Widget {
 				default:
 					throw new RuntimeException("niconiconi, WTF??");
 				}
+				RenderUtils.loadTexture(tex);;
 				HudUtils.drawRect(x, y, u, v, w, h, tw, th);
 			}
 		});
