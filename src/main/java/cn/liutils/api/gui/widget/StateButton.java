@@ -19,8 +19,8 @@ import cn.liutils.api.draw.tess.RectMapping;
 import cn.liutils.api.gui.Widget;
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.LambdaFont;
-import cn.liutils.util.render.LambdaFont.Align;
+import cn.liutils.util.render.Font;
+import cn.liutils.util.render.Font.Align;
 
 /**
  * @author WeathFolD
@@ -36,13 +36,13 @@ public abstract class StateButton extends Widget {
 	private GUIRect rect;
 	protected double[][] maps;
 	
-	protected LambdaFont font;
+	protected Font font = Font.font;
 	protected String text;
 	protected float textSize;
-	protected int[][] textColors = {
-		{255, 255, 255, 255},
-		{255, 255, 255, 255},
-		{255, 255, 255, 255}
+	protected int[] textColors = {
+		0xFFFFFF,
+		0xFFFFFF,
+		0xFFFFFF
 	};
 	
 	public StateButton(double x, double y, double w, double h, ResourceLocation tex, double[][] mappingData) {
@@ -56,7 +56,7 @@ public abstract class StateButton extends Widget {
 		rect = (GUIRect) drawer.getHandler("rect_2d");
 	}
 	
-	public void setFont(LambdaFont ttf) {
+	public void setFont(Font ttf) {
 		font = ttf;
 	}
 	
@@ -77,7 +77,7 @@ public abstract class StateButton extends Widget {
 	/**
 	 * You can pass null into colorData means use default color
 	 */
-	public void setTextData(float size, int[][] texColorData) {
+	public void setTextData(float size, int[] texColorData) {
 		textSize = size;
 		if(texColorData != null) {
 			textColors = texColorData;
@@ -113,9 +113,8 @@ public abstract class StateButton extends Widget {
 				LIUtils.log.error("NULL FONT in " + this);
 				return;
 			}
-			RenderUtils.bindColor(textColors[index]);
 			font.draw(StatCollector.translateToLocal(text), 
-				width / 2, height / 2 - textSize / 2, textSize, Align.CENTER);
+				width / 2, height / 2 - textSize / 2, textSize, textColors[index], Align.CENTER);
 			RenderUtils.bindIdentity();
 		}
 	}

@@ -131,8 +131,8 @@ public class CustomExplosion extends Explosion {
         int i2 = MathHelper.floor_double(this.explosionY + (double)this.explosionSize + 1.0D);
         int l = MathHelper.floor_double(this.explosionZ - (double)this.explosionSize - 1.0D);
         int j2 = MathHelper.floor_double(this.explosionZ + (double)this.explosionSize + 1.0D);
-        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this.exploder, AxisAlignedBB.getAABBPool().getAABB((double)i, (double)k, (double)l, (double)j, (double)i2, (double)j2));
-        Vec3 vec3 = this.worldObj.getWorldVec3Pool().getVecFromPool(this.explosionX, this.explosionY, this.explosionZ);
+        List list = this.worldObj.getEntitiesWithinAABBExcludingEntity(this.exploder, AxisAlignedBB.getBoundingBox((double)i, (double)k, (double)l, (double)j, (double)i2, (double)j2));
+        Vec3 vec3 = Vec3.createVectorHelper(this.explosionX, this.explosionY, this.explosionZ);
 
         for (int i1 = 0; i1 < list.size(); ++i1)
         {
@@ -165,7 +165,7 @@ public class CustomExplosion extends Explosion {
 
                     if (entity instanceof EntityPlayer)
                     {
-                        this.field_77288_k.put((EntityPlayer)entity, this.worldObj.getWorldVec3Pool().getVecFromPool(d5 * d11, d6 * d11, d7 * d11));
+                        this.field_77288_k.put((EntityPlayer)entity, Vec3.createVectorHelper(d5 * d11, d6 * d11, d7 * d11));
                     }
                 }
             }

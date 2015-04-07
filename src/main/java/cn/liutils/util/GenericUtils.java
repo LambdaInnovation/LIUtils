@@ -164,7 +164,7 @@ public class GenericUtils {
 		List entitylist = world.getEntitiesWithinAABBExcludingEntity(null, par2);
 		for (int i = 0; i < entitylist.size(); i++) {
 			Entity ent = (Entity) entitylist.get(i);
-			double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
+			double distance = pos.distanceTo(Vec3.createVectorHelper(ent.posX, ent.posY, ent.posZ));
 			//currently used linear attn, 1->0.1
 			float damage = (float) Math.max(0, strengh * ( 1 - 0.9 * distance / radius));
 			ent.attackEntityFrom(src , damage);
@@ -195,8 +195,8 @@ public class GenericUtils {
 	
 	public static MovingObjectPosition traceBetweenEntities(Entity e1, Entity e2) {
 		if(e1.worldObj != e2.worldObj) return null;
-		Vec3 v1 = e1.worldObj.getWorldVec3Pool().getVecFromPool(e1.posX, e1.posY + e1.getEyeHeight(), e1.posZ),
-				v2 = e2.worldObj.getWorldVec3Pool().getVecFromPool(e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ);
+		Vec3 v1 = Vec3.createVectorHelper(e1.posX, e1.posY + e1.getEyeHeight(), e1.posZ),
+				v2 = Vec3.createVectorHelper(e2.posX, e2.posY + e2.getEyeHeight(), e2.posZ);
 		MovingObjectPosition mop = e1.worldObj.rayTraceBlocks(v1, v2);
 		return mop;
 	}
@@ -353,7 +353,7 @@ public class GenericUtils {
 	}
 	
 	public static Vec3 multiply(Vec3 vec, double factor) {
-		return vec.myVec3LocalPool.getVecFromPool(vec.xCoord * factor, vec.yCoord * factor, vec.zCoord * factor);
+		return Vec3.createVectorHelper(vec.xCoord * factor, vec.yCoord * factor, vec.zCoord * factor);
 	}
 	
 	public static double length(double dx, double dy, double dz) {
