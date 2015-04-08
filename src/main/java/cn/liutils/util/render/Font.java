@@ -12,12 +12,14 @@
  */
 package cn.liutils.util.render;
 
-import org.lwjgl.opengl.GL11;
+import java.util.List;
 
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
+import javax.vecmath.Vector2d;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author WeathFolD
@@ -38,6 +40,9 @@ public class Font {
         draw(str, x, y, size, color, Align.LEFT);
     }
     
+    /**
+     * @return Rectangle size
+     */
     public void drawWrapped(String str, double x, double y, double size, int color, double limit) {
         double scale = size / mcFont.FONT_HEIGHT;
         GL11.glPushMatrix();
@@ -45,6 +50,12 @@ public class Font {
         GL11.glScaled(scale, scale, 1);
         mcFont.drawSplitString(str, 0, 0, 0xFFFFFF, (int) (limit * scale));
         GL11.glPopMatrix();
+    }
+    
+    public Vector2d simDrawWrapped(String str, double size, double limit) {
+    	double scale = size / mcFont.FONT_HEIGHT;
+        List<String> lst = mcFont.listFormattedStringToWidth(str, (int) (limit * scale));
+        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size * lst.size());
     }
     
     public void draw(String str, double x, double y, double size, int color, Align align) {
@@ -96,6 +107,10 @@ public class Font {
         GL11.glTranslated(x0, y0, 0);
         mcFont.drawString(line, 0, 0, color);
         GL11.glPopMatrix();
+    }
+    
+    public double strLen(String str, double size) {
+    	return mcFont.getStringWidth(str) * size / mcFont.FONT_HEIGHT;
     }
 
 }

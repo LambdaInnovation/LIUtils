@@ -21,10 +21,10 @@ import org.apache.logging.log4j.Logger;
 import cn.annoreg.core.RegistrationManager;
 import cn.annoreg.core.RegistrationMod;
 import cn.annoreg.mc.RegMessageHandler;
-import cn.liutils.core.energy.EnergyNet;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.core.proxy.LICommonProxy;
+import cn.liutils.debug.CmdMineStatistics;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
@@ -77,8 +77,6 @@ public class LIUtils {
 
 	@RegMessageHandler.WrapperInstance
 	public static SimpleNetworkWrapper netHandler = NetworkRegistry.INSTANCE.newSimpleChannel("LIUtils");
-
-	public static boolean ic2Exists = false;
 	
 	@EventHandler()
 	public void preInit(FMLPreInitializationEvent event) {
@@ -91,23 +89,6 @@ public class LIUtils {
 		LIFMLGameEventDispatcher.init();
 		
 		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
-		
-		//Try and see if IC2 implementation exists
-		{
-			Class cl = null;
-			try {
-				cl = Class.forName("ic2.core.IC2");
-			} catch(Exception e) {
-			} finally {
-				ic2Exists = cl != null;
-			}
-		}
-		
-		if(DEBUG)
-			log.info("IC2 internal network state: " + ic2Exists);
-		
-		if(!ic2Exists)
-			EnergyNet.initialize();
 		
 		//netHandler.registerMessage(MsgTileDirMulti.Handler.class, MsgTileDirMulti.class, 0, Side.CLIENT);
 		//netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
@@ -135,8 +116,10 @@ public class LIUtils {
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
 		proxy.cmdInit(cm);
-		
-		RegistrationManager.INSTANCE.registerAll(this, "ServerStarting");
+		if(DEBUG) {
+		    cm.registerCommand(new CmdMineStatistics());
+		}
+		RegistrationManager.INSTANCE.registerAll(this, "StartServer");
 	}
 	
 	private void registerEntity(Class<? extends Entity> cl, String name, int id) {

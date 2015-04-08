@@ -55,7 +55,7 @@ public abstract class MotionHandler<T extends EntityX> implements Comparable<Mot
 	}
 	
 	protected Vec3 createVector(double x, double y, double z) {
-		return entity.worldObj.getWorldVec3Pool().getVecFromPool(x, y, z);
+		return Vec3.createVectorHelper(x, y, z);
 	}
 	
 	@Override

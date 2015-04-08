@@ -1,13 +1,13 @@
 /**
  * Copyright (c) Lambda Innovation, 2013-2015
- * 本作品版权由Lambda Innovation所有。
+ * 譛ｬ菴懷刀迚域揀逕ｱLambda Innovation謇�怏縲�
  * http://www.li-dev.cn/
  *
  * This project is open-source, and it is distributed under 
  * the terms of GNU General Public License. You can modify
  * and distribute freely as long as you follow the license.
- * 本项目是一个开源项目，且遵循GNU通用公共授权协议。
- * 在遵照该协议的情况下，您可以自由传播和修改。
+ * 譛ｬ鬘ｹ逶ｮ譏ｯ荳�ｸｪ蠑�ｺ宣｡ｹ逶ｮ�御ｸ秘�蠕ｪGNU騾夂畑蜈ｬ蜈ｱ謗域揀蜊剰ｮｮ縲�
+ * 蝨ｨ驕ｵ辣ｧ隸･蜊剰ｮｮ逧�ュ蜀ｵ荳具ｼ梧お蜿ｯ莉･閾ｪ逕ｱ莨�眺蜥御ｿｮ謾ｹ縲�
  * http://www.gnu.org/licenses/gpl.html
  */
 package cn.liutils.api.entityx;
@@ -135,7 +135,7 @@ public abstract class EntityX extends Entity {
 	protected void writeEntityToNBT(NBTTagCompound var1) { }
 	
 	protected final Vec3 createVec(double x, double y, double z) {
-		return worldObj.getWorldVec3Pool().getVecFromPool(x, y, z);
+		return Vec3.createVectorHelper(x, y, z);
 	}
 	
 	protected final Vec3 createVec() {

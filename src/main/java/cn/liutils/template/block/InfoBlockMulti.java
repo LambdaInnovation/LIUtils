@@ -27,7 +27,7 @@ public class InfoBlockMulti {
 	
 	final TileEntity te;
 	
-	ForgeDirection dir = ForgeDirection.UP;
+	ForgeDirection dir = ForgeDirection.NORTH;
 	int subID;
 	
 	private boolean loaded; //Client-Only flag. Indicate if it was synced.
