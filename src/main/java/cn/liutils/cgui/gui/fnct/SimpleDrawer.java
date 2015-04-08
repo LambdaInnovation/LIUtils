@@ -17,7 +17,7 @@ import cn.liutils.util.RenderUtils;
 
 /**
  * 
- * @author WEAthFolD
+ * @author WeAthFolD
  *
  */
 public class SimpleDrawer extends GuiEventHandler<DrawEvent> {
@@ -28,6 +28,12 @@ public class SimpleDrawer extends GuiEventHandler<DrawEvent> {
 	
 	public SimpleDrawer(Widget w) {
 		super(w);
+	}
+	
+	public SimpleDrawer(Widget w, ResourceLocation rl) {
+		super(w);
+		PropTexture texture = (PropTexture) widget.getProperty("texture");
+		texture.texture = rl;
 	}
 	
 	public SimpleDrawer(Widget w, ResourceLocation rl, double _u, double _v, double _tw, double _th) {
@@ -42,11 +48,12 @@ public class SimpleDrawer extends GuiEventHandler<DrawEvent> {
 		if(texture.texture != null)
 			RenderUtils.loadTexture(texture.texture);
 		
-		GL11.glDisable(GL11.GL_CULL_FACE);
 		GL11.glColor4d(1, 1, 1, 1);
-		HudUtils.drawRect(0, 0, texture.u, texture.v, widget.propWidget().width, 
-			widget.propWidget().height, texture.tw, texture.th);
-		GL11.glEnable(GL11.GL_CULL_FACE);
+		if(texture.tw != 0 && texture.th != 0)
+			HudUtils.drawRect(0, 0, texture.u, texture.v, widget.propWidget().width, 
+				widget.propWidget().height, texture.tw, texture.th);
+		else
+			HudUtils.drawRect(0, 0, widget.propWidget().width, widget.propWidget().height);
 	}
 
 	@Override

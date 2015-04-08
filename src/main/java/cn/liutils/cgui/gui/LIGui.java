@@ -33,17 +33,16 @@ import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.property.PropWidget;
 import cn.liutils.cgui.gui.property.PropWidget.AlignStyle;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
-import cn.liutils.util.DebugUtils;
 
 /**
  * @author WeathFolD
  *
  */
-public class LIGui implements Iterable<LIGui.WidgetNode> {
+public class LIGui implements Iterable<Widget> {
 	
 	double width, height; //Only useful when calculating 'CENTER' align preference
 
-	private List<WidgetNode> widgets = new LinkedList();
+	private List<Widget> widgets = new LinkedList();
 	
 	//Counter for assigning ZOrder.
 	private Map<Integer, Integer> zOrderProg = new HashMap();
@@ -82,9 +81,9 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		this.height = h;
 		
 		if(diff) {
-			for(WidgetNode node : widgets) {
-				if(node.widget.propWidget().align == AlignStyle.CENTER)
-					updateNode(node);
+			for(Widget widget : widgets) {
+				if(widget.propWidget().align == AlignStyle.CENTER)
+					updateNode(widget.node);
 			}
 		}
 	}
@@ -101,22 +100,9 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		widget.gui = this;
 		updateWidget(widget);
 		
-		widgets.add(widget.node);
+		widgets.add(widget);
 		Collections.sort(widgets);
 		widget.onAdded();
-	}
-	
-	private void addSubWidget(Widget parent, Widget sub) {
-		if(sub.getWidgetParent() != null && sub.getWidgetParent() != parent) {
-			throw new RuntimeException("Fatal: Trying to add widget " + sub + " into multiple GUIs");
-		}
-		sub.gui = this;
-		sub.parent = parent;
-		updateWidget(sub);
-		
-		parent.node.addSubNode(sub.node);
-		Collections.sort(parent.node.sub);
-		sub.onAdded();
 	}
 	
 	//---Events
@@ -168,11 +154,44 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
         		yOffset = my - draggingNode.y;
         	}
         	if(draggingNode != null) {
+        		final double PIXEL_PER_MS = 5;
+        		long dtt = time - lastDragTime;
+        		
         	    lastDragTime = time;
+        	    
+        	    double dx = (mx - draggingNode.x - xOffset) / draggingNode.scale,
+        	    	dy = (my - draggingNode.y - yOffset) / draggingNode.scale;
         		draggingNode.widget.postEvent(new DragEvent(
-        				(mx - draggingNode.x - xOffset) / draggingNode.scale, 
-            			(my - draggingNode.y - yOffset) / draggingNode.scale));
+        				Math.signum(dx) * Math.min(dtt * PIXEL_PER_MS, Math.abs(dx)), 
+        				Math.signum(dy) * Math.min(dtt * PIXEL_PER_MS, Math.abs(dy))));
         	}
+    	}
+    }
+    
+    public void updateDragWidget() {
+    	if(draggingNode != null) {
+    		Widget w = draggingNode.widget;
+    		PropWidget p = draggingNode.widget.propWidget();
+    		draggingNode.x = mouseX - xOffset;
+    		draggingNode.y = mouseY - yOffset;
+    		//Reversed calc. TODO: Maybe need to wrap this up
+    		if(w.isWidgetParent()) {
+    			Widget pw = w.parent;
+    			WidgetNode pn = pw.node;
+    			p.x = (draggingNode.x - pn.x) / draggingNode.scale;
+    			p.y = (draggingNode.y - pn.y) / draggingNode.scale;
+    		} else {
+    			double x0, y0;
+    			if(p.align == AlignStyle.CENTER) {
+    				x0 = width / 2;
+    				y0 = height / 2;
+    			} else {
+    				x0 = y0 = 0;
+    			}
+    			p.x = (draggingNode.x - x0) / draggingNode.scale;
+    			p.y = (draggingNode.y - y0) / draggingNode.scale;
+    		}
+    		draggingNode.widget.dirty = true;
     	}
     }
     
@@ -256,9 +275,11 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 			node.x = Math.max(0, x0);
 			node.y = Math.max(0, y0);
 		}
+		node.widget.dirty = false;
 		
 		//Check sub widgets
 		for(Widget w : node.widget.subWidgets) {
+			System.out.println("updateWidget " + w);
 			updateWidget(w);
 		}
 	}
@@ -278,20 +299,20 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		updateTraverse(null, this);
 	}
 	
-	private void updateTraverse(WidgetNode cur, Iterable<WidgetNode> set) {
+	private void updateTraverse(WidgetNode cur, Iterable<Widget> set) {
 		if(cur != null) {
 			if(cur.widget.dirty) {
 				this.updateNode(cur);
 			}
 		}
 		
-		Iterator<WidgetNode> iter = set.iterator();
+		Iterator<Widget> iter = set.iterator();
 		while(iter.hasNext()) {
-			WidgetNode node = iter.next();
-			if(node.widget.disposed) {
+			Widget widget = iter.next();
+			if(widget.disposed) {
 				iter.remove();
 			} else {
-				updateTraverse(node, node);
+				updateTraverse(widget.node, widget.node);
 			}
 		}
 	}
@@ -314,7 +335,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		return gtnTraverse(x, y, null, this);
 	}
 	
-	private void drawTraverse(double mx, double my, WidgetNode cur, Iterable<WidgetNode> set, WidgetNode top) {
+	private void drawTraverse(double mx, double my, WidgetNode cur, Iterable<Widget> set, WidgetNode top) {
 		//System.out.println("drawTrav " + cur);
 		
 		if(cur != null && cur.widget.doesDraw) {
@@ -322,21 +343,20 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
 			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
-			System.out.println("drawTrav " + cur + " " + DebugUtils.formatArray(cur.x, cur.y, cur.scale));
 			cur.widget.postEvent(new DrawEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
 			GL11.glPopMatrix();
 		}
 		
 		if(cur == null || cur.widget.doesDraw) {
-			Iterator<WidgetNode> iter = set.iterator();
+			Iterator<Widget> iter = set.iterator();
 			while(iter.hasNext()) {
-				WidgetNode wn = iter.next();
-				drawTraverse(mx, my, wn, wn, top);
+				Widget wn = iter.next();
+				drawTraverse(mx, my, wn.node, wn.node, top);
 			}
 		}
 	}
 	
-	private WidgetNode gtnTraverse(double x, double y, WidgetNode node, Iterable<WidgetNode> set) {
+	private WidgetNode gtnTraverse(double x, double y, WidgetNode node, Iterable<Widget> set) {
 		WidgetNode res = null;
 		boolean sub = node == null || (node.widget.doesDraw && node.widget.doesListenKey);
 		if(sub && node != null && node.pointWithin(x, y)) {
@@ -346,37 +366,23 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		if(!sub) return res;
 		
 		WidgetNode next = null;
-		for(WidgetNode wn : set) {
-			WidgetNode tmp = gtnTraverse(x, y, wn, wn);
+		for(Widget wn : set) {
+			WidgetNode tmp = gtnTraverse(x, y, wn.node, wn.node);
 			if(tmp != null)
 				next = tmp;
 		}
 		return next == null ? res : next;
 	}
 	
-	public class WidgetNode implements Comparable<WidgetNode>, Iterable<WidgetNode> {
+	public class WidgetNode implements Comparable<WidgetNode>, Iterable<Widget> {
 		public final Widget widget;
 		
 		public double x, y;
 		public double scale;
 		public int zOrder;
-		
-		private List<WidgetNode> sub = new LinkedList();
 
 		public WidgetNode(Widget wig) {
 			widget = wig;
-		}
-		
-		public boolean hasChild() {
-			return sub != null && !sub.isEmpty();
-		}
-		
-		public void addSubNode(WidgetNode wn) {
-			sub.add(wn);
-		}
-		
-		public List<WidgetNode> getSubNodes() {
-			return sub;
 		}
 		
 		public WidgetNode parent() {
@@ -395,14 +401,14 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 		}
 
 		@Override
-		public Iterator<WidgetNode> iterator() {
-			return sub.iterator();
+		public Iterator<Widget> iterator() {
+			return widget.subWidgets.iterator();
 		}
 		
 	}
 
 	@Override
-	public Iterator<WidgetNode> iterator() {
+	public Iterator<Widget> iterator() {
 		return widgets.iterator();
 	}
 }

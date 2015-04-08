@@ -30,7 +30,7 @@ import cn.liutils.cgui.gui.property.PropWidget;
  * @author WeathFolD
  *
  */
-public class Widget {
+public class Widget implements Comparable<Widget> {
 	
 	List<Widget> subWidgets = new ArrayList();
 	Map<String, IProperty> properties = new HashMap();
@@ -102,10 +102,6 @@ public class Widget {
 		}
 	}
 	
-	protected List<WidgetNode> getSubNodes() {
-		return node.getSubNodes();
-	}
-	
 	/**
 	 * Dispose this gui. Will get removed next frame.
 	 */
@@ -122,18 +118,18 @@ public class Widget {
 	}
 	
 	//Event dispatch
-	public final void registerEventHandler(GuiEventHandler h) {
-		getHandlersFor(h.getEventClass()).add(h);
+	public final Widget regEventHandler(GuiEventHandler h) {
+		getEventHandlers(h.getEventClass()).add(h);
+		return this;
 	}
 	
 	public final void postEvent(GuiEvent event) {
-		for(GuiEventHandler h : getHandlersFor(event.getClass())) {
+		for(GuiEventHandler h : getEventHandlers(event.getClass())) {
 			h.handleEvent(event);
-			System.out.println(h + " " + " handling " + event);
 		}
 	}
 	
-	private Set<GuiEventHandler> getHandlersFor(Class<? extends GuiEvent> clazz) {
+	private Set<GuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
 		Set<GuiEventHandler> ret = eventHandlers.get(clazz);
 		if(ret == null) {
 			eventHandlers.put(clazz, ret = new HashSet());
@@ -153,5 +149,13 @@ public class Widget {
 	}
 	
 	Map< Class<? extends GuiEvent>, Set<GuiEventHandler> > eventHandlers = new HashMap();
+
+	@Override
+	public int compareTo(Widget o) {
+		return this.node.zOrder - o.node.zOrder;
+	}
+	
+	//Utils
+	
 
 }
