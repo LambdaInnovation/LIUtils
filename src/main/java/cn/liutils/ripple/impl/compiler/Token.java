@@ -28,8 +28,8 @@ public final class Token {
         S_LE,
         S_NE,
         
-        S_AND,
-        S_OR,
+        //S_AND,
+        //S_OR,
     }
     TokenType type;
     char sSymbol;
@@ -109,14 +109,16 @@ public final class Token {
             case '=': return BinaryOperator.EQUAL;
             case '>': return BinaryOperator.GREATER;
             case '<': return BinaryOperator.LESSER;
+            case '&': return BinaryOperator.AND;
+            case '|': return BinaryOperator.OR;
             }
         } else if (this.type == TokenType.MULTI_SYMBOL) {
             switch (this.mSymbol) {
-            case S_AND: return BinaryOperator.AND;
+            //case S_AND: return BinaryOperator.AND;
             case S_GE: return BinaryOperator.GREATER_EQUAL;
             case S_LE: return BinaryOperator.LESSER_EQUAL;
             case S_NE: return BinaryOperator.NOT_EQUAL;
-            case S_OR: return BinaryOperator.OR;
+            //case S_OR: return BinaryOperator.OR;
             }
         }
         return BinaryOperator.UNKNOWN;
