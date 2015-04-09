@@ -306,14 +306,21 @@ public class Parser {
     private void readIdentifier(char first) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append(first);
-        char c;
-        c = peekChar();
+        char c = peekChar();
         while (Character.isLetterOrDigit(c) || c == '_') {
             reader.read();
             sb.append(c);
             c = peekChar();
         }
         currentToken.setString(sb.toString());
+    }
+    
+    private void skipLine() throws IOException {
+        char c = peekChar();
+        while (c != '\r' && c != '\n') {
+            reader.read();
+            c = peekChar();
+        }
     }
     
     private void readToken() throws IOException {
@@ -339,6 +346,8 @@ public class Parser {
         case ';':
         case ':':
         case '=': //currently no ==
+        case '&':
+        case '|':
             currentToken.setSingleChar(c);
             break;
         //followed by '='
@@ -363,20 +372,6 @@ public class Parser {
                 currentToken.setSingleChar(c);
             }
             break;
-        case '&':
-            if (peekChar() == '&') {
-                currentToken.setMultiChar(MultiCharSymbol.S_AND);
-            } else {
-                currentToken.setSingleChar(c);
-            }
-            break;
-        case '|':
-            if (peekChar() == '|') {
-                currentToken.setMultiChar(MultiCharSymbol.S_OR);
-            } else {
-                currentToken.setSingleChar(c);
-            }
-            break;
         //number
         case '0':
         case '1':
@@ -390,6 +385,10 @@ public class Parser {
         case '9':
             readNumber(c);
             break;
+        case '#':
+            skipLine();
+            readToken(); //read again
+            return;
         default:
             if (Character.isWhitespace(c)) {
                 readToken(); //read again
