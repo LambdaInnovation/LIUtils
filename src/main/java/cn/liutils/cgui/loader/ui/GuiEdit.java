@@ -9,6 +9,7 @@ import cn.annoreg.core.RegistrationClass;
 import cn.annoreg.mc.gui.GuiHandlerBase;
 import cn.annoreg.mc.gui.RegGuiHandler;
 import cn.liutils.api.key.IKeyHandler;
+import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.LIGuiScreen;
 import cn.liutils.registry.AttachKeyHandlerRegistry.RegAttachKeyHandler;
 import cpw.mods.fml.relauncher.Side;
@@ -19,6 +20,8 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @RegistrationClass
 public class GuiEdit extends LIGuiScreen {
+	
+	LIGui toEdit;
 	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, 0.9 };

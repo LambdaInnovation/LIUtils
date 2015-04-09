@@ -36,7 +36,6 @@ import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 
 /**
  * @author WeathFolD
- *
  */
 public class LIGui implements Iterable<Widget> {
 	
@@ -83,7 +82,7 @@ public class LIGui implements Iterable<Widget> {
 		if(diff) {
 			for(Widget widget : widgets) {
 				if(widget.propWidget().align == AlignStyle.CENTER)
-					updateNode(widget.node);
+					widget.dirty = true;
 			}
 		}
 	}
@@ -279,7 +278,6 @@ public class LIGui implements Iterable<Widget> {
 		
 		//Check sub widgets
 		for(Widget w : node.widget.subWidgets) {
-			System.out.println("updateWidget " + w);
 			updateWidget(w);
 		}
 	}
@@ -336,8 +334,6 @@ public class LIGui implements Iterable<Widget> {
 	}
 	
 	private void drawTraverse(double mx, double my, WidgetNode cur, Iterable<Widget> set, WidgetNode top) {
-		//System.out.println("drawTrav " + cur);
-		
 		if(cur != null && cur.widget.doesDraw) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(cur.x, cur.y, 0);

@@ -7,8 +7,8 @@ package cn.liutils.cgui.gui.event;
  * @author WeAthFolD
  */
 public class DrawEvent implements GuiEvent {
-	double mx, my;
-	boolean hovering;
+	public final double mx, my;
+	public final boolean hovering;
 	
 	public DrawEvent(double _mx, double _my, boolean hov) {
 		mx = _mx;

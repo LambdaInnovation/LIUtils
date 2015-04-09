@@ -11,26 +11,17 @@ import cn.liutils.cgui.gui.property.IProperty;
  */
 public abstract class GuiEventHandler<T extends GuiEvent> {
 	
-	public final Widget widget;
+	private final Class<? extends GuiEvent> eventClass;
 	
-	public GuiEventHandler(Widget w) {
-		widget = w;
+	public GuiEventHandler(Class<? extends GuiEvent> _eventClass) {
+		eventClass = _eventClass;
 	}
 	
-	public abstract void handleEvent(T event);
-	public abstract Class <? extends GuiEvent> getEventClass();
+	public abstract void handleEvent(Widget w, T event);
 	
-	//Helper method
-	protected void checkProperty(String id, Class<? extends IProperty> pclazz) {
-		IProperty p = widget.getProperty(id);
-		if(p == null) {
-			IProperty add;
-			try {
-				add = pclazz.newInstance();
-				widget.addProperty(id, add);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
+	public void onAdded(Widget w) {}
+	
+	public Class <? extends GuiEvent> getEventClass() {
+		return eventClass;
 	}
 }

@@ -36,4 +36,5 @@ public @interface Editable {
 	double defDouble() default 0.0;
 	
 	boolean defBoolean() default false;
+	
 }

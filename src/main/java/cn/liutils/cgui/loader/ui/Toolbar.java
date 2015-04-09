@@ -13,12 +13,17 @@
 package cn.liutils.cgui.loader.ui;
 
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.GuiEvent;
-import cn.liutils.cgui.gui.event.GuiEventHandler;
 import cn.liutils.cgui.gui.fnct.SimpleDrawer;
+import cn.liutils.cgui.gui.property.PropColor;
+import cn.liutils.cgui.gui.property.PropTexture;
+import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
+import cn.liutils.util.render.Font.Align;
 
 /**
  * @author WeAthFolD
@@ -34,12 +39,26 @@ public class Toolbar extends Window {
 		addWidget(new Button(1, "save", "Save CGUI File"));
 		addWidget(new Button(2, "add", "Add Widget"));
 		addWidget(new Button(3, "remove", "Remove Widget"));
+		
 	}
 	
 	static class Button extends Widget {
-		public Button(int i, final String tn, String name) {
-			propWidget().setSize(18, 18).setPos(i * 20, 10);
-			regEventHandler(new SimpleDrawer(this, new ResourceLocation("liutils:textures/cgui/toolbar/" + tn + ".png")));
+		public Button(int i, final String tn, final String name) {
+			propWidget().setSize(18, 18).setPos(5 + i * 20, 10);
+			this.addProperty("texture", new PropTexture().init(new ResourceLocation("liutils:textures/cgui/toolbar/" + tn + ".png")));
+			this.addProperty("color", new PropColor().setColor3i(127, 190, 255));
+			regEventHandler(new SimpleDrawer() {
+				@Override
+				public void handleEvent(Widget widget, DrawEvent event) {
+					super.handleEvent(widget, event);
+					if(event.hovering) {
+						GL11.glColor4d(1, 1, 1, .5);
+						HudUtils.drawModalRect(0, 0, propWidget().width, propWidget().height);
+						
+						Font.font.draw(name, 9, 19, 10, 0x9fceff, Align.CENTER);
+					}
+				}
+			});
 		}
 	}
 	

@@ -17,12 +17,18 @@ public class PropTexture implements IProperty {
 	@Editable(value = "tex_mapping", defDouble = 0.0)
 	public double u, v, tw = 0, th = 0;
 	
-	public void init(ResourceLocation t, double _u, double _v, double _tw, double _th) {
+	public PropTexture init(ResourceLocation t, double _u, double _v, double _tw, double _th) {
 		texture = t;
 		u = _u;
 		v = _v;
 		tw = _tw;
 		th = _th;
+		return this;
+	}
+	
+	public PropTexture init(ResourceLocation t) {
+		texture = t;
+		return this;
 	}
 
 	@Override

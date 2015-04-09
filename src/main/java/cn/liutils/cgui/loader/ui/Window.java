@@ -27,9 +27,9 @@ import cn.liutils.util.render.Font;
 public class Window extends Widget {
 	
 	public Window(final String name) {
-		this.regEventHandler(new GuiEventHandler<DrawEvent>(this) {
+		this.regEventHandler(new GuiEventHandler<DrawEvent>(DrawEvent.class) {
 			@Override
-			public void handleEvent(DrawEvent event) {
+			public void handleEvent(Widget w, DrawEvent event) {
 				PropWidget p = propWidget();
 				final double bar_ht = 10;
 				
@@ -38,34 +38,15 @@ public class Window extends Widget {
 				
 				GuiEdit.bindColor(1);
 				HudUtils.drawModalRect(0, bar_ht, p.width, p.height - bar_ht);
-			}
-
-			@Override
-			public Class<? extends GuiEvent> getEventClass() {
-				return DrawEvent.class;
+				
+				Font.font.draw(name, 10, 0, 10, 0x7fbeff);
 			}
 		});
 		
-		this.regEventHandler(new GuiEventHandler<DragEvent>(this) {
+		this.regEventHandler(new GuiEventHandler<DragEvent>(DragEvent.class) {
 			@Override
-			public void handleEvent(DragEvent event) {
+			public void handleEvent(Widget w, DragEvent event) {
 				getGui().updateDragWidget();
-			}
-			@Override
-			public Class<? extends GuiEvent> getEventClass() {
-				return DragEvent.class;
-			}
-		});
-		
-		regEventHandler(new GuiEventHandler<DrawEvent>(this) {
-			@Override
-			public void handleEvent(DrawEvent event) {
-				Font.font.draw(name, 10, 0, 10, 0xffffff);
-			}
-
-			@Override
-			public Class<? extends GuiEvent> getEventClass() {
-				return DrawEvent.class;
 			}
 		});
 	}

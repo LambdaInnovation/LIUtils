@@ -93,6 +93,7 @@ public class Widget implements Comparable<Widget> {
 	
 	public void addWidget(Widget child) {
 		subWidgets.add(child);
+		child.parent = this;
 		dirty = true;
 	}
 	
@@ -120,12 +121,13 @@ public class Widget implements Comparable<Widget> {
 	//Event dispatch
 	public final Widget regEventHandler(GuiEventHandler h) {
 		getEventHandlers(h.getEventClass()).add(h);
+		h.onAdded(this);
 		return this;
 	}
 	
 	public final void postEvent(GuiEvent event) {
 		for(GuiEventHandler h : getEventHandlers(event.getClass())) {
-			h.handleEvent(event);
+			h.handleEvent(this, event);
 		}
 	}
 	
@@ -156,6 +158,17 @@ public class Widget implements Comparable<Widget> {
 	}
 	
 	//Utils
-	
+	public void checkProperty(String id, Class<? extends IProperty> pclazz) {
+		IProperty p = getProperty(id);
+		if(p == null) {
+			IProperty add;
+			try {
+				add = pclazz.newInstance();
+				addProperty(id, add);
+			} catch(Exception e) {
+				e.printStackTrace();
+			}
+		}
+	}
 
 }
