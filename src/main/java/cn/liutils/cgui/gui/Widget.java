@@ -12,14 +12,11 @@
  */
 package cn.liutils.cgui.gui;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import cn.liutils.cgui.gui.LIGui.WidgetNode;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
 import cn.liutils.cgui.gui.property.IProperty;
@@ -28,11 +25,9 @@ import cn.liutils.cgui.gui.property.PropWidget;
 
 /**
  * @author WeathFolD
- *
  */
-public class Widget implements Comparable<Widget> {
+public class Widget extends WidgetContainer {
 	
-	List<Widget> subWidgets = new ArrayList();
 	Map<String, IProperty> properties = new HashMap();
 	
 	public boolean 
@@ -44,7 +39,11 @@ public class Widget implements Comparable<Widget> {
 
 	LIGui gui;
 	Widget parent;
-	WidgetNode node;
+	
+	//Real-time calculated data not directly relevant to widget properties
+	public double x, y;
+	public double scale;
+	public int zOrder;
 	
 	{
 		properties.put("widget", new PropWidget());
@@ -71,12 +70,8 @@ public class Widget implements Comparable<Widget> {
 	 */
 	protected void onAdded() {}
 	
-	WidgetNode getNode() {
-		return node;
-	}
-	
 	public boolean initialized() {
-		return gui != null && node != null;
+		return gui != null;
 	}
 	
 	public boolean isWidgetParent() {
@@ -89,18 +84,6 @@ public class Widget implements Comparable<Widget> {
 	
 	public LIGui getGui() {
 		return gui;
-	}
-	
-	public void addWidget(Widget child) {
-		subWidgets.add(child);
-		child.parent = this;
-		dirty = true;
-	}
-	
-	public void addWidgets(Widget ...wigs) {
-		for(Widget w : wigs) {
-			addWidget(w);
-		}
 	}
 	
 	/**
@@ -140,22 +123,13 @@ public class Widget implements Comparable<Widget> {
 	}
 	
 	/**
-	 * Return whether this widget can be focused and receive keyboard input or not.
+	 * Return whether this widget can be 'focused' and receive keyboard input or not.
 	 */
 	public boolean doesNeedFocus() {
 		return false;
 	}
 	
-	public final boolean isFocused() {
-		return getGui().focus == this.node;
-	}
-	
 	Map< Class<? extends GuiEvent>, Set<GuiEventHandler> > eventHandlers = new HashMap();
-
-	@Override
-	public int compareTo(Widget o) {
-		return this.node.zOrder - o.node.zOrder;
-	}
 	
 	//Utils
 	public void checkProperty(String id, Class<? extends IProperty> pclazz) {
@@ -169,6 +143,19 @@ public class Widget implements Comparable<Widget> {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public boolean isPointWithin(double tx, double ty) {
+		double w = propWidget().width, h = propWidget().height;
+		double x1 = x + w * scale, y1 = y + h * scale;
+		return (x <= tx && tx <x1) && (y <= ty && ty < y1);
+	}
+
+	@Override
+	void onWidgetAdded(String name, Widget w) {
+		this.dirty = true;
+		w.parent = this;
+		w.gui = gui;
 	}
 
 }

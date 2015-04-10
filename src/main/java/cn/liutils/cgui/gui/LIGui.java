@@ -37,14 +37,9 @@ import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 /**
  * @author WeathFolD
  */
-public class LIGui implements Iterable<Widget> {
+public class LIGui extends WidgetContainer {
 	
 	double width, height; //Only useful when calculating 'CENTER' align preference
-
-	private List<Widget> widgets = new LinkedList();
-	
-	//Counter for assigning ZOrder.
-	private Map<Integer, Integer> zOrderProg = new HashMap();
 	
 	//Absolute mouse position.
 	public double mouseX, mouseY;
@@ -52,7 +47,7 @@ public class LIGui implements Iterable<Widget> {
 	LIKeyProcess keyProcess;
 	LIKeyProcess.Trigger trigger;
 	
-	WidgetNode focus; //last input focus
+	Widget focus; //last input focus
 
 	public LIGui() {}
 	
@@ -61,11 +56,8 @@ public class LIGui implements Iterable<Widget> {
 		this.height = height;
 	}
 	
-	protected void clear() {
-		dispose();
-		widgets.clear();
-		zOrderProg.clear();
-		focus = null;
+	public void dispose() {
+		if(trigger != null) trigger.setDead();
 	}
 	
 	/**
@@ -80,31 +72,14 @@ public class LIGui implements Iterable<Widget> {
 		this.height = h;
 		
 		if(diff) {
-			for(Widget widget : widgets) {
+			for(Widget widget : this) {
 				if(widget.propWidget().align == AlignStyle.CENTER)
 					widget.dirty = true;
 			}
 		}
 	}
 	
-	//---Widget handling
-	/**
-	 * Add the constructed Widget into the LIGui.
-	 * @param widget
-	 */
-	public void addWidget(Widget widget) {
-		if(widget.gui != null && widget.gui != this) {
-			throw new RuntimeException("Fatal: Trying to add widget " + widget + " into multiple GUIs");
-		}
-		widget.gui = this;
-		updateWidget(widget);
-		
-		widgets.add(widget);
-		Collections.sort(widgets);
-		widget.onAdded();
-	}
-	
-	//---Events
+	//---Event callback---
 	/**
 	 * Go down the hierarchy tree and draw each widget node.
 	 */
@@ -117,20 +92,16 @@ public class LIGui implements Iterable<Widget> {
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		GL11.glDepthMask(false);
-		drawTraverse(mx, my, null, this, getTopNode(mx, my));
+		drawTraverse(mx, my, null, this, getTopWidget(mx, my));
 		
 		GL11.glDepthMask(true);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 	}
 	
-	public void dispose() {
-		if(trigger != null) trigger.setDead();
-	}
-	
 	static final long DRAG_TIME_TOLE = 100;
 	long lastStartTime, lastDragTime;
-	WidgetNode draggingNode;
+	Widget draggingNode;
 	double xOffset, yOffset;
 	/**
 	 * Standard GUI class callback.
@@ -145,61 +116,21 @@ public class LIGui implements Iterable<Widget> {
     		long time = Minecraft.getSystemTime();
         	if(Math.abs(time - dt - lastStartTime) > DRAG_TIME_TOLE) {
         		lastStartTime = time;
-        		draggingNode = getTopNode(mx, my);
-        		//System.out.println(draggingNode);
+        		draggingNode = getTopWidget(mx, my);
         		if(draggingNode == null)
         			return;
         		xOffset = mx - draggingNode.x;
         		yOffset = my - draggingNode.y;
         	}
         	if(draggingNode != null) {
-        		final double PIXEL_PER_MS = 5;
-        		long dtt = time - lastDragTime;
-        		
         	    lastDragTime = time;
-        	    
-        	    double dx = (mx - draggingNode.x - xOffset) / draggingNode.scale,
-        	    	dy = (my - draggingNode.y - yOffset) / draggingNode.scale;
-        		draggingNode.widget.postEvent(new DragEvent(
-        				Math.signum(dx) * Math.min(dtt * PIXEL_PER_MS, Math.abs(dx)), 
-        				Math.signum(dy) * Math.min(dtt * PIXEL_PER_MS, Math.abs(dy))));
+        		draggingNode.postEvent(new DragEvent());
         	}
     	}
     }
     
-    public void updateDragWidget() {
-    	if(draggingNode != null) {
-    		Widget w = draggingNode.widget;
-    		PropWidget p = draggingNode.widget.propWidget();
-    		draggingNode.x = mouseX - xOffset;
-    		draggingNode.y = mouseY - yOffset;
-    		//Reversed calc. TODO: Maybe need to wrap this up
-    		if(w.isWidgetParent()) {
-    			Widget pw = w.parent;
-    			WidgetNode pn = pw.node;
-    			p.x = (draggingNode.x - pn.x) / draggingNode.scale;
-    			p.y = (draggingNode.y - pn.y) / draggingNode.scale;
-    		} else {
-    			double x0, y0;
-    			if(p.align == AlignStyle.CENTER) {
-    				x0 = width / 2;
-    				y0 = height / 2;
-    			} else {
-    				x0 = y0 = 0;
-    			}
-    			p.x = (draggingNode.x - x0) / draggingNode.scale;
-    			p.y = (draggingNode.y - y0) / draggingNode.scale;
-    		}
-    		draggingNode.widget.dirty = true;
-    	}
-    }
-    
-    public Widget getDraggingWidget() {
-        return Math.abs(Minecraft.getSystemTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode.widget;
-    }
-    
     /**
-	 * Standard GUI class callback.
+	 * Standard GUI mouseClicked callback.
 	 * @param mx
 	 * @param my
 	 * @param btn the mouse button ID.
@@ -207,14 +138,14 @@ public class LIGui implements Iterable<Widget> {
 	public void mouseClicked(int mx, int my, int bid) {
 		updateMouse(mx, my);
 		if(bid == 0) {
-			WidgetNode node = getTopNode(mx, my);
+			Widget node = getTopWidget(mx, my);
 			if(node != null) {
-				if(node.widget.doesNeedFocus()) {
+				if(node.doesNeedFocus()) {
 					focus = node;
 				} else {
 					focus = null;
 				}
-				node.widget.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
+				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 			} else {
 				focus = null;
 			}
@@ -223,12 +154,54 @@ public class LIGui implements Iterable<Widget> {
 	
 	public void keyTyped(char ch, int key) {
 		if(focus != null) {
-			focus.widget.postEvent(new KeyEvent(ch, key));
+			focus.postEvent(new KeyEvent(ch, key));
 		}
 	}
+    
+    //---Helper Methods---
+	public Widget getTopWidget(double x, double y) {
+		return gtnTraverse(x, y, null, this);
+	}
+	
+    public void updateDragWidget() {
+    	if(draggingNode != null) {
+    		moveWidgetToAbsPos(draggingNode, mouseX - xOffset, mouseY - yOffset);
+    	}
+    }
+    
+    /**
+     * Inverse calculation. Move this widget to the ABSOLUTE window position (tx, ty).
+     * Note that the widget's position may be further changed because of its parent widget's position change.
+     */
+    public void moveWidgetToAbsPos(Widget w, double tx, double ty) {
+    	PropWidget p = w.propWidget();
+		w.x = tx;
+		w.y = ty;
+		//Reversed calc to update propWidget.
+		if(w.isWidgetParent()) {
+			Widget pw = w.parent;
+			p.x = (w.x - pw.x) / w.scale;
+			p.y = (w.y - pw.y) / w.scale;
+		} else {
+			double x0, y0;
+			if(p.align == AlignStyle.CENTER) {
+				x0 = width / 2;
+				y0 = height / 2;
+			} else {
+				x0 = y0 = 0;
+			}
+			p.x = (w.x - x0) / w.scale;
+			p.y = (w.y - y0) / w.scale;
+		}
+		w.dirty = true;
+    }
+    
+    public Widget getDraggingWidget() {
+        return Math.abs(Minecraft.getSystemTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode;
+    }
 	
 	public Widget getFocus() {
-		return focus == null ? null : focus.widget;
+		return focus;
 	}
 	
 	//---Key Handling
@@ -246,48 +219,36 @@ public class LIGui implements Iterable<Widget> {
     }
 	
 	//---Internal Processing
-	/**
-	 * Recalculate node's absolute position and offset, provided that its parent's data is correct.
-	 * Also double-check all its sub widgets' data.
-	 */
-	private void updateNode(WidgetNode node) {
-		PropWidget p = node.widget.propWidget();
-		if(node.widget.isWidgetParent()) {
-			WidgetNode parent = node.parent();
-			node.scale = parent.scale * p.scale;
-			node.x = parent.x + p.x * node.scale;
-			node.y = parent.y + p.y * node.scale;
+	private void updateWidget(Widget widget) {
+		PropWidget p = widget.propWidget();
+		if(widget.isWidgetParent()) {
+			Widget parent = widget.parent;
+			widget.scale = parent.scale * p.scale;
+			widget.x = parent.x + p.x * widget.scale;
+			widget.y = parent.y + p.y * widget.scale;
 		} else {
-			node.scale = p.scale;
+			widget.scale = p.scale;
 
 			double x0 = 0, y0 = 0;
 			switch(p.align) {
 			case CENTER:
-				x0 = (width - p.width * node.scale) / 2;
-				y0 = (height - p.height * node.scale) / 2;
+				x0 = (width - p.width * widget.scale) / 2;
+				y0 = (height - p.height * widget.scale) / 2;
 				break;
 			case LEFT:
-				x0 = p.x * node.scale;
-				y0 = p.y * node.scale;
+				x0 = p.x * widget.scale;
+				y0 = p.y * widget.scale;
 				break;
 			}
-			node.x = Math.max(0, x0);
-			node.y = Math.max(0, y0);
+			widget.x = Math.max(0, x0);
+			widget.y = Math.max(0, y0);
 		}
-		node.widget.dirty = false;
+		widget.dirty = false;
 		
 		//Check sub widgets
-		for(Widget w : node.widget.subWidgets) {
+		for(Widget w : widget) {
 			updateWidget(w);
 		}
-	}
-	
-	private void updateWidget(Widget widget) {
-		if(widget.node == null) {
-			widget.node = new WidgetNode(widget);
-			updateOrder(widget);
-		}
-		updateNode(widget.node);
 	}
 	
 	/**
@@ -295,33 +256,23 @@ public class LIGui implements Iterable<Widget> {
 	 */
 	private void frameUpdate() {
 		updateTraverse(null, this);
+		this.update();
 	}
 	
-	private void updateTraverse(WidgetNode cur, Iterable<Widget> set) {
+	private void updateTraverse(Widget cur, WidgetContainer set) {
 		if(cur != null) {
-			if(cur.widget.dirty) {
-				this.updateNode(cur);
+			if(cur.dirty) {
+				this.updateWidget(cur);
 			}
 		}
 		
 		Iterator<Widget> iter = set.iterator();
 		while(iter.hasNext()) {
 			Widget widget = iter.next();
-			if(widget.disposed) {
-				iter.remove();
-			} else {
-				updateTraverse(widget.node, widget.node);
+			if(!widget.disposed) {
+				updateTraverse(widget, widget);
 			}
 		}
-	}
-	
-	private void updateOrder(Widget widget) {
-		//Assign z order
-		int prio = widget.getDrawPriority();
-		Integer prog = zOrderProg.get(prio);
-		if(prog == null) prog = 0;
-		widget.node.zOrder = prio * 100 + prog;
-		zOrderProg.put(prio, (prog + 1) % 100);
 	}
 	
 	private void updateMouse(double mx, double my) {
@@ -329,82 +280,46 @@ public class LIGui implements Iterable<Widget> {
 		this.mouseY = my;
 	}
 	
-	public WidgetNode getTopNode(double x, double y) {
-		return gtnTraverse(x, y, null, this);
-	}
-	
-	private void drawTraverse(double mx, double my, WidgetNode cur, Iterable<Widget> set, WidgetNode top) {
-		if(cur != null && cur.widget.doesDraw) {
+	private void drawTraverse(double mx, double my, Widget cur, WidgetContainer set, Widget top) {
+		if(cur != null && cur.doesDraw) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
 			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
-			cur.widget.postEvent(new DrawEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
+			cur.postEvent(new DrawEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
 			GL11.glPopMatrix();
 		}
 		
-		if(cur == null || cur.widget.doesDraw) {
+		if(cur == null || cur.doesDraw) {
 			Iterator<Widget> iter = set.iterator();
 			while(iter.hasNext()) {
 				Widget wn = iter.next();
-				drawTraverse(mx, my, wn.node, wn.node, top);
+				drawTraverse(mx, my, wn, wn, top);
 			}
 		}
 	}
 	
-	private WidgetNode gtnTraverse(double x, double y, WidgetNode node, Iterable<Widget> set) {
-		WidgetNode res = null;
-		boolean sub = node == null || (node.widget.doesDraw && node.widget.doesListenKey);
-		if(sub && node != null && node.pointWithin(x, y)) {
+	private Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
+		Widget res = null;
+		boolean sub = node == null || (node.doesDraw && node.doesListenKey);
+		if(sub && node != null && node.isPointWithin(x, y)) {
 			res = node;
 		}
 		
 		if(!sub) return res;
 		
-		WidgetNode next = null;
+		Widget next = null;
 		for(Widget wn : set) {
-			WidgetNode tmp = gtnTraverse(x, y, wn.node, wn.node);
+			Widget tmp = gtnTraverse(x, y, wn, wn);
 			if(tmp != null)
 				next = tmp;
 		}
 		return next == null ? res : next;
 	}
-	
-	public class WidgetNode implements Comparable<WidgetNode>, Iterable<Widget> {
-		public final Widget widget;
-		
-		public double x, y;
-		public double scale;
-		public int zOrder;
-
-		public WidgetNode(Widget wig) {
-			widget = wig;
-		}
-		
-		public WidgetNode parent() {
-			Widget wx = widget.getWidgetParent();
-			return wx == null ? null : wx.node;
-		}
-		
-		public boolean pointWithin(double mx, double my) {
-			double x1 = x + widget.propWidget().width * scale, y1 = y + widget.propWidget().height * scale;
-			return (x <= mx && mx <= x1) && (y <= my && my <= y1);
-		}
-
-		@Override
-		public int compareTo(WidgetNode other) {
-			return zOrder - other.zOrder;
-		}
-
-		@Override
-		public Iterator<Widget> iterator() {
-			return widget.subWidgets.iterator();
-		}
-		
-	}
 
 	@Override
-	public Iterator<Widget> iterator() {
-		return widgets.iterator();
+	void onWidgetAdded(String name, Widget w) {
+		w.gui = this;
+		updateWidget(w);
 	}
 }

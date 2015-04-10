@@ -1,0 +1,164 @@
+/**
+ * Copyright (c) Lambda Innovation, 2013-2015
+ * 本作品版权由Lambda Innovation所有。
+ * http://www.li-dev.cn/
+ *
+ * This project is open-source, and it is distributed under  
+ * the terms of GNU General Public License. You can modify
+ * and distribute freely as long as you follow the license.
+ * 本项目是一个开源项目，且遵循GNU通用公共授权协议。
+ * 在遵照该协议的情况下，您可以自由传播和修改。
+ * http://www.gnu.org/licenses/gpl.html
+ */
+package cn.liutils.cgui.gui;
+
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+
+import com.google.common.collect.HashBiMap;
+import com.google.common.collect.ImmutableList;
+
+/**
+ * A class that has capability to store widgets. Used by LIGui and Widget.
+ * Every widget is associated with a name. You can use that name to lookup a widget.
+ * @author WeAthFolD
+ */
+public abstract class WidgetContainer implements Iterable<Widget> {
+	
+	HashBiMap<String, Widget> widgets = HashBiMap.create();
+	List<Widget> drawList = new LinkedList(); //List sorted in non-descending widget zOrder.
+	
+	private static final String UNNAMED_PRE = "unnamed ";
+	
+	private int nameCount = 0;
+	
+	//Counter for assigning ZOrder.
+	private Map<Integer, Integer> zOrderProg = new HashMap();
+	static final Comparator<Widget> zOrderComparator = new Comparator<Widget>() {
+		@Override
+		public int compare(Widget o1, Widget o2) {
+			return o1.zOrder - o2.zOrder;
+		}
+	};
+	
+	/**
+	 * Walk the widget list and check their states. This should be called explicitly from tick check events.
+	 */
+	protected void update() {
+		Iterator<Widget> iter = drawList.iterator();
+		while(iter.hasNext()) {
+			Widget w = iter.next();
+			if(w.disposed) {
+				iter.remove();
+				//TODO: Test efficiency.
+				widgets.inverse().remove(w);
+			}
+		}
+	}
+	
+	public boolean addWidget(Widget add) {
+		return addWidget(getNextName(), add);
+	}
+	
+	/**
+	 * Add a widget into the container.
+	 * @param name
+	 * @param add
+	 * @return if the operation is successful. (False for id duplication)
+	 */
+	public boolean addWidget(String name, Widget add) {
+		//Check duplicate
+		if(widgets.containsKey(name)) {
+			Widget w = widgets.get(name);
+			if(!w.disposed) {
+				return false;
+			}
+		}
+		
+		widgets.put(name, add);
+		
+		updateZOrder(add);
+		drawList.add(add);
+		Collections.sort(drawList, zOrderComparator);
+		
+		onWidgetAdded(name, add);
+		return true;
+	}
+	
+	/**
+	 * Callback when a widget was loaded. Allows lower class to do
+	 * some specific data setup.
+	 */
+	abstract void onWidgetAdded(String name, Widget w);
+	
+	/**
+	 * @param name Widget name
+	 * @return The widget with this name.
+	 */
+	public Widget getWidget(String name) {
+		return widgets.get(name);
+	}
+	
+	/**
+	 * Check if a widget with given name exists.
+	 * @param name Widget name
+	 * @return If the widget exists
+	 */
+	public boolean hasWidget(String name) {
+		Widget w = getWidget(name);
+		return w != null && !w.disposed;
+	}
+	
+	/**
+	 * Remove a widget from container.
+	 */
+	public void removeWidget(String name) {
+		Widget w = widgets.get(name);
+		if(w != null) {
+			removeWidget(w);
+		}
+	}
+	
+	public void removeWidget(Widget w) {
+		w.dispose();
+	}
+	
+	/**
+	 * Get the id of the widget, provided that the widget is in this container.
+	 * @return Name of the widget, or null if it's not in this container.
+	 */
+	public String getWidgetName(Widget w) {
+		return widgets.inverse().get(w);
+	}
+	
+	public List<Widget> getDrawList() {
+		return ImmutableList.copyOf(drawList);
+	}
+	
+	public Iterator<Widget> iterator() {
+		return getDrawList().iterator();
+	}
+	
+	private String getNextName() {
+		String res;
+		do {
+			res = UNNAMED_PRE + (nameCount++);
+		} while(hasWidget(res));
+		return res;
+	}
+	
+	private void updateZOrder(Widget widget) {
+		//Assign z order
+		int prio = widget.getDrawPriority();
+		Integer prog = zOrderProg.get(prio);
+		if(prog == null) prog = 0;
+		widget.zOrder = prio * 100 + prog;
+		zOrderProg.put(prio, (prog + 1) % 100);
+	}
+	
+}
