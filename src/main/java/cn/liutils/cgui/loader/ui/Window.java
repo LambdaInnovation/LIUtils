@@ -17,7 +17,7 @@ import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.gui.property.PropWidget;
+import cn.liutils.cgui.gui.property.PropBasic;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 
@@ -26,11 +26,15 @@ import cn.liutils.util.render.Font;
  */
 public class Window extends Widget {
 	
-	public Window(final String name) {
+	protected final GuiEdit gui;
+	
+	public Window(final String name, GuiEdit _gui) {
+		gui = _gui;
+		
 		this.regEventHandler(new GuiEventHandler<DrawEvent>(DrawEvent.class) {
 			@Override
 			public void handleEvent(Widget w, DrawEvent event) {
-				PropWidget p = propWidget();
+				PropBasic p = propBasic();
 				final double bar_ht = 10;
 				
 				GuiEdit.bindColor(2);

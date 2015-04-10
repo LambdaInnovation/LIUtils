@@ -78,6 +78,11 @@ public class HudUtils {
     	Tessellator t = Tessellator.instance;
     	GL11.glDisable(GL11.GL_TEXTURE_2D);
     	t.startDrawing(GL11.GL_LINE_LOOP);
+    	double lw = lineWidth * 0.2;
+    	x -= lw;
+    	y -= lw;
+    	w += 2 * lw;
+    	h += 2 * lw;
     	t.addVertex(x, y, zLevel);
     	t.addVertex(x, y + h, zLevel);
     	t.addVertex(x + w, y + h, zLevel);

@@ -28,13 +28,4 @@ public @interface Editable {
 	 * into the same place.
 	 */
 	String value();
-	
-	String defStr() default "";
-	
-	int defInt() default 0;
-	
-	double defDouble() default 0.0;
-	
-	boolean defBoolean() default false;
-	
 }

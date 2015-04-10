@@ -288,7 +288,7 @@ public class LIGui implements Iterable<LIGui.WidgetNode> {
 	/**
 	 * Generic checking.
 	 */
-	private void frameUpdate() {
+	protected void frameUpdate() {
 		if(!this.nodesToAdd.isEmpty()) {
 			widgets.addAll(nodesToAdd);
 			nodesToAdd.clear();

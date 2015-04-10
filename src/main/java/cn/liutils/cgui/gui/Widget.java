@@ -19,8 +19,10 @@ import java.util.Set;
 
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.fnct.Function;
 import cn.liutils.cgui.gui.property.IProperty;
-import cn.liutils.cgui.gui.property.PropWidget;
+import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.loader.CGUIEditor;
 
 
 /**
@@ -29,10 +31,14 @@ import cn.liutils.cgui.gui.property.PropWidget;
 public class Widget extends WidgetContainer {
 	
 	Map<String, IProperty> properties = new HashMap();
+	Set<String> functions = new HashSet();
 	
 	public boolean 
 		doesDraw = true, 
 		doesListenKey = true;
+	
+	public boolean
+		needFocus = false;
 	
 	public boolean disposed = false;
 	public boolean dirty = true; //Indicate that this widget's pos data is dirty and requires update.
@@ -44,25 +50,54 @@ public class Widget extends WidgetContainer {
 	public double x, y;
 	public double scale;
 	public int zOrder;
+	/**
+	 * If this widget is being edited(i.e. in a CGUI edit gui) and should dummy some state-change related functions.
+	 */
+	public boolean editing = false;
 	
+	//Defaults
 	{
-		properties.put("widget", new PropWidget());
+		addProperty(new PropBasic());
 	}
 	
 	public Widget() {}
+	
+	/**
+	 * Return a reasonable copy of this widget. Retains all the properties and functions.
+	 */
+	public Widget copy() {
+		Widget n = new Widget();
+		for(IProperty ip : properties.values()) {
+			IProperty dup = ip.copy();
+			n.addProperty(dup, true);
+		}
+		for(String func : functions) {
+			Function f = CGUIEditor.instance.getFunction(func);
+			if(f == null) {
+				System.err.println("Didn't find function " + func + " when trying to clone the widget.");
+			} else {
+				n.regEventHandler(f);
+			}
+		}
+		return n;
+	}
 
-	public PropWidget propWidget() {
-		return (PropWidget) properties.get("widget");
+	public PropBasic propBasic() {
+		return (PropBasic) properties.get("basic");
 	}
 	
 	public IProperty getProperty(String name) {
 		return properties.get(name);
 	}
 	
-	public void addProperty(String name, IProperty prop) {
-		if(properties.containsKey(name))
-			throw new RuntimeException("Duplicate property id " + name);
-		properties.put(name, prop);
+	public void addProperty(IProperty prop) {
+		addProperty(prop, false);
+	}
+	
+	public void addProperty(IProperty prop, boolean force) {
+		if(properties.containsKey(prop.getName()) && !force)
+			throw new RuntimeException("Duplicate property id " + prop.getName());
+		properties.put(prop.getName(), prop);
 	}
 	
 	/**
@@ -105,6 +140,10 @@ public class Widget extends WidgetContainer {
 	public final Widget regEventHandler(GuiEventHandler h) {
 		getEventHandlers(h.getEventClass()).add(h);
 		h.onAdded(this);
+		if(h instanceof Function) {
+			functions.add(((Function) h).getName());
+		}
+		
 		return this;
 	}
 	
@@ -122,13 +161,6 @@ public class Widget extends WidgetContainer {
 		return ret;
 	}
 	
-	/**
-	 * Return whether this widget can be 'focused' and receive keyboard input or not.
-	 */
-	public boolean doesNeedFocus() {
-		return false;
-	}
-	
 	Map< Class<? extends GuiEvent>, Set<GuiEventHandler> > eventHandlers = new HashMap();
 	
 	//Utils
@@ -138,7 +170,7 @@ public class Widget extends WidgetContainer {
 			IProperty add;
 			try {
 				add = pclazz.newInstance();
-				addProperty(id, add);
+				addProperty(add);
 			} catch(Exception e) {
 				e.printStackTrace();
 			}
@@ -146,7 +178,7 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public boolean isPointWithin(double tx, double ty) {
-		double w = propWidget().width, h = propWidget().height;
+		double w = propBasic().width, h = propBasic().height;
 		double x1 = x + w * scale, y1 = y + h * scale;
 		return (x <= tx && tx <x1) && (y <= ty && ty < y1);
 	}

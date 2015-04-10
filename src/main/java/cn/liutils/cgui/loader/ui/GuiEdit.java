@@ -21,7 +21,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 @RegistrationClass
 public class GuiEdit extends LIGuiScreen {
 	
-	LIGui toEdit;
+	LIGui toEdit = new LIGuiPlayground(); //The edit playground gui!
 	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, 0.9 };
@@ -34,8 +34,28 @@ public class GuiEdit extends LIGuiScreen {
 	}
 	
 	public GuiEdit() {
-		gui.addWidget(new Toolbar());
+		gui.addWidget(new Toolbar(this));
+		this.drawBack = false;
 	}
+	
+	@Override
+    public void drawScreen(int mx, int my, float w) {
+		LIGui.drawBlackout();
+		toEdit.draw(mx, my);
+		super.drawScreen(mx, my, w);
+	}
+	
+    @Override
+    protected void mouseClicked(int mx, int my, int btn) {
+    	gui.mouseClicked(mx, my, btn);
+    	toEdit.mouseClicked(mx, my, btn);
+    }
+    
+    @Override
+    protected void mouseClickMove(int mx, int my, int btn, long time) {
+    	gui.mouseClickMove(mx, my, btn, time);
+    	toEdit.mouseClickMove(mx, my, btn, time);
+    }
 	
 	@RegAttachKeyHandler(clazz = KeyHandler.class)
 	public static final int OPEN = Keyboard.KEY_HOME;

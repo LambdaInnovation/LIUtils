@@ -34,7 +34,6 @@ public class LIGuiScreen extends GuiScreen {
     	if(drawBack)
     		this.drawDefaultBackground();
     	GL11.glPushMatrix(); {
-    		GL11.glTranslated(0, 0, 100);
     		gui.draw(mx, my);
     	} GL11.glPopMatrix();
     }

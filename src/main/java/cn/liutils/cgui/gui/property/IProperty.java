@@ -11,4 +11,9 @@ public interface IProperty {
 	
 	String getName();
 	
+	/**
+	 * Create a copy of the property.
+	 */
+	IProperty copy();
+	
 }

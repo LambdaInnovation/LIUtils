@@ -10,42 +10,36 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.property;
+package cn.liutils.cgui.gui.fnct;
 
-import cn.liutils.cgui.loader.Editable;
+import java.util.ArrayList;
+import java.util.Collection;
+
+import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.event.DragEvent;
 
 /**
  * @author WeAthFolD
- *
  */
-public class PropColor implements IProperty {
-	
-	@Editable(value = "color")
-	public double r = 1.0, g = 1.0, b = 1.0, a = 1.0;
-	
-	public PropColor setColor3i(int ir, int ig, int ib) {
-		r = ir / 255.0;
-		g = ig / 255.0;
-		b = ib / 255.0;
-		return this;
+public class Draggable extends Function<DragEvent> {
+
+	public Draggable() {
+		super(DragEvent.class);
 	}
-	
-	public PropColor setColor4d(double dr, double dg, double db, double da) {
-		r = dr;
-		g = dg;
-		b = db;
-		a = da;
-		return this;
+
+	@Override
+	public Collection getRequiredProperties() {
+		return new ArrayList();
 	}
 
 	@Override
 	public String getName() {
-		return "color";
+		return "draggable";
 	}
 
 	@Override
-	public IProperty copy() {
-		return new PropColor().setColor4d(r, g, b, a);
+	public void handleEvent(Widget w, DragEvent event) {
+		w.getGui().updateDragWidget();
 	}
 
 }

@@ -12,27 +12,27 @@
  */
 package cn.liutils.cgui.gui;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.util.glu.GLU;
 
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.api.key.LIKeyProcess.Trigger;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
+import cn.liutils.cgui.gui.event.GainFocusEvent;
 import cn.liutils.cgui.gui.event.KeyEvent;
+import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
-import cn.liutils.cgui.gui.property.PropWidget;
-import cn.liutils.cgui.gui.property.PropWidget.AlignStyle;
+import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.gui.property.PropBasic.AlignStyle;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
+import cn.liutils.util.HudUtils;
+import cn.liutils.util.RenderUtils;
 
 /**
  * @author WeathFolD
@@ -73,7 +73,7 @@ public class LIGui extends WidgetContainer {
 		
 		if(diff) {
 			for(Widget widget : this) {
-				if(widget.propWidget().align == AlignStyle.CENTER)
+				if(widget.propBasic().align == AlignStyle.CENTER)
 					widget.dirty = true;
 			}
 		}
@@ -86,6 +86,7 @@ public class LIGui extends WidgetContainer {
 	public void draw(double mx, double my) {
 		frameUpdate();
 		updateMouse(mx, my);
+		//System.out.println("draw " + this);
 		
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
@@ -139,17 +140,38 @@ public class LIGui extends WidgetContainer {
 		updateMouse(mx, my);
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
+			
 			if(node != null) {
-				if(node.doesNeedFocus()) {
-					focus = node;
+				if(node.needFocus) {
+					gainFocus(node);
 				} else {
-					focus = null;
+					removeFocus();
 				}
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 			} else {
-				focus = null;
+				removeFocus();
 			}
 		}
+	}
+	
+	public void removeFocus() {
+		if(focus != null) {
+			focus.postEvent(new LostFocusEvent());
+			focus = null;
+		}
+	}
+	
+	/**
+	 * Gain a widget's focus with force.
+	 */
+	public void gainFocus(Widget node) {
+		if(node == focus)
+			return;
+		if(focus != null) {
+			removeFocus();
+		}
+		focus = node;
+		focus.postEvent(new GainFocusEvent());
 	}
 	
 	public void keyTyped(char ch, int key) {
@@ -174,7 +196,7 @@ public class LIGui extends WidgetContainer {
      * Note that the widget's position may be further changed because of its parent widget's position change.
      */
     public void moveWidgetToAbsPos(Widget w, double tx, double ty) {
-    	PropWidget p = w.propWidget();
+    	PropBasic p = w.propBasic();
 		w.x = tx;
 		w.y = ty;
 		//Reversed calc to update propWidget.
@@ -220,7 +242,9 @@ public class LIGui extends WidgetContainer {
 	
 	//---Internal Processing
 	private void updateWidget(Widget widget) {
-		PropWidget p = widget.propWidget();
+		widget.gui = this;
+		
+		PropBasic p = widget.propBasic();
 		if(widget.isWidgetParent()) {
 			Widget parent = widget.parent;
 			widget.scale = parent.scale * p.scale;
@@ -271,6 +295,7 @@ public class LIGui extends WidgetContainer {
 			Widget widget = iter.next();
 			if(!widget.disposed) {
 				updateTraverse(widget, widget);
+				widget.update();
 			}
 		}
 	}
@@ -287,6 +312,7 @@ public class LIGui extends WidgetContainer {
 			GL11.glScaled(cur.scale, cur.scale, 1);
 			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
 			cur.postEvent(new DrawEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
+			//System.out.println("drawing " + cur);
 			GL11.glPopMatrix();
 		}
 		
@@ -321,5 +347,32 @@ public class LIGui extends WidgetContainer {
 	void onWidgetAdded(String name, Widget w) {
 		w.gui = this;
 		updateWidget(w);
+	}
+	
+	public static void drawBlackout() {
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		GLU.gluOrtho2D(1, 0, 1, 0);
+		
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+		GL11.glPushMatrix();
+		GL11.glLoadIdentity();
+		
+		GL11.glColor4d(0, 0, 0, 0.6);
+		HudUtils.setZLevel(-1);
+		HudUtils.drawModalRect(0, 0, 1, 1);
+		
+		GL11.glPopMatrix();
+		
+		GL11.glMatrixMode(GL11.GL_PROJECTION);
+		GL11.glPopMatrix();
+		
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		RenderUtils.bindIdentity();
+		
+		GL11.glEnable(GL11.GL_CULL_FACE);
+		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}
 }

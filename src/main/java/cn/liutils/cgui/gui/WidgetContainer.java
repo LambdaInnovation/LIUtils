@@ -136,6 +136,13 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 		return widgets.inverse().get(w);
 	}
 	
+	/**
+	 * Assign a new name for the widget.
+	 */
+	public void changeWidgetName(Widget w, String newName) {
+		widgets.inverse().put(w, newName);
+	}
+	
 	public List<Widget> getDrawList() {
 		return ImmutableList.copyOf(drawList);
 	}
