@@ -43,7 +43,7 @@ public class Toolbar extends Window {
 	boolean isLocked = false;
 	
 	public Toolbar(GuiEdit gui) {
-		super("Toolbar", gui);
+		super("Toolbar", gui, true);
 		propBasic().setPos(10, 10).setSize(200, 30);
 		
 		addWidget(new Button(0, "open", "Open CGUI File"));

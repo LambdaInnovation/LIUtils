@@ -8,6 +8,9 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.loader.edit.InputBoxEditor;
+
 /**
  * Mark a IProperty's field with @Editable annotation, and those field marked will be visible in CGUI's loading screen.
  * Currently supported types: <br/>
@@ -28,4 +31,10 @@ public @interface Editable {
 	 * into the same place.
 	 */
 	String value();
+	
+	/**
+	 * The edit widget type to construct. If you don't specify 
+	 * this then we use system default settings for this type.
+	 */
+	Class<? extends Widget> editWidget() default Widget.class;
 }

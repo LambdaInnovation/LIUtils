@@ -22,15 +22,21 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.fnct.Draggable;
 import cn.liutils.cgui.gui.fnct.Function;
 import cn.liutils.cgui.gui.fnct.SimpleDrawer;
+import cn.liutils.cgui.gui.property.IProperty;
 import cn.liutils.cgui.gui.property.PropTexture;
+import cn.liutils.cgui.loader.ui.PropertyEditor;
 
 /**
  * Main loading interface to provide templates&customized objects to CGUI.
+ * Only Properties, Functions and Widget templates registered in this class are available
+ * for in-editor usage.
  * @author WeAthFolD
  */
 public class CGUIEditor {
 	
 	public static CGUIEditor instance = new CGUIEditor();
+	
+	Map<String, ReggedProp> props = new HashMap();
 	
 	Map<String, Function> functions = new HashMap();
 	Map<String, Widget> templates = new HashMap();
@@ -39,10 +45,10 @@ public class CGUIEditor {
 	{
 		//Default templates
 		{
-		Widget def = new Widget();
-		def.addProperty(new PropTexture());
-		def.regEventHandler(new SimpleDrawer());
-		addTemplate("default", def);
+			Widget def = new Widget();
+			def.addProperty(new PropTexture());
+			def.regEventHandler(new SimpleDrawer());
+			addTemplate("default", def);
 		}
 		
 		//Default functions
@@ -56,6 +62,11 @@ public class CGUIEditor {
 	
 	public void addTemplate(String str, Widget template) {
 		templates.put(str, template);
+	}
+	
+	public void addProperty(IProperty prop) {
+		PropertyEditor editor = new PropertyEditor(prop);
+		props.put(prop.getName(), new ReggedProp(prop, editor));
 	}
 	
 	public Collection<Function> getFunctions() {
@@ -73,6 +84,25 @@ public class CGUIEditor {
 	
 	public Function getFunction(String name) {
 		return functions.get(name);
+	}
+	
+	public IProperty getProperty(String name) {
+		ReggedProp rp = props.get(name);
+		return rp == null ? null : rp.property;
+	}
+	
+	public PropertyEditor getPropertyEditor(IProperty target) {
+		ReggedProp rp = props.get(target.getName());
+		return rp == null ? null : rp.editor;
+	}
+	
+	private static class ReggedProp {
+		public IProperty property;
+		public PropertyEditor editor;
+		
+		public ReggedProp(IProperty _prop, PropertyEditor _editor) {
+			property = _prop;
+		}
 	}
 
 }

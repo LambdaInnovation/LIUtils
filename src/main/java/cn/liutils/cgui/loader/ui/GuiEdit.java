@@ -1,6 +1,7 @@
 package cn.liutils.cgui.loader.ui;
 
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
@@ -78,4 +79,8 @@ public class GuiEdit extends LIGuiScreen {
 			return new GuiEdit();
 		}
 	};
+	
+	public static final ResourceLocation tex(String name) {
+		return new ResourceLocation("liutils:textures/cgui/" + name + ".png");
+	}
 }

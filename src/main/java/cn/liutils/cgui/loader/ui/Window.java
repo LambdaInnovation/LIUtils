@@ -15,9 +15,10 @@ package cn.liutils.cgui.loader.ui;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.fnct.SimpleDrawer;
 import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.gui.property.PropTexture;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 
@@ -28,7 +29,9 @@ public class Window extends Widget {
 	
 	protected final GuiEdit gui;
 	
-	public Window(final String name, GuiEdit _gui) {
+	final boolean canClose;
+	
+	public Window(final String name, GuiEdit _gui, boolean _canClose) {
 		gui = _gui;
 		
 		this.regEventHandler(new GuiEventHandler<DrawEvent>(DrawEvent.class) {
@@ -53,5 +56,18 @@ public class Window extends Widget {
 				getGui().updateDragWidget();
 			}
 		});
+		
+		canClose = _canClose;
+	}
+	
+	@Override
+	public void onAdded() {
+		if(canClose) {
+			 Widget close = new Widget();
+			 close.propBasic().setSize(10, 10).setPos(propBasic().width - 12, 1);
+			 close.addProperty(new PropTexture().init(GuiEdit.tex("toolbar/close")));
+			 close.regEventHandler(new SimpleDrawer());
+			 addWidget(close);
+		}
 	}
 }

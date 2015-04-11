@@ -63,7 +63,8 @@ public class Widget extends WidgetContainer {
 	public Widget() {}
 	
 	/**
-	 * Return a reasonable copy of this widget. Retains all the properties and functions.
+	 * Return a reasonable copy of this widget. Retains all the properties and functions, 
+	 * along with its all sub widgets recursively.
 	 */
 	public Widget copy() {
 		Widget n = new Widget();
@@ -79,6 +80,8 @@ public class Widget extends WidgetContainer {
 				n.regEventHandler(f);
 			}
 		}
+		
+		//TODO: Also copy the widget's sub widgets
 		return n;
 	}
 

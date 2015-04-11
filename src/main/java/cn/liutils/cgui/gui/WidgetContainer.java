@@ -86,6 +86,7 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 		drawList.add(add);
 		Collections.sort(drawList, zOrderComparator);
 		
+		add.onAdded();
 		onWidgetAdded(name, add);
 		return true;
 	}
