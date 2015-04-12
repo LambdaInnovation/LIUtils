@@ -111,7 +111,7 @@ public class LIGui extends WidgetContainer {
 	 * @param btn the mouse button ID.
 	 * @param dt how long is this button being pressed(ms)
 	 */
-    public void mouseClickMove(int mx, int my, int btn, long dt) {
+    public boolean mouseClickMove(int mx, int my, int btn, long dt) {
     	updateMouse(mx, my);
     	if(btn == 0) {
     		long time = Minecraft.getSystemTime();
@@ -119,15 +119,17 @@ public class LIGui extends WidgetContainer {
         		lastStartTime = time;
         		draggingNode = getTopWidget(mx, my);
         		if(draggingNode == null)
-        			return;
+        			return false;
         		xOffset = mx - draggingNode.x;
         		yOffset = my - draggingNode.y;
         	}
         	if(draggingNode != null) {
         	    lastDragTime = time;
         		draggingNode.postEvent(new DragEvent());
+        		return true;
         	}
     	}
+    	return false;
     }
     
     /**
@@ -135,8 +137,9 @@ public class LIGui extends WidgetContainer {
 	 * @param mx
 	 * @param my
 	 * @param btn the mouse button ID.
+	 * @return if any action was performed on a widget.
 	 */
-	public void mouseClicked(int mx, int my, int bid) {
+	public boolean mouseClicked(int mx, int my, int bid) {
 		updateMouse(mx, my);
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
@@ -148,10 +151,13 @@ public class LIGui extends WidgetContainer {
 					removeFocus();
 				}
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
+				//TODO: Need further filtering
+				return true;
 			} else {
 				removeFocus();
 			}
 		}
+		return false;
 	}
 	
 	public void removeFocus() {

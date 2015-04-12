@@ -20,11 +20,11 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
-import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
+import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
-import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownFunc;
 import cn.liutils.cgui.gui.fnct.SimpleDrawer;
 import cn.liutils.cgui.gui.property.PropBasic;
 import cn.liutils.cgui.gui.property.PropColor;
@@ -42,8 +42,8 @@ public class Toolbar extends Window {
 	
 	boolean isLocked = false;
 	
-	public Toolbar(GuiEdit gui) {
-		super("Toolbar", gui, true);
+	public Toolbar() {
+		super("Toolbar", false);
 		propBasic().setPos(10, 10).setSize(200, 30);
 		
 		addWidget(new Button(0, "open", "Open CGUI File"));
@@ -65,7 +65,7 @@ public class Toolbar extends Window {
 			propBasic().setSize(18, 18).setPos(5 + i * 20, 10);
 			this.addProperty(new PropTexture().init(new ResourceLocation("liutils:textures/cgui/toolbar/" + tn + ".png")));
 			this.addProperty(new PropColor().setColor3i(127, 190, 255));
-			regEventHandler(new SimpleDrawer() {
+			addFunction(new SimpleDrawer() {
 				@Override
 				public void handleEvent(Widget widget, DrawEvent event) {
 					super.handleEvent(widget, event);
@@ -77,7 +77,7 @@ public class Toolbar extends Window {
 					}
 				}
 			});
-			regEventHandler(new MouseDownHandler() {
+			addFunction(new MouseDownFunc() {
 				@Override
 				public void handleEvent(Widget w, MouseDownEvent event) {
 					if(!isLocked)
@@ -101,7 +101,7 @@ public class Toolbar extends Window {
 			for(final Entry<String, Widget> e : CGUIEditor.instance.getTemplates()) {
 				Widget one = new Widget();
 				final String name = e.getKey();
-				one.regEventHandler(new DrawEventHandler() {
+				one.addFunction(new DrawEventFunc() {
 					@Override
 					public void handleEvent(Widget w, DrawEvent event) {
 						GL11.glColor4d(.3, .3, .3, event.hovering ? 0.8 : 0.5);
@@ -110,23 +110,23 @@ public class Toolbar extends Window {
 						Font.font.draw(name, 25, 1.5, 10, 0x98b8e2, Align.CENTER);
 					}
 				});
-				one.regEventHandler(new MouseDownHandler() {
+				one.addFunction(new MouseDownFunc() {
 					@Override
 					public void handleEvent(Widget w, MouseDownEvent event) {
 						isLocked = false;
 						TemplateList.this.dispose();
-						gui.toEdit.addWidget(CGUIEditor.instance.createFromTemplate(name));
+						gui().toEdit.addWidget(CGUIEditor.instance.createFromTemplate(name));
 					}
 				});
 				PropBasic opw = one.propBasic();
 				opw.x = 0;
-				opw.y = i * height;
+				opw.y = (i++) * height;
 				opw.width = width;
 				opw.height = height;
 				addWidget(one);
 			}
 			
-			regEventHandler(new LostFocusHandler() {
+			addFunction(new LostFocusFunc() {
 				@Override
 				public void handleEvent(Widget w, LostFocusEvent event) {
 					isLocked = false;

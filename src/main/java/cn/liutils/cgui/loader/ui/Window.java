@@ -12,10 +12,17 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.Tessellator;
+
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.event.MouseDownEvent;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownFunc;
+import cn.liutils.cgui.gui.fnct.Function;
 import cn.liutils.cgui.gui.fnct.SimpleDrawer;
 import cn.liutils.cgui.gui.property.PropBasic;
 import cn.liutils.cgui.gui.property.PropTexture;
@@ -27,14 +34,43 @@ import cn.liutils.util.render.Font;
  */
 public class Window extends Widget {
 	
-	protected final GuiEdit gui;
-	
 	final boolean canClose;
 	
-	public Window(final String name, GuiEdit _gui, boolean _canClose) {
-		gui = _gui;
+	protected String name;
+	
+	public Window(final String _name, boolean _canClose) {
+		name = _name;
+		canClose = _canClose;
+	}
+	
+	@Override
+	public void onAdded() {
+		if(canClose) {
+			 Widget close = new Widget();
+			 close.propBasic().setSize(10, 10).setPos(propBasic().width - 12, 1);
+			 close.addProperty(new PropTexture().init(GuiEdit.tex("toolbar/close")));
+			 close.addFunction(new SimpleDrawer());
+			 close.addFunction(new MouseDownFunc() {
+				@Override
+				public void handleEvent(Widget w, MouseDownEvent event) {
+					Window.this.dispose();
+				}
+			 });
+			 addWidget(close);
+		}
 		
-		this.regEventHandler(new GuiEventHandler<DrawEvent>(DrawEvent.class) {
+		if(!this.isWidgetParent()) {
+			this.addFunction(new Function<DragEvent>(DragEvent.class) {
+				@Override
+				public void handleEvent(Widget w, DragEvent event) {
+					if(!isWidgetParent()) {
+					getGui().updateDragWidget();
+					}
+				}
+			});
+		}
+		
+		this.addFunction(new Function<DrawEvent>(DrawEvent.class) {
 			@Override
 			public void handleEvent(Widget w, DrawEvent event) {
 				PropBasic p = propBasic();
@@ -49,25 +85,22 @@ public class Window extends Widget {
 				Font.font.draw(name, 10, 0, 10, 0x7fbeff);
 			}
 		});
-		
-		this.regEventHandler(new GuiEventHandler<DragEvent>(DragEvent.class) {
-			@Override
-			public void handleEvent(Widget w, DragEvent event) {
-				getGui().updateDragWidget();
-			}
-		});
-		
-		canClose = _canClose;
 	}
 	
-	@Override
-	public void onAdded() {
-		if(canClose) {
-			 Widget close = new Widget();
-			 close.propBasic().setSize(10, 10).setPos(propBasic().width - 12, 1);
-			 close.addProperty(new PropTexture().init(GuiEdit.tex("toolbar/close")));
-			 close.regEventHandler(new SimpleDrawer());
-			 addWidget(close);
-		}
+	public GuiEdit gui() {
+		return (GuiEdit) Minecraft.getMinecraft().currentScreen;
 	}
+	
+	protected void drawSplitLine(double y) {
+		Tessellator t = Tessellator.instance;
+		GuiEdit.bindColor(3);
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		GL11.glLineWidth(3);
+		t.startDrawing(GL11.GL_LINES);
+		t.addVertex(0, y, -90);
+		t.addVertex(propBasic().width, y, -90);
+		t.draw();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+	}
+	
 }

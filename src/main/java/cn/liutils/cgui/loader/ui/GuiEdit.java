@@ -12,6 +12,7 @@ import cn.annoreg.mc.gui.RegGuiHandler;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.LIGuiScreen;
+import cn.liutils.cgui.gui.Widget;
 import cn.liutils.registry.AttachKeyHandlerRegistry.RegAttachKeyHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -22,7 +23,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 @RegistrationClass
 public class GuiEdit extends LIGuiScreen {
 	
-	LIGui toEdit = new LIGuiPlayground(); //The edit playground gui!
+	LIGui toEdit = new LIGuiPlayground(this); //The edit playground gui!
+	
+	Widget selectedEditor;
 	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, 0.9 };
@@ -35,7 +38,7 @@ public class GuiEdit extends LIGuiScreen {
 	}
 	
 	public GuiEdit() {
-		gui.addWidget(new Toolbar(this));
+		gui.addWidget(new Toolbar());
 		this.drawBack = false;
 	}
 	
@@ -48,14 +51,17 @@ public class GuiEdit extends LIGuiScreen {
 	
     @Override
     protected void mouseClicked(int mx, int my, int btn) {
-    	gui.mouseClicked(mx, my, btn);
-    	toEdit.mouseClicked(mx, my, btn);
+    	if(!gui.mouseClicked(mx, my, btn)) {
+    		//Fallthrough only if edit gui wasn't interrupting.
+    		toEdit.mouseClicked(mx, my, btn);
+    	}
     }
     
     @Override
     protected void mouseClickMove(int mx, int my, int btn, long time) {
-    	gui.mouseClickMove(mx, my, btn, time);
-    	toEdit.mouseClickMove(mx, my, btn, time);
+    	if(!gui.mouseClickMove(mx, my, btn, time)) {
+    		toEdit.mouseClickMove(mx, my, btn, time);
+    	}
     }
 	
 	@RegAttachKeyHandler(clazz = KeyHandler.class)

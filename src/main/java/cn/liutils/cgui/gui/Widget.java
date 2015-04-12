@@ -12,17 +12,16 @@
  */
 package cn.liutils.cgui.gui;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
 import cn.liutils.cgui.gui.event.GuiEvent;
-import cn.liutils.cgui.gui.event.GuiEventHandler;
 import cn.liutils.cgui.gui.fnct.Function;
 import cn.liutils.cgui.gui.property.IProperty;
 import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.loader.CGUIEditor;
 
 
 /**
@@ -31,7 +30,7 @@ import cn.liutils.cgui.loader.CGUIEditor;
 public class Widget extends WidgetContainer {
 	
 	Map<String, IProperty> properties = new HashMap();
-	Set<String> functions = new HashSet();
+	Set<Function> functions = new HashSet();
 	
 	public boolean 
 		doesDraw = true, 
@@ -72,16 +71,15 @@ public class Widget extends WidgetContainer {
 			IProperty dup = ip.copy();
 			n.addProperty(dup, true);
 		}
-		for(String func : functions) {
-			Function f = CGUIEditor.instance.getFunction(func);
-			if(f == null) {
-				System.err.println("Didn't find function " + func + " when trying to clone the widget.");
-			} else {
-				n.regEventHandler(f);
-			}
+		for(Function func : functions) {
+			n.addFunction(func);
+			System.out.println("copy added " + func);
 		}
 		
-		//TODO: Also copy the widget's sub widgets
+		//Also copy the widget's sub widgets recursively.
+		for(Widget asub : getDrawList()) {
+			n.addWidget(asub.getName(), asub.copy());
+		}
 		return n;
 	}
 
@@ -91,6 +89,10 @@ public class Widget extends WidgetContainer {
 	
 	public IProperty getProperty(String name) {
 		return properties.get(name);
+	}
+	
+	public Collection<IProperty> getProperties() {
+		return properties.values();
 	}
 	
 	public void addProperty(IProperty prop) {
@@ -140,31 +142,29 @@ public class Widget extends WidgetContainer {
 	}
 	
 	//Event dispatch
-	public final Widget regEventHandler(GuiEventHandler h) {
+	public final Widget addFunction(Function h) {
 		getEventHandlers(h.getEventClass()).add(h);
 		h.onAdded(this);
-		if(h instanceof Function) {
-			functions.add(((Function) h).getName());
-		}
+		functions.add(h);
 		
 		return this;
 	}
 	
 	public final void postEvent(GuiEvent event) {
-		for(GuiEventHandler h : getEventHandlers(event.getClass())) {
+		for(Function h : getEventHandlers(event.getClass())) {
 			h.handleEvent(this, event);
 		}
 	}
 	
-	private Set<GuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
-		Set<GuiEventHandler> ret = eventHandlers.get(clazz);
+	private Set<Function> getEventHandlers(Class<? extends GuiEvent> clazz) {
+		Set<Function> ret = eventHandlers.get(clazz);
 		if(ret == null) {
 			eventHandlers.put(clazz, ret = new HashSet());
 		}
 		return ret;
 	}
 	
-	Map< Class<? extends GuiEvent>, Set<GuiEventHandler> > eventHandlers = new HashMap();
+	Map< Class<? extends GuiEvent>, Set<Function> > eventHandlers = new HashMap();
 	
 	//Utils
 	public void checkProperty(String id, Class<? extends IProperty> pclazz) {
@@ -178,6 +178,14 @@ public class Widget extends WidgetContainer {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public String getName() {
+		return this.isWidgetParent() ? parent.getWidgetName(this) : getGui().getWidgetName(this);
+	}
+	
+	public boolean hasFunction(String fnct) {
+		return functions.contains(fnct);
 	}
 	
 	public boolean isPointWithin(double tx, double ty) {

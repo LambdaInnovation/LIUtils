@@ -12,17 +12,16 @@
  */
 package cn.liutils.cgui.gui.event;
 
+import cn.liutils.cgui.gui.fnct.Function;
+
 /**
  * Indicate that a widget has lost input focus.
  * @author WeAthFolD
  */
 public class LostFocusEvent implements GuiEvent {
-	
-	public static abstract class LostFocusHandler extends GuiEventHandler<LostFocusEvent> {
-
-		public LostFocusHandler() {
+	public static abstract class LostFocusFunc extends Function<LostFocusEvent> {
+		public LostFocusFunc() {
 			super(LostFocusEvent.class);
 		}
-		
 	}
 }

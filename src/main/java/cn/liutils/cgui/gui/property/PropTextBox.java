@@ -18,39 +18,32 @@ import cn.liutils.cgui.loader.Editable;
  * @author WeAthFolD
  *
  */
-public class PropColor implements IProperty {
+public class PropTextBox extends PropColor {
 	
-	@Editable(value = "color")
-	public double r = 1.0, g = 1.0, b = 1.0, a = 1.0;
+	@Editable("content")
+	public String content = "";
 	
-	public PropColor setColor3i(int ir, int ig, int ib) {
-		r = ir / 255.0;
-		g = ig / 255.0;
-		b = ib / 255.0;
-		return this;
-	}
+	@Editable("echo")
+	public boolean doesEcho = false;
+	@Editable("echo")
+	public char echoChar = '*';
 	
-	public PropColor setColor4d(double dr, double dg, double db, double da) {
-		r = dr;
-		g = dg;
-		b = db;
-		a = da;
-		return this;
-	}
-	
-	public int toHexColor() {
-		int ir = (int) (r * 255), ig = (int) (g * 255), ib = (int) (b * 255);
-		return ir + ig << 8 + ib << 16;
-	}
+	@Editable("size")
+	public int textSize = 9;
 
 	@Override
 	public String getName() {
-		return "color";
+		return "text_box";
 	}
 
 	@Override
 	public IProperty copy() {
-		return new PropColor().setColor4d(r, g, b, a);
+		PropTextBox ptb = new PropTextBox();
+		ptb.setColor4d(r, g, b, a);
+		ptb.content = content;
+		ptb.doesEcho = doesEcho;
+		ptb.echoChar = echoChar;
+		return ptb;
 	}
 
 }

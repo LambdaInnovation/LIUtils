@@ -36,5 +36,5 @@ public @interface Editable {
 	 * The edit widget type to construct. If you don't specify 
 	 * this then we use system default settings for this type.
 	 */
-	Class<? extends Widget> editWidget() default Widget.class;
+	Class<? extends Widget> elementEditor() default Widget.class;
 }

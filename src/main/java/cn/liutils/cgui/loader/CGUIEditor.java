@@ -22,7 +22,12 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.fnct.Draggable;
 import cn.liutils.cgui.gui.fnct.Function;
 import cn.liutils.cgui.gui.fnct.SimpleDrawer;
+import cn.liutils.cgui.gui.fnct.TextBoxInput;
+import cn.liutils.cgui.gui.fnct.TextBoxShower;
 import cn.liutils.cgui.gui.property.IProperty;
+import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.gui.property.PropColor;
+import cn.liutils.cgui.gui.property.PropTextBox;
 import cn.liutils.cgui.gui.property.PropTexture;
 import cn.liutils.cgui.loader.ui.PropertyEditor;
 
@@ -43,17 +48,32 @@ public class CGUIEditor {
 	
 	//Built-ins.
 	{
-		//Default templates
-		{
-			Widget def = new Widget();
-			def.addProperty(new PropTexture());
-			def.regEventHandler(new SimpleDrawer());
-			addTemplate("default", def);
-		}
+		//Default Properties
+		addProperty(new PropBasic());
+		addProperty(new PropColor());
+		addProperty(new PropTexture());
+		addProperty(new PropTextBox());
 		
 		//Default functions
 		addFunction(new SimpleDrawer());
 		addFunction(new Draggable());
+		addFunction(new TextBoxInput());
+		addFunction(new TextBoxShower());
+		
+		//Default templates
+		{ //"default"
+			Widget def = new Widget();
+			def.addProperty(new PropTexture());
+			def.addFunction(new SimpleDrawer());
+			addTemplate("default", def);
+		}
+		{ //"input_box"
+			Widget inp = new Widget();
+			inp.addProperty(new PropTextBox());
+			inp.addFunction(new TextBoxInput());
+			inp.addFunction(new TextBoxShower());
+			addTemplate("input_box", inp);
+		}
 	}
 	
 	public void addFunction(Function func) {

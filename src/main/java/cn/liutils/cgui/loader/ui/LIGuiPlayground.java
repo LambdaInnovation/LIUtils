@@ -15,17 +15,27 @@ package cn.liutils.cgui.loader.ui;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
+import cn.liutils.cgui.gui.event.GainFocusEvent;
+import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusFunc;
+import cn.liutils.cgui.gui.event.LostFocusEvent;
+import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
 import cn.liutils.cgui.gui.fnct.Draggable;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.Font;
 
 /**
+ * Handler of edit content also provides environment information for GuiEdit and other toolbars.
  * @author WeAthFolD
- *
  */
 public class LIGuiPlayground extends LIGui {
+	
+	final GuiEdit guiEdit;
+	
+	public LIGuiPlayground(GuiEdit _guiEdit) {
+		guiEdit = _guiEdit;
+	}
 	
 	@Override
 	public void draw(double mx, double my) {
@@ -37,9 +47,10 @@ public class LIGuiPlayground extends LIGui {
 	
 	@Override
 	public boolean addWidget(String name, Widget w) {
-		boolean ret = super.addWidget(name, w);
-		if(ret) {
-			w.regEventHandler(new DrawEventHandler() {
+		boolean result = super.addWidget(name, w);
+		if(result) {
+			//Add selection indicator
+			w.addFunction(new DrawEventFunc() {
 				@Override
 				public void handleEvent(Widget w, DrawEvent event) {
 					if(getFocus() == w) {
@@ -50,9 +61,27 @@ public class LIGuiPlayground extends LIGui {
 					}
 				}
 			});
-			w.regEventHandler(new Draggable());
+			w.addFunction(new Draggable());
+			w.addFunction(new GainFocusFunc() {
+				@Override
+				public void handleEvent(Widget w, GainFocusEvent event) {
+					guiEdit.selectedEditor = new SelectedWidgetBar(w);
+					guiEdit.getGui().addWidget(guiEdit.selectedEditor);
+				}
+			});
+			w.addFunction(new LostFocusFunc() {
+				@Override
+				public void handleEvent(Widget w, LostFocusEvent event) {
+					if(guiEdit.selectedEditor != null) {
+						guiEdit.selectedEditor.dispose();
+						guiEdit.selectedEditor = null;
+					} else {
+						System.err.println("invalid state when selected widget lost focus. Plz check your implementation.");
+					}
+				}
+			});
 			w.needFocus = true;
 		}
-		return ret;
+		return result;
 	}
 }

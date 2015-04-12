@@ -12,27 +12,40 @@
  */
 package cn.liutils.cgui.gui.fnct;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
+import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.GuiEvent;
-import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.gui.property.IProperty;
 
 /**
  * Class that repr gui function. Under cover it is a GuiEventHandler.
  * @author WeAthFolD
  */
-public abstract class Function<T extends GuiEvent> extends GuiEventHandler<T>{
+public abstract class Function<T extends GuiEvent> {
+	
+	private final Class<? extends GuiEvent> eventClass;
 	
 	public Function(Class<? extends GuiEvent> _eventClass) {
-		super(_eventClass);
+		eventClass = _eventClass;
+	}
+	
+	public abstract void handleEvent(Widget w, T event);
+	
+	public void onAdded(Widget w) {}
+	
+	public Class <? extends GuiEvent> getEventClass() {
+		return eventClass;
 	}
 
 	/**
-	 * @return All the <code>IProperty</code>s required for this function to work correctly.
+	 * @return All the class of <code>IProperty</code>s required for this function to work correctly.
 	 */
-	public abstract Collection getRequiredProperties();
+	public Collection<Class> getRequiredProperties() { return new ArrayList(); }
 	
-	public abstract String getName();
+	/**
+	 * @return An identifier of this function. Used just in cgui.
+	 */
+	public String getName() { return null; }
 	
 }

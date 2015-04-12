@@ -3,7 +3,7 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * @author WeAthFolD
@@ -18,8 +18,8 @@ public class DrawEvent implements GuiEvent {
 		hovering = hov;
 	}
 	
-	public abstract static class DrawEventHandler extends GuiEventHandler<DrawEvent> {
-		public DrawEventHandler() {
+	public abstract static class DrawEventFunc extends Function<DrawEvent> {
+		public DrawEventFunc() {
 			super(DrawEvent.class);
 		}
 	}

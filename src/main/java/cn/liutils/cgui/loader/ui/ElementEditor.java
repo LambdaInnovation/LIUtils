@@ -12,12 +12,38 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import java.lang.reflect.Field;
+
 import cn.liutils.cgui.gui.Widget;
 
 /**
  * @author WeAthFolD
  *
  */
-public abstract class PropertyElementEditor extends Widget {
-
+public abstract class ElementEditor extends Widget{
+	
+	protected final EditTarget target;
+	
+	public ElementEditor(Field f) {
+		target = new EditTarget(f);
+	}
+	
+	/**
+	 * Default element editor.
+	 * @author WeAthFolD
+	 */
+	public static final class Default extends ElementEditor { 
+		
+		public Default(Field f) {
+			super(f);
+		}
+		
+	}
+	
+	public static class InputBox extends ElementEditor {
+		
+		public InputBox(Field f) {
+			super(f);
+		}
+	}
 }

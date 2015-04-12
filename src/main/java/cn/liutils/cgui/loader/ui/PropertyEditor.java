@@ -12,18 +12,23 @@
  */
 package cn.liutils.cgui.loader.ui;
 
-import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.property.IProperty;
+import cn.liutils.cgui.gui.property.PropBasic;
 
 /**
+ * Editor for a single property type. Instance registered into CGUIEditor works as a prototype and is copied each time
+ * it is queried.
  * @author WeAthFolD
  */
-public class PropertyEditor extends Widget {
+public class PropertyEditor extends Window {
 	
-	public PropertyEditor(IProperty prototype) {}
-	
-	public void changeTarget(IProperty target) {
-		
+	public PropertyEditor(IProperty prototype) {
+		super("Property:" + prototype.getName(), true);
+		PropBasic basic = propBasic();
+		basic.x = 100;
+		basic.y = 200;
+		basic.width = 250;
+		basic.height = 200;
 	}
 	
 }
