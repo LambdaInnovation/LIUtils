@@ -12,9 +12,11 @@
  */
 package cn.liutils.cgui.gui;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -31,13 +33,6 @@ public class Widget extends WidgetContainer {
 	
 	Map<String, IProperty> properties = new HashMap();
 	Set<Function> functions = new HashSet();
-	
-	public boolean 
-		doesDraw = true, 
-		doesListenKey = true;
-	
-	public boolean
-		needFocus = false;
 	
 	public boolean disposed = false;
 	public boolean dirty = true; //Indicate that this widget's pos data is dirty and requires update.
@@ -67,20 +62,23 @@ public class Widget extends WidgetContainer {
 	 */
 	public Widget copy() {
 		Widget n = new Widget();
+		assignProperties(n);
+		return n;
+	}
+	
+	protected void assignProperties(Widget n) {
 		for(IProperty ip : properties.values()) {
 			IProperty dup = ip.copy();
 			n.addProperty(dup, true);
 		}
 		for(Function func : functions) {
 			n.addFunction(func);
-			System.out.println("copy added " + func);
 		}
 		
 		//Also copy the widget's sub widgets recursively.
 		for(Widget asub : getDrawList()) {
 			n.addWidget(asub.getName(), asub.copy());
 		}
-		return n;
 	}
 
 	public PropBasic propBasic() {
@@ -156,15 +154,15 @@ public class Widget extends WidgetContainer {
 		}
 	}
 	
-	private Set<Function> getEventHandlers(Class<? extends GuiEvent> clazz) {
-		Set<Function> ret = eventHandlers.get(clazz);
+	private List<Function> getEventHandlers(Class<? extends GuiEvent> clazz) {
+		List<Function> ret = eventHandlers.get(clazz);
 		if(ret == null) {
-			eventHandlers.put(clazz, ret = new HashSet());
+			eventHandlers.put(clazz, ret = new ArrayList());
 		}
 		return ret;
 	}
 	
-	Map< Class<? extends GuiEvent>, Set<Function> > eventHandlers = new HashMap();
+	Map< Class<? extends GuiEvent>, List<Function> > eventHandlers = new HashMap();
 	
 	//Utils
 	public void checkProperty(String id, Class<? extends IProperty> pclazz) {
@@ -185,7 +183,11 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public boolean hasFunction(String fnct) {
-		return functions.contains(fnct);
+		for(Function f : functions) {
+			if(f.getName() == fnct)
+				return true;
+		}
+		return false;
 	}
 	
 	public boolean isPointWithin(double tx, double ty) {

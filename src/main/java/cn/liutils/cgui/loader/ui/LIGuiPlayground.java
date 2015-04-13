@@ -80,7 +80,7 @@ public class LIGuiPlayground extends LIGui {
 					}
 				}
 			});
-			w.needFocus = true;
+			w.propBasic().needFocus = true;
 		}
 		return result;
 	}

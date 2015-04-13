@@ -13,23 +13,26 @@ public class PropBasic implements IProperty {
 	
 	public enum AlignStyle { LEFT, CENTER };
 	
-	@Editable("position")
-	public double x = 50, y = 50;
+	@Editable()
+	public double x = 0, y = 0;
 	
-	@Editable(value = "size")
+	@Editable()
 	public double width = 100.0, height = 100.0;
 	
-	@Editable("scale")
+	@Editable()
 	public double scale = 1.0;
 	
-	@Editable(value = "align")
+	@Editable()
 	public AlignStyle align = AlignStyle.LEFT;
 	
-	@Editable(value = "doesDraw")
+	@Editable()
 	public boolean doesDraw = true;
 	
-	@Editable(value = "doesListenKey")
+	@Editable()
 	public boolean doesListenKey = true;
+	
+	@Editable
+	public boolean needFocus = false;
 	
 	public PropBasic setPos(double x, double y) {
 		this.x = x;
@@ -59,6 +62,7 @@ public class PropBasic implements IProperty {
 		ret.align = align;
 		ret.doesDraw = doesDraw;
 		ret.doesListenKey = doesListenKey;
+		ret.needFocus = needFocus;
 		return ret;
 	}
 }

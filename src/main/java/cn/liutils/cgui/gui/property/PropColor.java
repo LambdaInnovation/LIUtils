@@ -20,7 +20,7 @@ import cn.liutils.cgui.loader.Editable;
  */
 public class PropColor implements IProperty {
 	
-	@Editable(value = "color")
+	@Editable
 	public double r = 1.0, g = 1.0, b = 1.0, a = 1.0;
 	
 	public PropColor setColor3i(int ir, int ig, int ib) {
@@ -39,8 +39,8 @@ public class PropColor implements IProperty {
 	}
 	
 	public int toHexColor() {
-		int ir = (int) (r * 255), ig = (int) (g * 255), ib = (int) (b * 255);
-		return ir + ig << 8 + ib << 16;
+		int ir = (byte) (r * 255), ig = (byte) (g * 255), ib = (byte) (b * 255);
+		return ir | (ig << 8) | (ib << 16);
 	}
 
 	@Override

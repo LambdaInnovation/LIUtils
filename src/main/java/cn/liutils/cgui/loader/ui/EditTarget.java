@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import net.minecraft.util.ResourceLocation;
 import scala.actors.threadpool.Arrays;
 import cn.liutils.cgui.gui.property.IProperty;
 
@@ -35,6 +36,7 @@ public class EditTarget {
 		addEditableType(new EditFloat());
 		addEditableType(new EditDouble());
 		addEditableType(new EditStr());
+		addEditableType(new EditRL());
 	}
 	
 	final EditableType type;
@@ -51,6 +53,7 @@ public class EditTarget {
 	public boolean tryEdit(IProperty p, String etype, Object value) {
 		try {
 			type.set(field, p, etype, value);
+			System.out.println("Setting " + p + " " + value);
 			return true;
 		} catch(Exception e) {
 			return false;
@@ -61,6 +64,7 @@ public class EditTarget {
 		try {
 			return String.valueOf(field.get(p));
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "<invalid>";
 		}
 	}
@@ -83,6 +87,11 @@ public class EditTarget {
 				throw new UnsupportedOperationException("Can't use"
 						+ "default editable type to set non-string");
 				
+			}
+			try {
+				setByStr(f, target, (String) obj);
+			} catch(Exception e) {
+				e.printStackTrace();
 			}
 		}
 		
@@ -149,5 +158,17 @@ public class EditTarget {
 		
 	}
 	
-	
+	public static class EditRL extends EditableType {
+
+		@Override
+		Collection<Class<?>> getHandledClass() {
+			return Arrays.asList(new Class[] { ResourceLocation.class });
+		}
+
+		@Override
+		void setByStr(Field f, IProperty target, String input) throws Exception {
+			f.set(target, new ResourceLocation(input));
+		}
+		
+	}
 }

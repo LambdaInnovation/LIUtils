@@ -28,6 +28,7 @@ import cn.liutils.cgui.gui.event.GainFocusEvent;
 import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
+import cn.liutils.cgui.gui.event.RefreshEvent;
 import cn.liutils.cgui.gui.property.PropBasic;
 import cn.liutils.cgui.gui.property.PropBasic.AlignStyle;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
@@ -143,10 +144,11 @@ public class LIGui extends WidgetContainer {
 		updateMouse(mx, my);
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
-			
+			System.out.println(node);
 			if(node != null) {
-				if(node.needFocus) {
+				if(node.propBasic().needFocus) {
 					gainFocus(node);
+					System.out.println("focused " + node);
 				} else {
 					removeFocus();
 				}
@@ -292,7 +294,9 @@ public class LIGui extends WidgetContainer {
 	private void updateTraverse(Widget cur, WidgetContainer set) {
 		if(cur != null) {
 			if(cur.dirty) {
+				cur.postEvent(new RefreshEvent());
 				this.updateWidget(cur);
+				System.out.println("Ref " + cur);
 			}
 		}
 		
@@ -312,7 +316,7 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	private void drawTraverse(double mx, double my, Widget cur, WidgetContainer set, Widget top) {
-		if(cur != null && cur.doesDraw) {
+		if(cur != null && cur.propBasic().doesDraw) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
@@ -322,7 +326,7 @@ public class LIGui extends WidgetContainer {
 			GL11.glPopMatrix();
 		}
 		
-		if(cur == null || cur.doesDraw) {
+		if(cur == null || cur.propBasic().doesDraw) {
 			Iterator<Widget> iter = set.iterator();
 			while(iter.hasNext()) {
 				Widget wn = iter.next();
@@ -333,7 +337,7 @@ public class LIGui extends WidgetContainer {
 	
 	private Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
 		Widget res = null;
-		boolean sub = node == null || (node.doesDraw && node.doesListenKey);
+		boolean sub = node == null || (node.propBasic().doesDraw && node.propBasic().doesListenKey);
 		if(sub && node != null && node.isPointWithin(x, y)) {
 			res = node;
 		}

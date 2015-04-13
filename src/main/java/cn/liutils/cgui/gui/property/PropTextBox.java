@@ -12,6 +12,7 @@
  */
 package cn.liutils.cgui.gui.property;
 
+import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.loader.Editable;
 
 /**
@@ -46,4 +47,8 @@ public class PropTextBox extends PropColor {
 		return ptb;
 	}
 
+	public static PropTextBox get(Widget w) {
+		return (PropTextBox) w.getProperty("text_box");
+	}
+	
 }

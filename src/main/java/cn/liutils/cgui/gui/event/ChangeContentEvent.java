@@ -10,14 +10,21 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.loader.edit;
+package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.fnct.Function;
 
 /**
+ * Fired each time the gui content was edited.
  * @author WeAthFolD
- *
  */
-public class InputBoxEditor extends Widget {
+public class ChangeContentEvent implements GuiEvent {
+	
+	public abstract static class ChangeContentFunc extends Function<ChangeContentEvent> {
 
+		public ChangeContentFunc() {
+			super(ChangeContentEvent.class);
+		}
+		
+	}
 }

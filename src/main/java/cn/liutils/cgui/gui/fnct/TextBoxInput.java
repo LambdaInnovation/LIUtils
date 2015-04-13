@@ -20,6 +20,8 @@ import org.lwjgl.input.Keyboard;
 
 import scala.actors.threadpool.Arrays;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.event.ChangeContentEvent;
+import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.property.PropTextBox;
 
@@ -50,9 +52,13 @@ public class TextBoxInput extends Function<KeyEvent> {
 		
 		if (par2 == Keyboard.KEY_BACK && prop.content.length() > 0) {
 			prop.content = prop.content.substring(0, prop.content.length() - 1);
+			w.postEvent(new ChangeContentEvent());
+		} else if(par2 == Keyboard.KEY_RETURN || par2 == Keyboard.KEY_NUMPADENTER) {
+			w.postEvent(new ConfirmInputEvent());
 		}
 		if (ChatAllowedCharacters.isAllowedCharacter(event.inputChar)) {
 			prop.content = prop.content + event.inputChar;
+			w.postEvent(new ChangeContentEvent());
 		}
 	}
 

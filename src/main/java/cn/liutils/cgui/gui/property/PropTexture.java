@@ -13,11 +13,16 @@ public class PropTexture implements IProperty {
 	
 	static final ResourceLocation MISSING = new ResourceLocation("liutils:textures/cgui/missing.png");
 
-	@Editable("texture")
+	@Editable()
 	public ResourceLocation texture = MISSING;
 	
-	@Editable(value = "tex_mapping")
-	public double u, v, tw = 0, th = 0;
+	@Editable
+	public double u, v;
+	
+	@Editable("texture width")
+	public double tw = 0;
+	@Editable("texture height")
+	public double th = 0;
 	
 	public PropTexture init(ResourceLocation t, double _u, double _v, double _tw, double _th) {
 		texture = t;

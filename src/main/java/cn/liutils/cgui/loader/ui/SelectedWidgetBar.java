@@ -17,8 +17,12 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
+import cn.liutils.cgui.gui.event.MouseDownEvent;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownFunc;
 import cn.liutils.cgui.gui.property.IProperty;
 import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.loader.CGUIEditor;
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 import cn.liutils.util.render.Font.Align;
@@ -52,13 +56,25 @@ public class SelectedWidgetBar extends Window {
 				
 			}
 		});
+		
+		target.propBasic().x = 10;
 	}
 	
 	private void initWidgets() {
+		Widget temp = CGUIEditor.instance.createFromTemplate("input_box");
+		PropBasic pb = temp.propBasic();
+		pb.width = 100;
+		pb.height = 12;
+		pb.x = 2;
+		pb.y = 12;
+		addWidget(temp);
+		
 		addWidget(new PropertySelection());
 	}
 	
 	private class PropertySelection extends Window {
+		
+		Widget curEditor;
 		
 		public PropertySelection() {
 			super("Properties", false);
@@ -70,6 +86,15 @@ public class SelectedWidgetBar extends Window {
 			for(IProperty prop : target.getProperties()) {
 				addWidget(new PropertyButton(prop, i++));
 			}
+		}
+		
+		void setPropertyEditor(Widget pe) {
+			if(curEditor != null) {
+				curEditor.dispose();
+			}
+			curEditor = pe;
+			pe.propBasic().y = -30;
+			addWidget(curEditor);
 		}
 		
 		private class PropertyButton extends Widget {
@@ -90,6 +115,19 @@ public class SelectedWidgetBar extends Window {
 						Font.font.draw(prop.getName(), pb.width * 0.5, 0, 10, 0xffffff, Align.CENTER);
 						GL11.glColor4d(1, 1, 1, event.hovering ? 0.7 : 0.4);
 						HudUtils.drawModalRect(0, 0, pb.width, pb.height);
+					}
+				});
+				
+				addFunction(new MouseDownFunc() {
+					@Override
+					public void handleEvent(Widget w, MouseDownEvent event) {
+						PropertyEditor pe = CGUIEditor.instance.getPropertyEditor(target, prop);
+						
+						if(pe != null) {
+							setPropertyEditor(pe);
+						} else {
+							LIUtils.log.error("Property not registered: " + prop.getName());
+						}
 					}
 				});
 			}

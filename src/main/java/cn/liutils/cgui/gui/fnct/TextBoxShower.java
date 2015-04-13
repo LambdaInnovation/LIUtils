@@ -46,7 +46,7 @@ public class TextBoxShower extends Function<DrawEvent> {
 		PropTextBox prop = (PropTextBox) w.getProperty("text_box");
 		Font.font.draw(prop.content, 3, w.propBasic().height - prop.textSize, prop.textSize, prop.toHexColor());
 		
-		if(isEditable(w) && Minecraft.getSystemTime() % 1000 < 500) {
+		if(isEditable(w) && w.getGui().getFocus() == w && Minecraft.getSystemTime() % 1000 < 500) {
 			double len = Font.font.strLen(prop.content, prop.textSize);
 			Font.font.draw("|", len + 3, w.propBasic().height - prop.textSize, prop.textSize, prop.toHexColor());
 		}

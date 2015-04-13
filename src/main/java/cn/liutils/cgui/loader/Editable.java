@@ -9,7 +9,7 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.loader.edit.InputBoxEditor;
+import cn.liutils.cgui.loader.ui.ElementEditor;
 
 /**
  * Mark a IProperty's field with @Editable annotation, and those field marked will be visible in CGUI's loading screen.
@@ -28,13 +28,13 @@ import cn.liutils.cgui.loader.edit.InputBoxEditor;
 public @interface Editable {
 	/**
 	 * Represents key name displayed in the property page. You can put multiple props with same ID to merge them
-	 * into the same place.
+	 * into the same place. If not specified use the field name.
 	 */
-	String value();
+	String value() default "";
 	
 	/**
 	 * The edit widget type to construct. If you don't specify 
 	 * this then we use system default settings for this type.
 	 */
-	Class<? extends Widget> elementEditor() default Widget.class;
+	Class<? extends ElementEditor> elementEditor() default ElementEditor.Default.class;
 }

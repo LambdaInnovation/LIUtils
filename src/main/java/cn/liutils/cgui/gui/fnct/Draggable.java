@@ -40,6 +40,7 @@ public class Draggable extends Function<DragEvent> {
 	@Override
 	public void handleEvent(Widget w, DragEvent event) {
 		w.getGui().updateDragWidget();
+		w.dirty = true;
 	}
 
 }

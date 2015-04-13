@@ -41,7 +41,7 @@ public class CGUIEditor {
 	
 	public static CGUIEditor instance = new CGUIEditor();
 	
-	Map<String, ReggedProp> props = new HashMap();
+	Map<String, IProperty> props = new HashMap();
 	
 	Map<String, Function> functions = new HashMap();
 	Map<String, Widget> templates = new HashMap();
@@ -72,6 +72,7 @@ public class CGUIEditor {
 			inp.addProperty(new PropTextBox());
 			inp.addFunction(new TextBoxInput());
 			inp.addFunction(new TextBoxShower());
+			inp.propBasic().needFocus = true;
 			addTemplate("input_box", inp);
 		}
 	}
@@ -85,8 +86,7 @@ public class CGUIEditor {
 	}
 	
 	public void addProperty(IProperty prop) {
-		PropertyEditor editor = new PropertyEditor(prop);
-		props.put(prop.getName(), new ReggedProp(prop, editor));
+		props.put(prop.getName(), prop);
 	}
 	
 	public Collection<Function> getFunctions() {
@@ -107,13 +107,11 @@ public class CGUIEditor {
 	}
 	
 	public IProperty getProperty(String name) {
-		ReggedProp rp = props.get(name);
-		return rp == null ? null : rp.property;
+		return props.get(name);
 	}
 	
-	public PropertyEditor getPropertyEditor(IProperty target) {
-		ReggedProp rp = props.get(target.getName());
-		return rp == null ? null : rp.editor;
+	public PropertyEditor getPropertyEditor(Widget widget, IProperty target) {
+		return new PropertyEditor(widget, target);
 	}
 	
 	private static class ReggedProp {
@@ -122,6 +120,7 @@ public class CGUIEditor {
 		
 		public ReggedProp(IProperty _prop, PropertyEditor _editor) {
 			property = _prop;
+			editor = _editor;
 		}
 	}
 
