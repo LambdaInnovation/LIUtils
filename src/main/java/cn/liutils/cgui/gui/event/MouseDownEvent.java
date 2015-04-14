@@ -3,7 +3,6 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * @author WeAthFolD
@@ -16,9 +15,9 @@ public class MouseDownEvent implements GuiEvent {
 		y = _y;
 	}
 	
-	public static abstract class MouseDownFunc extends Function<MouseDownEvent> {
+	public static abstract class MouseDownHandler extends GuiEventHandler<MouseDownEvent> {
 
-		public MouseDownFunc() {
+		public MouseDownHandler() {
 			super(MouseDownEvent.class);
 		}
 

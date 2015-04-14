@@ -19,17 +19,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.fnct.Component;
 import cn.liutils.cgui.gui.fnct.Draggable;
-import cn.liutils.cgui.gui.fnct.Function;
-import cn.liutils.cgui.gui.fnct.SimpleDrawer;
-import cn.liutils.cgui.gui.fnct.TextBoxInput;
-import cn.liutils.cgui.gui.fnct.TextBoxShower;
-import cn.liutils.cgui.gui.property.IProperty;
-import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.gui.property.PropColor;
-import cn.liutils.cgui.gui.property.PropTextBox;
-import cn.liutils.cgui.gui.property.PropTexture;
-import cn.liutils.cgui.loader.ui.PropertyEditor;
+import cn.liutils.cgui.gui.fnct.DrawTexture;
+import cn.liutils.cgui.gui.fnct.TextBox;
+import cn.liutils.cgui.gui.fnct.Transform;
 
 /**
  * Main loading interface to provide templates&customized objects to CGUI.
@@ -39,89 +34,50 @@ import cn.liutils.cgui.loader.ui.PropertyEditor;
  */
 public class CGUIEditor {
 	
-	public static CGUIEditor instance = new CGUIEditor();
-	
-	Map<String, IProperty> props = new HashMap();
-	
-	Map<String, Function> functions = new HashMap();
-	Map<String, Widget> templates = new HashMap();
+	static Map<String, Component> components = new HashMap();
+	static Map<String, Widget> templates = new HashMap();
 	
 	//Built-ins.
-	{
+	static {
 		//Default Properties
-		addProperty(new PropBasic());
-		addProperty(new PropColor());
-		addProperty(new PropTexture());
-		addProperty(new PropTextBox());
-		
-		//Default functions
-		addFunction(new SimpleDrawer());
-		addFunction(new Draggable());
-		addFunction(new TextBoxInput());
-		addFunction(new TextBoxShower());
+		addComponent(new Transform());
+		addComponent(new TextBox());
+		addComponent(new Draggable());
+		addComponent(new DrawTexture());
 		
 		//Default templates
 		{ //"default"
-			Widget def = new Widget();
-			def.addProperty(new PropTexture());
-			def.addFunction(new SimpleDrawer());
+			Widget def = new Widget().addComponent(new DrawTexture());
 			addTemplate("default", def);
 		}
+		
 		{ //"input_box"
-			Widget inp = new Widget();
-			inp.addProperty(new PropTextBox());
-			inp.addFunction(new TextBoxInput());
-			inp.addFunction(new TextBoxShower());
-			inp.propBasic().needFocus = true;
-			addTemplate("input_box", inp);
+			Widget inp = new Widget().addComponent(new TextBox());
+			addTemplate("textBox", inp);
 		}
 	}
 	
-	public void addFunction(Function func) {
-		functions.put(func.getName(), func);
-	}
-	
-	public void addTemplate(String str, Widget template) {
+	//Template
+	public static void addTemplate(String str, Widget template) {
 		templates.put(str, template);
 	}
 	
-	public void addProperty(IProperty prop) {
-		props.put(prop.getName(), prop);
-	}
-	
-	public Collection<Function> getFunctions() {
-		return functions.values();
-	}
-	
-	public Set<Entry<String, Widget>> getTemplates() {
+	public static Set<Entry<String, Widget>> getTemplates() {
 		return templates.entrySet();
 	}
 	
-	public Widget createFromTemplate(String name) {
+	public static Widget createFromTemplate(String name) {
 		Widget prototype = templates.get(name);
 		return prototype == null ? null : prototype.copy();
 	}
 	
-	public Function getFunction(String name) {
-		return functions.get(name);
+	//Component
+	public static void addComponent(Component c) {
+		components.put(c.name, c);
 	}
 	
-	public IProperty getProperty(String name) {
-		return props.get(name);
-	}
-	
-	public PropertyEditor getPropertyEditor(Widget widget, IProperty target) {
-		return new PropertyEditor(widget, target);
-	}
-	
-	private static class ReggedProp {
-		public IProperty property;
-		public PropertyEditor editor;
-		
-		public ReggedProp(IProperty _prop, PropertyEditor _editor) {
-			property = _prop;
-			editor = _editor;
-		}
+	public static Collection<Component> getComponents() {
+		return components.values();
 	}
 
 }

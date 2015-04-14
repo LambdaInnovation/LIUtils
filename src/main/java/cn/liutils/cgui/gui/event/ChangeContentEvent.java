@@ -12,7 +12,6 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * Fired each time the gui content was edited.
@@ -20,9 +19,9 @@ import cn.liutils.cgui.gui.fnct.Function;
  */
 public class ChangeContentEvent implements GuiEvent {
 	
-	public abstract static class ChangeContentFunc extends Function<ChangeContentEvent> {
+	public abstract static class ChangeContentHandler extends GuiEventHandler<ChangeContentEvent> {
 
-		public ChangeContentFunc() {
+		public ChangeContentHandler() {
 			super(ChangeContentEvent.class);
 		}
 		

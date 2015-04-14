@@ -3,7 +3,6 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * Solely a notification event, fired when a widget was dragged.
@@ -12,8 +11,8 @@ import cn.liutils.cgui.gui.fnct.Function;
 public class DragEvent implements GuiEvent { 
 	 public DragEvent() {}
 	 
-	 public static abstract class DragEventFunc extends Function<DragEvent> {
-		public DragEventFunc() {
+	 public static abstract class DragEventHandler extends GuiEventHandler<DragEvent> {
+		public DragEventHandler() {
 			super(DragEvent.class);
 		}
 	 }

@@ -12,28 +12,29 @@
  */
 package cn.liutils.cgui.gui.fnct;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.DragEvent;
-import cn.liutils.cgui.gui.event.DragEvent.DragEventHandler;
+import cn.liutils.cgui.gui.event.DrawEvent;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.utils.Color;
+import cn.liutils.util.HudUtils;
 
 /**
  * @author WeAthFolD
  */
-public class Draggable extends Component {
-
-	public Draggable() {
-		name = "Draggable";
+public class Tint extends Component {
+	
+	public Color idleColor = new Color(0, 0, 0, 0), hoverColor = new Color(1, 1, 1, 0.5);
+	
+	public Tint() {
+		name = "Tint";
 		
-		addEventHandler(new DragEventHandler() {
+		addEventHandler(new DrawEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DragEvent event) {
-				w.getGui().updateDragWidget();
-				w.dirty = true;
+			public void handleEvent(Widget w, DrawEvent event) {
+				if(event.hovering) hoverColor.bind();
+				else idleColor.bind();
+				HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
 			}
 		});
 	}
-
 }

@@ -12,7 +12,6 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * Fired when ANY input-releated function has confirmed its input.
@@ -20,8 +19,8 @@ import cn.liutils.cgui.gui.fnct.Function;
  * @author WeAthFolD
  */
 public class ConfirmInputEvent implements GuiEvent {
-	public static abstract class ConfirmInputFunc extends Function<ConfirmInputEvent> {
-		public ConfirmInputFunc() {
+	public static abstract class ConfirmInputHandler extends GuiEventHandler<ConfirmInputEvent> {
+		public ConfirmInputHandler() {
 			super(ConfirmInputEvent.class);
 		}
 	}

@@ -12,18 +12,15 @@
  */
 package cn.liutils.cgui.loader.ui;
 
-import org.lwjgl.opengl.GL11;
-
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
-import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownFunc;
-import cn.liutils.cgui.gui.property.IProperty;
-import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.loader.CGUIEditor;
-import cn.liutils.core.LIUtils;
-import cn.liutils.util.HudUtils;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
+import cn.liutils.cgui.gui.fnct.Component;
+import cn.liutils.cgui.gui.fnct.DrawTexture;
+import cn.liutils.cgui.gui.fnct.Tint;
+import cn.liutils.cgui.gui.fnct.Transform;
 import cn.liutils.util.render.Font;
 import cn.liutils.util.render.Font.Align;
 
@@ -39,95 +36,80 @@ public class SelectedWidgetBar extends Window {
 
 	public SelectedWidgetBar(Widget _target) {
 		super(_target.getName() + " properties", false);
-		PropBasic pb = propBasic();
 		target = _target;
-		pb.width = 100;
-		pb.x = HT;
-		pb.y = 20;
+		transform.width = 100;
+		transform.x = HT;
+		transform.y = 20;
 		
-		initEvents();
 		initWidgets();
 	}
 	
-	private void initEvents() {
-		addFunction(new DrawEventFunc() {
-			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
-				
-			}
-		});
-		
-		target.propBasic().x = 10;
-	}
-	
 	private void initWidgets() {
-		Widget temp = CGUIEditor.instance.createFromTemplate("input_box");
-		PropBasic pb = temp.propBasic();
-		pb.width = 100;
-		pb.height = 12;
-		pb.x = 2;
-		pb.y = 12;
-		addWidget(temp);
-		
-		addWidget(new PropertySelection());
+		addWidget(new ComponentSelection());
 	}
 	
-	private class PropertySelection extends Window {
+	private class ComponentSelection extends Window {
 		
 		Widget curEditor;
 		
-		public PropertySelection() {
-			super("Properties", false);
-			PropBasic pb = propBasic();
-			pb.x = 0;
-			pb.y = HT;
+		public ComponentSelection() {
+			super("Components", false);
+			transform.x = 0;
+			transform.y = HT;
+			transform.width = 100;
+			transform.height = 15 + target.getComponentList().size() * 11;
 			
 			int i = 0;
-			for(IProperty prop : target.getProperties()) {
-				addWidget(new PropertyButton(prop, i++));
+			for(Component prop : target.getComponentList()) {
+				addWidget(new ComponentButton(prop, i++));
 			}
+			
+			System.out.println(target.getComponent("DrawTexture"));
+			
+			Widget w = new Widget();
+			w.addComponent(new DrawTexture().setTex(GuiEdit.tex("toolbar/add")));
+			Transform t2 = w.transform;
+			t2.x = transform.width - 12;
+			t2.y = 0;
+			t2.width = t2.height = 10;
+			addWidget(w);
 		}
 		
-		void setPropertyEditor(Widget pe) {
+		void setPropertyEditor(Widget ce) {
 			if(curEditor != null) {
 				curEditor.dispose();
 			}
-			curEditor = pe;
-			pe.propBasic().y = -30;
+			curEditor = ce;
+			ce.transform.y = -30;
 			addWidget(curEditor);
 		}
 		
-		private class PropertyButton extends Widget {
+		private class ComponentButton extends Widget {
 			
-			final IProperty prop;
+			final Component c;
 			
-			public PropertyButton(IProperty _prop, int n) {
-				final PropBasic pb = propBasic();
-				prop = _prop;
-				pb.x = 0;
-				pb.y = 11 + n * 11;
-				pb.width = 100;
-				pb.height = 10;
+			public ComponentButton(Component _c, int n) {
+				c = _c;
 				
-				addFunction(new DrawEventFunc() {
+				transform.x = 0;
+				transform.y = 11 + n * 11;
+				transform.width = 100;
+				transform.height = 10;
+				
+				addComponent(new Tint());
+				
+				regEventHandler(new MouseDownHandler() {
 					@Override
-					public void handleEvent(Widget w, DrawEvent event) {
-						Font.font.draw(prop.getName(), pb.width * 0.5, 0, 10, 0xffffff, Align.CENTER);
-						GL11.glColor4d(1, 1, 1, event.hovering ? 0.7 : 0.4);
-						HudUtils.drawModalRect(0, 0, pb.width, pb.height);
+					public void handleEvent(Widget w, MouseDownEvent event) {
+						setPropertyEditor(new ComponentEditor(target, c));
+						System.out.println(c);
 					}
 				});
 				
-				addFunction(new MouseDownFunc() {
+				regEventHandler(new DrawEventHandler() {
 					@Override
-					public void handleEvent(Widget w, MouseDownEvent event) {
-						PropertyEditor pe = CGUIEditor.instance.getPropertyEditor(target, prop);
-						
-						if(pe != null) {
-							setPropertyEditor(pe);
-						} else {
-							LIUtils.log.error("Property not registered: " + prop.getName());
-						}
+					public void handleEvent(Widget w, DrawEvent event) {
+						Font.font.draw(c.name, 50, 2, 7, 0xffffff, Align.CENTER);
 					}
 				});
 			}

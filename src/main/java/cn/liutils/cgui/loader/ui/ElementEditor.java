@@ -20,16 +20,14 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
-import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentFunc;
+import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
-import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputFunc;
+import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
-import cn.liutils.cgui.gui.fnct.TextBoxInput;
-import cn.liutils.cgui.gui.fnct.TextBoxShower;
-import cn.liutils.cgui.gui.property.IProperty;
-import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.gui.property.PropTextBox;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.fnct.Component;
+import cn.liutils.cgui.gui.fnct.TextBox;
+import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.util.HudUtils;
 
 /**
@@ -38,19 +36,19 @@ import cn.liutils.util.HudUtils;
  */
 public abstract class ElementEditor extends Widget {
 	
-	protected final EditTarget target;
-	
-	PropertyEditor editor;
+	ComponentEditor editor;
+	final Field targetField;
 	
 	public ElementEditor(Field f) {
-		target = new EditTarget(f);
+		targetField = f;
 	}
 	
-	boolean tryEdit(String type, Object obj) {
-		return target.tryEdit(editor.target, type, obj);
+	boolean tryEdit(String value) {
+		System.out.println("TryEdit " + getTargetComponent());
+		return TypeHelper.edit(targetField, getTargetComponent(), value);
 	}
 	
-	IProperty getTargetProperty() {
+	Component getTargetComponent() {
 		return editor.target;
 	}
 	
@@ -81,14 +79,12 @@ public abstract class ElementEditor extends Widget {
 		public InputBox(Field f) {
 			super(f);
 			
-			PropBasic pb = propBasic();
-			pb.x = 2;
-			pb.width = 120;
-			pb.height = 10;
-			pb.needFocus = true;
+			transform.x = 2;
+			transform.width = 120;
+			transform.height = 10;
 			
-			addProperty(new PropTextBox());
-			addFunction(new DrawEventFunc() {
+			addComponent(new TextBox());
+			regEventHandler(new DrawEventHandler() {
 				@Override
 				public void handleEvent(Widget w, DrawEvent event) {
 					if(lastErrorTime != -1 && Minecraft.getSystemTime() - lastErrorTime < 1000) {
@@ -99,24 +95,22 @@ public abstract class ElementEditor extends Widget {
 						GL11.glColor4d(1, 1, 1, 0.3);
 					}
 					HudUtils.drawModalRect(0, 0, 
-						w.propBasic().width, w.propBasic().height);
+						w.transform.width, w.transform.height);
 					GL11.glColor4d(1, 1, 1, 1);
 				}
 			});
-			addFunction(new TextBoxInput());
-			addFunction(new TextBoxShower());
-			addFunction(new ChangeContentFunc() {
+			regEventHandler(new ChangeContentHandler() {
 				@Override
 				public void handleEvent(Widget w, ChangeContentEvent event) {
 					inputDirty = true;
 				}
 			});
-			addFunction(new ConfirmInputFunc() {
+			regEventHandler(new ConfirmInputHandler() {
 				@Override
 				public void handleEvent(Widget w, ConfirmInputEvent event) {
 					if(inputDirty) {
 						//Try to edit the edit target. if not successful, show error.
-						if(!tryEdit("string", ((PropTextBox)w.getProperty("text_box")).content)) {
+						if(!tryEdit(((TextBox)w.getComponent("TextBox")).content)) {
 							lastErrorTime = Minecraft.getSystemTime();
 						} else {
 							updateTargetWidget();
@@ -130,7 +124,7 @@ public abstract class ElementEditor extends Widget {
 		
 		@Override
 		public void onAdded() {
-			PropTextBox.get(this).content = target.getValue(getTargetProperty());
+			TextBox.get(this).content = TypeHelper.repr(targetField, getTargetComponent());
 		}
 		
 	}

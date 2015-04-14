@@ -10,17 +10,26 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.event;
+package cn.liutils.cgui.utils;
 
+import java.lang.reflect.Field;
+import java.util.Collection;
 
 /**
- * Fired when a widget is marked 'dirty' and is about to be updated by the LIGui.
  * @author WeAthFolD
  */
-public class RefreshEvent implements GuiEvent {
-	public static abstract class RefreshFunc extends GuiEventHandler<RefreshEvent> {
-		public RefreshFunc() {
-			super(RefreshEvent.class);
-		}
+public abstract class HandledType {
+	
+	public void set(Field f, Object instance, Object value) throws Exception {
+		f.set(instance, value);
 	}
+	
+	public abstract void edit(Field f, Object instance, String value) throws Exception;
+	
+	public String get(Field f, Object instance) throws Exception {
+		return f.get(instance).toString();
+	}
+	
+	public abstract Object copy(Field f, Object instance) throws Exception;
+	
 }

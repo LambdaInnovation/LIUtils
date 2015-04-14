@@ -14,16 +14,13 @@ package cn.liutils.cgui.gui;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import cn.liutils.cgui.gui.event.GuiEvent;
-import cn.liutils.cgui.gui.fnct.Function;
-import cn.liutils.cgui.gui.property.IProperty;
-import cn.liutils.cgui.gui.property.PropBasic;
+import cn.liutils.cgui.gui.event.GuiEventBus;
+import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.fnct.Component;
+import cn.liutils.cgui.gui.fnct.Transform;
 
 
 /**
@@ -31,8 +28,8 @@ import cn.liutils.cgui.gui.property.PropBasic;
  */
 public class Widget extends WidgetContainer {
 	
-	Map<String, IProperty> properties = new HashMap();
-	Set<Function> functions = new HashSet();
+	private GuiEventBus eventBus = new GuiEventBus();
+	private List<Component> components = new ArrayList();
 	
 	public boolean disposed = false;
 	public boolean dirty = true; //Indicate that this widget's pos data is dirty and requires update.
@@ -49,9 +46,11 @@ public class Widget extends WidgetContainer {
 	 */
 	public boolean editing = false;
 	
+	public Transform transform;
+	
 	//Defaults
 	{
-		addProperty(new PropBasic());
+		addComponent(transform = new Transform());
 	}
 	
 	public Widget() {}
@@ -61,46 +60,28 @@ public class Widget extends WidgetContainer {
 	 * along with its all sub widgets recursively.
 	 */
 	public Widget copy() {
-		Widget n = new Widget();
-		assignProperties(n);
+		Widget n = null;
+		try {
+			n = getClass().newInstance();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		copyInfoTo(n);
 		return n;
 	}
 	
-	protected void assignProperties(Widget n) {
-		for(IProperty ip : properties.values()) {
-			IProperty dup = ip.copy();
-			n.addProperty(dup, true);
+	protected void copyInfoTo(Widget n) {
+		n.components.clear();
+		for(Component c : components) {
+			n.addComponent(c.copy());
 		}
-		for(Function func : functions) {
-			n.addFunction(func);
-		}
+		n.transform = n.getComponent("Transform");
+		n.eventBus = eventBus.copy();
 		
 		//Also copy the widget's sub widgets recursively.
 		for(Widget asub : getDrawList()) {
 			n.addWidget(asub.getName(), asub.copy());
 		}
-	}
-
-	public PropBasic propBasic() {
-		return (PropBasic) properties.get("basic");
-	}
-	
-	public IProperty getProperty(String name) {
-		return properties.get(name);
-	}
-	
-	public Collection<IProperty> getProperties() {
-		return properties.values();
-	}
-	
-	public void addProperty(IProperty prop) {
-		addProperty(prop, false);
-	}
-	
-	public void addProperty(IProperty prop, boolean force) {
-		if(properties.containsKey(prop.getName()) && !force)
-			throw new RuntimeException("Duplicate property id " + prop.getName());
-		properties.put(prop.getName(), prop);
 	}
 	
 	/**
@@ -139,61 +120,57 @@ public class Widget extends WidgetContainer {
 		return 1;
 	}
 	
+	//Component handling
+	/**
+	 * Java generic type is shit, so use it at your own risk.
+	 * @return the first component with the name specified, or null if no such component.
+	 */
+	public <T extends Component> T getComponent(String name) {
+		for(Component c : components) {
+			if(c.name.equals(name))
+				return (T) c;
+		}
+		return null;
+	}
+	
+	public Widget addComponent(Component c) {
+		components.add(c);
+		return this;
+	}
+	
+	/**
+	 * Return the raw component list. Any modification on the list will directly change the behavior of the widget.
+	 */
+	public List<Component> getComponentList() {
+		return components;
+	}
+	
 	//Event dispatch
-	public final Widget addFunction(Function h) {
-		getEventHandlers(h.getEventClass()).add(h);
-		h.onAdded(this);
-		functions.add(h);
-		
+	public final Widget regEventHandler(GuiEventHandler h) {
+		eventBus.regEventHandler(h);
 		return this;
 	}
 	
 	public final void postEvent(GuiEvent event) {
-		for(Function h : getEventHandlers(event.getClass())) {
-			h.handleEvent(this, event);
+		for(Component c : components) {
+			c.postEvent(this, event);
 		}
+		eventBus.postEvent(this, event);
 	}
-	
-	private List<Function> getEventHandlers(Class<? extends GuiEvent> clazz) {
-		List<Function> ret = eventHandlers.get(clazz);
-		if(ret == null) {
-			eventHandlers.put(clazz, ret = new ArrayList());
-		}
-		return ret;
-	}
-	
-	Map< Class<? extends GuiEvent>, List<Function> > eventHandlers = new HashMap();
 	
 	//Utils
-	public void checkProperty(String id, Class<? extends IProperty> pclazz) {
-		IProperty p = getProperty(id);
-		if(p == null) {
-			IProperty add;
-			try {
-				add = pclazz.newInstance();
-				addProperty(add);
-			} catch(Exception e) {
-				e.printStackTrace();
-			}
-		}
-	}
-	
 	public String getName() {
 		return this.isWidgetParent() ? parent.getWidgetName(this) : getGui().getWidgetName(this);
 	}
 	
-	public boolean hasFunction(String fnct) {
-		for(Function f : functions) {
-			if(f.getName() == fnct)
-				return true;
-		}
-		return false;
-	}
-	
 	public boolean isPointWithin(double tx, double ty) {
-		double w = propBasic().width, h = propBasic().height;
+		double w = transform.width, h = transform.height;
 		double x1 = x + w * scale, y1 = y + h * scale;
 		return (x <= tx && tx <x1) && (y <= ty && ty < y1);
+	}
+	
+	public boolean isFocused() {
+		return gui.getFocus() == this;
 	}
 
 	@Override

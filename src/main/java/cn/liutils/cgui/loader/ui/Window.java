@@ -18,14 +18,13 @@ import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
-import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownFunc;
-import cn.liutils.cgui.gui.fnct.Function;
-import cn.liutils.cgui.gui.fnct.SimpleDrawer;
-import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.gui.property.PropTexture;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
+import cn.liutils.cgui.gui.fnct.Draggable;
+import cn.liutils.cgui.gui.fnct.DrawTexture;
+import cn.liutils.cgui.gui.fnct.Transform;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 
@@ -47,10 +46,9 @@ public class Window extends Widget {
 	public void onAdded() {
 		if(canClose) {
 			 Widget close = new Widget();
-			 close.propBasic().setSize(10, 10).setPos(propBasic().width - 12, 1);
-			 close.addProperty(new PropTexture().init(GuiEdit.tex("toolbar/close")));
-			 close.addFunction(new SimpleDrawer());
-			 close.addFunction(new MouseDownFunc() {
+			 close.transform.setSize(10, 10).setPos(transform.width - 12, 1);
+			 close.addComponent(new DrawTexture().setTex(GuiEdit.tex("toolbar/close")));
+			 close.regEventHandler(new MouseDownHandler() {
 				@Override
 				public void handleEvent(Widget w, MouseDownEvent event) {
 					Window.this.dispose();
@@ -60,27 +58,20 @@ public class Window extends Widget {
 		}
 		
 		if(!this.isWidgetParent()) {
-			this.addFunction(new Function<DragEvent>(DragEvent.class) {
-				@Override
-				public void handleEvent(Widget w, DragEvent event) {
-					if(!isWidgetParent()) {
-					getGui().updateDragWidget();
-					}
-				}
-			});
+			this.addComponent(new Draggable());
 		}
 		
-		this.addFunction(new Function<DrawEvent>(DrawEvent.class) {
+		this.regEventHandler(new DrawEventHandler() {
 			@Override
 			public void handleEvent(Widget w, DrawEvent event) {
-				PropBasic p = propBasic();
+				Transform t = w.transform;
 				final double bar_ht = 10;
 				
 				GuiEdit.bindColor(2);
-				HudUtils.drawModalRect(0, 0, p.width, bar_ht);
+				HudUtils.drawModalRect(0, 0, t.width, bar_ht);
 				
 				GuiEdit.bindColor(1);
-				HudUtils.drawModalRect(0, bar_ht, p.width, p.height - bar_ht);
+				HudUtils.drawModalRect(0, bar_ht, t.width, t.height - bar_ht);
 				
 				Font.font.draw(name, 10, 0, 10, 0x7fbeff);
 			}
@@ -98,7 +89,7 @@ public class Window extends Widget {
 		GL11.glLineWidth(3);
 		t.startDrawing(GL11.GL_LINES);
 		t.addVertex(0, y, -90);
-		t.addVertex(propBasic().width, y, -90);
+		t.addVertex(transform.width, y, -90);
 		t.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}

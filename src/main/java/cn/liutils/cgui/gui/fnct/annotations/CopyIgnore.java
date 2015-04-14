@@ -10,17 +10,12 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.event;
-
+package cn.liutils.cgui.gui.fnct.annotations;
 
 /**
- * Fired when a widget is marked 'dirty' and is about to be updated by the LIGui.
+ * If a public field in Component is @CopyIgnore ed, it will not get copied by Component#copy() method even if it could.
  * @author WeAthFolD
  */
-public class RefreshEvent implements GuiEvent {
-	public static abstract class RefreshFunc extends GuiEventHandler<RefreshEvent> {
-		public RefreshFunc() {
-			super(RefreshEvent.class);
-		}
-	}
+public @interface CopyIgnore {
+
 }

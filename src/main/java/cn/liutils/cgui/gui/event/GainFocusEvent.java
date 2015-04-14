@@ -12,14 +12,13 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import cn.liutils.cgui.gui.fnct.Function;
 
 /**
  * Indicate that a widget has gained input focus.
  * @author WeAthFolD
  */
 public class GainFocusEvent implements GuiEvent {
-	public static abstract class GainFocusFunc extends Function<GainFocusEvent> {
+	public static abstract class GainFocusFunc extends GuiEventHandler<GainFocusEvent> {
 		public GainFocusFunc() {
 			super(GainFocusEvent.class);
 		}

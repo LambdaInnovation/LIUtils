@@ -15,7 +15,7 @@ package cn.liutils.cgui.loader.ui;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventFunc;
+import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusFunc;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
@@ -50,26 +50,26 @@ public class LIGuiPlayground extends LIGui {
 		boolean result = super.addWidget(name, w);
 		if(result) {
 			//Add selection indicator
-			w.addFunction(new DrawEventFunc() {
+			w.regEventHandler(new DrawEventHandler() {
 				@Override
 				public void handleEvent(Widget w, DrawEvent event) {
 					if(getFocus() == w) {
 						RenderUtils.bindColor(112, 223, 122, 200);
-						HudUtils.drawRectOutline(0, 0, w.propBasic().width, w.propBasic().height, 3);
+						HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
 					} else {
-						HudUtils.drawRectOutline(0, 0, w.propBasic().width, w.propBasic().height, 1);
+						HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);
 					}
 				}
 			});
-			w.addFunction(new Draggable());
-			w.addFunction(new GainFocusFunc() {
+			w.addComponent(new Draggable());
+			w.regEventHandler(new GainFocusFunc() {
 				@Override
 				public void handleEvent(Widget w, GainFocusEvent event) {
 					guiEdit.selectedEditor = new SelectedWidgetBar(w);
 					guiEdit.getGui().addWidget(guiEdit.selectedEditor);
 				}
 			});
-			w.addFunction(new LostFocusFunc() {
+			w.regEventHandler(new LostFocusFunc() {
 				@Override
 				public void handleEvent(Widget w, LostFocusEvent event) {
 					if(guiEdit.selectedEditor != null) {
@@ -78,9 +78,9 @@ public class LIGuiPlayground extends LIGui {
 					} else {
 						System.err.println("invalid state when selected widget lost focus. Plz check your implementation.");
 					}
+					System.out.println(w.transform);
 				}
 			});
-			w.propBasic().needFocus = true;
 		}
 		return result;
 	}

@@ -29,8 +29,8 @@ import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
-import cn.liutils.cgui.gui.property.PropBasic;
-import cn.liutils.cgui.gui.property.PropBasic.AlignStyle;
+import cn.liutils.cgui.gui.fnct.Transform;
+import cn.liutils.cgui.gui.fnct.Transform.AlignStyle;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -74,7 +74,7 @@ public class LIGui extends WidgetContainer {
 		
 		if(diff) {
 			for(Widget widget : this) {
-				if(widget.propBasic().align == AlignStyle.CENTER)
+				if(widget.transform.align == AlignStyle.CENTER)
 					widget.dirty = true;
 			}
 		}
@@ -144,14 +144,8 @@ public class LIGui extends WidgetContainer {
 		updateMouse(mx, my);
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
-			System.out.println(node);
 			if(node != null) {
-				if(node.propBasic().needFocus) {
-					gainFocus(node);
-					System.out.println("focused " + node);
-				} else {
-					removeFocus();
-				}
+				gainFocus(node);
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 				//TODO: Need further filtering
 				return true;
@@ -204,24 +198,24 @@ public class LIGui extends WidgetContainer {
      * Note that the widget's position may be further changed because of its parent widget's position change.
      */
     public void moveWidgetToAbsPos(Widget w, double tx, double ty) {
-    	PropBasic p = w.propBasic();
+    	Transform t = w.transform;
 		w.x = tx;
 		w.y = ty;
 		//Reversed calc to update propWidget.
 		if(w.isWidgetParent()) {
 			Widget pw = w.parent;
-			p.x = (w.x - pw.x) / w.scale;
-			p.y = (w.y - pw.y) / w.scale;
+			t.x = (w.x - pw.x) / w.scale;
+			t.y = (w.y - pw.y) / w.scale;
 		} else {
 			double x0, y0;
-			if(p.align == AlignStyle.CENTER) {
+			if(t.align == AlignStyle.CENTER) {
 				x0 = width / 2;
 				y0 = height / 2;
 			} else {
 				x0 = y0 = 0;
 			}
-			p.x = (w.x - x0) / w.scale;
-			p.y = (w.y - y0) / w.scale;
+			t.x = (w.x - x0) / w.scale;
+			t.y = (w.y - y0) / w.scale;
 		}
 		w.dirty = true;
     }
@@ -252,24 +246,24 @@ public class LIGui extends WidgetContainer {
 	private void updateWidget(Widget widget) {
 		widget.gui = this;
 		
-		PropBasic p = widget.propBasic();
+		Transform t = widget.transform;
 		if(widget.isWidgetParent()) {
 			Widget parent = widget.parent;
-			widget.scale = parent.scale * p.scale;
-			widget.x = parent.x + p.x * widget.scale;
-			widget.y = parent.y + p.y * widget.scale;
+			widget.scale = parent.scale * t.scale;
+			widget.x = parent.x + t.x * widget.scale;
+			widget.y = parent.y + t.y * widget.scale;
 		} else {
-			widget.scale = p.scale;
+			widget.scale = t.scale;
 
 			double x0 = 0, y0 = 0;
-			switch(p.align) {
+			switch(t.align) {
 			case CENTER:
-				x0 = (width - p.width * widget.scale) / 2;
-				y0 = (height - p.height * widget.scale) / 2;
+				x0 = (width - t.width * widget.scale) / 2;
+				y0 = (height - t.height * widget.scale) / 2;
 				break;
 			case LEFT:
-				x0 = p.x * widget.scale;
-				y0 = p.y * widget.scale;
+				x0 = t.x * widget.scale;
+				y0 = t.y * widget.scale;
 				break;
 			}
 			widget.x = Math.max(0, x0);
@@ -296,7 +290,7 @@ public class LIGui extends WidgetContainer {
 			if(cur.dirty) {
 				cur.postEvent(new RefreshEvent());
 				this.updateWidget(cur);
-				System.out.println("Ref " + cur);
+				//System.out.println("Ref " + cur);
 			}
 		}
 		
@@ -316,7 +310,7 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	private void drawTraverse(double mx, double my, Widget cur, WidgetContainer set, Widget top) {
-		if(cur != null && cur.propBasic().doesDraw) {
+		if(cur != null && cur.transform.doesDraw) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
@@ -326,7 +320,7 @@ public class LIGui extends WidgetContainer {
 			GL11.glPopMatrix();
 		}
 		
-		if(cur == null || cur.propBasic().doesDraw) {
+		if(cur == null || cur.transform.doesDraw) {
 			Iterator<Widget> iter = set.iterator();
 			while(iter.hasNext()) {
 				Widget wn = iter.next();
@@ -337,7 +331,7 @@ public class LIGui extends WidgetContainer {
 	
 	private Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
 		Widget res = null;
-		boolean sub = node == null || (node.propBasic().doesDraw && node.propBasic().doesListenKey);
+		boolean sub = node == null || (node.transform.doesDraw && node.transform.doesListenKey);
 		if(sub && node != null && node.isPointWithin(x, y)) {
 			res = node;
 		}
