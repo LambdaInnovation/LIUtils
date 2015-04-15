@@ -28,7 +28,7 @@ public class GuiEdit extends LIGuiScreen {
 	Widget selectedEditor;
 	
 	public static double
-		COLOR[] = { 0.2, 0.4, 0.65, 0.9 };
+		COLOR[] = { 0.2, 0.4, 0.65, .9 };
 	
 	public static double[] COLOR_STYLE = new double[] { .3, .56, 1 };
 	

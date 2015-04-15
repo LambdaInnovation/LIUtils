@@ -29,6 +29,10 @@ public class Color {
 		this(1, 1, 1, 1);
 	}
 	
+	public Color(int hex) {
+		fromHexColor(hex);
+	}
+	
 	public void setColor4i(int r, int g, int b, int a) {
 		setColor4d(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 	}
@@ -40,12 +44,25 @@ public class Color {
 		a = _a;
 	}
 	
+	public void fromHexColor(int hex) {
+		setColor4i(hex & 0xFF, (hex >> 8) & 0xFF, (hex >> 16) & 0xFF, (hex >> 24) & 0xFF);
+	}
+	
 	public int asHexColor() {
-		byte ir = (byte) (r * 255), ig = (byte) (g * 255), ib = (byte) (b * 255);
-		return ir | ig << 8 | ib << 16;
+		byte ir = (byte) (r * 255), ig = (byte) (g * 255), ib = (byte) (b * 255), ia = (byte) (a * 255);;
+		return ir | ig << 8 | ib << 16 | ia << 24;
 	}
 	
 	public void bind() {
 		GL11.glColor4d(r, g, b, a);
 	}
+	
+	public Color copy() {
+		return new Color(r, g, b, a);
+	}
+	
+	public String toString() {
+		return String.valueOf(asHexColor());
+	}
+	
 }

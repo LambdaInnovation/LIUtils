@@ -10,7 +10,7 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.fnct;
+package cn.liutils.cgui.gui.component;
 
 import net.minecraft.util.ResourceLocation;
 
@@ -19,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.utils.Color;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 
@@ -31,15 +32,15 @@ public class DrawTexture extends Component {
 	
 	public ResourceLocation texture = MISSING;
 	
-	public double r = 1.0, g = 1.0, b = 1.0, a = 1.0;
+	public Color color = new Color(1, 1, 1, 1);
 
 	public DrawTexture() {
-		this.name = "DrawTexture";
+		super("DrawTexture");
 		this.addEventHandler(new DrawEventHandler() {
 			@Override
 			public void handleEvent(Widget w, DrawEvent event) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glColor4d(r, g, b, a);
+				color.bind();
 				RenderUtils.loadTexture(texture);
 				HudUtils.drawRect(0, 0, w.transform.width, w.transform.height);
 			}
@@ -52,16 +53,17 @@ public class DrawTexture extends Component {
 	}
 	
 	public DrawTexture setColor4i(int r, int g, int b, int a) {
-		setColor4d(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
+		color.setColor4d(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 		return this;
 	}
 	
 	public DrawTexture setColor4d(double _r, double _g, double _b, double _a) {
-		r = _r;
-		g = _g;
-		b = _b;
-		a = _a;
+		color.setColor4d(_r, _g, _b, _a);
 		return this;
+	}
+	
+	public static DrawTexture get(Widget w) {
+		return w.getComponent("DrawTexture");
 	}
 
 }

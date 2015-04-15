@@ -10,12 +10,30 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.fnct.annotations;
+package cn.liutils.cgui.gui.component;
+
+import java.util.ArrayList;
+import java.util.Collection;
+
+import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.event.DragEvent;
+import cn.liutils.cgui.gui.event.DragEvent.DragEventHandler;
 
 /**
- * If a public field in Component is @CopyIgnore ed, it will not get copied by Component#copy() method even if it could.
  * @author WeAthFolD
  */
-public @interface CopyIgnore {
+public class Draggable extends Component {
+
+	public Draggable() {
+		super("Draggable");
+		
+		addEventHandler(new DragEventHandler() {
+			@Override
+			public void handleEvent(Widget w, DragEvent event) {
+				w.getGui().updateDragWidget();
+				w.dirty = true;
+			}
+		});
+	}
 
 }

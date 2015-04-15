@@ -14,13 +14,13 @@ package cn.liutils.cgui.loader.ui;
 
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.Draggable;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusFunc;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
-import cn.liutils.cgui.gui.fnct.Draggable;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.Font;
@@ -78,7 +78,6 @@ public class LIGuiPlayground extends LIGui {
 					} else {
 						System.err.println("invalid state when selected widget lost focus. Plz check your implementation.");
 					}
-					System.out.println(w.transform);
 				}
 			});
 		}

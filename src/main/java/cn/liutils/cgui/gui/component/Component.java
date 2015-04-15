@@ -10,9 +10,10 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.fnct;
+package cn.liutils.cgui.gui.component;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -20,10 +21,11 @@ import java.util.List;
 import java.util.Map;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.annotations.CopyIgnore;
+import cn.liutils.cgui.gui.annotations.EditIgnore;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventBus;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.gui.fnct.annotations.CopyIgnore;
 import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.core.LIUtils;
 
@@ -38,19 +40,22 @@ public class Component {
 
 	private GuiEventBus eventBus;
 	
-	public String name = "Default";
+	@EditIgnore
+	public final String name;
 	
-	public Component() {
+	public Component(String _name) {
+		name = _name;
 		checkCopyFields();
 		eventBus = new GuiEventBus();
 	}
-	
+
 	private void checkCopyFields() {
 		if(copiedFields.containsKey(getClass()))
 			return;
 		List<Field> ret = new ArrayList<Field>();
 		for(Field f : getClass().getFields()) {
-			if(!f.isAnnotationPresent(CopyIgnore.class) && TypeHelper.isTypeSupported(f.getType())) {
+			if(((f.getModifiers() & Modifier.FINAL) == 0)
+			&& !f.isAnnotationPresent(CopyIgnore.class) && TypeHelper.isTypeSupported(f.getType())) {
 				ret.add(f);
 			}
 		}

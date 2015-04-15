@@ -1,4 +1,4 @@
-package cn.liutils.cgui.gui.fnct;
+package cn.liutils.cgui.gui.component;
 
 import cn.liutils.cgui.gui.Widget;
 
@@ -17,7 +17,7 @@ public class Transform extends Component {
 	public AlignStyle align = AlignStyle.LEFT;
 
 	public Transform() {
-		name = "Transform";
+		super("Transform");
 	}
 	
 	//Helper set methods

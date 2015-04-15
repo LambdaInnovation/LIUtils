@@ -19,16 +19,18 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.Component;
+import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
-import cn.liutils.cgui.gui.fnct.Component;
-import cn.liutils.cgui.gui.fnct.TextBox;
+import cn.liutils.cgui.utils.Color;
 import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.util.HudUtils;
+import cn.liutils.util.render.Font;
 
 /**
  * @author WeAthFolD
@@ -44,16 +46,23 @@ public abstract class ElementEditor extends Widget {
 	}
 	
 	boolean tryEdit(String value) {
-		System.out.println("TryEdit " + getTargetComponent());
-		return TypeHelper.edit(targetField, getTargetComponent(), value);
+		return TypeHelper.edit(targetField, getEditInstance(), value);
+	}
+	
+	Object getEditInstance() {
+		return getTargetComponent();
+	}
+	
+	ComponentEditor getEditor() {
+		return editor;
 	}
 	
 	Component getTargetComponent() {
-		return editor.target;
+		return getEditor().target;
 	}
 	
 	void updateTargetWidget() {
-		editor.widget.dirty = true;
+		getEditor().widget.dirty = true;
 	}
 	
 	/**
@@ -63,6 +72,59 @@ public abstract class ElementEditor extends Widget {
 		
 		public Default(Field f) {
 			super(f);
+		}
+		
+	}
+	
+	public static class ColorBox extends ElementEditor {
+
+		public ColorBox(Field f) {
+			super(f);
+			String[] arr = new String[] { "r", "g", "b", "a" };
+			double x = 5;
+			for(final String s : arr) {
+				Widget drawer = new Widget();
+				drawer.regEventHandler(new DrawEventHandler() {
+					@Override
+					public void handleEvent(Widget w, DrawEvent event) {
+						Font.font.draw(s, 0, 2, 8, 0xffffff);
+					}
+				});
+				drawer.transform.x = x;
+				addWidget(drawer);
+				
+				try {
+					ColorEditor ce = new ColorEditor(s);
+					ce.transform.x = x + 5;
+					ce.transform.width = 20;
+					ce.transform.height = 10;
+					addWidget(ce);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				x += 30;
+			}
+		}
+		
+		class ColorEditor extends InputBox {
+			public ColorEditor(String sub) throws Exception {
+				super(Color.class.getField(sub));
+			}
+			
+			@Override
+			public ComponentEditor getEditor() {
+				return ColorBox.this.editor;
+			}
+			
+			@Override Object getEditInstance() {
+				try {
+					return ColorBox.this.targetField.get(ColorBox.this.getTargetComponent());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
 		}
 		
 	}
@@ -83,7 +145,7 @@ public abstract class ElementEditor extends Widget {
 			transform.width = 120;
 			transform.height = 10;
 			
-			addComponent(new TextBox());
+			addComponent(new TextBox().setSize(9));
 			regEventHandler(new DrawEventHandler() {
 				@Override
 				public void handleEvent(Widget w, DrawEvent event) {
@@ -124,7 +186,7 @@ public abstract class ElementEditor extends Widget {
 		
 		@Override
 		public void onAdded() {
-			TextBox.get(this).content = TypeHelper.repr(targetField, getTargetComponent());
+			TextBox.get(this).content = TypeHelper.repr(targetField, getEditInstance());
 		}
 		
 	}

@@ -196,6 +196,22 @@ public class TypeHelper {
 				return new ResourceLocation(rl.getResourceDomain(), rl.getResourcePath());
 			}
 		}, ResourceLocation.class);
+		
+		addHandledType(new HandledType() {
+
+			@Override
+			public void edit(Field f, Object instance, String value)
+					throws Exception {
+				int hex = Integer.valueOf(value);
+				f.set(instance, new Color(hex));
+			}
+
+			@Override
+			public Object copy(Field f, Object instance) throws Exception {
+				return ((Color)f.get(instance)).copy();
+			}
+			
+		}, Color.class);
 	}
 	
 }

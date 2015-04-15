@@ -18,13 +18,13 @@ import net.minecraft.client.renderer.Tessellator;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.Draggable;
+import cn.liutils.cgui.gui.component.DrawTexture;
+import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.cgui.gui.fnct.Draggable;
-import cn.liutils.cgui.gui.fnct.DrawTexture;
-import cn.liutils.cgui.gui.fnct.Transform;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 
@@ -86,7 +86,7 @@ public class Window extends Widget {
 		Tessellator t = Tessellator.instance;
 		GuiEdit.bindColor(3);
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		GL11.glLineWidth(3);
+		GL11.glLineWidth(1.5f);
 		t.startDrawing(GL11.GL_LINES);
 		t.addVertex(0, y, -90);
 		t.addVertex(transform.width, y, -90);

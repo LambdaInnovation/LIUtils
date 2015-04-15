@@ -22,6 +22,8 @@ import org.lwjgl.util.glu.GLU;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.api.key.LIKeyProcess.Trigger;
+import cn.liutils.cgui.gui.component.Transform;
+import cn.liutils.cgui.gui.component.Transform.AlignStyle;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
@@ -29,8 +31,6 @@ import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
-import cn.liutils.cgui.gui.fnct.Transform;
-import cn.liutils.cgui.gui.fnct.Transform.AlignStyle;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -310,7 +310,7 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	private void drawTraverse(double mx, double my, Widget cur, WidgetContainer set, Widget top) {
-		if(cur != null && cur.transform.doesDraw) {
+		if(cur != null && cur.isVisible()) {
 			GL11.glPushMatrix();
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
@@ -320,7 +320,7 @@ public class LIGui extends WidgetContainer {
 			GL11.glPopMatrix();
 		}
 		
-		if(cur == null || cur.transform.doesDraw) {
+		if(cur == null || cur.isVisible()) {
 			Iterator<Widget> iter = set.iterator();
 			while(iter.hasNext()) {
 				Widget wn = iter.next();

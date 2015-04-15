@@ -1,4 +1,4 @@
-package cn.liutils.cgui.gui.fnct.annotations;
+package cn.liutils.cgui.gui.annotations;
 
 /**
  * Specify edit method for this field.

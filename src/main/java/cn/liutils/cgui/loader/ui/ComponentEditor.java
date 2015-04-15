@@ -18,9 +18,10 @@ import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
-import cn.liutils.cgui.gui.fnct.Component;
+import cn.liutils.cgui.utils.Color;
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.render.Font;
 
@@ -38,19 +39,21 @@ public class ComponentEditor extends Window {
 		for(Class c : arr) {
 			editors.put(c, ElementEditor.InputBox.class);
 		}
+		
+		editors.put(Color.class, ElementEditor.ColorBox.class);
 	}
 	
 	Widget widget;
 	Component target;
 	
 	public ComponentEditor(Widget _widget, Component _target) {
-		super("Property: " + _target.name, true);
+		super("Component: " + _target.name, true);
 		widget = _widget;
 		target = _target;
 		generate();
 		transform.x = 100;
 		transform.y = 20;
-		transform.width = 150;
+		transform.width = 125;
 	}
 	
 	private void generate() {
@@ -82,7 +85,6 @@ public class ComponentEditor extends Window {
 				 */
 				ee.editor = this;
 				ee.transform.y = y + 10;
-				System.out.println("TARGET:" + ee.editor.target);
 				addWidget(ee);
 				y += 20;
 			}

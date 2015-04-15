@@ -13,14 +13,14 @@
 package cn.liutils.cgui.loader.ui;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.Component;
+import cn.liutils.cgui.gui.component.DrawTexture;
+import cn.liutils.cgui.gui.component.Tint;
+import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.cgui.gui.fnct.Component;
-import cn.liutils.cgui.gui.fnct.DrawTexture;
-import cn.liutils.cgui.gui.fnct.Tint;
-import cn.liutils.cgui.gui.fnct.Transform;
 import cn.liutils.util.render.Font;
 import cn.liutils.util.render.Font.Align;
 
@@ -32,14 +32,15 @@ public class SelectedWidgetBar extends Window {
 	
 	final Widget target;
 	
-	static final double HT = 30;
+	static final double HT = 10;
 
 	public SelectedWidgetBar(Widget _target) {
 		super(_target.getName() + " properties", false);
 		target = _target;
 		transform.width = 100;
-		transform.x = HT;
-		transform.y = 20;
+		transform.height = HT;
+		transform.x = 0;
+		transform.y = 0;
 		
 		initWidgets();
 	}
@@ -64,8 +65,6 @@ public class SelectedWidgetBar extends Window {
 				addWidget(new ComponentButton(prop, i++));
 			}
 			
-			System.out.println(target.getComponent("DrawTexture"));
-			
 			Widget w = new Widget();
 			w.addComponent(new DrawTexture().setTex(GuiEdit.tex("toolbar/add")));
 			Transform t2 = w.transform;
@@ -80,7 +79,7 @@ public class SelectedWidgetBar extends Window {
 				curEditor.dispose();
 			}
 			curEditor = ce;
-			ce.transform.y = -30;
+			ce.transform.y = -10;
 			addWidget(curEditor);
 		}
 		
@@ -102,7 +101,6 @@ public class SelectedWidgetBar extends Window {
 					@Override
 					public void handleEvent(Widget w, MouseDownEvent event) {
 						setPropertyEditor(new ComponentEditor(target, c));
-						System.out.println(c);
 					}
 				});
 				

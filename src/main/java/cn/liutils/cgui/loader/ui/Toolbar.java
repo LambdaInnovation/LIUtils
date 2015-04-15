@@ -17,14 +17,14 @@ import java.util.Map.Entry;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.component.DrawTexture;
+import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.DrawEvent;
 import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.cgui.gui.fnct.DrawTexture;
-import cn.liutils.cgui.gui.fnct.Transform;
 import cn.liutils.cgui.loader.CGUIEditor;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
@@ -52,8 +52,13 @@ public class Toolbar extends Window {
 				getGui().gainFocus(tl);
 			}
 		});
-		addWidget(new Button(3, "remove", "Remove Widget"));
-		
+		addWidget(new Button(3, "hierarchy", "Hierarchy") {
+			@Override public void triggerEvent() {
+				if(!getGui().hasWidget("hierarchy")) {
+					getGui().addWidget("hierarchy", new Hierarchy(gui()));
+				}
+			}
+		});
 	}
 	
 	class Button extends Widget {

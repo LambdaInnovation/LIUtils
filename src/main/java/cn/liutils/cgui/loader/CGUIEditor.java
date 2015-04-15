@@ -19,12 +19,12 @@ import java.util.Map.Entry;
 import java.util.Set;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.gui.fnct.Component;
-import cn.liutils.cgui.gui.fnct.Draggable;
-import cn.liutils.cgui.gui.fnct.DrawTexture;
-import cn.liutils.cgui.gui.fnct.TextBox;
-import cn.liutils.cgui.gui.fnct.Transform;
+import cn.liutils.cgui.gui.component.Component;
+import cn.liutils.cgui.gui.component.Draggable;
+import cn.liutils.cgui.gui.component.DrawTexture;
+import cn.liutils.cgui.gui.component.TextBox;
+import cn.liutils.cgui.gui.component.Tint;
+import cn.liutils.cgui.gui.component.Transform;
 
 /**
  * Main loading interface to provide templates&customized objects to CGUI.
@@ -44,6 +44,7 @@ public class CGUIEditor {
 		addComponent(new TextBox());
 		addComponent(new Draggable());
 		addComponent(new DrawTexture());
+		addComponent(new Tint());
 		
 		//Default templates
 		{ //"default"

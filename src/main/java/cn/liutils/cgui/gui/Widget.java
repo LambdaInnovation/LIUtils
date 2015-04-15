@@ -16,11 +16,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import cn.liutils.cgui.gui.component.Component;
+import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventBus;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.gui.fnct.Component;
-import cn.liutils.cgui.gui.fnct.Transform;
 
 
 /**
@@ -42,9 +42,14 @@ public class Widget extends WidgetContainer {
 	public double scale;
 	public int zOrder;
 	/**
-	 * If this widget is being edited(i.e. in a CGUI edit gui) and should dummy some state-change related functions.
+	 * Used ONLY in editing gui.
 	 */
-	public boolean editing = false;
+	public boolean visible = true;
+	
+	/**
+	 * Whether this widget can be copied when going down copy recursion process.
+	 */
+	public boolean needCopy = true;
 	
 	public Transform transform;
 	
@@ -54,6 +59,10 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public Widget() {}
+	
+	public boolean isVisible() {
+		return visible && transform.doesDraw;
+	}
 	
 	/**
 	 * Return a reasonable copy of this widget. Retains all the properties and functions, 
@@ -80,7 +89,7 @@ public class Widget extends WidgetContainer {
 		
 		//Also copy the widget's sub widgets recursively.
 		for(Widget asub : getDrawList()) {
-			n.addWidget(asub.getName(), asub.copy());
+			if(asub.needCopy) n.addWidget(asub.getName(), asub.copy());
 		}
 	}
 	
@@ -178,6 +187,16 @@ public class Widget extends WidgetContainer {
 		this.dirty = true;
 		w.parent = this;
 		w.gui = gui;
+	}
+	
+	public int getHierarchyLevel() {
+		int ret = 0;
+		Widget cur = this;
+		while(cur.isWidgetParent()) {
+			cur = cur.getWidgetParent();
+			++ret;
+		}
+		return ret;
 	}
 
 }

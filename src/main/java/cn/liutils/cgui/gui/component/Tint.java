@@ -10,7 +10,7 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.fnct;
+package cn.liutils.cgui.gui.component;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.DrawEvent;
@@ -23,10 +23,12 @@ import cn.liutils.util.HudUtils;
  */
 public class Tint extends Component {
 	
-	public Color idleColor = new Color(0, 0, 0, 0), hoverColor = new Color(1, 1, 1, 0.5);
+	public Color 
+		idleColor = new Color(0, 0, 0, 0), 
+		hoverColor = new Color(1, 1, 1, 0.4);
 	
 	public Tint() {
-		name = "Tint";
+		super("Tint");
 		
 		addEventHandler(new DrawEventHandler() {
 			@Override
