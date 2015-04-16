@@ -40,8 +40,12 @@ public class Component {
 
 	private GuiEventBus eventBus;
 	
-	@EditIgnore
 	public final String name;
+	
+	public boolean enabled = true;
+	
+	@EditIgnore
+	public boolean canEdit = true;
 	
 	public Component(String _name) {
 		name = _name;

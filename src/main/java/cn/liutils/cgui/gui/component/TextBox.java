@@ -21,8 +21,8 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.annotations.CopyIgnore;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.KeyEvent.KeyEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
@@ -111,10 +111,10 @@ public class TextBox extends Component {
 			}
 		});
 		
-		addEventHandler(new DrawEventHandler() {
+		addEventHandler(new FrameEventHandler() {
 
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color, Align.LEFT, w.transform.width - 2, "...");
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {

@@ -31,26 +31,17 @@ import com.google.common.collect.ImmutableList;
 public abstract class WidgetContainer implements Iterable<Widget> {
 	
 	HashBiMap<String, Widget> widgets = HashBiMap.create();
-	List<Widget> drawList = new LinkedList(); //List sorted in non-descending widget zOrder.
+	List<Widget> widgetList = new LinkedList(); //List sorted in non-descending widget zOrder.
 	
 	private static final String UNNAMED_PRE = "unnamed ";
 	
 	private int nameCount = 0;
 	
-	//Counter for assigning ZOrder.
-	private Map<Integer, Integer> zOrderProg = new HashMap();
-	static final Comparator<Widget> zOrderComparator = new Comparator<Widget>() {
-		@Override
-		public int compare(Widget o1, Widget o2) {
-			return o1.zOrder - o2.zOrder;
-		}
-	};
-	
 	/**
 	 * Walk the widget list and check their states. This should be called explicitly from tick check events.
 	 */
 	protected void update() {
-		Iterator<Widget> iter = drawList.iterator();
+		Iterator<Widget> iter = widgetList.iterator();
 		while(iter.hasNext()) {
 			Widget w = iter.next();
 			if(w.disposed) {
@@ -81,14 +72,19 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 		}
 		
 		widgets.put(name, add);
-		
-		updateZOrder(add);
-		drawList.add(add);
-		Collections.sort(drawList, zOrderComparator);
+		widgetList.add(add);
 		
 		onWidgetAdded(name, add);
 		add.onAdded();
 		return true;
+	}
+	
+	public Widget getWidget(int i) {
+		return widgetList.get(i);
+	}
+	
+	public int locate(Widget w) {
+		return widgetList.indexOf(w);
 	}
 	
 	/**
@@ -127,6 +123,17 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 	
 	public void removeWidget(Widget w) {
 		w.dispose();
+		//w.gui = null;
+		w.parent = null;
+	}
+	
+	public void forceRemoveWidget(Widget w) {
+		if(w.getAbstractParent() != this)
+			return;
+		widgets.remove(w.getName());
+		widgetList.remove(w);
+		//w.gui = null;
+		w.parent = null;
 	}
 	
 	/**
@@ -145,7 +152,7 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 	}
 	
 	public List<Widget> getDrawList() {
-		return ImmutableList.copyOf(drawList);
+		return ImmutableList.copyOf(widgetList);
 	}
 	
 	public Iterator<Widget> iterator() {
@@ -158,15 +165,6 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 			res = UNNAMED_PRE + (nameCount++);
 		} while(hasWidget(res));
 		return res;
-	}
-	
-	private void updateZOrder(Widget widget) {
-		//Assign z order
-		int prio = widget.getDrawPriority();
-		Integer prog = zOrderProg.get(prio);
-		if(prog == null) prog = 0;
-		widget.zOrder = prio * 100 + prog;
-		zOrderProg.put(prio, (prog + 1) % 100);
 	}
 	
 }

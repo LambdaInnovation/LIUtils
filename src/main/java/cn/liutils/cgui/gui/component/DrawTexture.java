@@ -17,8 +17,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.utils.Color;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -36,9 +36,9 @@ public class DrawTexture extends Component {
 
 	public DrawTexture() {
 		super("DrawTexture");
-		this.addEventHandler(new DrawEventHandler() {
+		this.addEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				color.bind();
 				RenderUtils.loadTexture(texture);

@@ -14,13 +14,18 @@ package cn.liutils.cgui.loader.ui;
 
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.component.Draggable;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.WidgetContainer;
+import cn.liutils.cgui.gui.event.DragEvent;
+import cn.liutils.cgui.gui.event.DragEvent.DragEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
-import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusFunc;
+import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusHandler;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
-import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
+import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
+import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
+import cn.liutils.cgui.gui.event.global.AddWidgetEvent.AddWidgetHandler;
+import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.Font;
@@ -35,6 +40,13 @@ public class LIGuiPlayground extends LIGui {
 	
 	public LIGuiPlayground(GuiEdit _guiEdit) {
 		guiEdit = _guiEdit;
+		
+		this.regEventHandler(new AddWidgetHandler() {
+			@Override
+			public void handleEvent(Widget w, AddWidgetEvent event) {
+				guiEdit.getGui().postEvent(new AddTargetEvent(w));
+			}
+		});
 	}
 	
 	@Override
@@ -50,9 +62,9 @@ public class LIGuiPlayground extends LIGui {
 		boolean result = super.addWidget(name, w);
 		if(result) {
 			//Add selection indicator
-			w.regEventHandler(new DrawEventHandler() {
+			w.regEventHandler(new FrameEventHandler() {
 				@Override
-				public void handleEvent(Widget w, DrawEvent event) {
+				public void handleEvent(Widget w, FrameEvent event) {
 					if(getFocus() == w) {
 						RenderUtils.bindColor(112, 223, 122, 200);
 						HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
@@ -61,15 +73,22 @@ public class LIGuiPlayground extends LIGui {
 					}
 				}
 			});
-			w.addComponent(new Draggable());
-			w.regEventHandler(new GainFocusFunc() {
+			w.regEventHandler(new DragEventHandler() {
+				@Override
+				public void handleEvent(Widget w, DragEvent event) {
+					if(w.isFocused()) {
+						w.getGui().updateDragWidget();
+					}
+				}
+			});
+			w.regEventHandler(new GainFocusHandler() {
 				@Override
 				public void handleEvent(Widget w, GainFocusEvent event) {
-					guiEdit.selectedEditor = new SelectedWidgetBar(w);
+					guiEdit.selectedEditor = new SelectedWidgetBar(guiEdit, w);
 					guiEdit.getGui().addWidget(guiEdit.selectedEditor);
 				}
 			});
-			w.regEventHandler(new LostFocusFunc() {
+			w.regEventHandler(new LostFocusHandler() {
 				@Override
 				public void handleEvent(Widget w, LostFocusEvent event) {
 					if(guiEdit.selectedEditor != null) {
@@ -82,5 +101,27 @@ public class LIGuiPlayground extends LIGui {
 			});
 		}
 		return result;
+	}
+	
+	/**
+	 * DIRRRRRTY!
+	 */
+	@Override
+	protected Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
+		Widget res = null;
+		boolean sub = node == null || (node.transform.doesDraw && node.transform.doesListenKey);
+		if(sub && node != null && node.isPointWithin(x, y) && node.isFocused()) {
+			res = node;
+		}
+		
+		if(!sub) return res;
+		
+		Widget next = null;
+		for(Widget wn : set) {
+			Widget tmp = gtnTraverse(x, y, wn, wn);
+			if(tmp != null)
+				next = tmp;
+		}
+		return next == null ? res : next;
 	}
 }

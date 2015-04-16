@@ -17,8 +17,8 @@ import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.Tint;
 import cn.liutils.cgui.gui.component.Transform;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.util.render.Font;
@@ -34,13 +34,13 @@ public class SelectedWidgetBar extends Window {
 	
 	static final double HT = 10;
 
-	public SelectedWidgetBar(Widget _target) {
-		super(_target.getName() + " properties", false);
+	public SelectedWidgetBar(GuiEdit guiEdit, Widget _target) {
+		super(guiEdit, _target.getName() + " properties", false, new double[] { 220, 20 });
 		target = _target;
 		transform.width = 100;
 		transform.height = HT;
-		transform.x = 0;
-		transform.y = 0;
+		transform.x = 200;
+		transform.y = 50;
 		
 		initWidgets();
 	}
@@ -54,7 +54,7 @@ public class SelectedWidgetBar extends Window {
 		Widget curEditor;
 		
 		public ComponentSelection() {
-			super("Components", false);
+			super(SelectedWidgetBar.this.guiEdit, "Components", false);
 			transform.x = 0;
 			transform.y = HT;
 			transform.width = 100;
@@ -62,7 +62,8 @@ public class SelectedWidgetBar extends Window {
 			
 			int i = 0;
 			for(Component prop : target.getComponentList()) {
-				addWidget(new ComponentButton(prop, i++));
+				if(prop.canEdit)
+					addWidget(new ComponentButton(prop, i++));
 			}
 			
 			Widget w = new Widget();
@@ -100,13 +101,13 @@ public class SelectedWidgetBar extends Window {
 				regEventHandler(new MouseDownHandler() {
 					@Override
 					public void handleEvent(Widget w, MouseDownEvent event) {
-						setPropertyEditor(new ComponentEditor(target, c));
+						setPropertyEditor(new ComponentEditor(guiEdit, target, c));
 					}
 				});
 				
-				regEventHandler(new DrawEventHandler() {
+				regEventHandler(new FrameEventHandler() {
 					@Override
-					public void handleEvent(Widget w, DrawEvent event) {
+					public void handleEvent(Widget w, FrameEvent event) {
 						Font.font.draw(c.name, 50, 2, 7, 0xffffff, Align.CENTER);
 					}
 				});

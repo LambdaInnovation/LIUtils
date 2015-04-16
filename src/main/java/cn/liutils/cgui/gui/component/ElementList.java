@@ -16,8 +16,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 
 /**
  * Component that can hold widgets itself and display them as a list. Only Widgets fully in the area will be shown.
@@ -39,9 +39,9 @@ public class ElementList extends Component {
 	public ElementList() {
 		super("list");
 		
-		this.addEventHandler(new DrawEventHandler() {
+		this.addEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				if(!loaded) {
 					loaded = true;
 					setup(w);

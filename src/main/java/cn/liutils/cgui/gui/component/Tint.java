@@ -13,8 +13,8 @@
 package cn.liutils.cgui.gui.component;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.utils.Color;
 import cn.liutils.util.HudUtils;
 
@@ -30,9 +30,9 @@ public class Tint extends Component {
 	public Tint() {
 		super("Tint");
 		
-		addEventHandler(new DrawEventHandler() {
+		addEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				if(event.hovering) hoverColor.bind();
 				else idleColor.bind();
 				HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);

@@ -20,10 +20,12 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
 import cn.liutils.cgui.gui.component.Tint;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
+import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
+import cn.liutils.cgui.loader.ui.event.AddTargetEvent.AddTargetHandler;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.render.Font;
 import cn.liutils.util.render.Font.Align;
@@ -35,11 +37,10 @@ import cn.liutils.util.render.Font.Align;
  */
 public class Hierarchy extends Window {
 	
-	GuiEdit guiEdit;
+	Widget hList;
 
 	public Hierarchy(GuiEdit _guiEdit) {
-		super("Hierarchy", true);
-		guiEdit = _guiEdit;
+		super(_guiEdit, "Hierarchy", true, new double[] { 150, 80 });
 		transform.width = 100;
 		transform.height = 120;
 	}
@@ -47,29 +48,78 @@ public class Hierarchy extends Window {
 	@Override
 	public void onAdded() {
 		super.onAdded();
-		regEventHandler(new DrawEventHandler() {
+		regEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				drawSplitLine(30);
 			}
 		});
 		
 		buildHierarchy();
 		addButtons();
+		getGui().regEventHandler(new AddTargetHandler() {
+			@Override
+			public void handleEvent(Widget w, AddTargetEvent event) {
+				buildHierarchy();
+			}
+		});
+	}
+	
+	Widget getAccessTarget() {
+		return guiEdit.toEdit.getFocus();
 	}
 	
 	private void addButtons() {
 		Widget tmp;
 		
 		tmp = setupButton(0, "arrow_left", "De-child");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().moveLeft();
+					buildHierarchy();
+				}
+			}
+		});
 		tmp = setupButton(1, "arrow_right", "Become child");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().moveRight();
+					buildHierarchy();
+				}
+			}
+		});
 		tmp = setupButton(2, "arrow_up", "Move up");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().moveUp();
+					buildHierarchy();
+				}
+			}
+		});
 		tmp = setupButton(3, "arrow_down", "Move down");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().moveDown();
+					buildHierarchy();
+				}
+			}
+		});
 		tmp = setupButton(4, "rename", "Rename");
 	}
 	
 	private void buildHierarchy() {
-		Widget hList = new Widget();
+		if(hList != null) 
+			hList.dispose();
+		
+		hList = new Widget();
 		hList.transform.x = 2;
 		hList.transform.y = 32;
 		hList.transform.width = 96;
@@ -94,12 +144,16 @@ public class Hierarchy extends Window {
 	private Widget setupButton(int count, final String name, final String desc) {
 		final double size = 10;
 		Widget w = new Widget();
-		w.addComponent(new Tint());
+		final Tint tint = new Tint();
+		w.addComponent(tint);
 		w.addComponent(new DrawTexture().setTex(GuiEdit.tex(name)));
 		w.transform.setSize(size, size).setPos(2 + count * 12, 11);
-		w.regEventHandler(new DrawEventHandler() {
+		w.regEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
+				Widget target = getAccessTarget();
+				tint.enabled = target != null && target.visible;
+				
 				if(event.hovering) {
 					Font.font.draw(desc, size / 2, size, 10, 0xffffff, Align.CENTER);
 				}
@@ -110,13 +164,15 @@ public class Hierarchy extends Window {
 		return w;
 	}
 	
-	private static class SingleWidget extends Widget {
+	private class SingleWidget extends Widget {
 		int hierLevel;
 		Widget target;
 		
 		boolean on = true;
 		
-		static final ResourceLocation vis_on = GuiEdit.tex("vis_on"), vis_off = GuiEdit.tex("vis_off");
+		final ResourceLocation 
+			vis_on = GuiEdit.tex("vis_on"), 
+			vis_off = GuiEdit.tex("vis_off");
 		
 		public SingleWidget(Widget w) {
 			transform.width = 96;
@@ -124,9 +180,9 @@ public class Hierarchy extends Window {
 			
 			hierLevel = w.getHierarchyLevel();
 			target = w;
-			regEventHandler(new DrawEventHandler() {
+			regEventHandler(new FrameEventHandler() {
 				@Override
-				public void handleEvent(Widget w, DrawEvent event) {
+				public void handleEvent(Widget w, FrameEvent event) {
 					double r = 1, g = 1, b = 1;
 					double brightness = .3;
 					if(target.isFocused()) {
@@ -136,7 +192,15 @@ public class Hierarchy extends Window {
 					GL11.glColor4d(r, g, b, brightness);
 					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
 					
-					Font.font.draw(target.getName(), 14 + hierLevel * 6, 1, 10, 0xffffff);
+					String name = target.getName();
+					Font.font.draw(name == null ? "<error>" : name, 14 + hierLevel * 6, 1, 10, 0xffffff);
+				}
+			});
+			
+			regEventHandler(new MouseDownHandler() {
+				@Override
+				public void handleEvent(Widget w, MouseDownEvent event) {
+					guiEdit.toEdit.gainFocus(target);
 				}
 			});
 			
@@ -157,6 +221,5 @@ public class Hierarchy extends Window {
 			}
 		}
 	}
-
 
 }

@@ -12,8 +12,8 @@
  */
 package cn.liutils.cgui.gui;
 
+import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 import cn.liutils.cgui.gui.component.Component;
@@ -40,7 +40,6 @@ public class Widget extends WidgetContainer {
 	//Real-time calculated data not directly relevant to widget properties
 	public double x, y;
 	public double scale;
-	public int zOrder;
 	/**
 	 * Used ONLY in editing gui.
 	 */
@@ -86,7 +85,6 @@ public class Widget extends WidgetContainer {
 		}
 		n.transform = n.getComponent("Transform");
 		n.eventBus = eventBus.copy();
-		
 		//Also copy the widget's sub widgets recursively.
 		for(Widget asub : getDrawList()) {
 			if(asub.needCopy) n.addWidget(asub.getName(), asub.copy());
@@ -119,14 +117,6 @@ public class Widget extends WidgetContainer {
 	 */
 	public void dispose() {
 		disposed = true;
-	}
-	
-	/**
-	 * Get the relative drawing priority
-	 * If two widgets share the same parent, the one with higher priority will always be drawn first.
-	 */
-	public int getDrawPriority() {
-		return 1;
 	}
 	
 	//Component handling
@@ -162,7 +152,8 @@ public class Widget extends WidgetContainer {
 	
 	public final void postEvent(GuiEvent event) {
 		for(Component c : components) {
-			c.postEvent(this, event);
+			if(c.enabled)
+				c.postEvent(this, event);
 		}
 		eventBus.postEvent(this, event);
 	}
@@ -197,6 +188,48 @@ public class Widget extends WidgetContainer {
 			++ret;
 		}
 		return ret;
+	}
+	
+	WidgetContainer getAbstractParent() {
+		return isWidgetParent() ? parent : gui;
+	}
+	
+	public void moveDown() {
+		WidgetContainer parent = getAbstractParent();
+		int i = parent.locate(this);
+		if(i == -1 || i == parent.widgetList.size() - 1) return;
+		Widget next = parent.getWidget(i + 1);
+		parent.widgetList.set(i, next);
+		parent.widgetList.set(i + 1, this);
+	}
+	
+	public void moveUp() {
+		WidgetContainer parent = getAbstractParent();
+		int i = parent.locate(this);
+		if(i == -1 || i == 0) return;
+		Widget last = parent.getWidget(i - 1);
+		parent.widgetList.set(i, last);
+		parent.widgetList.set(i - 1, this);
+	}
+	
+	public void moveLeft() {
+		if(!this.isWidgetParent())
+			return;
+		parent.getAbstractParent().addWidget(this);
+		parent.forceRemoveWidget(this);
+		this.disposed = false;
+	}
+	
+	public void moveRight() {
+		WidgetContainer parent = getAbstractParent();
+		int i = parent.locate(this) - 1;
+		if(i >= 0) {
+			Widget newParent = parent.getWidget(i);
+			String name = this.getName();
+			parent.forceRemoveWidget(this);
+			this.disposed = false;
+			newParent.addWidget(this);
+		}
 	}
 
 }

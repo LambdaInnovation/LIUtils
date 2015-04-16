@@ -12,17 +12,20 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import javax.vecmath.Vector2d;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
-import cn.liutils.cgui.gui.component.Draggable;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.Transform;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.DragEvent;
+import cn.liutils.cgui.gui.event.DragEvent.DragEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.util.HudUtils;
@@ -37,9 +40,18 @@ public class Window extends Widget {
 	
 	protected String name;
 	
-	public Window(final String _name, boolean _canClose) {
+	final GuiEdit guiEdit;
+	
+	public Window(GuiEdit _guiEdit, final String _name, boolean _canClose, double[] defaultPos) {
 		name = _name;
 		canClose = _canClose;
+		guiEdit = _guiEdit;
+		Vector2d pos = guiEdit.getDefaultPosition(name, defaultPos);
+		transform.setPos(pos.x, pos.y);
+	}
+	
+	public Window(GuiEdit _guiEdit, final String _name, boolean _canClose) {
+		this(_guiEdit, _name, _canClose, new double[] { 0, 0 });
 	}
 	
 	@Override
@@ -58,12 +70,18 @@ public class Window extends Widget {
 		}
 		
 		if(!this.isWidgetParent()) {
-			this.addComponent(new Draggable());
+			this.regEventHandler(new DragEventHandler() {
+				@Override
+				public void handleEvent(Widget w, DragEvent event) {
+					w.getGui().updateDragWidget();
+					guiEdit.updateDefaultPosition(name, w.transform.x, w.transform.y);
+				}
+			});
 		}
 		
-		this.regEventHandler(new DrawEventHandler() {
+		this.regEventHandler(new FrameEventHandler() {
 			@Override
-			public void handleEvent(Widget w, DrawEvent event) {
+			public void handleEvent(Widget w, FrameEvent event) {
 				Transform t = w.transform;
 				final double bar_ht = 10;
 				

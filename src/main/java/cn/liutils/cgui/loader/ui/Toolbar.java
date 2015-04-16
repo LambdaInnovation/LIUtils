@@ -19,10 +19,10 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.Transform;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
-import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusFunc;
+import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.CGUIEditor;
@@ -38,9 +38,9 @@ public class Toolbar extends Window {
 	
 	boolean isLocked = false;
 	
-	public Toolbar() {
-		super("Toolbar", false);
-		transform.setPos(10, 10).setSize(200, 30);
+	public Toolbar(GuiEdit guiEdit) {
+		super(guiEdit, "Toolbar", false, new double[] { 10, 10 });
+		transform.setSize(200, 30);
 		
 		addWidget(new Button(0, "open", "Open CGUI File"));
 		addWidget(new Button(1, "save", "Save CGUI File"));
@@ -65,9 +65,9 @@ public class Toolbar extends Window {
 		public Button(int i, final String tn, final String name) {
 			transform.setSize(18, 18).setPos(5 + i * 20, 10);
 			this.addComponent(new DrawTexture().setTex(GuiEdit.tex("toolbar/" + tn)).setColor4i(127, 190, 255, 255));
-			regEventHandler(new DrawEventHandler() {
+			regEventHandler(new FrameEventHandler() {
 				@Override
-				public void handleEvent(Widget widget, DrawEvent event) {
+				public void handleEvent(Widget widget, FrameEvent event) {
 					if(event.hovering && !isLocked) {
 						GL11.glColor4d(1, 1, 1, .5);
 						HudUtils.drawModalRect(0, 0, transform.width, transform.height);
@@ -98,9 +98,9 @@ public class Toolbar extends Window {
 			for(final Entry<String, Widget> e : CGUIEditor.getTemplates()) {
 				Widget one = new Widget();
 				final String name = e.getKey();
-				one.regEventHandler(new DrawEventHandler() {
+				one.regEventHandler(new FrameEventHandler() {
 					@Override
-					public void handleEvent(Widget w, DrawEvent event) {
+					public void handleEvent(Widget w, FrameEvent event) {
 						GL11.glColor4d(.3, .3, .3, event.hovering ? 0.8 : 0.5);
 						HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
 						
@@ -123,7 +123,7 @@ public class Toolbar extends Window {
 				addWidget(one);
 			}
 			
-			regEventHandler(new LostFocusFunc() {
+			regEventHandler(new LostFocusHandler() {
 				@Override
 				public void handleEvent(Widget w, LostFocusEvent event) {
 					isLocked = false;

@@ -25,12 +25,16 @@ import cn.liutils.api.key.LIKeyProcess.Trigger;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.component.Transform.AlignStyle;
 import cn.liutils.cgui.gui.event.DragEvent;
-import cn.liutils.cgui.gui.event.DrawEvent;
+import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
+import cn.liutils.cgui.gui.event.GuiEvent;
+import cn.liutils.cgui.gui.event.GuiEventBus;
+import cn.liutils.cgui.gui.event.GuiEventHandler;
 import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
+import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -49,6 +53,8 @@ public class LIGui extends WidgetContainer {
 	LIKeyProcess.Trigger trigger;
 	
 	Widget focus; //last input focus
+	
+	GuiEventBus eventBus = new GuiEventBus();
 
 	public LIGui() {}
 	
@@ -99,6 +105,15 @@ public class LIGui extends WidgetContainer {
 		GL11.glDepthMask(true);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
+	}
+	
+	@Override
+	public boolean addWidget(String name, Widget w) {
+		if(this.hasWidget(name))
+			return false;
+		super.addWidget(name, w);
+		this.postEvent(new AddWidgetEvent(w));
+		return true;
 	}
 	
 	static final long DRAG_TIME_TOLE = 100;
@@ -315,7 +330,7 @@ public class LIGui extends WidgetContainer {
 			GL11.glTranslated(cur.x, cur.y, 0);
 			GL11.glScaled(cur.scale, cur.scale, 1);
 			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
-			cur.postEvent(new DrawEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
+			cur.postEvent(new FrameEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
 			//System.out.println("drawing " + cur);
 			GL11.glPopMatrix();
 		}
@@ -329,7 +344,7 @@ public class LIGui extends WidgetContainer {
 		}
 	}
 	
-	private Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
+	protected Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
 		Widget res = null;
 		boolean sub = node == null || (node.transform.doesDraw && node.transform.doesListenKey);
 		if(sub && node != null && node.isPointWithin(x, y)) {
@@ -378,5 +393,26 @@ public class LIGui extends WidgetContainer {
 		
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
+	}
+	
+	/**
+	 * Event bus delegator, will post every widget inside this LIGui.
+	 */
+	public void postEvent(GuiEvent event) {
+		eventBus.postEvent(null, event);
+		for(Widget w : getDrawList()) {
+			hierPostEvent(w, event);
+		}
+	}
+	
+	public void regEventHandler(GuiEventHandler geh) {
+		eventBus.regEventHandler(geh);
+	}
+	
+	private void hierPostEvent(Widget w, GuiEvent event) {
+		w.postEvent(event);
+		for(Widget ww : w.widgetList) {
+			hierPostEvent(ww, event);
+		}
 	}
 }

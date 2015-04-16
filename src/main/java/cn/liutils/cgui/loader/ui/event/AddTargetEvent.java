@@ -10,17 +10,25 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.cgui.gui.event;
+package cn.liutils.cgui.loader.ui.event;
 
+import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.event.GuiEvent;
+import cn.liutils.cgui.gui.event.GuiEventHandler;
 
 /**
- * Indicate that a widget has gained input focus.
  * @author WeAthFolD
  */
-public class GainFocusEvent implements GuiEvent {
-	public static abstract class GainFocusHandler extends GuiEventHandler<GainFocusEvent> {
-		public GainFocusHandler() {
-			super(GainFocusEvent.class);
+public class AddTargetEvent implements GuiEvent {
+	public final Widget widget;
+	
+	public AddTargetEvent(Widget w) {
+		widget = w;
+	}
+	
+	public static abstract class AddTargetHandler extends GuiEventHandler<AddTargetEvent> {
+		public AddTargetHandler() {
+			super(AddTargetEvent.class);
 		}
 	}
 }

@@ -25,8 +25,8 @@ import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.utils.Color;
 import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.util.HudUtils;
@@ -84,9 +84,9 @@ public abstract class ElementEditor extends Widget {
 			double x = 5;
 			for(final String s : arr) {
 				Widget drawer = new Widget();
-				drawer.regEventHandler(new DrawEventHandler() {
+				drawer.regEventHandler(new FrameEventHandler() {
 					@Override
-					public void handleEvent(Widget w, DrawEvent event) {
+					public void handleEvent(Widget w, FrameEvent event) {
 						Font.font.draw(s, 0, 2, 8, 0xffffff);
 					}
 				});
@@ -146,9 +146,9 @@ public abstract class ElementEditor extends Widget {
 			transform.height = 10;
 			
 			addComponent(new TextBox().setSize(9));
-			regEventHandler(new DrawEventHandler() {
+			regEventHandler(new FrameEventHandler() {
 				@Override
-				public void handleEvent(Widget w, DrawEvent event) {
+				public void handleEvent(Widget w, FrameEvent event) {
 					if(lastErrorTime != -1 && Minecraft.getSystemTime() - lastErrorTime < 1000) {
 						GL11.glColor4d(1, 0, 0, Minecraft.getSystemTime() % 500 < 250 ? 0.6 : 0.3);
 					} else if(inputDirty) {

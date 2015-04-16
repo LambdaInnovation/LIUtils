@@ -18,9 +18,10 @@ import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.gui.annotations.EditIgnore;
 import cn.liutils.cgui.gui.component.Component;
-import cn.liutils.cgui.gui.event.DrawEvent;
-import cn.liutils.cgui.gui.event.DrawEvent.DrawEventHandler;
+import cn.liutils.cgui.gui.event.FrameEvent;
+import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.utils.Color;
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.render.Font;
@@ -46,8 +47,8 @@ public class ComponentEditor extends Window {
 	Widget widget;
 	Component target;
 	
-	public ComponentEditor(Widget _widget, Component _target) {
-		super("Component: " + _target.name, true);
+	public ComponentEditor(GuiEdit guiEdit, Widget _widget, Component _target) {
+		super(guiEdit, "Component: " + _target.name, true);
 		widget = _widget;
 		target = _target;
 		generate();
@@ -67,14 +68,17 @@ public class ComponentEditor extends Window {
 					LIUtils.log.error("Can't find element editor for type " + f.getType());
 					continue;
 				}
+				if(f.isAnnotationPresent(EditIgnore.class)) {
+					continue;
+				}
 				
 				Widget drawer = new Widget();
 				drawer.transform.x = 2;
 				drawer.transform.y = y;
-				drawer.regEventHandler(new DrawEventHandler() {
+				drawer.regEventHandler(new FrameEventHandler() {
 					final String name = f.getName();
 					@Override
-					public void handleEvent(Widget w, DrawEvent event) {
+					public void handleEvent(Widget w, FrameEvent event) {
 						Font.font.draw(name, 0, 0, 9, 0xffffff);
 					}
 				});
