@@ -67,8 +67,8 @@ public class CollisionCheck extends MotionHandler {
 	
 	@Override
 	public void onUpdate() {
-		Vec3 v1 = this.createVector(entity.lastTickPosX, entity.lastTickPosY, entity.lastTickPosZ),
-			v2 = this.createVector(entity.posX, entity.posY, entity.posZ);
+		Vec3 v1 = this.createVector(entity.posX, entity.posY, entity.posZ),
+			v2 = this.createVector(entity.posX + entity.motionX, entity.posY + entity.motionY, entity.posZ + entity.motionZ);
 		MovingObjectPosition res = 
 			blockOnly ? entity.worldObj.rayTraceBlocks(v1, v2) :
 			GenericUtils.rayTraceBlocksAndEntities(selector, entity.worldObj,

@@ -35,20 +35,10 @@ public class ExpUtils {
 	 * @return level that this exp corresponds to, counting start from 1
 	 */
 	public static int getLevel(int exp) {
-		int l = 0, r = dp.length - 1;
-		if(exp >= dp[dp.length - 1]) return dp.length;
-		//Perform a binary search.
-		while(l < r) {
-			int m = (l + r) / 2;
-			boolean a = dp[m] <= exp;
-			if(a) {
-				if(exp < dp[m + 1]) return m; //basic assumption: not over level 665
-				l = m + 1;
-			} else {
-				r = m - 1;
-			}
+		for(int i = 1; i < 666; ++i) {
+			if(dp[i] > exp) return i;
 		}
-		return l + 1;
+		return 666;
 	}
 	
 	public static int getTotalExp(EntityPlayer player) {

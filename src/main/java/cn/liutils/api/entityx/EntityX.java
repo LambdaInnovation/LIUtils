@@ -58,6 +58,7 @@ public abstract class EntityX extends Entity {
 	
 	@Override
 	public void onUpdate() {
+		//super.onUpdate();
 		boolean doesUpdate = doesUpdate();
 		//System.out.println("Updating " + this);
 		

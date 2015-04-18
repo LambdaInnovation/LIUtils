@@ -35,7 +35,7 @@ public class SelectedWidgetBar extends Window {
 	static final double HT = 10;
 
 	public SelectedWidgetBar(GuiEdit guiEdit, Widget _target) {
-		super(guiEdit, _target.getName() + " properties", false, new double[] { 220, 20 });
+		super(guiEdit, "Properties", false, new double[] { 220, 20 });
 		target = _target;
 		transform.width = 100;
 		transform.height = HT;

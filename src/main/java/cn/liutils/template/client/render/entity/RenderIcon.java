@@ -49,7 +49,7 @@ public class RenderIcon extends Render {
 	private float size = 0.5F;
 	protected boolean enableDepth = true;
 	protected boolean hasLight = false;
-	protected float r = 1.0F, g = 1.0F, b = 1.0f;
+	protected double r = 1.0F, g = 1.0F, b = 1.0f;
 	protected boolean viewOptimize = false;
 	
 	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
@@ -86,10 +86,18 @@ public class RenderIcon extends Render {
 		return this;
 	}
 	
-	public RenderIcon setColorRGB(float r, float g, float b) {
+	public RenderIcon setColorRGB(double r, double g, double b) {
 		this.r = r;
 		this.g = g;
 		this.b = b;
+		return this;
+	}
+	
+	public RenderIcon setColorRGBA(double r, double g, double b, double a) {
+		this.r = r;
+		this.g = g;
+		this.b = b;
+		this.alpha = a;
 		return this;
 	}
 

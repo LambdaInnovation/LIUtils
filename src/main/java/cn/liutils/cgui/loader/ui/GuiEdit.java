@@ -20,6 +20,7 @@ import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.LIGuiScreen;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.core.LIUtils;
 import cn.liutils.registry.AttachKeyHandlerRegistry.RegAttachKeyHandler;
 
 import com.typesafe.config.ConfigFactory;
@@ -117,7 +118,8 @@ public class GuiEdit extends LIGuiScreen {
 	public static class KeyHandler implements IKeyHandler {
 		@Override
 		public void onKeyDown(int keyCode, boolean tickEnd) {
-			guiHandler.openClientGui();
+			if(LIUtils.DEBUG)
+				guiHandler.openClientGui();
 		}
 		@Override
 		public void onKeyUp(int keyCode, boolean tickEnd) {}

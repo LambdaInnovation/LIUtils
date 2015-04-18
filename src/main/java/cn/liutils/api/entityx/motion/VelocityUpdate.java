@@ -41,6 +41,9 @@ public class VelocityUpdate extends MotionHandler {
 //		entity.posX += entity.motionX;
 //		entity.posY += entity.motionY;
 //		entity.posZ += entity.motionZ;
+		entity.lastTickPosX = entity.posX;
+		entity.lastTickPosY = entity.posY;
+		entity.lastTickPosZ = entity.posZ;
 		entity.setPosition(entity.posX + entity.motionX, entity.posY + entity.motionY, entity.posZ + entity.motionZ);
 		entity.motionX *= decrRate;
 		entity.motionY *= decrRate;
