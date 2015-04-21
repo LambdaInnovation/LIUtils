@@ -153,6 +153,15 @@ public abstract class BlockMulti extends BlockContainer {
 		}
 	}
 	
+	/**
+	 * Build a multiblock at the given coordinate.
+	 */
+	public void setMultiBlock(World world, int x, int y, int z, ForgeDirection dir) {
+		world.setBlockToAir(x, y, z);
+		world.setBlock(x, y, z, this);
+		updateDirInfo(world, x, y, z, dir);
+	}
+	
 	//Placement API
 	@Override
     public void onBlockPlacedBy(World world, int x, int y, int z, EntityLivingBase placer, ItemStack stack) {
@@ -161,8 +170,11 @@ public abstract class BlockMulti extends BlockContainer {
     	
     	int l = MathHelper.floor_double(placer.rotationYaw * 4.0F / 360.0F + 0.5D) & 3;
         ForgeDirection dir = rotMap[l];
-        
-    	//Set the origin block.
+        updateDirInfo(world, x, y, z, dir);
+    }
+	
+	private void updateDirInfo(World world, int x, int y, int z, ForgeDirection dir) {
+		//Set the origin block.
         TileEntity te = world.getTileEntity(x, y, z);
     	((IMultiTile)te).setBlockInfo(new InfoBlockMulti(te, dir, 0));
     	
@@ -175,7 +187,7 @@ public abstract class BlockMulti extends BlockContainer {
         	te = world.getTileEntity(nx, ny, nz);
         	((IMultiTile)te).setBlockInfo(new InfoBlockMulti(te, dir, i));
         }
-    }
+	}
 	
     @Override
 	public void breakBlock(World world, int x, int y, int z, Block block, int metadata)  {

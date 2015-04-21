@@ -42,6 +42,7 @@ public class ExpUtils {
 	}
 	
 	public static int getTotalExp(EntityPlayer player) {
+		if(player.experienceLevel > 650) return dp[650];
 		return (player.experienceLevel > 0 ? dp[player.experienceLevel - 1] : 0) + (int) (player.experience * player.xpBarCap());
 	}
 

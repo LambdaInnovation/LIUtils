@@ -113,7 +113,7 @@ public class GuiEdit extends LIGuiScreen {
     }
 	
 	@RegAttachKeyHandler(clazz = KeyHandler.class)
-	public static final int OPEN = Keyboard.KEY_HOME;
+	public static final int OPEN = Keyboard.KEY_O;
 	
 	public static class KeyHandler implements IKeyHandler {
 		@Override

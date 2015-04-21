@@ -58,15 +58,17 @@ public class RegUtils {
 		return res;
 	}
 	
-	public static Field getObfField(Class cl, String normName, String obfName) throws NoSuchFieldException, SecurityException {
+	public static Field getObfField(Class cl, String normName, String obfName) {
 		Field f = null;
 		try {
 			f = cl.getDeclaredField(normName);
-		} catch(Exception e) {}
-		if(f == null)
-			f = cl.getDeclaredField(obfName);
-		f.setAccessible(true);
-		return f;
+			if(f == null)
+				f = cl.getDeclaredField(obfName);
+			f.setAccessible(true);
+			return f;
+		} catch(Exception e) {
+			return null;
+		}
 	}
 
 }
