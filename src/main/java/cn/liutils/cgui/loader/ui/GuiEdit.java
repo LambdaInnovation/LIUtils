@@ -6,6 +6,7 @@ import java.io.PrintWriter;
 
 import javax.vecmath.Vector2d;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
@@ -42,7 +43,7 @@ public class GuiEdit extends LIGuiScreen {
 	
 	LIGui toEdit = new LIGuiPlayground(this); //The edit playground gui!
 	
-	Widget selectedEditor;
+	private Widget selectedEditor;
 	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, .9 };
@@ -52,6 +53,18 @@ public class GuiEdit extends LIGuiScreen {
 	public static void bindColor(int n) {
 		double c = COLOR[n];
 		GL11.glColor4d(c * COLOR_STYLE[0], c * COLOR_STYLE[1], c * COLOR_STYLE[2], 0.7);
+	}
+	
+	public void disposeSelectedEditor() {
+		if(selectedEditor != null) {
+			selectedEditor.dispose();
+		}
+	}
+	
+	public void changeSelectedEditor(Widget w) {
+		disposeSelectedEditor();
+		selectedEditor = w;
+		getGui().addWidget(selectedEditor);
 	}
 	
 	public GuiEdit() {
@@ -118,7 +131,7 @@ public class GuiEdit extends LIGuiScreen {
 	public static class KeyHandler implements IKeyHandler {
 		@Override
 		public void onKeyDown(int keyCode, boolean tickEnd) {
-			if(LIUtils.DEBUG)
+			if(LIUtils.DEBUG && Minecraft.getMinecraft().currentScreen == null)
 				guiHandler.openClientGui();
 		}
 		@Override

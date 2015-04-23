@@ -113,6 +113,28 @@ public class Hierarchy extends Window {
 			}
 		});
 		tmp = setupButton(4, "rename", "Rename");
+
+		tmp = setupButton(5, "remove", "Remove");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().dispose();
+					buildHierarchy();
+				}
+			}
+		});
+		
+		tmp = setupButton(6, "duplicate", "Duplicate");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().getAbstractParent().addWidget(getAccessTarget().copy());
+					buildHierarchy();
+				}
+			}
+		});
 	}
 	
 	private void buildHierarchy() {
@@ -127,7 +149,8 @@ public class Hierarchy extends Window {
 		
 		ElementList el = new ElementList();
 		for(Widget w : guiEdit.toEdit.getDrawList()) {
-			hierarchyAdd(el, w);
+			if(!w.disposed)
+				hierarchyAdd(el, w);
 		}
 		hList.addComponent(el);
 		
@@ -137,7 +160,8 @@ public class Hierarchy extends Window {
 	private void hierarchyAdd(ElementList list, Widget w) {
 		list.addWidget(new SingleWidget(w));
 		for(Widget ww : w.getDrawList()) {
-			hierarchyAdd(list, ww);
+			if(!ww.disposed)
+				hierarchyAdd(list, ww);
 		}
 	}
 	

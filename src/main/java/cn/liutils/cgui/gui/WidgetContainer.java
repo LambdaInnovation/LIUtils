@@ -33,9 +33,7 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 	HashBiMap<String, Widget> widgets = HashBiMap.create();
 	List<Widget> widgetList = new LinkedList(); //List sorted in non-descending widget zOrder.
 	
-	private static final String UNNAMED_PRE = "unnamed ";
-	
-	private int nameCount = 0;
+	private static final String UNNAMED_PRE = "Unnamed ";
 	
 	/**
 	 * Walk the widget list and check their states. This should be called explicitly from tick check events.
@@ -161,6 +159,7 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 	
 	private String getNextName() {
 		String res;
+		int nameCount = 0;
 		do {
 			res = UNNAMED_PRE + (nameCount++);
 		} while(hasWidget(res));

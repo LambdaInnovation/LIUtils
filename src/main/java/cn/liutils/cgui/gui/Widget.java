@@ -12,8 +12,8 @@
  */
 package cn.liutils.cgui.gui;
 
-import java.nio.charset.CharsetEncoder;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 import cn.liutils.cgui.gui.component.Component;
@@ -133,8 +133,29 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public Widget addComponent(Component c) {
+		for(Component cc : components) {
+			if(cc.name.equals(c)) {
+				throw new RuntimeException("Duplicate component!");
+			}
+		}
+		
 		components.add(c);
 		return this;
+	}
+	
+	public void removeComponent(Component c) {
+		removeComponent(c.name);
+	}
+	
+	public void removeComponent(String name) {
+		Iterator<Component> iter = components.iterator();
+		while(iter.hasNext()) {
+			Component c = iter.next();
+			if(c.name.equals(name)) {
+				iter.remove();
+				return;
+			}
+		}
 	}
 	
 	/**
@@ -190,7 +211,7 @@ public class Widget extends WidgetContainer {
 		return ret;
 	}
 	
-	WidgetContainer getAbstractParent() {
+	public WidgetContainer getAbstractParent() {
 		return isWidgetParent() ? parent : gui;
 	}
 	

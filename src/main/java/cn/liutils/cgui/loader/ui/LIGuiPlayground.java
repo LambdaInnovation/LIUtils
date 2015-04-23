@@ -84,19 +84,7 @@ public class LIGuiPlayground extends LIGui {
 			w.regEventHandler(new GainFocusHandler() {
 				@Override
 				public void handleEvent(Widget w, GainFocusEvent event) {
-					guiEdit.selectedEditor = new SelectedWidgetBar(guiEdit, w);
-					guiEdit.getGui().addWidget(guiEdit.selectedEditor);
-				}
-			});
-			w.regEventHandler(new LostFocusHandler() {
-				@Override
-				public void handleEvent(Widget w, LostFocusEvent event) {
-					if(guiEdit.selectedEditor != null) {
-						guiEdit.selectedEditor.dispose();
-						guiEdit.selectedEditor = null;
-					} else {
-						System.err.println("invalid state when selected widget lost focus. Plz check your implementation.");
-					}
+					new SelectedWidgetBar(guiEdit, w);
 				}
 			});
 		}
