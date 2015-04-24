@@ -96,10 +96,6 @@ public class CGUIDocLoader {
 		String clazz = ((Element)n).getAttribute("class");
 		for(int i = 0; i < nl.getLength(); ++i) {
 			Node n2 = nl.item(i);
-			if(n2.getNodeName().equals("class")) {
-				clazz = n2.getTextContent().trim();
-				break;
-			}
 			propertyMap.put(n2.getNodeName(), n2.getTextContent());
 		}
 		if(clazz == null) {
