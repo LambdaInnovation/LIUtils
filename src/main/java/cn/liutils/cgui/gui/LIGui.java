@@ -363,7 +363,7 @@ public class LIGui extends WidgetContainer {
 	}
 
 	@Override
-	void onWidgetAdded(String name, Widget w) {
+	protected void onWidgetAdded(String name, Widget w) {
 		w.gui = this;
 		updateWidget(w);
 	}

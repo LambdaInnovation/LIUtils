@@ -15,6 +15,7 @@ package cn.liutils.cgui.gui;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
@@ -62,7 +63,7 @@ public class Widget extends WidgetContainer {
 	public boolean isVisible() {
 		return visible && transform.doesDraw;
 	}
-	
+		
 	/**
 	 * Return a reasonable copy of this widget. Retains all the properties and functions, 
 	 * along with its all sub widgets recursively.
@@ -134,7 +135,7 @@ public class Widget extends WidgetContainer {
 	
 	public Widget addComponent(Component c) {
 		for(Component cc : components) {
-			if(cc.name.equals(c)) {
+			if(cc.name.equals(c.name)) {
 				throw new RuntimeException("Duplicate component!");
 			}
 		}
@@ -195,7 +196,7 @@ public class Widget extends WidgetContainer {
 	}
 
 	@Override
-	void onWidgetAdded(String name, Widget w) {
+	protected void onWidgetAdded(String name, Widget w) {
 		this.dirty = true;
 		w.parent = this;
 		w.gui = gui;

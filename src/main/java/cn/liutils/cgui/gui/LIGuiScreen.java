@@ -3,9 +3,11 @@
  */
 package cn.liutils.cgui.gui;
 
-import org.lwjgl.opengl.GL11;
+import java.io.File;
 
 import net.minecraft.client.gui.GuiScreen;
+
+import org.lwjgl.opengl.GL11;
 
 /**
  * @author WeAthFolD
@@ -51,6 +53,7 @@ public class LIGuiScreen extends GuiScreen {
     @Override
     public void onGuiClosed() {
     	gui.dispose();
+    	
     }
     
     @Override

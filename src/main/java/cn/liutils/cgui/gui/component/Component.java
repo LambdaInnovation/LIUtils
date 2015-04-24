@@ -53,9 +53,9 @@ public class Component {
 		eventBus = new GuiEventBus();
 	}
 
-	private void checkCopyFields() {
+	private List<Field> checkCopyFields() {
 		if(copiedFields.containsKey(getClass()))
-			return;
+			return copiedFields.get(getClass());
 		List<Field> ret = new ArrayList<Field>();
 		for(Field f : getClass().getFields()) {
 			if(((f.getModifiers() & Modifier.FINAL) == 0)
@@ -64,6 +64,7 @@ public class Component {
 			}
 		}
 		copiedFields.put(getClass(), ret);
+		return ret;
 	}
 	
 	protected void addEventHandler(GuiEventHandler handler) {
@@ -88,8 +89,38 @@ public class Component {
 		return null;
 	}
 	
+	public boolean canStore() {
+		return true;
+	}
+	
+	/**
+	 * Recover all the data fields within the component with the data map specified.
+	 */
+	public void fromPropertyMap(Map<String, String> map) {
+		List<Field> fields = checkCopyFields();
+		for(Field f : fields) {
+			String val = map.get(f.getName());
+			if(val != null) {
+				TypeHelper.edit(f, this, val);
+			}
+		}
+	}
+	
+	public Map<String, String> getPropertyMap() {
+		Map<String, String> ret = new HashMap();
+		for(Field f : checkCopyFields()) {
+			String val = TypeHelper.repr(f, this);
+			if(val != null) {
+				ret.put(f.getName(), val);
+			}
+		}
+		
+		return ret;
+	}
+	
 	public Collection<Field> getPropertyList() {
 		return copiedFields.get(getClass());
 	}
 	
 }
+

@@ -2,7 +2,6 @@ package cn.liutils.cgui.loader.ui;
 
 import java.io.File;
 import java.io.FileOutputStream;
-import java.io.PrintWriter;
 
 import javax.vecmath.Vector2d;
 
@@ -21,13 +20,9 @@ import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.LIGuiScreen;
 import cn.liutils.cgui.gui.Widget;
+import cn.liutils.cgui.loader.xml.CGUIDocWriter;
 import cn.liutils.core.LIUtils;
 import cn.liutils.registry.AttachKeyHandlerRegistry.RegAttachKeyHandler;
-
-import com.typesafe.config.ConfigFactory;
-import com.typesafe.config.ConfigObject;
-import com.typesafe.config.ConfigValueFactory;
-
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -47,6 +42,12 @@ public class GuiEdit extends LIGuiScreen {
 	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, .9 };
+	
+	
+	public GuiEdit(LIGui gui) {
+		this();
+		toEdit.addAll(gui);
+	}
 	
 	public static double[] COLOR_STYLE = new double[] { .3, .56, 1 };
 	
@@ -123,30 +124,27 @@ public class GuiEdit extends LIGuiScreen {
     	super.onGuiClosed();
     	
     	cfg.save();
+    	saveResult("autosave");
     }
-	
-	@RegAttachKeyHandler(clazz = KeyHandler.class)
-	public static final int OPEN = Keyboard.KEY_O;
-	
-	public static class KeyHandler implements IKeyHandler {
-		@Override
-		public void onKeyDown(int keyCode, boolean tickEnd) {
-			if(LIUtils.DEBUG && Minecraft.getMinecraft().currentScreen == null)
-				guiHandler.openClientGui();
-		}
-		@Override
-		public void onKeyUp(int keyCode, boolean tickEnd) {}
-		@Override
-		public void onKeyTick(int keyCode, boolean tickEnd) {}
-	}
-	
-	@RegGuiHandler
-	public static GuiHandlerBase guiHandler = new GuiHandlerBase() {
-		@SideOnly(Side.CLIENT)
-		protected GuiScreen getClientGui() {
-			return new GuiEdit();
-		}
-	};
+    
+    public void saveResult() {
+    	saveResult("save");
+    }
+    
+    private void saveResult(String name) {
+    	File file;
+    	file = new File("cgui/");
+    	if(file.isFile()) file.delete();
+    	if(!file.isDirectory()) file.mkdirs();
+    	
+    	int i = 0;
+    	do {
+    		file = new File("cgui/" + name + (i++) + ".xml");
+    	} while(file.canRead() || file.isDirectory());
+    	
+    	CGUIDocWriter.save(toEdit, file);
+    	Minecraft.getMinecraft().thePlayer.sendChatMessage("Sucessfully saved to " + file.getName());
+    }
 	
 	public static final ResourceLocation tex(String name) {
 		return new ResourceLocation("liutils:textures/cgui/" + name + ".png");

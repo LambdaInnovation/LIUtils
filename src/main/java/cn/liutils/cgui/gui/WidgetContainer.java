@@ -12,13 +12,11 @@
  */
 package cn.liutils.cgui.gui;
 
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
@@ -28,12 +26,21 @@ import com.google.common.collect.ImmutableList;
  * Every widget is associated with a name. You can use that name to lookup a widget.
  * @author WeAthFolD
  */
-public abstract class WidgetContainer implements Iterable<Widget> {
+public class WidgetContainer implements Iterable<Widget> {
 	
 	HashBiMap<String, Widget> widgets = HashBiMap.create();
 	List<Widget> widgetList = new LinkedList(); //List sorted in non-descending widget zOrder.
 	
 	private static final String UNNAMED_PRE = "Unnamed ";
+	
+	/**
+	 * This is light copy.
+	 */
+	public void addAll(WidgetContainer container) {
+		for(Map.Entry<String, Widget> entry : container.getEntries()) {
+			addWidget(entry.getKey(), entry.getValue());
+		}
+	}
 	
 	/**
 	 * Walk the widget list and check their states. This should be called explicitly from tick check events.
@@ -48,6 +55,10 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 				widgets.inverse().remove(w);
 			}
 		}
+	}
+	
+	public Set<Map.Entry<String, Widget>> getEntries() {
+		return widgets.entrySet();
 	}
 	
 	public boolean addWidget(Widget add) {
@@ -77,6 +88,11 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 		return true;
 	}
 	
+	public void clear() {
+		widgets.clear();
+		widgetList.clear();
+	}
+	
 	public Widget getWidget(int i) {
 		return widgetList.get(i);
 	}
@@ -89,14 +105,27 @@ public abstract class WidgetContainer implements Iterable<Widget> {
 	 * Callback when a widget was loaded. Allows lower class to do
 	 * some specific data setup.
 	 */
-	abstract void onWidgetAdded(String name, Widget w);
+	protected void onWidgetAdded(String name, Widget w) {}
 	
 	/**
+	 * This method supports level recursion. 
+	 * For example, you can use "a/b" to get the subWidget named 'b' of a in this
+	 * widget container.
 	 * @param name Widget name
 	 * @return The widget with this name.
 	 */
 	public Widget getWidget(String name) {
-		return widgets.get(name);
+		int ind = name.indexOf('/');
+		if(ind == -1) {
+			return widgets.get(name);
+		} else if(ind != name.length() - 1){
+			String cp = name.substring(0, ind);
+			String ep = name.substring(ind + 1, name.length());
+			Widget w = widgets.get(cp);
+			return w == null ? null : w.getWidget(ep);
+		} else {
+			return null;
+		}
 	}
 	
 	/**
