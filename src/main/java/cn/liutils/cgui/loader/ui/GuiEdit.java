@@ -43,10 +43,12 @@ public class GuiEdit extends LIGuiScreen {
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, .9 };
 	
+	String path;
 	
-	public GuiEdit(LIGui gui) {
+	public GuiEdit(String _path, LIGui gui) {
 		this();
 		toEdit.addAll(gui);
+		path = _path;
 	}
 	
 	public static double[] COLOR_STYLE = new double[] { .3, .56, 1 };
@@ -128,7 +130,15 @@ public class GuiEdit extends LIGuiScreen {
     }
     
     public void saveResult() {
-    	saveResult("save");
+    	if(path == null)
+    		throw new IllegalStateException("Null path!");
+    	File file;
+    	file = new File("cgui/");
+    	if(file.isFile()) file.delete();
+    	if(!file.isDirectory()) file.mkdirs();
+    	
+    	CGUIDocWriter.save(toEdit, file);
+    	Minecraft.getMinecraft().thePlayer.sendChatMessage("Sucessfully saved to " + file.getName());
     }
     
     private void saveResult(String name) {
@@ -144,6 +154,10 @@ public class GuiEdit extends LIGuiScreen {
     	
     	CGUIDocWriter.save(toEdit, file);
     	Minecraft.getMinecraft().thePlayer.sendChatMessage("Sucessfully saved to " + file.getName());
+    }
+    
+    public boolean doesGuiPauseGame() {
+        return false;
     }
 	
 	public static final ResourceLocation tex(String name) {

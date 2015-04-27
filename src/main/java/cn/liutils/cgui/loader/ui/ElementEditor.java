@@ -15,6 +15,7 @@ package cn.liutils.cgui.loader.ui;
 import java.lang.reflect.Field;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -27,9 +28,12 @@ import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
+import cn.liutils.cgui.gui.event.MouseDownEvent;
+import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.utils.Color;
 import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.util.HudUtils;
+import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.Font;
 
 /**
@@ -76,10 +80,67 @@ public abstract class ElementEditor extends Widget {
 		
 	}
 	
+	public static final class CheckBox extends ElementEditor {
+		
+		static final ResourceLocation
+			OUTLINE = GuiEdit.tex("check_back"),
+			CHECK = GuiEdit.tex("check");
+		
+		boolean state;
+		
+		public CheckBox(Field f) {
+			super(f);
+		}
+		
+		@Override
+		public void onAdded() {
+			state = (boolean) TypeHelper.get(targetField, getEditInstance());
+			
+			regEventHandler(new MouseDownHandler() {
+				@Override
+				public void handleEvent(Widget w, MouseDownEvent event) {
+					state = !state;
+					
+					TypeHelper.set(targetField, getEditInstance(), state);
+				}
+			});
+			
+			regEventHandler(new FrameEventHandler() {
+				boolean firstLoad = true;
+				
+				@Override
+				public void handleEvent(Widget w, FrameEvent event) {
+					if(firstLoad) {
+						firstLoad = false;
+						transform.setSize(10, 10);
+						w.dirty = true;
+					}
+					GL11.glColor4d(1, 1, 1, .8);
+					RenderUtils.loadTexture(OUTLINE);
+					HudUtils.drawRect(0, 0, 10, 10);
+					
+					if(state) {
+						RenderUtils.loadTexture(CHECK);
+						HudUtils.drawRect(0, 0, w.transform.width, w.transform.height);
+					}
+				}
+			});
+			
+			transform.x = 80;
+			transform.y -= 10;
+			transform.setSize(0, 0);
+		}
+		
+	}
+	
 	public static class ColorBox extends ElementEditor {
 
 		public ColorBox(Field f) {
 			super(f);
+		}
+		
+		@Override
+		public void onAdded() {
 			String[] arr = new String[] { "r", "g", "b", "a" };
 			double x = 5;
 			for(final String s : arr) {
@@ -105,9 +166,11 @@ public abstract class ElementEditor extends Widget {
 				
 				x += 30;
 			}
+			
+			transform.setSize(10, 12);
 		}
 		
-		class ColorEditor extends InputBox {
+ 		class ColorEditor extends InputBox {
 			public ColorEditor(String sub) throws Exception {
 				super(Color.class.getField(sub));
 			}

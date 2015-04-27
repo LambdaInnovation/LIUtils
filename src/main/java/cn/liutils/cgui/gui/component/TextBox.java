@@ -100,10 +100,12 @@ public class TextBox extends Component {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				double len = 3;
 				for(int i = 0; i < content.length(); ++i) {
-					len += Font.font.strLen(String.valueOf(content.charAt(i)), size);
-					System.out.println(len + " " + event.x);
+					double cw = Font.font.strLen(String.valueOf(content.charAt(i)), size);
+					len += cw;
+					
 					if(len > event.x) {
-						caretPos = i;
+						System.out.println(len + " " + event.x + " " + (event.x - len - cw > cw / 2));
+						caretPos = (event.x - len + cw > cw / 2) ? i + 1 : i;
 						return;
 					}
 				}
@@ -119,7 +121,7 @@ public class TextBox extends Component {
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
-					Font.font.draw("|", len + 3, w.transform.height - size, size, color);
+					Font.font.draw("|", len + 1, w.transform.height - size, size, color);
 				}
 			}
 			

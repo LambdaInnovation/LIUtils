@@ -42,6 +42,8 @@ public class ComponentEditor extends Window {
 		}
 		
 		editors.put(Color.class, ElementEditor.ColorBox.class);
+		editors.put(Boolean.TYPE, ElementEditor.CheckBox.class);
+		editors.put(Boolean.class, ElementEditor.CheckBox.class);
 	}
 	
 	Widget widget;
@@ -90,7 +92,7 @@ public class ComponentEditor extends Window {
 				ee.editor = this;
 				ee.transform.y = y + 10;
 				addWidget(ee);
-				y += 20;
+				y += 10 + ee.transform.height;
 			}
 			
 			transform.height = y + 5;

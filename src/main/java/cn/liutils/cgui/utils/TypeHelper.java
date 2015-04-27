@@ -76,7 +76,7 @@ public class TypeHelper {
 	
 	public static String repr(Field f, Object instance) {
 		try {
-			return getHandledType(f).get(f, instance);
+			return getHandledType(f).repr(f, instance);
 		} catch(Exception e) {
 			e.printStackTrace();
 		}

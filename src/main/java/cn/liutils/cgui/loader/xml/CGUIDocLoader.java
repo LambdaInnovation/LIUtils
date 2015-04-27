@@ -12,7 +12,7 @@
  */
 package cn.liutils.cgui.loader.xml;
 
-import java.io.StringBufferInputStream;
+import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -20,6 +20,7 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
+import org.apache.commons.io.input.ReaderInputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -57,7 +58,7 @@ public class CGUIDocLoader {
 	public LIGui loadXml(String xml) throws Exception {
 		retval = new LIGui();
 		
-		Document doc = db.parse(new StringBufferInputStream(xml));
+		Document doc = db.parse(new ReaderInputStream(new StringReader(xml)));
 		Element root = doc.getDocumentElement();
 		NodeList nl = root.getElementsByTagName("Widget");
 		for(int i = 0; i < nl.getLength(); ++i) {

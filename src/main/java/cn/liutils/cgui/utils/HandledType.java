@@ -26,8 +26,12 @@ public abstract class HandledType {
 	
 	public abstract void edit(Field f, Object instance, String value) throws Exception;
 	
-	public String get(Field f, Object instance) throws Exception {
+	public String repr(Field f, Object instance) throws Exception {
 		return f.get(instance).toString();
+	}
+	
+	public Object get(Field f, Object instance) throws Exception {
+		return f.get(instance);
 	}
 	
 	public abstract Object copy(Field f, Object instance) throws Exception;

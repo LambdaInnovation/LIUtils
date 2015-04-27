@@ -57,10 +57,11 @@ public class CommandOpen extends LICommandBase {
 			try {
 				xml = IOUtils.toString(new FileInputStream(file));
 			} catch (Exception e) {
-				throw new RuntimeException("File doesnt exist");
+				this.sendChat(ics, "File doesnt exist.");
+				return;
 			}
 			LIGui gui = CGUIDocLoader.load(xml);
-			Minecraft.getMinecraft().displayGuiScreen(new GuiEdit(gui));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiEdit(path, gui));
 		} else {
 			Minecraft.getMinecraft().displayGuiScreen(new GuiEdit());
 		}

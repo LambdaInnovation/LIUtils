@@ -43,7 +43,7 @@ public class EnumTypeHandler extends HandledType {
 	}
 
 	@Override
-	public String get(Field f, Object instance) throws Exception {
+	public String repr(Field f, Object instance) throws Exception {
 		return f.get(instance).toString();
 	}
 

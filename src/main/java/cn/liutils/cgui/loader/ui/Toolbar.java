@@ -38,12 +38,24 @@ public class Toolbar extends Window {
 	
 	boolean isLocked = false;
 	
-	public Toolbar(GuiEdit guiEdit) {
+	public Toolbar(final GuiEdit guiEdit) {
 		super(guiEdit, "Toolbar", false, new double[] { 10, 10 });
 		transform.setSize(200, 30);
 		
-		addWidget(new Button(0, "open", "Open CGUI File"));
-		addWidget(new Button(1, "save", "Save CGUI File"));
+		addWidget(new Button(0, "save", "Save") {
+			@Override public void triggerEvent() {
+				if(guiEdit.path != null) {
+					guiEdit.saveResult();
+				} else {
+					guiEdit.getGui().addWidget("SaveAs", new SaveAsScreen(guiEdit));
+				}
+			}
+		});
+		addWidget(new Button(1, "saveas", "Save As") {
+			@Override public void triggerEvent() {
+				guiEdit.getGui().addWidget("SaveAs", new SaveAsScreen(guiEdit));
+			}
+		});
 		addWidget(new Button(2, "add", "Add Widget") {
 			@Override public void triggerEvent() {
 				isLocked = true;
