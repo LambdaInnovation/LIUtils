@@ -3,9 +3,12 @@
 Introduction
 -----
 CGUI is a sub API of LambdaLib. It provides a Unity-like framework for swift GUI programming in Minecraft. 
+
 In CGUI, everything in the GUI is treated as a ```Widget```. Widget is solely a container of ```Component```s and ```EventHandler```s, which provide the concrete function for this Widget, such as drawing, typing and click event handling. All widgets are handled in a class named ```LIGui```. LIGui provides the interface that Minecraft GUI provided generally, and you should delegate all drawing/keyboard/mouse events to the LIGui instance you created in your GUI class. 
+
 What's more, Widgets are allowed to have sub widgets. That is, you can build sophiscated structures using hierachy method. For example, you can make a "window" with many ```InputBox```es and Buttons, with no effort.
 CGUI also implemented a visualized editing environment. With the editing UI, you can create Widgets and edit their components, change hierarchy, and get a WYSIWYG feeling. The editing UI stores the gui data using .xml files, and you can manually restore them back to a LIGui at runtime.
+
 For implementation simplicity, a special event registration method called **Annotation Event Registry** is provided. It allows you to create the gui from XML, and bind the events to widgets dynamically. You can simply just write event handlers in one class, specify the hierarchy target widget, and we will do the rest of job for you.
 
 
@@ -55,7 +58,7 @@ After creating a Widget, you can either add it into a ```LIGui``` or into a ```W
 If you want to destroy a Widget at runtime, simply call its ```dispose()``` function. It will get removed the next frame.
 When the widget's position is updated, you must set ```widget.dirty=true``` so LIGui will update its position information the next frame. (This is because widget's absolute position is pre-calculated)
 
-A widget can create a copy of itself. While copying, it copies all the Components and Event Listeners to the new Widget, and go down the hierachy tree to **copy all the sub-widgets** of it. This is particularly useful if you want to build some widgets out of a certain template. But be warned, **avoid usage of inner class event listeners** when copying Widget, or it may cause serious issues (End up handling the wrong widget).
+A widget can **create a copy of itself**. While copying, it copies all the Components and Event Listeners to the new Widget, and go down the hierachy tree to **copy all the sub-widgets** of it. This is particularly useful if you want to build some widgets out of a certain template. But be warned, **avoid usage of inner class event listeners** when copying Widget, or it may cause serious issues (End up handling the wrong widget).
 
 ## Widget naming
 Widget and LIGui introduced a naming system, where all widgets within them have a this-container-unique id. If you call addWidget(widget), that name is auto generated. You can call ```addWidget(id, widget)``` to specify its id.
