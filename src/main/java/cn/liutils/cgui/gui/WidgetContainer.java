@@ -24,6 +24,8 @@ import com.google.common.collect.ImmutableList;
 /**
  * A class that has capability to store widgets. Used by LIGui and Widget.
  * Every widget is associated with a name. You can use that name to lookup a widget.
+ * 
+ * This is a internal implementation class. DONT TOUCH IT!
  * @author WeAthFolD
  */
 public class WidgetContainer implements Iterable<Widget> {
