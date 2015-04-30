@@ -19,6 +19,7 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.IIcon;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
@@ -54,6 +55,15 @@ public class HudUtils {
 	    if(width != 0 && height != 0)
 	        setTextureResolution(width, height);
 	}
+	
+	public static void drawRect(ResourceLocation tex, double width, double height) {
+		RenderUtils.loadTexture(tex);
+		drawRect(width, height);
+	}
+	
+    public static void drawRect(double width, double height) {
+    	drawRect(0, 0, width, height);
+    }
 	
     /**
      * Draws a textured rectangle at the stored z-value. Mapping the full texture to the rect.

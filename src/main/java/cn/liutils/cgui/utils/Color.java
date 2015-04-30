@@ -19,7 +19,7 @@ import org.lwjgl.opengl.GL11;
  */
 public class Color {
 	
-	public double r, g, b, a;
+	public double r, g, b, a = 1.0;
 	
 	public Color(double _r, double _g, double _b, double _a) {
 		setColor4d(_r, _g, _b, _a);
@@ -45,12 +45,12 @@ public class Color {
 	}
 	
 	public void fromHexColor(int hex) {
-		setColor4i(hex & 0xFF, (hex >> 8) & 0xFF, (hex >> 16) & 0xFF, (hex >> 24) & 0xFF);
+		setColor4i((hex >> 16) & 0xFF, (hex >> 8) & 0xFF, hex & 0xFF, (hex >> 24) & 0xFF);
 	}
 	
 	public int asHexColor() {
 		byte ir = (byte) (r * 255), ig = (byte) (g * 255), ib = (byte) (b * 255), ia = (byte) (a * 255);;
-		return ir | ig << 8 | ib << 16 | ia << 24;
+		return ir << 16 | ig << 8 | ib | ia << 24;
 	}
 	
 	public void bind() {

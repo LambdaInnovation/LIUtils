@@ -31,6 +31,7 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.WidgetContainer;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
+import cn.liutils.cgui.loader.EventLoader;
 
 /**
  * @author WeAthFolD
@@ -134,6 +135,13 @@ public class CGUIDocLoader {
 			e.printStackTrace();
 		}
 		return null;
+	}
+	
+	public static LIGui load(String xml, Object callbackProvider) {
+		LIGui ret = load(xml);
+		if(ret == null) return null;
+		EventLoader.load(ret, callbackProvider);
+		return ret;
 	}
 	
 }
