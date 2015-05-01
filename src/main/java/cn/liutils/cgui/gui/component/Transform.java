@@ -4,7 +4,9 @@ import cn.liutils.cgui.gui.Widget;
 
 public class Transform extends Component {
 	
-	public enum AlignStyle { LEFT, CENTER };
+	public enum WidthAlign { LEFT, CENTER, RIGHT };
+	
+	public enum HeightAlign { TOP, CENTER, BOTTOM };
 	
 	public double width = 50.0, height = 50.0;
 	
@@ -14,7 +16,9 @@ public class Transform extends Component {
 	
 	public boolean doesDraw = true, doesListenKey = true;
 	
-	public AlignStyle align = AlignStyle.LEFT;
+	public WidthAlign alignWidth = WidthAlign.LEFT;
+	
+	public HeightAlign alignHeight = HeightAlign.TOP;
 
 	public Transform() {
 		super("Transform");
@@ -30,6 +34,12 @@ public class Transform extends Component {
 	public Transform setSize(double _width, double _height) {
 		width = _width;
 		height = _height;
+		return this;
+	}
+	
+	public Transform setCenteredAlign() {
+		alignWidth = WidthAlign.CENTER;
+		alignHeight = HeightAlign.CENTER;
 		return this;
 	}
 	

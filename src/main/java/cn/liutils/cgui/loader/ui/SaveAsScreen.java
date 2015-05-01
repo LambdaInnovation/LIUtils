@@ -22,7 +22,7 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
-import cn.liutils.cgui.gui.component.Transform.AlignStyle;
+import cn.liutils.cgui.gui.component.Transform.WidthAlign;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
@@ -46,7 +46,7 @@ public class SaveAsScreen extends Window {
 
 	public SaveAsScreen(GuiEdit _guiEdit) {
 		super(_guiEdit, "Save As", true);
-		transform.align = AlignStyle.CENTER;
+		transform.setCenteredAlign();
 		transform.setSize(100, 40);
 		addWidgets();
 	}

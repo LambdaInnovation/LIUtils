@@ -19,11 +19,11 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
+import cn.liutils.api.gui.Widget.AlignStyle;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.api.key.LIKeyProcess.Trigger;
 import cn.liutils.cgui.gui.component.Transform;
-import cn.liutils.cgui.gui.component.Transform.AlignStyle;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
@@ -80,8 +80,7 @@ public class LIGui extends WidgetContainer {
 		
 		if(diff) {
 			for(Widget widget : this) {
-				if(widget.transform.align == AlignStyle.CENTER)
-					widget.dirty = true;
+				widget.dirty = true;
 			}
 		}
 	}
@@ -209,30 +208,62 @@ public class LIGui extends WidgetContainer {
     }
     
     /**
-     * Inverse calculation. Move this widget to the ABSOLUTE window position (tx, ty).
+     * Inverse calculation. Move this widget to the ABSOLUTE window position (x0, y0).
      * Note that the widget's position may be further changed because of its parent widget's position change.
      */
-    public void moveWidgetToAbsPos(Widget w, double tx, double ty) {
-    	Transform t = w.transform;
-		w.x = tx;
-		w.y = ty;
-		//Reversed calc to update propWidget.
-		if(w.isWidgetParent()) {
-			Widget pw = w.parent;
-			t.x = (w.x - pw.x) / w.scale;
-			t.y = (w.y - pw.y) / w.scale;
+    public void moveWidgetToAbsPos(Widget widget, double x0, double y0) {
+    	Transform transform = widget.transform;
+		double tx, ty;
+		double tw, th;
+		
+		if(widget.isWidgetParent()) {
+			Widget p = widget.getWidgetParent();
+			tx = p.x;
+			ty = p.y;
+			tw = p.transform.width * p.scale;
+			th = p.transform.height * p.scale;
+			
+			widget.scale = transform.scale * p.scale;
 		} else {
-			double x0, y0;
-			if(t.align == AlignStyle.CENTER) {
-				x0 = width / 2;
-				y0 = height / 2;
-			} else {
-				x0 = y0 = 0;
-			}
-			t.x = (w.x - x0) / w.scale;
-			t.y = (w.y - y0) / w.scale;
+			tx = ty = 0;
+			tw = width;
+			th = height;
+			
+			widget.scale = transform.scale;
 		}
-		w.dirty = true;
+		
+		double xx = 0;
+		switch(transform.alignWidth) {
+		case CENTER:
+			xx = x0 - (tx + (tw - transform.width * widget.scale) / 2) / widget.scale;
+			break;
+		case LEFT:
+			xx = (x0 - tx) / widget.scale;
+			break;
+		case RIGHT:
+			xx = (x0 - (tx + (tw - transform.width * widget.scale))) / widget.scale;
+			break;
+		}
+		transform.x = xx;
+		
+		double yy = 0;
+		switch(transform.alignHeight) {
+		case CENTER:
+			yy = y0 - (ty + (th - transform.height * widget.scale) / 2) / widget.scale;
+			break;
+		case TOP:
+			yy = (y0 - ty) / widget.scale;
+			break;
+		case BOTTOM:
+			yy = (y0- (ty + (th - transform.height * widget.scale))) / widget.scale;
+			break;
+		}
+		transform.y = yy;
+		
+		widget.x = x0;
+		widget.y = y0;
+		
+		widget.dirty = true;
     }
     
     public Widget getDraggingWidget() {
@@ -261,29 +292,54 @@ public class LIGui extends WidgetContainer {
 	private void updateWidget(Widget widget) {
 		widget.gui = this;
 		
-		Transform t = widget.transform;
+		Transform transform = widget.transform;
+		
+		double tx, ty;
+		double tw, th;
 		if(widget.isWidgetParent()) {
-			Widget parent = widget.parent;
-			widget.scale = parent.scale * t.scale;
-			widget.x = parent.x + t.x * widget.scale;
-			widget.y = parent.y + t.y * widget.scale;
+			Widget p = widget.getWidgetParent();
+			tx = p.x;
+			ty = p.y;
+			tw = p.transform.width * p.scale;
+			th = p.transform.height * p.scale;
+			
+			widget.scale = transform.scale * p.scale;
 		} else {
-			widget.scale = t.scale;
-
-			double x0 = 0, y0 = 0;
-			switch(t.align) {
-			case CENTER:
-				x0 = (width - t.width * widget.scale) / 2;
-				y0 = (height - t.height * widget.scale) / 2;
-				break;
-			case LEFT:
-				x0 = t.x * widget.scale;
-				y0 = t.y * widget.scale;
-				break;
-			}
-			widget.x = Math.max(0, x0);
-			widget.y = Math.max(0, y0);
+			tx = ty = 0;
+			tw = width;
+			th = height;
+			
+			widget.scale = transform.scale;
 		}
+		
+		double x0 = 0;
+		switch(transform.alignWidth) {
+		case CENTER:
+			x0 = tx + (tw - transform.width * widget.scale) / 2 + transform.x * widget.scale;
+			break;
+		case LEFT:
+			x0 = tx + transform.x * widget.scale;
+			break;
+		case RIGHT:
+			x0 = tx + (tw - transform.width * widget.scale) + transform.x * widget.scale;
+			break;
+		}
+		widget.x = x0;
+		
+		double y0 = 0;
+		switch(transform.alignHeight) {
+		case CENTER:
+			y0 = ty + (th - transform.height * widget.scale) / 2 + transform.y * widget.scale;
+			break;
+		case TOP:
+			y0 = ty + transform.y * widget.scale;
+			break;
+		case BOTTOM:
+			y0 = ty + (th - transform.height * widget.scale) + transform.y * widget.scale;
+			break;
+		}
+		widget.y = y0;
+		
 		widget.dirty = false;
 		
 		//Check sub widgets
