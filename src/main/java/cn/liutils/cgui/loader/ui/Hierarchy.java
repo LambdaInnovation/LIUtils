@@ -124,29 +124,29 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-		tmp = setupButton(4, "rename", "Rename");
-		tmp.regEventHandler(new MouseDownHandler() {
-			@Override
-			public void handleEvent(Widget w, MouseDownEvent event) {
-				if(getAccessTarget() != null) {
-					TextBox box = handlers.get(getAccessTarget()).box;
-					box.allowEdit = true;
-					handlers.get(getAccessTarget()).transform.doesListenKey = true;
-					System.out.println("Rename callback");
-				}
-			}
-		});
-
-//		tmp = setupButton(5, "remove", "Remove");
+//		tmp = setupButton(4, "rename", "Rename");
 //		tmp.regEventHandler(new MouseDownHandler() {
 //			@Override
 //			public void handleEvent(Widget w, MouseDownEvent event) {
 //				if(getAccessTarget() != null) {
-//					getAccessTarget().dispose();
-//					buildHierarchy();
+//					TextBox box = handlers.get(getAccessTarget()).box;
+//					box.allowEdit = true;
+//					handlers.get(getAccessTarget()).transform.doesListenKey = true;
+//					System.out.println("Rename callback");
 //				}
 //			}
 //		});
+
+		tmp = setupButton(4, "remove", "Remove");
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(getAccessTarget() != null) {
+					getAccessTarget().dispose();
+					buildHierarchy();
+				}
+			}
+		});
 		
 		tmp = setupButton(5, "duplicate", "Duplicate");
 		tmp.regEventHandler(new MouseDownHandler() {
