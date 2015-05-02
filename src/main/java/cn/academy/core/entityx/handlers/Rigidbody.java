@@ -56,8 +56,6 @@ public class Rigidbody extends MotionHandler {
 		target.lastTickPosY = target.posY;
 		target.lastTickPosZ = target.posZ;
 		target.setPosition(target.posX + target.motionX, target.posY + target.motionY, target.posZ + target.motionZ);
-		
-		System.out.println(target.motionY);
 	}
 
 }

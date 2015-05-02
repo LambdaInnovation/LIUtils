@@ -27,6 +27,7 @@ import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.KeyEvent.KeyEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
+import cn.liutils.cgui.utils.Color;
 import cn.liutils.util.render.Font;
 import cn.liutils.util.render.Font.Align;
 
@@ -43,7 +44,7 @@ public class TextBox extends Component {
 	public boolean doesEcho = false;
 	public char echoChar = '*';
 	
-	public int color = 0xffffff;
+	public Color color = new Color(0xffffff);
 	
 	public double size = 5;
 	
@@ -130,11 +131,11 @@ public class TextBox extends Component {
 
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color, Align.LEFT, w.transform.width - 2, "...");
+				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color.asHexColor(), Align.LEFT, w.transform.width - 2, "...");
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
-					Font.font.draw("|", len + 1, w.transform.height - size, size, color);
+					Font.font.draw("|", len + 1, w.transform.height - size, size, color.asHexColor());
 				}
 			}
 			

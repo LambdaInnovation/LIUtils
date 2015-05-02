@@ -233,17 +233,18 @@ public class GenericUtils {
         List list = world.getEntitiesWithinAABBExcludingEntity(null, boundingBox.expand(1.0D, 1.0D, 1.0D), selector);
         double d0 = 0.0D;
 
-        for (int j = 0; j < list.size(); ++j)
-        {
+        for (int j = 0; j < list.size(); ++j) {
             Entity entity1 = (Entity)list.get(j);
 
-            if(!entity1.canBeCollidedWith())
+            if(!entity1.canBeCollidedWith() || (selector != null && !selector.isEntityApplicable(entity1)))
             	continue;
             
             boolean b = true;
             for(Entity e : exclusion) {
-            	if(entity1.equals(e))
+            	if(entity1.equals(e)) {
             		b = false;
+            		break;
+            	}
             }
             if(!b) continue;
             
@@ -264,6 +265,7 @@ public class GenericUtils {
 
         if (entity != null)
         {
+        	System.out.println("Trace get  " + entity);
             return new MovingObjectPosition(entity);
         }
         return null;
