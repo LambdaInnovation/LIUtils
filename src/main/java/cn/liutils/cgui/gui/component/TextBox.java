@@ -94,6 +94,9 @@ public class TextBox extends Component {
 					w.postEvent(new ChangeContentEvent());
 				} else if(par2 == Keyboard.KEY_RETURN || par2 == Keyboard.KEY_NUMPADENTER) {
 					w.postEvent(new ConfirmInputEvent());
+				} else if(par2 == Keyboard.KEY_DELETE) {
+					content = "";
+					w.postEvent(new ChangeContentEvent());
 				}
 				if (ChatAllowedCharacters.isAllowedCharacter(event.inputChar)) {
 					content = content.substring(0, caretPos) + event.inputChar +
