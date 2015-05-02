@@ -182,7 +182,7 @@ public class Widget extends WidgetContainer {
 	
 	//Utils
 	public String getName() {
-		return this.isWidgetParent() ? parent.getWidgetName(this) : getGui().getWidgetName(this);
+		return getAbstractParent().getWidgetName(this);
 	}
 	
 	public boolean isPointWithin(double tx, double ty) {
@@ -192,7 +192,7 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public boolean isFocused() {
-		return gui.getFocus() == this;
+		return this == gui.getFocus();
 	}
 
 	@Override
@@ -252,6 +252,14 @@ public class Widget extends WidgetContainer {
 			this.disposed = false;
 			newParent.addWidget(this);
 		}
+	}
+	
+	public void rename(String newName) {
+		getAbstractParent().renameWidget(getName(), newName);
+	}
+	
+	public void gainFocus() {
+		getGui().gainFocus(this);
 	}
 
 }

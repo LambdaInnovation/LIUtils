@@ -12,6 +12,9 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -19,9 +22,14 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
+import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
+import cn.liutils.cgui.gui.event.ConfirmInputEvent;
+import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
+import cn.liutils.cgui.gui.event.GainFocusEvent;
+import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
@@ -82,6 +90,7 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
 		tmp = setupButton(1, "arrow_right", "Become child");
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
@@ -92,6 +101,7 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
 		tmp = setupButton(2, "arrow_up", "Move up");
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
@@ -102,6 +112,7 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
 		tmp = setupButton(3, "arrow_down", "Move down");
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
@@ -112,20 +123,32 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
 		tmp = setupButton(4, "rename", "Rename");
-
-		tmp = setupButton(5, "remove", "Remove");
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(getAccessTarget() != null) {
-					getAccessTarget().dispose();
-					buildHierarchy();
+					TextBox box = handlers.get(getAccessTarget()).box;
+					box.allowEdit = true;
+					handlers.get(getAccessTarget()).transform.doesListenKey = true;
+					System.out.println("Rename callback");
 				}
 			}
 		});
+
+//		tmp = setupButton(5, "remove", "Remove");
+//		tmp.regEventHandler(new MouseDownHandler() {
+//			@Override
+//			public void handleEvent(Widget w, MouseDownEvent event) {
+//				if(getAccessTarget() != null) {
+//					getAccessTarget().dispose();
+//					buildHierarchy();
+//				}
+//			}
+//		});
 		
-		tmp = setupButton(6, "duplicate", "Duplicate");
+		tmp = setupButton(5, "duplicate", "Duplicate");
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -137,10 +160,13 @@ public class Hierarchy extends Window {
 		});
 	}
 	
+	Map<Widget, SingleWidget> handlers = new HashMap();
+	
 	private void buildHierarchy() {
 		if(hList != null) 
 			hList.dispose();
 		
+		handlers.clear();
 		hList = new Widget();
 		hList.transform.x = 2;
 		hList.transform.y = 32;
@@ -158,7 +184,9 @@ public class Hierarchy extends Window {
 	}
 	
 	private void hierarchyAdd(ElementList list, Widget w) {
-		list.addWidget(new SingleWidget(w));
+		SingleWidget sw;
+		list.addWidget(sw = new SingleWidget(w));
+		handlers.put(w, sw);
 		for(Widget ww : w.getDrawList()) {
 			if(!ww.disposed)
 				hierarchyAdd(list, ww);
@@ -198,6 +226,8 @@ public class Hierarchy extends Window {
 			vis_on = GuiEdit.tex("vis_on"), 
 			vis_off = GuiEdit.tex("vis_off");
 		
+		TextBox box;
+		
 		public SingleWidget(Widget w) {
 			transform.width = 96;
 			transform.height = 12;
@@ -215,9 +245,6 @@ public class Hierarchy extends Window {
 					}
 					GL11.glColor4d(r, g, b, brightness);
 					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
-					
-					String name = target.getName();
-					Font.font.draw(name == null ? "<error>" : name, 14 + hierLevel * 6, 1, 10, 0xffffff);
 				}
 			});
 			
@@ -242,6 +269,45 @@ public class Hierarchy extends Window {
 					}
 				});
 				addWidget(eye);
+			}
+			
+			addWidget(new Name());
+		}
+		
+		private class Name extends Widget {
+			public Name() {
+				box = new TextBox().setSize(10);
+				box.content = target.getName();
+				transform.x = 14 + hierLevel * 6;
+				transform.setSize(80, 10);
+			}
+			
+			@Override
+			public void onAdded() {
+				regEventHandler(new FrameEventHandler() {
+					int slowdown = 0;
+					@Override
+					public void handleEvent(Widget w, FrameEvent event) {
+						if(++slowdown == 100) {
+							slowdown = 0;
+							transform.x = 14 + hierLevel * 6;
+							w.dirty = true;
+						}
+					}
+				});
+				regEventHandler(new ConfirmInputHandler() {
+					@Override
+					public void handleEvent(Widget w, ConfirmInputEvent event) {
+						target.rename(box.content);
+					}
+				});
+				regEventHandler(new GainFocusHandler() {
+					@Override
+					public void handleEvent(Widget w, GainFocusEvent event) {
+						SingleWidget.this.postEvent(new MouseDownEvent(0, 0));
+					}
+				});
+				addComponent(box);
 			}
 		}
 	}

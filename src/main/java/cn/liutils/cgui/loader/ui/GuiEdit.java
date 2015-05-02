@@ -102,6 +102,8 @@ public class GuiEdit extends LIGuiScreen {
 	@Override
     public void drawScreen(int mx, int my, float w) {
 		LIGui.drawBlackout();
+		
+		toEdit.resize(width, height);
 		toEdit.draw(mx, my);
 		super.drawScreen(mx, my, w);
 	}

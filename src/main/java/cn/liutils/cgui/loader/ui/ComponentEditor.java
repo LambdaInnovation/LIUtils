@@ -44,6 +44,7 @@ public class ComponentEditor extends Window {
 		editors.put(Color.class, ElementEditor.ColorBox.class);
 		editors.put(Boolean.TYPE, ElementEditor.CheckBox.class);
 		editors.put(Boolean.class, ElementEditor.CheckBox.class);
+		editors.put(Enum.class, ElementEditor.EnumSelector.class);
 	}
 	
 	Widget widget;
@@ -90,9 +91,10 @@ public class ComponentEditor extends Window {
 				 * Inject instance
 				 */
 				ee.editor = this;
-				ee.transform.y = y + 10;
-				addWidget(ee);
+				ee.transform.y = y + 10 + ee.transform.y;
 				y += 10 + ee.transform.height;
+				
+				addWidget(ee);
 			}
 			
 			transform.height = y + 5;
@@ -102,12 +104,19 @@ public class ComponentEditor extends Window {
 	}
 	
 	private ElementEditor getElementEditor(Field f) {
-		try {
-			return editors.get(f.getType()).getConstructor(Field.class).newInstance(f);
-		} catch (Exception e) {
-			//e.printStackTrace();
+		Class c = f.getType();
+		Class handler = null;
+		while(c != null && handler == null) {
+			handler = editors.get(c);
+			c = c.getSuperclass();
 		}
-		return null;
+		if(handler == null) return null;
+		try {
+			return (ElementEditor) handler.getConstructor(Field.class).newInstance(f);
+		} catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 }

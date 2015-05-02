@@ -59,6 +59,16 @@ public class WidgetContainer implements Iterable<Widget> {
 		}
 	}
 	
+	/**
+	 * @throws NullPointerException if the widget wasn't found.
+	 */
+	public void renameWidget(String name, String newName) {
+		Widget w = widgets.remove(name);
+		if(w == null)
+			throw new NullPointerException();
+		widgets.put(newName, w);
+	}
+	
 	public Set<Map.Entry<String, Widget>> getEntries() {
 		return widgets.entrySet();
 	}

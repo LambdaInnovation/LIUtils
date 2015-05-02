@@ -22,12 +22,15 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.TextBox;
+import cn.liutils.cgui.gui.component.Tint;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
+import cn.liutils.cgui.gui.event.LostFocusEvent;
+import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.utils.Color;
@@ -69,6 +72,29 @@ public abstract class ElementEditor extends Widget {
 		getEditor().widget.dirty = true;
 	}
 	
+	@Override
+	public void onAdded() {
+		updateValue();
+		
+		regEventHandler(new FrameEventHandler() {
+			int slowdown = 0;
+			
+			@Override
+			public void handleEvent(Widget w, FrameEvent event) {
+				if(++slowdown >= 30) {
+					slowdown = 0;
+					if(canUpdateValue()) {
+						updateValue();
+					}
+				}
+			}
+		});
+	}
+	
+	public abstract void updateValue();
+	
+	public abstract boolean canUpdateValue();
+	
 	/**
 	 * Default element editor. This is a special one and has hardcoded delegation.
 	 */
@@ -76,6 +102,14 @@ public abstract class ElementEditor extends Widget {
 		
 		public Default(Field f) {
 			super(f);
+		}
+
+		@Override
+		public void updateValue() {}
+
+		@Override
+		public boolean canUpdateValue() {
+			return false;
 		}
 		
 	}
@@ -90,11 +124,15 @@ public abstract class ElementEditor extends Widget {
 		
 		public CheckBox(Field f) {
 			super(f);
+			
+			transform.x = 80;
+			transform.y = -10;
+			transform.setSize(0, 0);
 		}
 		
 		@Override
 		public void onAdded() {
-			state = (Boolean) TypeHelper.get(targetField, getEditInstance());
+			super.onAdded();
 			
 			regEventHandler(new MouseDownHandler() {
 				@Override
@@ -125,10 +163,16 @@ public abstract class ElementEditor extends Widget {
 					}
 				}
 			});
-			
-			transform.x = 80;
-			transform.y -= 10;
-			transform.setSize(0, 0);
+		}
+
+		@Override
+		public void updateValue() {
+			state = (Boolean) TypeHelper.get(targetField, getEditInstance());
+		}
+
+		@Override
+		public boolean canUpdateValue() {
+			return true;
 		}
 		
 	}
@@ -137,6 +181,7 @@ public abstract class ElementEditor extends Widget {
 
 		public ColorBox(Field f) {
 			super(f);
+			transform.setSize(10, 12);
 		}
 		
 		@Override
@@ -166,8 +211,6 @@ public abstract class ElementEditor extends Widget {
 				
 				x += 30;
 			}
-			
-			transform.setSize(10, 12);
 		}
 		
  		class ColorEditor extends InputBox {
@@ -188,6 +231,19 @@ public abstract class ElementEditor extends Widget {
 				}
 				return null;
 			}
+			
+			@Override
+			public boolean canUpdateValue() {
+				return false;
+			}
+		}
+
+		@Override
+		public void updateValue() {}
+
+		@Override
+		public boolean canUpdateValue() {
+			return false;
 		}
 		
 	}
@@ -246,10 +302,101 @@ public abstract class ElementEditor extends Widget {
 			});
 
 		}
+
+		@Override
+		public void updateValue() {
+			TextBox.get(this).content = TypeHelper.repr(targetField, getEditInstance());
+		}
+
+		@Override
+		public boolean canUpdateValue() {
+			return !inputDirty;
+		}
+		
+	}
+	
+	public static class EnumSelector extends ElementEditor {
+		
+		Object[] enumConstants;
+		
+		TextBox box;
+		
+		Widget list;
+
+		public EnumSelector(Field f) {
+			super(f);
+			enumConstants = f.getType().getEnumConstants();
+			transform.setSize(70, 0);
+			transform.setPos(60, -10);
+		}
 		
 		@Override
 		public void onAdded() {
-			TextBox.get(this).content = TypeHelper.repr(targetField, getEditInstance());
+			transform.setSize(65, 10);
+			box = new TextBox().disallowEdit().setSize(10);
+			addComponent(box);
+			Tint tint = new Tint();
+			tint.idleColor = new Color(1, 1, 1, 0.3);
+			addComponent(tint);
+			
+			regEventHandler(new MouseDownHandler() {
+
+				@Override
+				public void handleEvent(Widget w, MouseDownEvent event) {
+					if(list != null)
+						list.dispose();
+					list = new Widget();
+					list.transform.setPos(0, 0).setSize(40, 10 * enumConstants.length);
+					for(int i = 0; i < enumConstants.length; ++i) {
+						list.addWidget(new Value(i));
+					}
+					w.addWidget(list);
+					list.gainFocus();
+					list.regEventHandler(new LostFocusHandler() {
+						@Override
+						public void handleEvent(Widget w, LostFocusEvent event) {
+							list.dispose();
+							list = null;
+						}
+					});
+				}
+				
+			});
+			
+			super.onAdded();
+		}
+
+		@Override
+		public void updateValue() {
+			box.content = TypeHelper.repr(targetField, getEditInstance());
+		}
+
+		@Override
+		public boolean canUpdateValue() {
+			return true;
+		}
+		
+		private class Value extends Widget {
+			
+			String name;
+			
+			public Value(int i) {
+				transform.setSize(40, 10);
+				transform.setPos(65, 10 * i);
+				name = enumConstants[i].toString();
+				addComponent(new TextBox().setSize(10).disallowEdit().setContent(name));
+				Tint tint = new Tint();
+				tint.idleColor = new Color(1, 1, 1, 0.3);
+				addComponent(tint);
+				
+				regEventHandler(new MouseDownHandler() {
+					@Override
+					public void handleEvent(Widget w, MouseDownEvent event) {
+						TypeHelper.edit(targetField, getEditInstance(), name);
+						editor.widget.dirty = true;
+					}
+				});
+			}
 		}
 		
 	}

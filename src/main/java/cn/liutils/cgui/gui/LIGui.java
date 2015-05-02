@@ -35,6 +35,7 @@ import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
+import cn.liutils.core.LIUtils;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
@@ -381,14 +382,18 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	private void drawTraverse(double mx, double my, Widget cur, WidgetContainer set, Widget top) {
-		if(cur != null && cur.isVisible()) {
-			GL11.glPushMatrix();
-			GL11.glTranslated(cur.x, cur.y, 0);
-			GL11.glScaled(cur.scale, cur.scale, 1);
-			GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
-			cur.postEvent(new FrameEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
-			//System.out.println("drawing " + cur);
-			GL11.glPopMatrix();
+		try {
+			if(cur != null && cur.isVisible()) {
+				GL11.glPushMatrix();
+				GL11.glTranslated(cur.x, cur.y, 0);
+				GL11.glScaled(cur.scale, cur.scale, 1);
+				GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
+				cur.postEvent(new FrameEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
+				//System.out.println("drawing " + cur);
+				GL11.glPopMatrix();
+			}
+		} catch(Exception e) {
+			LIUtils.log.error("Error occured handling widget draw. instance class: " + cur.getClass().getName() + ", name: " + cur.getName());
 		}
 		
 		if(cur == null || cur.isVisible()) {

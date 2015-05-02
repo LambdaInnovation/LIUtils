@@ -55,6 +55,16 @@ public class TextBox extends Component {
 		return this;
 	}
 	
+	public TextBox disallowEdit() {
+		allowEdit = false;
+		return this;
+	}
+	
+	public TextBox setContent(String str) {
+		content = str;
+		return this;
+	}
+	
 	public TextBox() {
 		super("TextBox");
 		addEventHandler(new KeyEventHandler() {

@@ -29,13 +29,13 @@ public class EnumTypeHandler extends HandledType {
 		int i = 0;
 		enumClass = cz;
 		for(Object e : cz.getEnumConstants()) {
-			map.put(i++, e.toString().toLowerCase());
+			map.put(i++, e.toString());
 		}
 	}
 
 	@Override
 	public void edit(Field f, Object instance, String value) throws Exception {
-		Integer i = map.inverse().get(value.toLowerCase());
+		Integer i = map.inverse().get(value);
 		if(i == null) {
 			throw new RuntimeException();
 		}
