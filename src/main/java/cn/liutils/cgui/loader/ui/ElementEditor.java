@@ -94,7 +94,7 @@ public abstract class ElementEditor extends Widget {
 		
 		@Override
 		public void onAdded() {
-			state = (boolean) TypeHelper.get(targetField, getEditInstance());
+			state = (Boolean) TypeHelper.get(targetField, getEditInstance());
 			
 			regEventHandler(new MouseDownHandler() {
 				@Override

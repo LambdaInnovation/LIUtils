@@ -12,12 +12,16 @@
  */
 package cn.liutils.api.key;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 
 /**
  * Handler for a LIKeyProcess registered key.
  * @see LIKeyProcess
  * @author WeAthFolD
  */
+@SideOnly(Side.CLIENT)
 public interface IKeyHandler {
 
 	/**
