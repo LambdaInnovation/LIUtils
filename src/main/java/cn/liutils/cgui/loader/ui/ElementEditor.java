@@ -236,6 +236,15 @@ public abstract class ElementEditor extends Widget {
 			public boolean canUpdateValue() {
 				return false;
 			}
+			
+			public boolean setValue() {
+				return tryEdit(String.valueOf(Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0));
+			}
+			
+			@Override
+			public void updateValue() {
+				TextBox.get(this).content = String.valueOf( (int) (((Double)TypeHelper.get(targetField, getEditInstance())) * 255) );
+			}
 		}
 
 		@Override
@@ -291,7 +300,7 @@ public abstract class ElementEditor extends Widget {
 				public void handleEvent(Widget w, ConfirmInputEvent event) {
 					if(inputDirty) {
 						//Try to edit the edit target. if not successful, show error.
-						if(!tryEdit(((TextBox)w.getComponent("TextBox")).content)) {
+						if(!setValue()) {
 							lastErrorTime = Minecraft.getSystemTime();
 						} else {
 							updateTargetWidget();
@@ -301,6 +310,10 @@ public abstract class ElementEditor extends Widget {
 				}
 			});
 
+		}
+		
+		public boolean setValue() {
+			return tryEdit(((TextBox)getComponent("TextBox")).content);
 		}
 
 		@Override
