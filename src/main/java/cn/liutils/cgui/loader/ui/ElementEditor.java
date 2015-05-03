@@ -238,7 +238,11 @@ public abstract class ElementEditor extends Widget {
 			}
 			
 			public boolean setValue() {
-				return tryEdit(String.valueOf(Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0));
+				try {
+					return tryEdit(String.valueOf(Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0));
+				} catch(Exception e) {
+					return false;
+				}
 			}
 			
 			@Override

@@ -182,7 +182,8 @@ public class Widget extends WidgetContainer {
 	
 	//Utils
 	public String getName() {
-		return getAbstractParent().getWidgetName(this);
+		WidgetContainer parent = getAbstractParent();
+		return parent == null ? "null" : parent.getWidgetName(this);
 	}
 	
 	public boolean isPointWithin(double tx, double ty) {
@@ -237,7 +238,7 @@ public class Widget extends WidgetContainer {
 	public void moveLeft() {
 		if(!this.isWidgetParent())
 			return;
-		parent.getAbstractParent().addWidget(this);
+		parent.getAbstractParent().addWidget(this.getName(), this);
 		parent.forceRemoveWidget(this);
 		this.disposed = false;
 	}
@@ -250,7 +251,7 @@ public class Widget extends WidgetContainer {
 			String name = this.getName();
 			parent.forceRemoveWidget(this);
 			this.disposed = false;
-			newParent.addWidget(this);
+			newParent.addWidget(name, this);
 		}
 	}
 	

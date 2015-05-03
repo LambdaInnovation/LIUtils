@@ -58,37 +58,42 @@ public class LIGuiPlayground extends LIGui {
 	}
 	
 	@Override
-	public boolean addWidget(String name, Widget w) {
-		boolean result = super.addWidget(name, w);
-		if(result) {
-			//Add selection indicator
-			w.regEventHandler(new FrameEventHandler() {
-				@Override
-				public void handleEvent(Widget w, FrameEvent event) {
-					if(getFocus() == w) {
-						RenderUtils.bindColor(112, 223, 122, 200);
-						HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
-					} else {
-						HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);
-					}
+	public void onWidgetAdded(String name, Widget w) {
+		super.onWidgetAdded(name, w);
+		injectEvents(w);
+	}
+	
+	private void injectEvents(Widget w) {
+		//Add selection indicator
+		w.regEventHandler(new FrameEventHandler() {
+			@Override
+			public void handleEvent(Widget w, FrameEvent event) {
+				if(getFocus() == w) {
+					RenderUtils.bindColor(112, 223, 122, 200);
+					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
+				} else {
+					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);
 				}
-			});
-			w.regEventHandler(new DragEventHandler() {
-				@Override
-				public void handleEvent(Widget w, DragEvent event) {
-					if(w.isFocused()) {
-						w.getGui().updateDragWidget();
-					}
+			}
+		});
+		w.regEventHandler(new DragEventHandler() {
+			@Override
+			public void handleEvent(Widget w, DragEvent event) {
+				if(w.isFocused()) {
+					w.getGui().updateDragWidget();
 				}
-			});
-			w.regEventHandler(new GainFocusHandler() {
-				@Override
-				public void handleEvent(Widget w, GainFocusEvent event) {
-					new SelectedWidgetBar(guiEdit, w);
-				}
-			});
+			}
+		});
+		w.regEventHandler(new GainFocusHandler() {
+			@Override
+			public void handleEvent(Widget w, GainFocusEvent event) {
+				new SelectedWidgetBar(guiEdit, w);
+			}
+		});
+		
+		for(Widget w2 : w.getDrawList()) {
+			injectEvents(w2);
 		}
-		return result;
 	}
 	
 	/**

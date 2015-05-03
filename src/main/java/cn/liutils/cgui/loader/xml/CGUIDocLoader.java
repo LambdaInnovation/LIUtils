@@ -32,6 +32,7 @@ import cn.liutils.cgui.gui.WidgetContainer;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.loader.EventLoader;
+import cn.liutils.core.LIUtils;
 
 /**
  * @author WeAthFolD
@@ -61,9 +62,12 @@ public class CGUIDocLoader {
 		
 		Document doc = db.parse(new ReaderInputStream(new StringReader(xml)));
 		Element root = doc.getDocumentElement();
-		NodeList nl = root.getElementsByTagName("Widget");
+		NodeList nl = root.getChildNodes();
 		for(int i = 0; i < nl.getLength(); ++i) {
-			parseWidget(nl.item(i), retval);
+			Node node = (Node) nl.item(i);
+			if(node.getNodeName().equals("Widget")) {
+				parseWidget(nl.item(i), retval);
+			}
 		}
 		
 		return retval;
@@ -89,6 +93,7 @@ public class CGUIDocLoader {
 		if(name == null) {
 			throw new RuntimeException("No name specified for the widget");
 		}
+//		System.out.println("Add " + name + " to " + (target instanceof LIGui ? "LIGui" : ((Widget)target).getName()));
 		target.addWidget(name, val);
 	}
 	
@@ -108,7 +113,7 @@ public class CGUIDocLoader {
 		try {
 			c = (Component) Class.forName(clazz).newInstance();
 		} catch(Exception e) {
-			System.err.println("An error occured trying to instantiate class " + clazz);
+			LIUtils.log.error("An error occured trying to instantiate class " + clazz);
 			e.printStackTrace();
 		}
 		
