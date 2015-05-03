@@ -394,6 +394,7 @@ public class LIGui extends WidgetContainer {
 			}
 		} catch(Exception e) {
 			LIUtils.log.error("Error occured handling widget draw. instance class: " + cur.getClass().getName() + ", name: " + cur.getName());
+			e.printStackTrace();
 		}
 		
 		if(cur == null || cur.isVisible()) {

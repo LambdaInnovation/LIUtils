@@ -192,7 +192,7 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public boolean isFocused() {
-		return this == gui.getFocus();
+		return gui != null && this == gui.getFocus();
 	}
 
 	@Override
@@ -254,8 +254,12 @@ public class Widget extends WidgetContainer {
 		}
 	}
 	
-	public void rename(String newName) {
+	public boolean rename(String newName) {
+		WidgetContainer parent = getAbstractParent();
+		if(parent.hasWidget(newName))
+			return false;
 		getAbstractParent().renameWidget(getName(), newName);
+		return true;
 	}
 	
 	public void gainFocus() {

@@ -10,9 +10,15 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.academy.core.entityx;
+package cn.liutils.entityx;
+
+import net.minecraft.entity.Entity;
 
 /**
  * @author WeAthFolD
  */
-public class EntityEvent {}
+public interface EntityCallback<T extends Entity> {
+
+	void execute(T target);
+	
+}

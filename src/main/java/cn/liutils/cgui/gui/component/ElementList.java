@@ -74,6 +74,7 @@ public class ElementList extends Component {
 			w.transform.doesDraw = true;
 			w.transform.x = 0;
 			w.transform.y = in * (elementHt + spacing);
+			w.dirty = true;
 		}
 	}
 	

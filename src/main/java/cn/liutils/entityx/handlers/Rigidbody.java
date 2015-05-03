@@ -10,14 +10,14 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.academy.core.entityx.handlers;
+package cn.liutils.entityx.handlers;
 
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import cn.academy.core.entityx.MotionHandler;
-import cn.academy.core.entityx.event.CollideEvent;
+import cn.liutils.entityx.MotionHandler;
+import cn.liutils.entityx.event.CollideEvent;
 import cn.liutils.util.GenericUtils;
 
 /**

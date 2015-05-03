@@ -30,8 +30,8 @@ public abstract class RenderBlockMulti extends TileEntitySpecialRenderer {
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float f) {
 		BlockMulti bm = (BlockMulti) te.getBlockType();
 		InfoBlockMulti inf = ((IMultiTile)te).getBlockInfo();
-		if(inf == null || !inf.isLoaded() || inf.subID != 0) return;
 		
+		if(inf == null || !inf.isLoaded() || inf.subID != 0) return;
 		GL11.glPushMatrix();
 		double[] off = bm.getPivotOffset(inf);
 		double[] off2 = bm.rotCenters[inf.dir.ordinal()];

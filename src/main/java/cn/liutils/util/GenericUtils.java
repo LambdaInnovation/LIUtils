@@ -263,9 +263,7 @@ public class GenericUtils {
             }
         }
 
-        if (entity != null)
-        {
-        	System.out.println("Trace get  " + entity);
+        if (entity != null) {
             return new MovingObjectPosition(entity);
         }
         return null;

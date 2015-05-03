@@ -24,6 +24,8 @@ import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
+import cn.liutils.cgui.gui.event.ChangeContentEvent;
+import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent.ConfirmInputHandler;
 import cn.liutils.cgui.gui.event.FrameEvent;
@@ -158,6 +160,30 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
+		tmp = setupButton(6, "up", "Move Up");
+		tmp.transform.setPos(90, 30);
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(hList != null) {
+					ElementList list = hList.getComponent("list");
+					list.progressLast();
+				}
+			}
+		});
+		
+		tmp = setupButton(7, "down", "Move Down");
+		tmp.transform.setPos(90, 110);
+		tmp.regEventHandler(new MouseDownHandler() {
+			@Override
+			public void handleEvent(Widget w, MouseDownEvent event) {
+				if(hList != null) {
+					ElementList list = hList.getComponent("list");
+					list.progressNext();
+				}
+			}
+		});
 	}
 	
 	Map<Widget, SingleWidget> handlers = new HashMap();
@@ -170,7 +196,7 @@ public class Hierarchy extends Window {
 		hList = new Widget();
 		hList.transform.x = 2;
 		hList.transform.y = 32;
-		hList.transform.width = 96;
+		hList.transform.width = 80;
 		hList.transform.height = 86;
 		
 		ElementList el = new ElementList();
@@ -220,6 +246,7 @@ public class Hierarchy extends Window {
 		int hierLevel;
 		Widget target;
 		
+		boolean modified = false;
 		boolean on = true;
 		
 		final ResourceLocation 
@@ -229,7 +256,7 @@ public class Hierarchy extends Window {
 		TextBox box;
 		
 		public SingleWidget(Widget w) {
-			transform.width = 96;
+			transform.width = 80;   
 			transform.height = 12;
 			
 			hierLevel = w.getHierarchyLevel();
@@ -238,10 +265,14 @@ public class Hierarchy extends Window {
 				@Override
 				public void handleEvent(Widget w, FrameEvent event) {
 					double r = 1, g = 1, b = 1;
-					double brightness = .3;
+					double brightness = event.hovering ? .5 : .3;
 					if(target.isFocused()) {
 						brightness *= 1.6;
 						r = b = .6;
+					}
+					if(modified) {
+						r = g = 1;
+						b = 0;
 					}
 					GL11.glColor4d(r, g, b, brightness);
 					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
@@ -298,7 +329,15 @@ public class Hierarchy extends Window {
 				regEventHandler(new ConfirmInputHandler() {
 					@Override
 					public void handleEvent(Widget w, ConfirmInputEvent event) {
-						target.rename(box.content);
+						if(target.rename(box.content)) {
+							modified = false;
+						}
+					}
+				});
+				regEventHandler(new ChangeContentHandler() {
+					@Override
+					public void handleEvent(Widget w, ChangeContentEvent event) {
+						modified = true;
 					}
 				});
 				regEventHandler(new GainFocusHandler() {

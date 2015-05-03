@@ -10,11 +10,11 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.academy.core.entityx.event;
+package cn.liutils.entityx.event;
 
+import cn.liutils.entityx.EntityEvent;
+import cn.liutils.entityx.EntityEventHandler;
 import net.minecraft.util.MovingObjectPosition;
-import cn.academy.core.entityx.EntityEvent;
-import cn.academy.core.entityx.EntityEventHandler;
 
 /**
  * @author WeAthFolD
