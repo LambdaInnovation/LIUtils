@@ -185,6 +185,16 @@ public abstract class ElementEditor extends Widget {
 		}
 		
 		@Override
+		public Object getEditInstance() {
+			try {
+				return targetField.get(super.getEditInstance());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+		
+		@Override
 		public void onAdded() {
 			String[] arr = new String[] { "r", "g", "b", "a" };
 			double x = 5;
@@ -225,7 +235,7 @@ public abstract class ElementEditor extends Widget {
 			
 			@Override Object getEditInstance() {
 				try {
-					return ColorBox.this.targetField.get(ColorBox.this.getTargetComponent());
+					return ColorBox.this.getEditInstance();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
@@ -239,15 +249,20 @@ public abstract class ElementEditor extends Widget {
 			
 			public boolean setValue() {
 				try {
-					return tryEdit(String.valueOf(Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0));
+					System.out.println("SetValue " + this.getEditInstance().getClass());
+					double val = Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0;
+					targetField.set(getEditInstance(), val);
+					return true;
 				} catch(Exception e) {
+					e.printStackTrace();
 					return false;
 				}
 			}
 			
 			@Override
 			public void updateValue() {
-				TextBox.get(this).content = String.valueOf( (int) (((Double)TypeHelper.get(targetField, getEditInstance())) * 255) );
+				System.out.println("UpdateValue");
+				TextBox.get(this).content = String.valueOf( (int) (((double)TypeHelper.get(targetField, getEditInstance())) * 255) );
 			}
 		}
 

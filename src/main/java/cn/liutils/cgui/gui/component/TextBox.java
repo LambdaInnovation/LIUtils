@@ -131,11 +131,13 @@ public class TextBox extends Component {
 
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color.asHexColor(), Align.LEFT, w.transform.width - 2, "...");
+				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color.asHexWithoutAlpha() & 0xFFFFFF, Align.LEFT, w.transform.width - 2, "...");
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
-					Font.font.draw("|", len + 1, w.transform.height - size, size, color.asHexColor());
+					//System.out.println(color.r + " " + color.g + " " + color.b + " " + color.a);
+					//System.out.println(String.format("0x%x", color.asHexWithoutAlpha()));
+					Font.font.draw("|", len + 1, w.transform.height - size, size, color.asHexWithoutAlpha());
 				}
 			}
 			

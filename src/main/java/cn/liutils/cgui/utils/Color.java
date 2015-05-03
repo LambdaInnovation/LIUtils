@@ -50,7 +50,12 @@ public class Color {
 	
 	public int asHexColor() {
 		byte ir = (byte) (r * 255), ig = (byte) (g * 255), ib = (byte) (b * 255), ia = (byte) (a * 255);;
-		return ir << 16 | ig << 8 | ib | ia << 24;
+		return (ir << 16) | (ig << 8) | (ib) | (ia << 24);
+	}
+	
+	public int asHexWithoutAlpha() {
+		byte ir = (byte) ((int)(r * 255) & 0xFF), ig = (byte) ((int)(g * 255) & 0xFF), ib = (byte) ((int)(b * 255) & 0xFF);
+		return (ir << 16) + (ig << 8) + ib;
 	}
 	
 	public void bind() {
