@@ -10,7 +10,7 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.api.gui;
+package cn.liutils.cgui.gui;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
@@ -25,7 +25,16 @@ public class LIGuiContainer extends GuiContainer {
 		super(c);
 		gui = new LIGui();
 	}
-
+	
+	public LIGuiContainer(Container c, LIGui _gui) {
+		super(c);
+		gui = _gui;
+	}
+	
+	public LIGui getGui() {
+		return gui;
+	}
+	
 	@Override
 	protected void drawGuiContainerBackgroundLayer(float var1, int var2,
 			int var3) {

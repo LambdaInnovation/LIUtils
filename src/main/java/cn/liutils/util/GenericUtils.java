@@ -12,6 +12,7 @@
  */
 package cn.liutils.util;
 
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.Random;
 import java.util.Set;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.Minecraft;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -30,6 +32,7 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.MovingObjectPosition.MovingObjectType;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import cn.liutils.template.selector.EntitySelectorLiving;
@@ -40,6 +43,7 @@ import cn.liutils.util.space.IBlockFilter;
 import cn.liutils.util.space.Motion3D;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * Many sorts of utility functions.
@@ -59,6 +63,16 @@ public class GenericUtils {
 	 */
 	public static Side getSide() {
 		return FMLCommonHandler.instance().getSide();
+	}
+	
+	@SideOnly(Side.CLIENT)
+	public static InputStream getResourceStream(ResourceLocation res) {
+		try {
+			return Minecraft.getMinecraft().getResourceManager().getResource(res).getInputStream();
+		} catch(Exception e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 	
 	//World interact

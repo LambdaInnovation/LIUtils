@@ -135,7 +135,7 @@ public class GuiEdit extends LIGuiScreen {
     	if(path == null)
     		throw new IllegalStateException("Null path!");
     	File file;
-    	file = new File("cgui/");
+    	file = new File("cgui/" + path);
     	if(file.isFile()) file.delete();
     	if(!file.isDirectory()) file.mkdirs();
     	

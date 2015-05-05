@@ -43,9 +43,9 @@ public class EventLoader {
 				}
 				
 				String path = m.getAnnotation(GuiCallback.class).value();
-				Widget target = (Widget) (path == "" ? (widget instanceof Widget ? widget : null) : widget.getWidget(path));
-				if(widget == null) {
-					LIUtils.log.error("Didn't find widget named " + path + "!");
+				Widget target = (Widget) (path.equals("") ? (widget instanceof Widget ? widget : null) : widget.getWidget(path));
+				if(target == null) {
+					LIUtils.log.error("Didn't find widget named " + path + ".");
 				} else {
 					target.regEventHandler(new MethodWrapper(m, callbackProvider, pars[1]));
 				}

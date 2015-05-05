@@ -12,6 +12,7 @@
  */
 package cn.liutils.cgui.loader.xml;
 
+import java.io.InputStream;
 import java.io.StringReader;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,6 +20,8 @@ import java.util.Map;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+
+import net.minecraft.util.ResourceLocation;
 
 import org.apache.commons.io.input.ReaderInputStream;
 import org.w3c.dom.Document;
@@ -33,6 +36,7 @@ import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.loader.EventLoader;
 import cn.liutils.core.LIUtils;
+import cn.liutils.util.GenericUtils;
 
 /**
  * @author WeAthFolD
@@ -45,8 +49,6 @@ public class CGUIDocLoader {
 	
 	DocumentBuilder db;
 	
-	LIGui retval;
-	
 	public CGUIDocLoader() {
 		dbf = DocumentBuilderFactory.newInstance();
 		dbf.setIgnoringElementContentWhitespace(true);
@@ -57,10 +59,18 @@ public class CGUIDocLoader {
 		}
 	}
 	
+	public LIGui loadXml(ResourceLocation xmlPath) throws Exception {
+		return loadXml(GenericUtils.getResourceStream(xmlPath));
+	}
+	
 	public LIGui loadXml(String xml) throws Exception {
-		retval = new LIGui();
+		return loadXml(new ReaderInputStream(new StringReader(xml)));
+	}
+	
+	public LIGui loadXml(InputStream xml) throws Exception {
+		LIGui retval = new LIGui();
 		
-		Document doc = db.parse(new ReaderInputStream(new StringReader(xml)));
+		Document doc = db.parse(xml);
 		Element root = doc.getDocumentElement();
 		NodeList nl = root.getChildNodes();
 		for(int i = 0; i < nl.getLength(); ++i) {
@@ -133,6 +143,16 @@ public class CGUIDocLoader {
 	}
 	
 	public static LIGui load(String xml) {
+		try {
+			return instance.loadXml(xml);
+		} catch (Exception e) {
+			System.err.println("An error occured when loading CGUI document.");
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	public static LIGui load(ResourceLocation xml) {
 		try {
 			return instance.loadXml(xml);
 		} catch (Exception e) {

@@ -55,7 +55,7 @@ public class Font {
     public Vector2d simDrawWrapped(String str, double size, double limit) {
     	double scale = size / mcFont.FONT_HEIGHT;
         List<String> lst = mcFont.listFormattedStringToWidth(str, (int) (limit * scale));
-        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size * lst.size());
+        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size);
     }
     
     public void draw(String str, double x, double y, double size, int color, Align align) {

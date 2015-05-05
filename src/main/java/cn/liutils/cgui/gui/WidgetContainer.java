@@ -132,7 +132,7 @@ public class WidgetContainer implements Iterable<Widget> {
 			return widgets.get(name);
 		} else if(ind != name.length() - 1){
 			String cp = name.substring(0, ind);
-			String ep = name.substring(ind + 1, name.length());
+			String ep = name.substring(ind + 1);
 			Widget w = widgets.get(cp);
 			return w == null ? null : w.getWidget(ep);
 		} else {

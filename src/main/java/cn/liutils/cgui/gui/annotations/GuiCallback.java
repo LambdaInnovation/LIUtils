@@ -28,5 +28,5 @@ public @interface GuiCallback {
 	/**
 	 * Provide the path for looking up the widget.
 	 */
-	String value();
+	String value() default "";
 }

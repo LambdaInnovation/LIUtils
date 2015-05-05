@@ -195,7 +195,7 @@ public class Motion3D {
 	 */
 	public void applyToEntity(Entity e) {
 		e.setPosition(this.posX, this.posY, this.posZ);
-		normalize();
+		//normalize();
 		e.motionX = this.motionX;
 		e.motionY = this.motionY;
 		e.motionZ = this.motionZ;

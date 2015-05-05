@@ -12,6 +12,8 @@
  */
 package cn.liutils.cgui.gui.component;
 
+import javax.vecmath.Vector2d;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 
@@ -19,6 +21,8 @@ import org.lwjgl.input.Keyboard;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.annotations.CopyIgnore;
+import cn.liutils.cgui.gui.component.Transform.HeightAlign;
+import cn.liutils.cgui.gui.component.Transform.WidthAlign;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
 import cn.liutils.cgui.gui.event.FrameEvent;
@@ -48,6 +52,10 @@ public class TextBox extends Component {
 	
 	public double size = 5;
 	
+	public WidthAlign widthAlign = WidthAlign.LEFT;
+	
+	public HeightAlign heightAlign = HeightAlign.BOTTOM;
+	
 	@CopyIgnore
 	public int caretPos = 0;
 	
@@ -64,6 +72,41 @@ public class TextBox extends Component {
 	public TextBox setContent(String str) {
 		content = str;
 		return this;
+	}
+	
+	private double[] getOffset(Widget w) {
+		double x = 0, y = 0;
+		Vector2d v = Font.font.simDrawWrapped(content, size, w.transform.width);
+		
+		switch(widthAlign) {
+		case LEFT:
+			x = 2;
+			break;
+		case CENTER:
+			x = (w.transform.width - v.x) / 2;
+			break;
+		case RIGHT:
+			x = w.transform.width - v.x;
+			break;
+		default:
+			break;
+		}
+		
+		switch(heightAlign) {
+		case TOP:
+			y = 0;
+			break;
+		case CENTER:
+			y = (w.transform.height - v.y) / 2;
+			break;
+		case BOTTOM:
+			y = (w.transform.height - v.y);
+			break;
+		default:
+			break;
+		}
+		
+		return new double[] { x, y };
 	}
 	
 	public TextBox() {
@@ -113,13 +156,15 @@ public class TextBox extends Component {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				double len = 3;
+				double[] offset = getOffset(w);
+				double eventX = offset[0] + event.x;
+				
 				for(int i = 0; i < content.length(); ++i) {
 					double cw = Font.font.strLen(String.valueOf(content.charAt(i)), size);
 					len += cw;
 					
-					if(len > event.x) {
-						System.out.println(len + " " + event.x + " " + (event.x - len - cw > cw / 2));
-						caretPos = (event.x - len + cw > cw / 2) ? i + 1 : i;
+					if(len > eventX) {
+						caretPos = (eventX - len + cw > cw / 2) ? i + 1 : i;
 						return;
 					}
 				}
@@ -131,13 +176,21 @@ public class TextBox extends Component {
 
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				Font.font.drawTrimmed(content, 2, w.transform.height - size, size, color.asHexWithoutAlpha() & 0xFFFFFF, Align.LEFT, w.transform.width - 2, "...");
+				double[] offset = getOffset(w);
+				
+				String str = content;
+				if(doesEcho) {
+					StringBuilder sb = new StringBuilder();
+					for(int i = 0; i < str.length(); ++i) {
+						sb.append('*');
+					}
+					str = sb.toString();
+				}
+				Font.font.drawTrimmed(str, offset[0], offset[1], size, color.asHexWithoutAlpha() & 0xFFFFFF, Align.LEFT, w.transform.width - 2, "...");
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
-					//System.out.println(color.r + " " + color.g + " " + color.b + " " + color.a);
-					//System.out.println(String.format("0x%x", color.asHexWithoutAlpha()));
-					Font.font.draw("|", len + 1, w.transform.height - size, size, color.asHexWithoutAlpha());
+					Font.font.draw("|", len + offset[0], offset[1], size, color.asHexWithoutAlpha());
 				}
 			}
 			
