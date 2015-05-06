@@ -1,10 +1,18 @@
 package cn.liutils.loading;
 
-import java.util.HashMap;
+import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 
-import cn.liutils.core.LIUtils;
+import net.minecraft.util.ResourceLocation;
 
+import org.apache.commons.io.IOUtils;
+
+import cn.liutils.core.LIUtils;
+import cn.liutils.loading.item.ItemLoader;
+import cn.liutils.util.GenericUtils;
+
+import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -15,9 +23,9 @@ public abstract class Loader<T> {
 	//'default' element (if any): basic search element. 2nd fallback.
 	//'parent' element specified in JsonObject: 1st fallback.
 	
-	Map<String, JsonObject> entries = new HashMap();
+	HashBiMap<String, JsonObject> entries = HashBiMap.create();
 	
-	Map<String, T> loadedObjects = new HashMap();
+	HashBiMap<String, T> loadedObjects = HashBiMap.create();
 	
 	static final JsonParser parser = new JsonParser();
 	
@@ -25,6 +33,14 @@ public abstract class Loader<T> {
 	
 	public void feed(String json) {
 		feed(parser.parse(json).getAsJsonObject());
+	}
+	
+	public void feed(ResourceLocation res) {
+		try {
+			feed(IOUtils.toString(GenericUtils.getResourceStream(res)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 	
 	public void feed(JsonObject root) {
@@ -39,9 +55,22 @@ public abstract class Loader<T> {
 	
 	public void loadAll() {
 		for(Map.Entry<String, JsonObject> entry : entries.entrySet()) {
-			if(entry.getKey() != "default")
+			if(!entry.getKey().equals("default"))
 				doLoad(entry.getKey(), entry.getValue());
 		}
+		
+		for(Map.Entry<String, T> entry : loadedObjects.entrySet()) {
+			finishedLoading(entry.getKey(), entry.getValue(), new ObjectNamespace(entry.getKey()));
+		}
+		
+	}
+	
+	public Collection<T> getEnumeration() {
+		return loadedObjects.values();
+	}
+	
+	public String getName(T obj) {
+		return loadedObjects.inverse().get(obj);
 	}
 	
 	public boolean isLoaded(String name) {
@@ -50,7 +79,7 @@ public abstract class Loader<T> {
 	
 	public T getObjectLazy(String name) {
 		if(!isLoaded(name))
-			load(name, entries.get(name));
+			load(name, new ObjectNamespace(name));
 		return getObject(name);
 	}
 	
@@ -60,7 +89,7 @@ public abstract class Loader<T> {
 	
 	private void doLoad(String name, JsonObject object) {
 		try {
-			T obj = load(name, object);
+			T obj = load(name, new ObjectNamespace(name));
 			if(obj == null) {
 				LIUtils.log.error("Didn't load the element " + name + " correctly.");
 				return;
@@ -72,7 +101,12 @@ public abstract class Loader<T> {
 		}
 	}
 	
-	public abstract T load(String name, JsonObject object);
+	protected abstract T load(String name, ObjectNamespace ns);
+	
+	/**
+	 * Called when all objects' loading are completed.
+	 */
+	protected abstract void finishedLoading(String name, T object, ObjectNamespace ns);
 	
 	/**
 	 * @throws NumberFormatException
@@ -91,10 +125,9 @@ public abstract class Loader<T> {
 	}
 	
 	/**
-	 * @throws NullPointerException if didn't find the prop
 	 * @throws NumberFormatException
 	 */
-	public int getInt(String name, Object ...searchRule) {
+	public Integer getInt(String name, Object ...searchRule) {
 		JsonPrimitive jp = getProp(name, searchRule);
 		return jp == null ? null : jp.getAsInt();
 	}
@@ -167,6 +200,47 @@ public abstract class Loader<T> {
 		}
 		
 		return null;
+	}
+	
+	public class ObjectNamespace {
+		
+		public final String name;
+		public final Loader<T> loader;
+		
+		ObjectNamespace(String n) {
+			name = n;
+			loader = Loader.this;
+		}
+		
+		/**
+		 * @throws NumberFormatException
+		 */
+		public Double getDouble(Object ...searchRule) {
+			return Loader.this.getDouble(name, searchRule);
+		}
+		
+		/**
+		 * @throws NumberFormatException
+		 */
+		public Float getFloat(Object ...searchRule) {
+			return Loader.this.getFloat(name, searchRule);
+		}
+		
+		/**
+		 * @throws NumberFormatException
+		 */
+		public Integer getInt(Object ...searchRule) {
+			return Loader.this.getInt(name, searchRule);
+		}
+		
+		public Boolean getBoolean(Object ...searchRule) {
+			return Loader.this.getBoolean(name, searchRule);
+		}
+		
+		public String getString(Object ...searchRule) {
+			return Loader.this.getString(name, searchRule);
+		}
+		
 	}
 	
 }

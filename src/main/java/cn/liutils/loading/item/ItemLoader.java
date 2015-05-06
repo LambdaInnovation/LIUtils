@@ -24,6 +24,7 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cn.liutils.loading.item.DefaultRules.*;
+import cn.weaponry.core.Weaponry;
 
 /**
  * Primitive info:
@@ -50,10 +51,16 @@ public class ItemLoader<T extends Item> extends Loader<T> {
 	
 	public final List<ItemLoadRule> additionalRules = new ArrayList<ItemLoadRule>();
 
+	private boolean pass1;
+	
+	ObjectNamespace ns;
+	
 	@Override
-	public T load(String name, JsonObject object) {
+	public T load(String name, ObjectNamespace ns) {
+		pass1 = true;
+		this.ns = ns;
 		try {
-			String itemType = this.getString(name, "itemType");
+			String itemType = this.getString(name, "itemType"); ns.getString("itemType");
 			Item item;
 			if(itemType == null) {
 				item = new Item();
@@ -61,24 +68,23 @@ public class ItemLoader<T extends Item> extends Loader<T> {
 				item = (Item) Class.forName(itemType).newInstance();
 			}
 			
-			checkRuleset(item, builtIns, name);
-			checkRuleset(item, additionalRules, name);
-			if(item instanceof ItemLoadRuleProvider) {
-				checkRuleset(item, ((ItemLoadRuleProvider)item).getRules(), name);
-			}
+			doInit((T) item, name);
 			
 			GameRegistry.registerItem(item, name);
 			return (T) item;
 		} catch(Exception e) {
 			LIUtils.log.error("An error occured loading Item " + name);
+			e.printStackTrace();
 			return null;
 		}
 	}
 	
 	private void checkRuleset(Item item, Iterable<ItemLoadRule> iterable, String name) throws Exception {
 		for(ItemLoadRule rule : iterable) {
-			if(rule.applyFor(item, this, name)) {
-				rule.load(item, this, name);
+			if(pass1) {
+				rule.load(item, ns, name);
+			} else {
+				rule.finishedLoad(item, ns, name);
 			}
 		}
 	}
@@ -86,8 +92,31 @@ public class ItemLoader<T extends Item> extends Loader<T> {
 	private void checkRuleset(Item item, ItemLoadRule[] iterable, String name) throws Exception {
 		for(ItemLoadRule rule : iterable) {
 			if(rule.applyFor(item, this, name)) {
-				rule.load(item, this, name);
+				if(pass1) {
+					rule.load(item, ns, name);
+				} else {
+					rule.finishedLoad(item, ns, name);
+				}
 			}
+		}
+	}
+
+	@Override
+	protected void finishedLoading(String name, T object, ObjectNamespace ns) {
+		pass1 = false;
+		try {
+			doInit(object, name);
+		} catch (Exception e) {
+			Weaponry.log.error("error occured doing item post-init, name:" + name + ", object: " + object);
+			e.printStackTrace();
+		}
+	}
+	
+	private void doInit(T item, String name) throws Exception {
+		checkRuleset(item, builtIns, name);
+		checkRuleset(item, additionalRules, name);
+		if(item instanceof ItemLoadRuleProvider) {
+			checkRuleset(item, ((ItemLoadRuleProvider)item).getRules(), name);
 		}
 	}
 

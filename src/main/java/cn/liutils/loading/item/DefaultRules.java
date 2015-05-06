@@ -15,6 +15,7 @@ package cn.liutils.loading.item;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import cn.liutils.core.LIUtils;
+import cn.liutils.loading.Loader.ObjectNamespace;
 
 /**
  * @author WeAthFolD
@@ -24,8 +25,8 @@ class DefaultRules {
 
 	static class UnlName extends ItemLoadRule {
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
-			String unlName = loader.getString(name, "unlName");
+		public void load(Item item, ObjectNamespace ns, String name) {
+			String unlName = ns.getString("unlName");
 			if(unlName != null)
 				item.setUnlocalizedName(unlName);
 		}
@@ -34,8 +35,8 @@ class DefaultRules {
 	static class Texture extends ItemLoadRule {
 
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
-			String texName = loader.getString(name, "textureName");
+		public void load(Item item, ObjectNamespace ns, String name) {
+			String texName = ns.getString("textureName");
 			if(texName != null)
 				item.setTextureName(texName);
 		}
@@ -45,8 +46,8 @@ class DefaultRules {
 	static class CCT extends ItemLoadRule {
 
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
-			String cctName = loader.getString(name, "creativeTab");
+		public void load(Item item, ObjectNamespace ns, String name) {
+			String cctName = ns.getString("creativeTab");
 			if(cctName != null) {
 				try {
 					int dot = cctName.lastIndexOf('.');
@@ -68,9 +69,9 @@ class DefaultRules {
 	static class MaxDamage extends ItemLoadRule {
 
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
+		public void load(Item item, ObjectNamespace ns, String name) {
 			try {
-				int md = loader.getInt(name, "maxDamage");
+				int md = ns.getInt("maxDamage");
 				item.setMaxDamage(md);
 			} catch(Exception e) {}
 		}
@@ -80,9 +81,9 @@ class DefaultRules {
 	static class MaxSS extends ItemLoadRule {
 
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
+		public void load(Item item, ObjectNamespace ns, String name) {
 			try {
-				int md = loader.getInt(name, "maxStackSize");
+				int md = ns.getInt("maxStackSize");
 				item.setMaxStackSize(md);
 			} catch(Exception e) {}
 		}
@@ -92,9 +93,9 @@ class DefaultRules {
 	static class Full3D extends ItemLoadRule {
 
 		@Override
-		public void load(Item item, ItemLoader loader, String name) {
+		public void load(Item item, ObjectNamespace ns, String name) {
 			try {
-				boolean b = loader.getBoolean(name, "full3D");
+				boolean b = ns.getBoolean("full3D");
 				if(b)
 					item.setFull3D();
 			} catch(Exception e) {}

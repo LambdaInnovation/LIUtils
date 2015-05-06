@@ -1,5 +1,5 @@
 /**
- * Copyright (c) Lambda Innovation, 2013-2015
+* Copyright (c) Lambda Innovation, 2013-2015
  * 本作品版权由Lambda Innovation所有。
  * http://www.li-dev.cn/
  *

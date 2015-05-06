@@ -29,18 +29,18 @@ import cn.liutils.util.DebugUtils;
 public class Motion3D {
 
 	private static final Random RNG = new Random();
-	public double motionX, motionY, motionZ;
-	public double posX, posY, posZ;
+	public double vx, vy, vz; //Velocity
+	public double px, py, pz; //Position
 	public static final double OFFSET_SCALE = 0.5D;
 
 	public Motion3D(double pX, double pY, double pZ, double moX, double moY, double moZ) {
-		posX = pX;
-		posY = pY;
-		posZ = pZ;
+		px = pX;
+		py = pY;
+		pz = pZ;
 
-		motionX = moX;
-		motionY = moY;
-		motionZ = moZ;
+		vx = moX;
+		vy = moY;
+		vz = moZ;
 	}
 
 	public Motion3D(Vec3 posVec, double moX, double moY, double moZ) {
@@ -62,12 +62,12 @@ public class Motion3D {
 	}
 	
 	public void setFrom(Motion3D ano) {
-		posX = ano.posX;
-		posY = ano.posY;
-		posZ = ano.posZ;
-		motionX = ano.motionX;
-		motionY = ano.motionY;
-		motionZ = ano.motionZ;
+		px = ano.px;
+		py = ano.py;
+		pz = ano.pz;
+		vx = ano.vx;
+		vy = ano.vy;
+		vz = ano.vz;
 	}
 	
 	/**
@@ -103,9 +103,9 @@ public class Motion3D {
 	 * @param dirFlag true: use head facing direction; flase: use motion
 	 */
 	public void init(Entity entity, int offset, boolean dirFlag) {
-		this.posX = entity.posX;
-		this.posY = entity.posY + entity.getEyeHeight();
-		this.posZ = entity.posZ;
+		this.px = entity.posX;
+		this.py = entity.posY + entity.getEyeHeight();
+		this.pz = entity.posZ;
 //		if(!entity.worldObj.isRemote && entity instanceof EntityPlayer) {
 //			posY += 1.6;
 //		}
@@ -116,60 +116,67 @@ public class Motion3D {
 			float rotationYaw = entity.getRotationYawHead() + 2 * (RNG.nextFloat() - 0.5F) * offset;
 			float rotationPitch = entity.rotationPitch + (RNG.nextFloat() - 0.5F) * offset;
 			//System.out.println(rotationYaw + " " + rotationPitch);
-			this.motionX = -MathHelper.sin(rotationYaw / 180.0F
+			this.vx = -MathHelper.sin(rotationYaw / 180.0F
 					* (float) Math.PI)
 					* MathHelper.cos(rotationPitch / 180.0F
 							* (float) Math.PI) * var3;
-			this.motionZ = MathHelper.cos(rotationYaw / 180.0F
+			this.vz = MathHelper.cos(rotationYaw / 180.0F
 					* (float) Math.PI)
 					* MathHelper.cos(rotationPitch / 180.0F
 							* (float) Math.PI) * var3;
-			this.motionY = -MathHelper.sin((rotationPitch + var4)
+			this.vy = -MathHelper.sin((rotationPitch + var4)
 					/ 180.0F * (float) Math.PI)
 					* var3;
 			
 			
 		} else {
-			motionX = entity.motionX;
-			motionY = entity.motionY;
-			motionZ = entity.motionZ;
+			vx = entity.motionX;
+			vy = entity.motionY;
+			vz = entity.motionZ;
 			setMotionOffset(offset);
 		}
 		this.normalize();
 	}
 	
 	public Motion3D setPosition(double x, double y, double z) {
-		posX = x;
-		posY = y;
-		posZ = z;
+		px = x;
+		py = y;
+		pz = z;
+		return this;
+	}
+	
+	public Motion3D multiplyMotionBy(double d) {
+		vx *= d;
+		vy *= d;
+		vz *= d;
 		return this;
 	}
 	
 	public void update(Entity entity, boolean dirFlag) {
-		this.posX = entity.posX;
-		this.posY = entity.posY + entity.getEyeHeight();
-		this.posZ = entity.posZ;
+		this.px = entity.posX;
+		this.py = entity.posY + entity.getEyeHeight();
+		this.pz = entity.posZ;
 
 		if (dirFlag) {
 			calcMotionByRotation(entity.rotationYaw, entity.rotationPitch);
 		} else {
-			motionX = entity.motionX;
-			motionY = entity.motionY;
-			motionZ = entity.motionZ;
+			vx = entity.motionX;
+			vy = entity.motionY;
+			vz = entity.motionZ;
 		}
 	}
 	
 	public Motion3D calcMotionByRotation(float yaw, float pitch) {
 		float var3 = 1.0f;
-		this.motionX = -MathHelper.sin(yaw / 180.0F
+		this.vx = -MathHelper.sin(yaw / 180.0F
 				* (float) Math.PI)
 				* MathHelper.cos(yaw / 180.0F
 						* (float) Math.PI) * var3;
-		this.motionZ = MathHelper.cos(yaw / 180.0F
+		this.vz = MathHelper.cos(yaw / 180.0F
 				* (float) Math.PI)
 				* MathHelper.cos(pitch / 180.0F
 						* (float) Math.PI) * var3;
-		this.motionY = -MathHelper.sin((pitch)
+		this.vy = -MathHelper.sin((pitch)
 				/ 180.0F * (float) Math.PI)
 				* var3;
 		this.normalize();
@@ -183,9 +190,9 @@ public class Motion3D {
 	 * @return
 	 */
 	public Motion3D setMotionOffset(double par1) {
-		this.motionX += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
-		this.motionY += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
-		this.motionZ += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
+		this.vx += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
+		this.vy += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
+		this.vz += (RNG.nextDouble() - .5) * par1 * OFFSET_SCALE;
 		return this;
 	}
 	
@@ -194,14 +201,14 @@ public class Motion3D {
 	 * @param e
 	 */
 	public void applyToEntity(Entity e) {
-		e.setPosition(this.posX, this.posY, this.posZ);
+		e.setPosition(this.px, this.py, this.pz);
 		//normalize();
-		e.motionX = this.motionX;
-		e.motionY = this.motionY;
-		e.motionZ = this.motionZ;
-		double tmp = Math.sqrt(motionX * motionX + motionZ * motionZ);
-		e.prevRotationYaw = e.rotationYaw = -(float)(Math.atan2(motionX, motionZ) * 180.0D / Math.PI);
-        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(motionY, tmp) * 180.0D / Math.PI);
+		e.motionX = this.vx;
+		e.motionY = this.vy;
+		e.motionZ = this.vz;
+		double tmp = Math.sqrt(vx * vx + vz * vz);
+		e.prevRotationYaw = e.rotationYaw = -(float)(Math.atan2(vx, vz) * 180.0D / Math.PI);
+        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(vy, tmp) * 180.0D / Math.PI);
 	}
 	
 	/**
@@ -210,9 +217,9 @@ public class Motion3D {
 	 * @return this
 	 */
 	public Motion3D move(double step) {
-		posX += motionX * step;
-		posY += motionY * step;
-		posZ += motionZ * step;
+		px += vx * step;
+		py += vy * step;
+		pz += vz * step;
 		return this;
 	}
 	
@@ -221,15 +228,15 @@ public class Motion3D {
 	 * @return this
 	 */
 	public Motion3D normalize() {
-		double z = Math.sqrt(motionX * motionX + motionY * motionY + motionZ * motionZ);
-		motionX /= z;
-		motionY /= z;
-		motionZ /= z;
+		double z = Math.sqrt(vx * vx + vy * vy + vz * vz);
+		vx /= z;
+		vy /= z;
+		vz /= z;
 		return this;
 	}
 	
 	public double distanceTo(double x, double y, double z) {
-		double a = x - posX, b = y - posY, c = z - posZ;
+		double a = x - px, b = y - py, c = z - pz;
 		return Math.sqrt(a * a + b * b + c * c);
 	}
 
@@ -240,26 +247,26 @@ public class Motion3D {
 	 */
 	public final AxisAlignedBB getBoundingBox(Motion3D another) {
 		double minX, minY, minZ, maxX, maxY, maxZ;
-		if (another.posX > this.posX) {
-			minX = this.posX;
-			maxX = another.posX;
+		if (another.px > this.px) {
+			minX = this.px;
+			maxX = another.px;
 		} else {
-			minX = another.posX;
-			maxX = this.posX;
+			minX = another.px;
+			maxX = this.px;
 		}
-		if (another.posY > this.posY) {
-			minY = this.posY;
-			maxY = another.posY;
+		if (another.py > this.py) {
+			minY = this.py;
+			maxY = another.py;
 		} else {
-			minY = another.posY;
-			maxY = this.posY;
+			minY = another.py;
+			maxY = this.py;
 		}
-		if (another.posZ > this.posZ) {
-			minZ = this.posZ;
-			maxZ = another.posZ;
+		if (another.pz > this.pz) {
+			minZ = this.pz;
+			maxZ = another.pz;
 		} else {
-			minZ = another.posZ;
-			maxZ = this.posZ;
+			minZ = another.pz;
+			maxZ = this.pz;
 		}
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 	}
@@ -270,11 +277,11 @@ public class Motion3D {
 	 * @return
 	 */
 	public Vec3 getPosVec(World world) {
-		return Vec3.createVectorHelper(posX, posY, posZ);
+		return Vec3.createVectorHelper(px, py, pz);
 	}
 	
 	public Vec3 getMotionVec(World world) {
-		return Vec3.createVectorHelper(motionX, motionY, motionZ);
+		return Vec3.createVectorHelper(vx, vy, vz);
 	}
 	
 	public MovingObjectPosition applyRaytrace(World world) {
@@ -290,7 +297,7 @@ public class Motion3D {
 	
 	@Override
 	public String toString() {
-		return "[ Motion3D POS" + DebugUtils.formatArray(posX, posY, posZ) + "MOTION" + DebugUtils.formatArray(motionX, motionY, motionZ) + " ]";
+		return "[ Motion3D POS" + DebugUtils.formatArray(px, py, pz) + "MOTION" + DebugUtils.formatArray(vx, vy, vz) + " ]";
 	}
 
 }

@@ -13,15 +13,16 @@
 package cn.liutils.loading.item;
 
 import net.minecraft.item.Item;
-
-import com.google.gson.JsonObject;
+import cn.liutils.loading.Loader.ObjectNamespace;
 
 /**
  * @author WeAthFolD
  */
 public abstract class ItemLoadRule<T extends Item> {
 	
-	public abstract void load(T item, ItemLoader loader, String name) throws Exception;
+	public abstract void load(T item, ObjectNamespace ns, String name) throws Exception;
+	
+	public void finishedLoad(T item, ObjectNamespace ns, String name) throws Exception {}
 	
 	public boolean applyFor(Item item, ItemLoader loader, String name) {
 		return true;
