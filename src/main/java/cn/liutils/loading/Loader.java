@@ -174,11 +174,14 @@ public abstract class Loader<T> {
 			JsonElement current = o;
 			
 			int searchIndex = 0;
+			boolean fail = false;
 			while(searchIndex < searchRule.length && current != null) {
 				Object obj = searchRule[searchIndex];
 				if(obj instanceof String) {
-					if(!current.isJsonObject())
+					if(!current.isJsonObject()) {
+						fail = true;
 						break;
+					}
 					current = current.getAsJsonObject().get((String) obj);
 				} else {
 					int i = 0;
@@ -192,9 +195,10 @@ public abstract class Loader<T> {
 						break;
 					current = current.getAsJsonArray().get(i);
 				}
+				++searchIndex;
 			}
 			
-			if(current != null && current.isJsonPrimitive()) {
+			if(!fail && current != null && current.isJsonPrimitive()) {
 				return (JsonPrimitive) current;
 			}
 		}

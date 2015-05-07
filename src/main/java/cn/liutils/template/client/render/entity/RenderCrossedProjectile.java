@@ -32,7 +32,7 @@ import cn.liutils.util.space.Motion3D;
 public class RenderCrossedProjectile extends Render {
 	
 	public double 
-		fpOffsetX = 0.0,
+		fpOffsetX = 0.5,
 		fpOffsetY = -0.2,
 		fpOffsetZ = -0.2;
 	
@@ -112,9 +112,8 @@ public class RenderCrossedProjectile extends Render {
 			
 			GL11.glTranslatef((float) par2, (float) par4, (float) par6);
 			
-			GL11.glRotatef(270.0F - entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
-			GL11.glRotatef(entity.rotationPitch, 0.0F, 0.0F, -1.0F); // 上下旋转
-			
+			GL11.glRotatef(90 + entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
+			GL11.glRotatef(-entity.rotationPitch, 0.0F, 0.0F, 1.0F); // 上下旋转
 			if(this.playerViewOptm) {
 				boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
 				if(firstPerson) {
@@ -124,19 +123,21 @@ public class RenderCrossedProjectile extends Render {
 				}
 			}
 			
+			
+			
 			t.startDrawingQuads();
 			if(ignoreLight) 
 				t.setBrightness(15728880);
 			
-			RenderUtils.addVertex(v1, 0, 1);
-			RenderUtils.addVertex(v2, 1, 1);
-			RenderUtils.addVertex(v3, 1, 0);
-			RenderUtils.addVertex(v4, 0, 0);
+			RenderUtils.addVertex(v1, 0, 0);
+			RenderUtils.addVertex(v2, 0, 1);
+			RenderUtils.addVertex(v3, 1, 1);
+			RenderUtils.addVertex(v4, 1, 0);
 			
-			RenderUtils.addVertex(v5, 0, 1);
-			RenderUtils.addVertex(v6, 1, 1);
-			RenderUtils.addVertex(v7, 1, 0);
-			RenderUtils.addVertex(v8, 0, 0);
+			RenderUtils.addVertex(v5, 0, 0);
+			RenderUtils.addVertex(v6, 0, 1);
+			RenderUtils.addVertex(v7, 1, 1);
+			RenderUtils.addVertex(v8, 1, 0);
 			
 			t.draw();
 			
