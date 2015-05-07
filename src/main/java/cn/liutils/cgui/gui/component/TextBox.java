@@ -16,6 +16,7 @@ import javax.vecmath.Vector2d;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
+import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
 
@@ -42,6 +43,11 @@ import cn.liutils.util.render.Font.Align;
 public class TextBox extends Component {
 	
 	public String content = "";
+	
+	/**
+	 * Only activated when doesn't allow edit. If activated, The display string will be StatCollector.translateToLocal(content).
+	 */
+	public boolean localized = false;
 	
 	public boolean allowEdit = true;
 	
@@ -179,6 +185,10 @@ public class TextBox extends Component {
 				double[] offset = getOffset(w);
 				
 				String str = content;
+				if(!allowEdit && localized) {
+					str = StatCollector.translateToLocal(str);
+				}
+				
 				if(doesEcho) {
 					StringBuilder sb = new StringBuilder();
 					for(int i = 0; i < str.length(); ++i) {

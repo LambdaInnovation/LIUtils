@@ -155,6 +155,19 @@ public class HudUtils {
         t.draw();
     }
     
+    public static void rawDrawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texHeight) {
+    	checkResolution();
+    	double f = 1;
+    	double f1 = 1;
+        Tessellator t = Tessellator.instance;
+        t.startDrawingQuads();
+        t.addVertexWithUV(x + 0, y + height, zLevel, (u + 0) * f, (v + texHeight) * f1);
+        t.addVertexWithUV(x + width, y + height, zLevel, (u + texWidth) * f, (v + texHeight) * f1);
+        t.addVertexWithUV(x + width, y + 0, zLevel, (u + texWidth) * f, (v + 0) * f1);
+        t.addVertexWithUV(x + 0, y + 0, zLevel, (u + 0) * f, (v + 0) * f1);
+        t.draw();
+    }
+    
     public static void drawRectFromIcon(int x, int y, IIcon icon, int width, int height)
     {
         Tessellator t = Tessellator.instance;

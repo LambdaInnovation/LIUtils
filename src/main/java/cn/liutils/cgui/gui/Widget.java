@@ -38,16 +38,16 @@ public class Widget extends WidgetContainer {
 	LIGui gui;
 	Widget parent;
 	
-	//Real-time calculated data not directly relevant to widget properties
+	//*INTERNAL* Real-time calculated data not directly relevant to widget properties
 	public double x, y;
 	public double scale;
 	/**
-	 * Used ONLY in editing gui.
+	 * *INTERNAL*Used ONLY in editing gui.
 	 */
 	public boolean visible = true;
 	
 	/**
-	 * Whether this widget can be copied when going down copy recursion process.
+	 * *INTERNAL*Whether this widget can be copied when going down copy recursion process.
 	 */
 	public boolean needCopy = true;
 	

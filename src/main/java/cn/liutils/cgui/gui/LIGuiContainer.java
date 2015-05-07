@@ -15,6 +15,7 @@ package cn.liutils.cgui.gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.inventory.Container;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 public class LIGuiContainer extends GuiContainer {
@@ -81,7 +82,7 @@ public class LIGuiContainer extends GuiContainer {
     @Override
     public void keyTyped(char ch, int key) {
     	gui.keyTyped(ch, key);
-    	if(containerAcceptsKey(key))
+    	if(containerAcceptsKey(key) || key == Keyboard.KEY_ESCAPE)
     		super.keyTyped(ch, key);
     }
     

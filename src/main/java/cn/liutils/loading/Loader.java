@@ -2,6 +2,7 @@ package cn.liutils.loading;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
@@ -9,7 +10,6 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 
 import cn.liutils.core.LIUtils;
-import cn.liutils.loading.item.ItemLoader;
 import cn.liutils.util.GenericUtils;
 
 import com.google.common.collect.HashBiMap;
@@ -23,7 +23,7 @@ public abstract class Loader<T> {
 	//'default' element (if any): basic search element. 2nd fallback.
 	//'parent' element specified in JsonObject: 1st fallback.
 	
-	HashBiMap<String, JsonObject> entries = HashBiMap.create();
+	Map<String, JsonObject> entries = new HashMap();
 	
 	HashBiMap<String, T> loadedObjects = HashBiMap.create();
 	
