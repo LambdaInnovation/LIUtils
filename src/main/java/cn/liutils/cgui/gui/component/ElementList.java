@@ -37,7 +37,7 @@ public class ElementList extends Component {
 	private boolean loaded = false;
 
 	public ElementList() {
-		super("list");
+		super("ElementList");
 		
 		this.addEventHandler(new FrameEventHandler() {
 			@Override
@@ -52,6 +52,27 @@ public class ElementList extends Component {
 				}
 			}
 		});
+	}
+	
+	public static ElementList get(Widget w) {
+		return w.getComponent("ElementList");
+	}
+	
+	public int getProgress() {
+		return progress;
+	}
+	
+	public void disposeAll() {
+		for(Widget w : subWidgets)
+			w.disposed = true;
+		subWidgets.clear();
+	}
+	
+	public void setProgress(int prog) {
+		progress = prog;
+		if(progress < 0) progress = 0;
+		if(progress > maxProgress) progress = maxProgress;
+		updateList();
 	}
 	
 	private void setup(Widget w) {

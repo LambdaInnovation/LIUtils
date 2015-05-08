@@ -120,7 +120,7 @@ public class WidgetContainer implements Iterable<Widget> {
 	protected void onWidgetAdded(String name, Widget w) {}
 	
 	/**
-	 * This method supports level recursion. 
+	 * This method supports recursive searching.
 	 * For example, you can use "a/b" to get the subWidget named 'b' of a in this
 	 * widget container.
 	 * @param name Widget name

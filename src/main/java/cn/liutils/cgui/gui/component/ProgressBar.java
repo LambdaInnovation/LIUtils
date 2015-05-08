@@ -162,6 +162,10 @@ public class ProgressBar extends Component {
         fluctRegion = r;
         return this;
     }
+	
+	public static ProgressBar get(Widget w) {
+		return w.getComponent("ProgressBar");
+	}
 
 	
 }
