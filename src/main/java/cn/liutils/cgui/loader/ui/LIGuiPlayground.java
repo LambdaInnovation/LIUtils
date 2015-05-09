@@ -12,6 +12,7 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.WidgetContainer;
@@ -53,8 +54,9 @@ public class LIGuiPlayground extends LIGui {
 	public void draw(double mx, double my) {
 		super.draw(mx, my);
 		
-		String focusName = this.getFocus() == null ? "<Background>" : this.getWidgetName(getFocus());
-		Font.font.draw("Current selection: " + focusName, 5, 5, 10, 0x89b1e7);
+		String focusName = this.getFocus() == null ? "<" + CGUILang.txtBackground() + ">" : 
+			this.getWidgetName(getFocus());
+		Font.font.draw(CGUILang.txtSelection() + focusName, 5, 5, 10, 0x89b1e7);
 	}
 	
 	@Override

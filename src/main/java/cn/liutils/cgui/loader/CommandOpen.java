@@ -23,6 +23,7 @@ import org.apache.commons.io.IOUtils;
 
 import cn.annoreg.core.RegistrationClass;
 import cn.annoreg.mc.RegCommand;
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.loader.ui.GuiEdit;
 import cn.liutils.cgui.loader.xml.CGUIDocLoader;
@@ -45,7 +46,7 @@ public class CommandOpen extends LICommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender p_71518_1_) {
-		return "/cgui <filepath> or /cgui";
+		return CGUILang.commUsage();
 	}
 
 	@Override
@@ -57,7 +58,7 @@ public class CommandOpen extends LICommandBase {
 			try {
 				xml = IOUtils.toString(new FileInputStream(file));
 			} catch (Exception e) {
-				this.sendChat(ics, "File doesnt exist.");
+				this.sendChat(ics, CGUILang.commFileNotFound());
 				return;
 			}
 			LIGui gui = CGUIDocLoader.load(xml);
