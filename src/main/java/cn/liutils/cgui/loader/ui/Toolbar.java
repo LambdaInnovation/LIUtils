@@ -16,6 +16,7 @@ import java.util.Map.Entry;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.Transform;
@@ -39,10 +40,10 @@ public class Toolbar extends Window {
 	boolean isLocked = false;
 	
 	public Toolbar(final GuiEdit guiEdit) {
-		super(guiEdit, "Toolbar", false, new double[] { 10, 10 });
+		super(guiEdit, CGUILang.guiToolbar(), false, new double[] { 10, 10 });
 		transform.setSize(200, 30);
 		
-		addWidget(new Button(0, "save", "Save") {
+		addWidget(new Button(0, "save", CGUILang.butSave()) {
 			@Override public void triggerEvent() {
 				if(guiEdit.path != null) {
 					guiEdit.saveResult();
@@ -51,12 +52,12 @@ public class Toolbar extends Window {
 				}
 			}
 		});
-		addWidget(new Button(1, "saveas", "Save As") {
+		addWidget(new Button(1, "saveas", CGUILang.butSaveAs()) {
 			@Override public void triggerEvent() {
 				guiEdit.getGui().addWidget("SaveAs", new SaveAsScreen(guiEdit));
 			}
 		});
-		addWidget(new Button(2, "add", "Add Widget") {
+		addWidget(new Button(2, "add", CGUILang.butAdd()) {
 			@Override public void triggerEvent() {
 				isLocked = true;
 				Widget tl = new TemplateList();
@@ -64,7 +65,7 @@ public class Toolbar extends Window {
 				getGui().gainFocus(tl);
 			}
 		});
-		addWidget(new Button(3, "hierarchy", "Hierarchy") {
+		addWidget(new Button(3, "hierarchy", CGUILang.butHierarchy()) {
 			@Override public void triggerEvent() {
 				if(!getGui().hasWidget("hierarchy")) {
 					getGui().addWidget("hierarchy", new Hierarchy(gui()));

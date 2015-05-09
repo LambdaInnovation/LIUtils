@@ -18,6 +18,7 @@ import net.minecraft.client.Minecraft;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.TextBox;
@@ -45,7 +46,7 @@ public class SaveAsScreen extends Window {
 	long lastWarningTime;
 
 	public SaveAsScreen(GuiEdit _guiEdit) {
-		super(_guiEdit, "Save As", true);
+		super(_guiEdit, CGUILang.butSaveAs(), true);
 		transform.setCenteredAlign();
 		transform.setSize(100, 40);
 		addWidgets();
@@ -89,7 +90,7 @@ public class SaveAsScreen extends Window {
 		button.regEventHandler(new FrameEventHandler() {
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				Font.font.draw("Save", 9, 1, 6, 0xffffff, Align.CENTER);
+				Font.font.draw(CGUILang.butSave(), 9, 1, 6, 0xffffff, Align.CENTER);
 				if(Minecraft.getSystemTime() - lastWarningTime < 1000L) {
 					GL11.glColor4d(1, .3, .3, .3);
 					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);

@@ -17,6 +17,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import net.minecraft.util.ResourceLocation;
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.annotations.EditIgnore;
 import cn.liutils.cgui.gui.component.Component;
@@ -51,7 +52,7 @@ public class ComponentEditor extends Window {
 	Component target;
 	
 	public ComponentEditor(GuiEdit guiEdit, Widget _widget, Component _target) {
-		super(guiEdit, "Component: " + _target.name, true);
+		super(guiEdit, CGUILang.guiComeditor() + _target.name, true);
 		widget = _widget;
 		target = _target;
 		generate();

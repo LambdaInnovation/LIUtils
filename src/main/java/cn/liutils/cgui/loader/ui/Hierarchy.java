@@ -19,6 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
@@ -50,7 +51,7 @@ public class Hierarchy extends Window {
 	Widget hList;
 
 	public Hierarchy(GuiEdit _guiEdit) {
-		super(_guiEdit, "Hierarchy", true, new double[] { 150, 80 });
+		super(_guiEdit, CGUILang.guiHierarchy(), true, new double[] { 150, 80 });
 		transform.width = 100;
 		transform.height = 120;
 	}
@@ -82,7 +83,7 @@ public class Hierarchy extends Window {
 	private void addButtons() {
 		Widget tmp;
 		
-		tmp = setupButton(0, "arrow_left", "De-child");
+		tmp = setupButton(0, "arrow_left", CGUILang.butDechild());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -93,7 +94,7 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-		tmp = setupButton(1, "arrow_right", "Become child");
+		tmp = setupButton(1, "arrow_right", CGUILang.butChild());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -104,7 +105,7 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-		tmp = setupButton(2, "arrow_up", "Move up");
+		tmp = setupButton(2, "arrow_up", CGUILang.butMoveUp());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -115,7 +116,7 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-		tmp = setupButton(3, "arrow_down", "Move down");
+		tmp = setupButton(3, "arrow_down", CGUILang.butMoveDown());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -126,7 +127,7 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-//		tmp = setupButton(4, "rename", "Rename");
+//		tmp = setupButton(4, "rename", CGUILang.butRename());
 //		tmp.regEventHandler(new MouseDownHandler() {
 //			@Override
 //			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -139,7 +140,7 @@ public class Hierarchy extends Window {
 //			}
 //		});
 
-		tmp = setupButton(4, "remove", "Remove");
+		tmp = setupButton(4, "remove", CGUILang.butRemove());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -150,7 +151,7 @@ public class Hierarchy extends Window {
 			}
 		});
 		
-		tmp = setupButton(5, "duplicate", "Duplicate");
+		tmp = setupButton(5, "duplicate", CGUILang.butDuplicate());
 		tmp.regEventHandler(new MouseDownHandler() {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
@@ -167,7 +168,7 @@ public class Hierarchy extends Window {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
-					ElementList list = ElementList.get(hList);
+					ElementList list = hList.getComponent("list");
 					list.progressLast();
 				}
 			}
@@ -179,7 +180,7 @@ public class Hierarchy extends Window {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
-					ElementList list = ElementList.get(hList);
+					ElementList list = hList.getComponent("list");
 					list.progressNext();
 				}
 			}
@@ -189,14 +190,10 @@ public class Hierarchy extends Window {
 	Map<Widget, SingleWidget> handlers = new HashMap();
 	
 	private void buildHierarchy() {
-		int lastProg = 0;
-		if(hList != null) {
+		if(hList != null) 
 			hList.dispose();
-			lastProg = ElementList.get(hList).getProgress();
-		}
 		
 		handlers.clear();
-		
 		hList = new Widget();
 		hList.transform.x = 2;
 		hList.transform.y = 32;
@@ -209,7 +206,6 @@ public class Hierarchy extends Window {
 				hierarchyAdd(el, w);
 		}
 		hList.addComponent(el);
-		el.setProgress(lastProg);
 		
 		addWidget(hList);
 	}
@@ -263,8 +259,6 @@ public class Hierarchy extends Window {
 		public SingleWidget(Widget w) {
 			transform.width = 80;   
 			transform.height = 12;
-			
-			on = w.visible;
 			
 			hierLevel = w.getHierarchyLevel();
 			target = w;

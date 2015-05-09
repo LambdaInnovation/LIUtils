@@ -53,12 +53,12 @@ public class CGUIEditor {
 		//Default templates
 		{ //"default"
 			Widget def = new Widget().addComponent(new DrawTexture());
-			addTemplate("default", def);
+			addTemplate("Default", def);
 		}
 		
 		{ //"input_box"
 			Widget inp = new Widget().addComponent(new TextBox());
-			addTemplate("textBox", inp);
+			addTemplate("TextBox", inp);
 		}
 	}
 	
