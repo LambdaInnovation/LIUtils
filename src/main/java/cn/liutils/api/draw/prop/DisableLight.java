@@ -64,6 +64,7 @@ public class DisableLight extends DrawHandler {
 			break;
 		case POST_DRAW:
 			GL11.glEnable(GL11.GL_LIGHTING);
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240, 240);
 			break;
 		default:
 		}
