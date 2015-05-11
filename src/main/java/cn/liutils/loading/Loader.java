@@ -55,7 +55,7 @@ public abstract class Loader<T> {
 	
 	public void loadAll() {
 		for(Map.Entry<String, JsonObject> entry : entries.entrySet()) {
-			if(!entry.getKey().equals("default"))
+			if(!entry.getKey().equals("default") && entry.getValue().get("ignore") == null)
 				doLoad(entry.getKey(), entry.getValue());
 		}
 		
