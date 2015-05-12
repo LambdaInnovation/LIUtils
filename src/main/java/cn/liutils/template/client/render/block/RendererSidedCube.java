@@ -22,7 +22,7 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.util.RenderUtils;
-import cn.weaponry.core.blob.VecUtils;
+import cn.liutils.util.VecUtils;
 
 
 /**

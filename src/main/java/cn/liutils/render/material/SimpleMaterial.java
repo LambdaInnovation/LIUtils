@@ -35,6 +35,11 @@ public class SimpleMaterial extends Material {
 	public SimpleMaterial(ResourceLocation _texture) {
 		texture = _texture;
 	}
+	
+	public SimpleMaterial setIgnoreLight() {
+		ignoreLight = true;
+		return this;
+	}
 
 	@Override
 	public void onRenderStage(RenderStage stage) {

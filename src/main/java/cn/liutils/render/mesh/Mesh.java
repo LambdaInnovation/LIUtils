@@ -6,6 +6,10 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.render.material.Material;
 
+/**
+ * TODO: We can use list call to tweak it to be faster!
+ * @author WeAthFolD
+ */
 public class Mesh {
 
 	private double[][] vertices;
@@ -28,14 +32,32 @@ public class Mesh {
 	
 	public Mesh setVertices(double[][] vertices) {
 		this.vertices = vertices;
-		if(uvs.length != vertices.length) uvs = null;
-		if(normals.length != vertices.length) normals = null;
+		if(uvs != null && uvs.length != vertices.length) uvs = null;
+		if(normals != null && normals.length != vertices.length) normals = null;
 		//Dont check triangle.
+		return this;
+	}
+	
+	public Mesh setVertex(int ind, double[] vert) {
+		vertices[ind] = vert;
+		return this;
+	}
+	
+	public Mesh setUV(int ind, double[] uv) {
+		uvs[ind] = uv;
 		return this;
 	}
 	
 	public Mesh setTriangles(int[] triangles) {
 		this.triangles = triangles;
+		return this;
+	}
+	
+	public Mesh setAllNormals(float[] normal) {
+		normals = new float[vertices.length][];
+		for(int i = 0; i < vertices.length; ++i) {
+			normals[i] = normal;
+		}
 		return this;
 	}
 	
