@@ -19,14 +19,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.IIcon;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Vec3;
-import net.minecraftforge.common.util.ForgeDirection;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.api.draw.DrawObject;
-import cn.liutils.api.draw.prop.DisableLight;
-import cn.liutils.api.draw.tess.Rect;
-import cn.liutils.util.render.Vertex;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -43,70 +38,6 @@ public class RenderUtils {
 	private static Tessellator t = Tessellator.instance;
 	private static int textureState = -1;
 	
-	//-----------------Quick aliases-----------------------------
-	/**
-	 * Stores the current texture state. stack depth: 1
-	 */
-	public static void pushTextureState() {
-		if(textureState != -1) {
-			System.err.println("RenderUtils:Texture State Overflow");
-			return;
-		}
-		textureState = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
-	}
-	
-	/**
-	 * Restores the stored texture state. stack depth: 1
-	 */
-	public static void popTextureState() {
-		if(textureState == -1) {
-			System.err.println("RenderUtils:Texture State Underflow");
-			return;
-		}
-		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureState);
-		textureState = -1;
-	}
-	
-    public static void bindColor(Vec3 cv) {
-    	GL11.glColor3d(cv.xCoord, cv.yCoord, cv.zCoord);
-    }
-    
-    public static void bindColor(int r, int g, int b, int a) {
-    	GL11.glColor4ub((byte)r, (byte)g, (byte)b, (byte)a);
-    }
-    
-    public static void bindColor(int[] arr) {
-    	if(arr.length == 3)
-    		bindColor(arr[0], arr[1], arr[2]);
-    	else bindColor(arr[0], arr[1], arr[2], arr[3]);
-    }
-    
-    public static void bindColor(int r, int g, int b) {
-    	GL11.glColor3ub((byte)r, (byte)g, (byte)b);
-    }
-    
-    public static void bindGray(int s) {
-    	byte r = (byte) s;
-    	GL11.glColor3ub(r, r, r);
-    }
-    
-    public static void bindIdentity() {
-    	GL11.glColor4f(1, 1, 1, 1);
-    }
-    
-    public static void bindGray(int s, int alpha) {
-    	byte r = (byte) s;
-    	GL11.glColor4ub(r, r, r, (byte) alpha);
-    }
-    
-    public static void bindGray(double s) {
-    	GL11.glColor3d(s, s, s);
-    }
-    
-    public static void bindGray(double s, double alpha) {
-    	GL11.glColor4d(s, s, s, alpha);
-    }
-	
 	/**
 	 * Add a vertex to the tessellator with UV coords.
 	 */
@@ -116,7 +47,6 @@ public class RenderUtils {
 
 	/**
 	 * Add a vertex to the tessellator without UV coords.
-	 * @param vec3
 	 */
 	public static void addVertex(Vec3 vec3) {
 		t.addVertex(vec3.xCoord, vec3.yCoord, vec3.zCoord);
@@ -126,14 +56,13 @@ public class RenderUtils {
 		Minecraft.getMinecraft().renderEngine.bindTexture(src);
 	}
 	
-	/**
-	 * 创建一个新的Vec3顶点。
-	 */
-	public static Vec3 newV3(double x, double y, double z) {
-		return Vec3.createVectorHelper(x, y, z);
-	}
+
 	
 	//--------------------Utility functions-----------------------
+	
+	/**
+	 * Render an item in default preference.
+	 */
 	public static void renderItemIn2d(ItemStack stackToRender, double w) {
 		renderItemIn2d(stackToRender, w, null);
 	}
@@ -154,6 +83,9 @@ public class RenderUtils {
 		renderItemIn2d(w, tex, tex, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV());
 	}
 	
+	/**
+	 * Render an item with different textures on each side.
+	 */
 	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back) {
 		renderItemIn2d(w, front, back, 0, 0, 1, 1);
 	}
@@ -342,76 +274,9 @@ public class RenderUtils {
 		}
 	}
     
-    /**
-     * see drawCube(w, l, h, texture).
-     */
-    public static void drawCube(double w, double l, double h) {
-    	drawCube(w, l, h, false);
-    }
-   
-    /**
-     * Draw a cube with xwidth=w zwidth=l height=h at (0, 0, 0) with no texture.
-     * <br/>Often used for debugging? ^^
-     * Currently, the cube has been FORCE set to the no-lighting state. 
-     * DrawObject may take over this in further versions.
-     * @param w xwidth
-     * @param l zwidth
-     * @param h height
-     */
-    public static void drawCube(double w, double l, double h, boolean texture) {
-    	final Vec3 vs[] = {
-    	    null, //placeholder
-    	    newV3(0, 0, 0),
-    	    newV3(w, 0, 0),
-    	    newV3(w, 0, l),
-    	    newV3(0, 0, l),
-    	    newV3(0, h, 0),
-    	    newV3(w, h, 0),
-    	    newV3(w, h, l),
-    	    newV3(0, h, l),
-    	};
-    	final int uvs[][] = {
-    		{0, 0},
-    		{1, 0}, 
-    		{1, 1},
-    		{0, 1}
-    	};
-    	final int arr[][] = {
-    		{1, 2, 3, 4},
-    		{5, 6, 2, 1},
-    		{7, 3, 2, 6},
-    		{7, 8, 4, 3},
-    		{8, 7, 6, 5},
-    		{5, 1, 4, 8}
-    	};
-    	final int normals[][] = {
-    		{0, -1, 0},
-    		{0, 0, -1},
-    		{1, 0, 0},
-    		{0, 0, 1},
-    		{0, 1, 0},
-    		{-1, 0, 0}
-    	};
-    	GL11.glPushMatrix(); {
-    		for(int i = 0; i < arr.length; ++i) {
-    			t.startDrawingQuads();
-    			t.setBrightness(15728880);
-    			t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
-    			
-    			int[] va = arr[i];
-    			for(int j = 0; j < 4; ++j) {
-    				Vec3 v = vs[va[j]];
-    				t.addVertexWithUV(v.xCoord, v.yCoord, v.zCoord, uvs[j][0], uvs[j][1]);
-    			}
-    			t.draw();
-    		}
-    	} GL11.glPopMatrix();
-    }
-    
-    //Implementations
-    private static Vertex vert(double x, double y, double z, double u, double v) {
-    	return new Vertex(x, y, z, u, v);
-    }
+	private static Vec3 newV3(double x, double y, double z) {
+		return Vec3.createVectorHelper(x, y, z);
+	}
 
 }
  

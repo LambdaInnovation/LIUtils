@@ -70,5 +70,14 @@ public class RegUtils {
 			return null;
 		}
 	}
+	
+	public static <T> T getFieldInstance(Class cl, Object instance, String normName, String obfName) {
+		Field f = getObfField(cl, normName, obfName);
+		try {
+			return (T) f.get(instance);
+		} catch(Exception e) {
+			return null;
+		}
+	}
 
 }

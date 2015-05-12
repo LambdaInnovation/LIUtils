@@ -450,7 +450,7 @@ public class LIGui extends WidgetContainer {
 		GL11.glPopMatrix();
 		
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		RenderUtils.bindIdentity();
+		GL11.glColor4d(1, 1, 1, 1);
 		
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);

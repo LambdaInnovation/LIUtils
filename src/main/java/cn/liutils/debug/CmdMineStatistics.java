@@ -83,9 +83,6 @@ public class CmdMineStatistics extends LICommandBase {
         @Override
         public void run() {
             sendChat(player, "Starting statistics, this may take some time......");
-            for(Integer i : filteredDicts) {
-                System.out.println("www?" + i);
-            }
             int total = 0;
             for(int i = x; i < x + size; ++i) {
                 for(int j = 0; j < 65; ++j) {

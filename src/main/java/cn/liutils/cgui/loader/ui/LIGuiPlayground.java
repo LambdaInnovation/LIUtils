@@ -22,11 +22,10 @@ import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.GainFocusEvent;
 import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusHandler;
-import cn.liutils.cgui.gui.event.LostFocusEvent;
-import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent.AddWidgetHandler;
 import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
+import cn.liutils.cgui.utils.Color;
 import cn.liutils.util.HudUtils;
 import cn.liutils.util.RenderUtils;
 import cn.liutils.util.render.Font;
@@ -68,10 +67,12 @@ public class LIGuiPlayground extends LIGui {
 	private void injectEvents(Widget w) {
 		//Add selection indicator
 		w.regEventHandler(new FrameEventHandler() {
+			Color c = new Color(112, 223, 122, 200);
+			
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
 				if(getFocus() == w) {
-					RenderUtils.bindColor(112, 223, 122, 200);
+					c.bind();
 					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
 				} else {
 					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);

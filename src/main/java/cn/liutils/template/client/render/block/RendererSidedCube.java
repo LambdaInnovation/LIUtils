@@ -22,6 +22,7 @@ import net.minecraft.util.Vec3;
 import org.lwjgl.opengl.GL11;
 
 import cn.liutils.util.RenderUtils;
+import cn.weaponry.core.blob.VecUtils;
 
 
 /**
@@ -83,15 +84,15 @@ public abstract class RendererSidedCube extends TileEntitySpecialRenderer {
 		setBound(block);
 
 		Vec3 v1, v2, v3, v4, v5, v6, v7, v8;
-		v1 = RenderUtils.newV3(minX, minY, minZ);
-		v2 = RenderUtils.newV3(minX, minY, maxZ);
-		v3 = RenderUtils.newV3(minX, maxY, maxZ);
-		v4 = RenderUtils.newV3(minX, maxY, minZ);
+		v1 = VecUtils.vec(minX, minY, minZ);
+		v2 = VecUtils.vec(minX, minY, maxZ);
+		v3 = VecUtils.vec(minX, maxY, maxZ);
+		v4 = VecUtils.vec(minX, maxY, minZ);
 
-		v5 = RenderUtils.newV3(maxX, minY, minZ);
-		v6 = RenderUtils.newV3(maxX, minY, maxZ);
-		v7 = RenderUtils.newV3(maxX, maxY, maxZ);
-		v8 = RenderUtils.newV3(maxX, maxY, minZ);
+		v5 = VecUtils.vec(maxX, minY, minZ);
+		v6 = VecUtils.vec(maxX, minY, maxZ);
+		v7 = VecUtils.vec(maxX, maxY, maxZ);
+		v8 = VecUtils.vec(maxX, maxY, minZ);
 
 		GL11.glPushMatrix();
 		GL11.glTranslated(x, y, z);

@@ -70,6 +70,8 @@ public class Color {
 		return String.valueOf(asHexColor());
 	}
 	
-	public static Color WHITE = new Color(1, 1, 1, 1);
+	public static Color WHITE() {
+		return new Color(1, 1, 1, 1);
+	}
 	
 }
