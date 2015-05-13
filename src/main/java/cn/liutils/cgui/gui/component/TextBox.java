@@ -12,6 +12,13 @@
  */
 package cn.liutils.cgui.gui.component;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
+import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
+import java.awt.datatransfer.UnsupportedFlavorException;
+import java.io.IOException;
+
 import javax.vecmath.Vector2d;
 
 import net.minecraft.client.Minecraft;
@@ -80,6 +87,26 @@ public class TextBox extends Component {
 		return this;
 	}
 	
+	private String getClipboardContent() {
+		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+		if(cb.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
+			try {
+				return (String) cb.getData(DataFlavor.stringFlavor);
+			} catch (UnsupportedFlavorException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		return "";
+	}
+	
+	private void saveClipboardContent() {
+		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
+		StringSelection ss = new StringSelection(content);
+		cb.setContents(ss, ss);
+	}
+	
 	private double[] getOffset(Widget w) {
 		double x = 0, y = 0;
 		Vector2d v = Font.font.simDrawWrapped(content, size, w.transform.width);
@@ -123,6 +150,7 @@ public class TextBox extends Component {
 			public void handleEvent(Widget w, KeyEvent event) {
 				if(!allowEdit)
 					return;
+				checkCaret();
 				
 				int par2 = event.keyCode;
 				
@@ -134,6 +162,17 @@ public class TextBox extends Component {
 				
 				if(caretPos < 0) caretPos = 0;
 				if(caretPos > content.length()) caretPos = content.length();
+				
+				if(event.keyCode == Keyboard.KEY_V && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+					String str1 = content.substring(0, caretPos), str2 = getClipboardContent(), str3 = content.substring(caretPos);
+					content = str1 + str2 + str3;
+					return;
+				}
+				
+				if(event.keyCode == Keyboard.KEY_C && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+					saveClipboardContent();
+					return;
+				}
 				
 				if (par2 == Keyboard.KEY_BACK && content.length() > 0) {
 					if(caretPos > 0) {
@@ -154,6 +193,8 @@ public class TextBox extends Component {
 					caretPos += 1;
 					w.postEvent(new ChangeContentEvent());
 				}
+				
+				checkCaret();
 			}
 			
 		});
@@ -184,6 +225,8 @@ public class TextBox extends Component {
 			public void handleEvent(Widget w, FrameEvent event) {
 				double[] offset = getOffset(w);
 				
+				checkCaret();
+				
 				String str = content;
 				if(!allowEdit && localized) {
 					str = StatCollector.translateToLocal(str);
@@ -205,6 +248,11 @@ public class TextBox extends Component {
 			}
 			
 		});
+	}
+	
+	private void checkCaret() {
+		if(caretPos > content.length())
+			caretPos = content.length() - 1;
 	}
 	
 	public static TextBox get(Widget w) {

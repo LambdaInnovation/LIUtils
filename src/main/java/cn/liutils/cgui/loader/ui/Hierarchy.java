@@ -12,6 +12,8 @@
  */
 package cn.liutils.cgui.loader.ui;
 
+import java.awt.Toolkit;
+import java.awt.datatransfer.DataFlavor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -247,6 +249,7 @@ public class Hierarchy extends Window {
 			}
 			
 		});
+		
 		
 		addWidget(hList);
 	}
