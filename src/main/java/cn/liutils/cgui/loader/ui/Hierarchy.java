@@ -168,7 +168,7 @@ public class Hierarchy extends Window {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
-					ElementList list = hList.getComponent("list");
+					ElementList list = ElementList.get(hList);
 					list.progressLast();
 				}
 			}
@@ -180,7 +180,7 @@ public class Hierarchy extends Window {
 			@Override
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
-					ElementList list = hList.getComponent("list");
+					ElementList list = ElementList.get(hList);
 					list.progressNext();
 				}
 			}
