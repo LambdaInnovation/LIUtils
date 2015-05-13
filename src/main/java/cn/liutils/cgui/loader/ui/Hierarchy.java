@@ -23,6 +23,8 @@ import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
+import cn.liutils.cgui.gui.component.ElementList.ProgressChangeHandler;
+import cn.liutils.cgui.gui.component.ElementList.ProgressChangedEvent;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
 import cn.liutils.cgui.gui.component.VerticalDragBar;
@@ -51,7 +53,7 @@ import cn.liutils.util.render.Font.Align;
  */
 public class Hierarchy extends Window {
 	
-	Widget hList;
+	Widget hList, dragbar;
 
 	public Hierarchy(GuiEdit _guiEdit) {
 		super(_guiEdit, CGUILang.guiHierarchy(), true, new double[] { 150, 80 });
@@ -172,7 +174,7 @@ public class Hierarchy extends Window {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
 					ElementList list = ElementList.get(hList);
-					list.progressLast();
+					list.progressLast(hList);
 				}
 			}
 		});
@@ -184,7 +186,7 @@ public class Hierarchy extends Window {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
 					ElementList list = ElementList.get(hList);
-					list.progressNext();
+					list.progressNext(hList);
 				}
 			}
 		});
@@ -207,12 +209,13 @@ public class Hierarchy extends Window {
 					double p = bar.getProgress(w);
 					if(hList != null) {
 						ElementList list = ElementList.get(hList);
-						list.setProgress((int) Math.round(p * list.getMaxProgress()));
+						list.setProgress(hList, (int) Math.round(p * list.getMaxProgress()));
 					}
 				}
 			});
 			
 			addWidget(tmp);
+			dragbar = tmp;
 		}
 	}
 	
@@ -229,12 +232,21 @@ public class Hierarchy extends Window {
 		hList.transform.width = 80;
 		hList.transform.height = 86;
 		
-		ElementList el = new ElementList();
+		final ElementList el = new ElementList();
 		for(Widget w : guiEdit.toEdit.getDrawList()) {
 			if(!w.disposed)
 				hierarchyAdd(el, w);
 		}
 		hList.addComponent(el);
+		hList.regEventHandler(new ProgressChangeHandler() {
+
+			@Override
+			public void handleEvent(Widget w, ProgressChangedEvent event) {
+				double p = (double)el.getProgress() / el.getMaxProgress();
+				VerticalDragBar.get(dragbar).setProgress(dragbar, p);
+			}
+			
+		});
 		
 		addWidget(hList);
 	}
@@ -340,7 +352,7 @@ public class Hierarchy extends Window {
 				box = new TextBox().setSize(10);
 				box.content = target.getName();
 				transform.x = 14 + hierLevel * 6;
-				transform.setSize(80, 10);
+				transform.setSize(70, 10);
 			}
 			
 			@Override

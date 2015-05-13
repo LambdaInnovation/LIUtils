@@ -18,6 +18,8 @@ import java.util.List;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
+import cn.liutils.cgui.gui.event.GuiEvent;
+import cn.liutils.cgui.gui.event.GuiEventHandler;
 
 /**
  * Component that can hold widgets itself and display them as a list. Only Widgets fully in the area will be shown.
@@ -72,11 +74,22 @@ public class ElementList extends Component {
 		subWidgets.clear();
 	}
 	
-	public void setProgress(int prog) {
+	public void setProgress(Widget w, int prog) {
 		progress = prog;
 		if(progress < 0) progress = 0;
 		if(progress > maxProgress) progress = maxProgress;
 		updateList();
+		
+	}
+	
+	public static class ProgressChangedEvent implements GuiEvent  {}
+	
+	public abstract static class ProgressChangeHandler extends GuiEventHandler<ProgressChangedEvent> {
+
+		public ProgressChangeHandler() {
+			super(ProgressChangedEvent.class);
+		}
+		
 	}
 	
 	private void setup(Widget w) {
@@ -103,16 +116,18 @@ public class ElementList extends Component {
 		}
 	}
 	
-	public void progressNext() { 
+	public void progressNext(Widget w) { 
 		++progress;
 		if(progress > maxProgress) progress = maxProgress;
 		updateList();
+		w.postEvent(new ProgressChangedEvent());
 	}
 	
-	public void progressLast() {
+	public void progressLast(Widget w) {
 		--progress;
 		if(progress < 0) progress = 0;
 		updateList();
+		w.postEvent(new ProgressChangedEvent());
 	}
 	
 	public void addWidget(Widget w) {

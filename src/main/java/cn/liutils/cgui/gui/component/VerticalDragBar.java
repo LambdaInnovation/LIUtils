@@ -56,6 +56,12 @@ public class VerticalDragBar extends Component {
 		return (w.transform.y - y0) / (y1 - y0);
 	}
 	
+	public void setProgress(Widget w, double prg) {
+		w.transform.y = y0 + (y1 - y0) * prg;
+		System.out.println("setProgress");
+		w.dirty = true;
+	}
+	
 	public VerticalDragBar setArea(double _y0,  double _y1) {
 		y0 = _y0;
 		y1 = _y1;
