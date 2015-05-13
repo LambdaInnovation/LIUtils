@@ -25,6 +25,9 @@ import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.ElementList;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
+import cn.liutils.cgui.gui.component.VerticalDragBar;
+import cn.liutils.cgui.gui.component.VerticalDragBar.DraggedEvent;
+import cn.liutils.cgui.gui.component.VerticalDragBar.DraggedHandler;
 import cn.liutils.cgui.gui.event.ChangeContentEvent;
 import cn.liutils.cgui.gui.event.ChangeContentEvent.ChangeContentHandler;
 import cn.liutils.cgui.gui.event.ConfirmInputEvent;
@@ -185,6 +188,32 @@ public class Hierarchy extends Window {
 				}
 			}
 		});
+		
+		{
+			tmp = new Widget();
+			tmp.transform.setSize(10, 10);
+			tmp.transform.setPos(90, 40);
+			
+			final VerticalDragBar bar = new VerticalDragBar();
+			bar.setArea(40, 100);
+			tmp.addComponent(bar);
+			
+			DrawTexture dt = new DrawTexture().setTex(null).setColor4i(200, 200, 255, 200);
+			tmp.addComponent(dt);
+			
+			tmp.regEventHandler(new DraggedHandler() {
+				@Override
+				public void handleEvent(Widget w, DraggedEvent event) {
+					double p = bar.getProgress(w);
+					if(hList != null) {
+						ElementList list = ElementList.get(hList);
+						list.setProgress((int) Math.round(p * list.getMaxProgress()));
+					}
+				}
+			});
+			
+			addWidget(tmp);
+		}
 	}
 	
 	Map<Widget, SingleWidget> handlers = new HashMap();

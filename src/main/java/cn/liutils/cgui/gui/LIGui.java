@@ -289,7 +289,7 @@ public class LIGui extends WidgetContainer {
     }
 	
 	//---Internal Processing
-	private void updateWidget(Widget widget) {
+	public void updateWidget(Widget widget) {
 		widget.gui = this;
 		
 		Transform transform = widget.transform;

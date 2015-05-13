@@ -62,6 +62,10 @@ public class ElementList extends Component {
 		return progress;
 	}
 	
+	public int getMaxProgress() {
+		return maxProgress;
+	}
+	
 	public void disposeAll() {
 		for(Widget w : subWidgets)
 			w.disposed = true;

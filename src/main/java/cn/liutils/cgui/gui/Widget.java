@@ -238,9 +238,14 @@ public class Widget extends WidgetContainer {
 	public void moveLeft() {
 		if(!this.isWidgetParent())
 			return;
-		parent.getAbstractParent().addWidget(this.getName(), this);
+		WidgetContainer pp = parent.getAbstractParent();
+		String name = this.getName();
 		parent.forceRemoveWidget(this);
+		
 		this.disposed = false;
+		if(!pp.addWidget(name, this)) {
+			pp.addWidget(this);
+		}
 	}
 	
 	public void moveRight() {
