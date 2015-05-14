@@ -22,11 +22,11 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Draggable;
 import cn.liutils.cgui.gui.component.DrawTexture;
-import cn.liutils.cgui.gui.component.ElementList;
 import cn.liutils.cgui.gui.component.ProgressBar;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
 import cn.liutils.cgui.gui.component.Transform;
+import cn.liutils.cgui.gui.component.VerticalDragBar;
 
 /**
  * Main loading interface to provide templates&customized objects to CGUI.
@@ -48,6 +48,7 @@ public class CGUIEditor {
 		addComponent(new DrawTexture());
 		addComponent(new Tint());
 		addComponent(new ProgressBar());
+		addComponent(new VerticalDragBar());
 		//addComponent(new ElementList());
 		
 		//Default templates

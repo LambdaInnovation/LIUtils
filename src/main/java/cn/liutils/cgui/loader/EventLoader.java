@@ -69,8 +69,13 @@ public class EventLoader {
 			try {
 				method.invoke(instance, w, event);
 			} catch (Exception e) {
-				LIUtils.log.fatal("Exception occured trying to do event callback");
+				LIUtils.log.error("Exception occured trying to do event callback");
 				e.printStackTrace();
+				
+				if(e instanceof InvocationTargetException) {
+					LIUtils.log.error("Target stack trace:");
+					((InvocationTargetException)e).getTargetException().printStackTrace();
+				}
 			}
 		}
 		

@@ -12,17 +12,23 @@
  */
 package cn.liutils.template.client.render.block;
 
-import cn.liutils.core.proxy.LIClientProps;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.RenderBlocks;
 import net.minecraft.world.IBlockAccess;
+import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.mc.RegBlockRenderer;
 import cpw.mods.fml.client.registry.ISimpleBlockRenderingHandler;
+import cpw.mods.fml.client.registry.RenderingRegistry;
 
 /**
  * Renders nothing at all.
  * @author WeathFolD
  */
+@RegistrationClass
+@RegBlockRenderer
 public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
+	
+	public static int id = RenderingRegistry.getNextAvailableRenderId();
 
 	public RenderEmptyBlock() {
 	}
@@ -45,7 +51,7 @@ public class RenderEmptyBlock implements ISimpleBlockRenderingHandler {
 
 	@Override
 	public int getRenderId() {
-		return LIClientProps.RENDER_TYPE_EMPTY;
+		return id;
 	}
 
 }

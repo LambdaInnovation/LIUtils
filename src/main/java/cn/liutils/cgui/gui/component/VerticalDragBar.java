@@ -33,7 +33,9 @@ public class VerticalDragBar extends Component {
 
 			@Override
 			public void handleEvent(Widget w, DragEvent event) {
-				w.getGui().moveWidgetToAbsPos(w, w.x, w.getGui().mouseY);
+				double originalX = w.transform.x;
+				w.getGui().updateDragWidget();
+				w.transform.x = originalX;
 				w.getGui().updateWidget(w);
 				
 				w.postEvent(new DraggedEvent());
@@ -58,7 +60,6 @@ public class VerticalDragBar extends Component {
 	
 	public void setProgress(Widget w, double prg) {
 		w.transform.y = y0 + (y1 - y0) * prg;
-		System.out.println("setProgress");
 		w.dirty = true;
 	}
 	

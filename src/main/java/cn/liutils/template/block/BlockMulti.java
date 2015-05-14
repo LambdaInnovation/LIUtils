@@ -30,7 +30,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.proxy.LIClientProps;
+import cn.liutils.template.client.render.block.RenderEmptyBlock;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -269,7 +269,7 @@ public abstract class BlockMulti extends BlockContainer {
     
 	@Override
     public int getRenderType() {
-        return LIClientProps.RENDER_TYPE_EMPTY;
+        return RenderEmptyBlock.id;
     }
 	
 	@Override

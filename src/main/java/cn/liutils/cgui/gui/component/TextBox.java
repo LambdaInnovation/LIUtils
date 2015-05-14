@@ -166,6 +166,7 @@ public class TextBox extends Component {
 				if(event.keyCode == Keyboard.KEY_V && Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 					String str1 = content.substring(0, caretPos), str2 = getClipboardContent(), str3 = content.substring(caretPos);
 					content = str1 + str2 + str3;
+					w.postEvent(new ChangeContentEvent());
 					return;
 				}
 				
@@ -204,7 +205,7 @@ public class TextBox extends Component {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				double len = 3;
 				double[] offset = getOffset(w);
-				double eventX = offset[0] + event.x;
+				double eventX = -offset[0] + event.x;
 				
 				for(int i = 0; i < content.length(); ++i) {
 					double cw = Font.font.strLen(String.valueOf(content.charAt(i)), size);
@@ -253,6 +254,7 @@ public class TextBox extends Component {
 	private void checkCaret() {
 		if(caretPos > content.length())
 			caretPos = content.length() - 1;
+		if(caretPos < 0) caretPos = 0;
 	}
 	
 	public static TextBox get(Widget w) {

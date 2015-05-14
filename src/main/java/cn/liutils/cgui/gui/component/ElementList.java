@@ -72,9 +72,13 @@ public class ElementList extends Component {
 		for(Widget w : subWidgets)
 			w.disposed = true;
 		subWidgets.clear();
+		loaded = false;
+		progress = maxProgress = showPerPage = 0;
 	}
 	
 	public void setProgress(Widget w, int prog) {
+		if(progress == prog)
+			return;
 		progress = prog;
 		if(progress < 0) progress = 0;
 		if(progress > maxProgress) progress = maxProgress;

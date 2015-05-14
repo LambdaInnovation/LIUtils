@@ -51,6 +51,7 @@ public class LIGuiContainer extends GuiContainer {
     		super.drawScreen(a, b, c);
     	} else {
     	    gui.resize(width, height);
+    	    this.drawDefaultBackground();
             gui.draw(a, b);
     	}
     }
