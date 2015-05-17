@@ -13,6 +13,7 @@
 package cn.liutils.core.event;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -30,7 +31,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
-public class LIClientEvents {
+public class AuxGuiHandler {
 
 	private static Set<AuxGui> auxGuiList = new HashSet<AuxGui>();
 	
@@ -43,11 +44,17 @@ public class LIClientEvents {
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		 if(event.type == ElementType.CROSSHAIRS) {
-			 for(AuxGui gui : auxGuiList) {
-				 if(gui.isOpen()) gui.draw(event.resolution);
-			 }
-		 }
+		if(event.type == ElementType.CROSSHAIRS) {
+			Iterator<AuxGui> iter = auxGuiList.iterator();
+			while(iter.hasNext()) {
+				AuxGui gui = iter.next();
+				if(gui.isDisposed()) {
+					iter.remove();
+				} else {
+					gui.draw(event.resolution);
+				}
+			}
+		}
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glDepthMask(true);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
@@ -55,7 +62,7 @@ public class LIClientEvents {
 	
 	public static boolean hasForegroundGui() {
 		for(AuxGui ag : auxGuiList) {
-			if(ag.isOpen() && ag.isForeground())
+			if(!ag.isDisposed() && ag.isForeground())
 				return true;
 		}
 		return false;

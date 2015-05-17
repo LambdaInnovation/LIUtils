@@ -46,7 +46,7 @@ public class ProgressBar extends Component {
 	
 	double curFluct;
 	double curSpeed;
-	double progressDisplay = -1; //cur display progress
+	public double progressDisplay = -1; //cur display progress
 
 	public ProgressBar() {
 		super("ProgressBar");
@@ -87,7 +87,15 @@ public class ProgressBar extends Component {
 				}
 				
 				{
-					double disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
+					double disp;
+					if(progressDisplay == 0) {
+						disp = 0;
+					} else if(progressDisplay == 1) {
+						disp = 1;
+					} else {
+						disp = Math.max(0, Math.min(progressDisplay + curFluct, 1.0));
+					}
+					
 					//System.out.println(progressDisplay + " " + curFluct + " " + disp);
 					double x, y, u = 0, v = 0, w, h, tw, th;
 					double width = wi.transform.width, height = wi.transform.height;
@@ -145,7 +153,7 @@ public class ProgressBar extends Component {
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 				}
 			}
-			
+			 
 		});
 	}
 	

@@ -16,7 +16,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.settings.KeyBinding;
 import cn.liutils.api.key.IKeyHandler;
 import cn.liutils.api.key.LIKeyProcess;
-import cn.liutils.core.event.LIClientEvents;
+import cn.liutils.core.event.AuxGuiHandler;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
@@ -33,56 +33,26 @@ import cpw.mods.fml.relauncher.SideOnly;
  */
 @SideOnly(Side.CLIENT)
 public abstract class AuxGui {
-	private LIKeyProcess keyListener;
-	public class AuxProcess extends LIKeyProcess {
-		final AuxGui gui;
-		public AuxProcess(AuxGui _gui) {
-			gui = _gui;
-			this.mouseOverride = overrideMouse();
-		}
-		@SubscribeEvent
-		@Override
-	    public void onClickTick(ClientTickEvent e) {
-			if(!gui.isOpen()) return;
-	    	if(e.phase == Phase.START) {
-	    		keyTick(false);
-	    	} else {
-	    		keyTick(true);
-	    	}
-	    }
+	
+	public AuxGui() {}
+	
+	private boolean disposed;
+	
+	public boolean isDisposed() {
+		return disposed;
 	}
 	
-	public AuxGui() {
-		if(needKeyListening()) {
-			keyListener = new AuxProcess(this);
-			FMLCommonHandler.instance().bus().register(keyListener);
-		}
+	public void dispose() {
+		disposed = true;
 	}
 	
-	public abstract boolean isOpen();
 	/**
 	 * Judge if this GUI is a foreground GUI and interrupts key listening.
 	 */
 	public abstract boolean isForeground();
 	public abstract void draw(ScaledResolution sr);
 	
-	protected boolean needKeyListening() {
-		return true;
-	}
-	
-	protected void addKeyHandler(KeyBinding kb, boolean rep, IKeyHandler handler) {
-		keyListener.addKey(kb, rep, handler);
-	}
-	
-	protected void addKeyHandler(String name, int keyCode, boolean rep, IKeyHandler handler) {
-		keyListener.addKey(name, keyCode, rep, handler);
-	}
-	
-	protected boolean overrideMouse() {
-		return false;
-	}
-	
 	public static void register(AuxGui gui) {
-		LIClientEvents.registerAuxGui(gui);
+		AuxGuiHandler.registerAuxGui(gui);
 	}
 }

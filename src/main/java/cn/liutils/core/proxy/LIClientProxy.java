@@ -18,7 +18,7 @@ import net.minecraft.entity.Entity;
 import net.minecraftforge.common.MinecraftForge;
 import cn.liutils.core.LIUtils;
 import cn.liutils.core.client.render.RenderTrail;
-import cn.liutils.core.event.LIClientEvents;
+import cn.liutils.core.event.AuxGuiHandler;
 import cn.liutils.core.player.MouseHelperX;
 import cn.liutils.template.client.render.block.RenderEmptyBlock;
 import cn.liutils.template.client.render.entity.RenderCrossedProjectile;
@@ -57,7 +57,7 @@ public class LIClientProxy extends LICommonProxy {
 	@Override
 	public void preInit() {
 		super.preInit();
-		MinecraftForge.EVENT_BUS.register(new LIClientEvents());
+		MinecraftForge.EVENT_BUS.register(new AuxGuiHandler());
 	}
 	
 	@Override

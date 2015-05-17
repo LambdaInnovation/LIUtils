@@ -21,6 +21,9 @@ import java.util.Set;
 import com.google.common.collect.HashBiMap;
 import com.google.common.collect.ImmutableList;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /**
  * A class that has capability to store widgets. Used by LIGui and Widget.
  * Every widget is associated with a name. You can use that name to lookup a widget.
@@ -28,6 +31,7 @@ import com.google.common.collect.ImmutableList;
  * This is a internal implementation class. DONT TOUCH IT!
  * @author WeAthFolD
  */
+@SideOnly(Side.CLIENT)
 public class WidgetContainer implements Iterable<Widget> {
 	
 	HashBiMap<String, Widget> widgets = HashBiMap.create();

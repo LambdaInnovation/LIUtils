@@ -38,7 +38,7 @@ class DefaultRules {
 		public void load(Item item, ObjectNamespace ns, String name) {
 			String texName = ns.getString("textureName");
 			if(texName != null)
-				item.setTextureName(texName);
+				item.setTextureName(getNamespace(ns) + ":" + texName);
 		}
 		
 	}

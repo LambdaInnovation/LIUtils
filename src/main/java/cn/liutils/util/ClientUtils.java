@@ -13,7 +13,7 @@
 package cn.liutils.util;
 
 import cn.liutils.api.gui.AuxGui;
-import cn.liutils.core.event.LIClientEvents;
+import cn.liutils.core.event.AuxGuiHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
@@ -34,7 +34,7 @@ public class ClientUtils {
 	 */
 	public static boolean isPlayerInGame() {
 		EntityPlayer player = Minecraft.getMinecraft().thePlayer;
-		return player != null && Minecraft.getMinecraft().currentScreen == null && !LIClientEvents.hasForegroundGui();
+		return player != null && Minecraft.getMinecraft().currentScreen == null && !AuxGuiHandler.hasForegroundGui();
 	}
 	
 	/**

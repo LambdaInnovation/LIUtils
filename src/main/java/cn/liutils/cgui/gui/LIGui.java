@@ -49,9 +49,6 @@ public class LIGui extends WidgetContainer {
 	//Absolute mouse position.
 	public double mouseX, mouseY;
 	
-	LIKeyProcess keyProcess;
-	LIKeyProcess.Trigger trigger;
-	
 	Widget focus; //last input focus
 	
 	GuiEventBus eventBus = new GuiEventBus();
@@ -64,7 +61,6 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	public void dispose() {
-		if(trigger != null) trigger.setDead();
 	}
 	
 	/**
@@ -86,6 +82,7 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	//---Event callback---
+	
 	/**
 	 * Go down the hierarchy tree and draw each widget node.
 	 */
@@ -275,18 +272,6 @@ public class LIGui extends WidgetContainer {
 	}
 	
 	//---Key Handling
-    /**
-     * Add a key event listener within the lifetime of the GUI.
-     */
-    public void addKeyHandler(String name, int keyCode, boolean isRep, IKeyHandler ikh) {
-    	if(keyProcess == null) { //lazy loading
-    		keyProcess = new LIKeyProcess();
-    		keyProcess.mouseOverride = false;
-    		trigger = new Trigger(keyProcess);
-    		LIFMLGameEventDispatcher.INSTANCE.registerClientTick(trigger);
-    	}
-    	keyProcess.addKey(name, keyCode, isRep, ikh);
-    }
 	
 	//---Internal Processing
 	public void updateWidget(Widget widget) {

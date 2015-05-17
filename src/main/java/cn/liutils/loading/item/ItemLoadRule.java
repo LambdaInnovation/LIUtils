@@ -28,4 +28,9 @@ public abstract class ItemLoadRule<T extends Item> {
 		return true;
 	}
 	
+	protected String getNamespace(ObjectNamespace ns) {
+		String name = ns.getString("namespace");
+		return name == null ? "minecraft" : name;
+	}
+	
 }

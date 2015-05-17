@@ -30,6 +30,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  * 统一处理按键的实用类。 请使用addKey(...)注册按键绑定。详见函数本身说明
  * @author WeAthFolD
  */
+@Deprecated
 public class LIKeyProcess {
 	
 	public static final int MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99,
