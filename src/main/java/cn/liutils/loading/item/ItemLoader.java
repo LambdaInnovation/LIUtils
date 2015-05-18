@@ -46,7 +46,8 @@ public class ItemLoader<T extends Item> extends Loader<T> {
 		new CCT(),
 		new MaxDamage(),
 		new MaxSS(),
-		new Full3D()
+		new Full3D(),
+		new Renderer()
 	};
 	
 	public final List<ItemLoadRule> additionalRules = new ArrayList<ItemLoadRule>();

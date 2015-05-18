@@ -14,6 +14,8 @@ package cn.liutils.loading.item;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
+import net.minecraftforge.client.IItemRenderer;
+import net.minecraftforge.client.MinecraftForgeClient;
 import cn.liutils.core.LIUtils;
 import cn.liutils.loading.Loader.ObjectNamespace;
 
@@ -101,6 +103,27 @@ class DefaultRules {
 			} catch(Exception e) {}
 		}
 		
+	}
+	
+	static class Renderer extends ItemLoadRule {
+		@Override
+		public void load(Item item, ObjectNamespace ns, String name) {
+			String rendererName = ns.getString("renderer");
+			if(rendererName != null) {
+				try {
+					int dot = rendererName.lastIndexOf('.');
+					Class c = Class.forName(rendererName.substring(0, dot));
+					IItemRenderer renderer = (IItemRenderer) c.getField(rendererName.substring(dot + 1)).get(null);
+					if(renderer != null) {
+						MinecraftForgeClient.registerItemRenderer(item, renderer);
+					} else {
+						throw new RuntimeException();
+					}
+				} catch(Exception e) {
+					LIUtils.log.error("Didn't find item renderer " + rendererName);
+				}
+			}
+		}
 	}
 	
 }
