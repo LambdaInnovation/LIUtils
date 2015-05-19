@@ -12,7 +12,7 @@
  */
 package cn.liutils.core.player;
 
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegMessageHandler;
 import cn.liutils.api.player.ControlData;
 import net.minecraft.client.Minecraft;
@@ -28,7 +28,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author Violet
  *
  */
-@RegistrationClass
+@Registrant
 public class MsgControlSyncAll implements IMessage {
 
 	private ControlData cd = null;

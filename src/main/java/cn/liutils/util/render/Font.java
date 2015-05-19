@@ -27,14 +27,15 @@ import org.lwjgl.opengl.GL11;
  */
 public class Font {
     
-    public static Font font = new Font(Minecraft.getMinecraft().fontRenderer);
+    public static Font font = new Font();
 
     public enum Align { LEFT, CENTER, RIGHT };
-    final FontRenderer mcFont;
     
-    public Font(FontRenderer _mcFont) {
-        mcFont = _mcFont;
+    FontRenderer mcFont() {
+    	return Minecraft.getMinecraft().fontRenderer;
     }
+    
+    private Font() {}
     
     public void draw(String str, double x, double y, double size, int color) {
         draw(str, x, y, size, color, Align.LEFT);
@@ -44,31 +45,31 @@ public class Font {
      * @return Rectangle size
      */
     public void drawWrapped(String str, double x, double y, double size, int color, double limit) {
-        double scale = size / mcFont.FONT_HEIGHT;
+        double scale = size / mcFont().FONT_HEIGHT;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, 0);
         GL11.glScaled(scale, scale, 1);
-        mcFont.drawSplitString(str, 0, 0, 0xFFFFFF, (int) (limit * scale));
+        mcFont().drawSplitString(str, 0, 0, 0xFFFFFF, (int) (limit * scale));
         GL11.glPopMatrix();
     }
     
     public Vector2d simDrawWrapped(String str, double size, double limit) {
-    	double scale = size / mcFont.FONT_HEIGHT;
-        List<String> lst = mcFont.listFormattedStringToWidth(str, (int) (limit * scale));
+    	double scale = size / mcFont().FONT_HEIGHT;
+        List<String> lst = mcFont().listFormattedStringToWidth(str, (int) (limit * scale));
         return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size);
     }
     
     public void draw(String str, double x, double y, double size, int color, Align align) {
         GL11.glEnable(GL11.GL_BLEND);
         //GL11.glDepthMask(false);
-        double scale = size / mcFont.FONT_HEIGHT;
+        double scale = size / mcFont().FONT_HEIGHT;
         GL11.glPushMatrix(); {
             GL11.glTranslated(x, y, 0);
             GL11.glScaled(scale, scale, 1);
             String[] ss = str.split("\n");
             for(int i = 0; i < ss.length; ++i) {
                 GL11.glPushMatrix(); {
-                    double dy = i * mcFont.FONT_HEIGHT;
+                    double dy = i * mcFont().FONT_HEIGHT;
                     GL11.glTranslated(0, dy, 0);
                     drawSingleLine(ss[i], color, align);
                 } GL11.glPopMatrix();
@@ -77,9 +78,9 @@ public class Font {
     }
     
     public void drawTrimmed(String str, double x, double y, double size, int color, Align align, double limit, String postfix) {
-        double cur = 0.0, scale = size / mcFont.FONT_HEIGHT;
+        double cur = 0.0, scale = size / mcFont().FONT_HEIGHT;
         for(int i = 0; i < str.length(); ++i) {
-            cur += mcFont.getCharWidth(str.charAt(i)) * scale;
+            cur += mcFont().getCharWidth(str.charAt(i)) * scale;
             if(cur > limit) {
                 str = str.substring(0, i).concat(postfix);
                 break;
@@ -92,25 +93,25 @@ public class Font {
         double x0 = 0, y0 = 0;
         switch(align) {
         case CENTER:
-            x0 = -mcFont.getStringWidth(line) / 2;
+            x0 = -mcFont().getStringWidth(line) / 2;
             break;
         case LEFT:
             x0 = 0;
             break;
         case RIGHT:
-            x0 = -mcFont.getStringWidth(line);
+            x0 = -mcFont().getStringWidth(line);
             break;
         default:
             break;
         }
         GL11.glPushMatrix();
         GL11.glTranslated(x0, y0, 0);
-        mcFont.drawString(line, 0, 0, color);
+        mcFont().drawString(line, 0, 0, color);
         GL11.glPopMatrix();
     }
     
     public double strLen(String str, double size) {
-    	return mcFont.getStringWidth(str) * size / mcFont.FONT_HEIGHT;
+    	return mcFont().getStringWidth(str) * size / mcFont().FONT_HEIGHT;
     }
 
 }

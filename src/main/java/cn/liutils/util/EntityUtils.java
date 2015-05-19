@@ -108,7 +108,6 @@ public class EntityUtils {
 	 * Get all entities around space point(x, y, z) in radius [rad], with exclusion and filter.
 	 */
 	public static List<Entity> getEntitiesAround(World world, double x, double y, double z, double rad, IEntitySelector selector, Entity...exclusions) {
-		rad *= 0.5;
 		AxisAlignedBB box = AxisAlignedBB.getBoundingBox(x - rad, y - rad, z - rad, x + rad, y + rad, z + rad);
 		List<Entity> list = world.getEntitiesWithinAABBExcludingEntity(exclusions.length > 0 ? exclusions[0] : null, box, selector);
 		return list;

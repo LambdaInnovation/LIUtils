@@ -30,7 +30,7 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegSubmoduleInit;
 import cn.liutils.api.player.ControlData;
 
@@ -39,7 +39,7 @@ import cn.liutils.api.player.ControlData;
  * @author Violet
  *
  */
-@RegistrationClass
+@Registrant
 @RegSubmoduleInit(side = RegSubmoduleInit.Side.CLIENT_ONLY)
 @SideOnly(Side.CLIENT)
 public class ControlHandler {

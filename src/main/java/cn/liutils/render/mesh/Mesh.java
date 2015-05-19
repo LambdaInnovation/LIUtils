@@ -1,5 +1,8 @@
 package cn.liutils.render.mesh;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraft.client.renderer.Tessellator;
 
 import org.lwjgl.opengl.GL11;
@@ -20,7 +23,22 @@ public class Mesh {
 	
 	private int[] triangles;
 	
+	List<Mesh> sub = new ArrayList<Mesh>();
+	
 	public Mesh() {}
+	
+	public int addMesh(Mesh m) {
+		sub.add(m);
+		return sub.size() - 1;
+	}
+	
+	public void removeMesh(Mesh m) {
+		sub.remove(m);
+	}
+	
+	public Mesh getSubMesh(int id) {
+		return sub.get(id);
+	}
 	
 	public Mesh setUVs(double[][] uvs) {
 		if(vertices == null || vertices.length != uvs.length) {
@@ -91,6 +109,25 @@ public class Mesh {
 		return this;
 	}
 	
+	public Mesh setQuads(Integer[] quads) {
+		if(quads.length % 4 != 0) {
+			System.err.println("You should specify quads by a list of length of multiply of 4.");
+		}
+		int[] result = new int[(quads.length / 4) * 6];
+		int j = 0;
+		for(int i = 0; i + 3 < quads.length; i += 4, j += 6) {
+			result[j] 	  = quads[i];
+			result[j + 1] = quads[i + 1];
+			result[j + 2] = quads[i + 2];
+			
+			result[j + 3] = quads[i];
+			result[j + 4] = quads[i + 2];
+			result[j + 5] = quads[i + 3];
+		}
+		setTriangles(result);
+		return this;
+	}
+	
 	public void draw(Material mat) {
 		mat.onRenderStage(RenderStage.START);
 		GL11.glPushMatrix();
@@ -123,6 +160,10 @@ public class Mesh {
 		
 		GL11.glPopMatrix();
 		mat.onRenderStage(RenderStage.END);
+		
+		for(Mesh m : this.sub) {
+			m.draw(mat);
+		}
 	}
 	
 }

@@ -21,7 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 
 import org.apache.commons.io.IOUtils;
 
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegCommand;
 import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.LIGui;
@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * @author WeAthFolD
  */
-@RegistrationClass
+@Registrant
 @RegCommand
 @SideOnly(Side.CLIENT)
 public class CommandOpen extends LICommandBase {

@@ -30,7 +30,7 @@ public class SimpleMaterial extends Material {
 	public boolean ignoreLight = false;
 	public Color color = Color.WHITE();
 	
-	ResourceLocation texture;
+	public ResourceLocation texture;
 	
 	public SimpleMaterial(ResourceLocation _texture) {
 		texture = _texture;

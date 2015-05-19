@@ -19,7 +19,7 @@ import java.util.Set;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegEntity;
 import cn.annoreg.mc.RegEventHandler;
 import cn.annoreg.mc.RegEventHandler.Bus;
@@ -34,7 +34,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * A entity that always in the position of a player entity, in aid of player additional rendering.
  * @author WeAthFolD
  */
-@RegistrationClass
+@Registrant
 @RegEntity(clientOnly = true)
 @RegEntity.HasRender
 public class EntityPlayerHook extends Entity {

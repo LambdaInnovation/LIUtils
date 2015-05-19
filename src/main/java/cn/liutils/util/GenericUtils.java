@@ -54,7 +54,15 @@ public class GenericUtils {
 
 	public static IEntitySelector 
 		selectorLiving = new EntitySelectorLiving(),
-		selectorPlayer = new EntitySelectorPlayer();
+		selectorPlayer = new EntitySelectorPlayer(),
+		selectorSurvivalPlayer = new IEntitySelector() {
+
+			@Override
+			public boolean isEntityApplicable(Entity entity) {
+				return entity instanceof EntityPlayer && !((EntityPlayer)entity).capabilities.isCreativeMode;
+			}
+		
+		};
 	
 	private static Random RNG = new Random();
 	
@@ -63,6 +71,10 @@ public class GenericUtils {
 	 */
 	public static Side getSide() {
 		return FMLCommonHandler.instance().getSide();
+	}
+	
+	public static Side getEffectiveSide() {
+		return FMLCommonHandler.instance().getEffectiveSide();
 	}
 	
 	@SideOnly(Side.CLIENT)

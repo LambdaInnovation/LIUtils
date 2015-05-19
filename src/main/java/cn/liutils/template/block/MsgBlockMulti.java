@@ -17,7 +17,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegMessageHandler;
 import cpw.mods.fml.common.network.simpleimpl.IMessage;
 import cpw.mods.fml.common.network.simpleimpl.IMessageHandler;
@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
  * @author WeathFolD
  *
  */
-@RegistrationClass
+@Registrant
 public class MsgBlockMulti implements IMessage {
 	
 	int x, y, z;

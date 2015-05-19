@@ -14,14 +14,14 @@ package cn.liutils.template.block;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegTileEntity;
 
 /**
  * @author WeathFolD
  *
  */
-@RegistrationClass
+@Registrant
 @RegTileEntity
 public class TileMulti extends TileEntity implements IMultiTile {
 	

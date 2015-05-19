@@ -16,6 +16,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -41,6 +42,10 @@ public class AuxGuiHandler {
 	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
+		//TODO: Maybe some hud need it?
+		if(Minecraft.getMinecraft().thePlayer.isDead)
+			return;
+		
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);

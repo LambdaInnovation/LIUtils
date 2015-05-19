@@ -15,11 +15,12 @@ package cn.liutils.util;
 
 import java.util.Random;
 
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Matrix4f;
 import org.lwjgl.util.vector.Vector3f;
 
 /**
@@ -30,10 +31,16 @@ public class VecUtils {
 	
 	private static Random rand = new Random();
 	
+	public static Vec3 toGlobalOffset(Entity entity, Vec3 offset) {
+		Vec3 v = copy(offset);
+		v.rotateAroundY((float) (entity.rotationYaw * Math.PI / 180));
+		return v;
+	}
+	
 	public static Vec3 toDirVector(float yaw, float pitch) {
 		float var3 = 1.0f;
 		float vx, vy, vz;
-		vx = -MathHelper.sin(yaw / 180.0F
+		vx = MathHelper.sin(yaw / 180.0F
 				* (float) Math.PI)
 				* MathHelper.cos(yaw / 180.0F
 						* (float) Math.PI) * var3;
@@ -133,6 +140,14 @@ public class VecUtils {
 		to.xCoord = from.xCoord;
 		to.yCoord = from.yCoord;
 		to.zCoord = from.zCoord;
+	}
+	
+	public static void tessellate(Vec3 v) {
+		Tessellator.instance.addVertex(v.xCoord, v.yCoord, v.zCoord);
+	}
+	
+	public static void tessellate(Vec3 v, double u, double w) {
+		Tessellator.instance.addVertexWithUV(v.xCoord, v.yCoord, v.zCoord, u, w);
 	}
 	
 	public static Vec3 crossProduct(Vec3 a, Vec3 b) {

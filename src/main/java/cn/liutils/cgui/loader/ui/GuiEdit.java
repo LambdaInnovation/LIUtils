@@ -13,7 +13,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
-import cn.annoreg.core.RegistrationClass;
+import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.gui.GuiHandlerBase;
 import cn.annoreg.mc.gui.RegGuiHandler;
 import cn.liutils.api.key.IKeyHandler;
@@ -29,7 +29,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 /**
  * @author WeAthFolD
  */
-@RegistrationClass
+@Registrant
 public class GuiEdit extends LIGuiScreen {
 	
 	static final String CONFIG_PATH = "config/cgui_layout.conf";
