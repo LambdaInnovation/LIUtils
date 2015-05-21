@@ -24,7 +24,6 @@ import com.google.gson.JsonObject;
 
 import cpw.mods.fml.common.registry.GameRegistry;
 import cn.liutils.loading.item.DefaultRules.*;
-import cn.weaponry.core.Weaponry;
 
 /**
  * Primitive info:
@@ -108,7 +107,7 @@ public class ItemLoader<T extends Item> extends Loader<T> {
 		try {
 			doInit(object, name);
 		} catch (Exception e) {
-			Weaponry.log.error("error occured doing item post-init, name:" + name + ", object: " + object);
+			LIUtils.log.error("error occured doing item post-init, name:" + name + ", object: " + object);
 			e.printStackTrace();
 		}
 	}
