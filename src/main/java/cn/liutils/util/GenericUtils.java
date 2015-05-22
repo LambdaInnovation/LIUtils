@@ -133,7 +133,7 @@ public class GenericUtils {
 	public static int mergeStackable(InventoryPlayer inv, ItemStack stack) {
 		for(int i = 0; i < inv.getSizeInventory() - 4 && stack.stackSize > 0; ++i) {
 			ItemStack is = inv.getStackInSlot(i);
-			if(is != null && is.getItem() == stack.getItem()) {
+			if(is != null && isStackDataEqual(stack, is)) {
 				is.stackSize += stack.stackSize;
 				int left = Math.max(0, is.stackSize - is.getMaxStackSize());
 				stack.stackSize = left;
@@ -149,6 +149,17 @@ public class GenericUtils {
 			return 0;
 		}
 		return 0;
+	}
+	
+	public static boolean isStackDataEqual(ItemStack s1, ItemStack s2) {
+		if(s1.getItem() != s1.getItem())
+			return false;
+		NBTTagCompound tag1 = s1.getTagCompound(), tag2 = s2.getTagCompound();
+		if(tag1 == null || tag2 == null) {
+			return tag1 == null && tag2 == null;
+		}
+		
+		return tag1.equals(tag2);
 	}
 	
 	public static AxisAlignedBB getBoundingBox(double minX, double minY,double minZ,double maxX,double maxY, double maxZ) {

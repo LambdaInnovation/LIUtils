@@ -64,13 +64,13 @@ public class RenderUtils {
 	 * Render an item in default preference.
 	 */
 	public static void renderItemIn2d(ItemStack stackToRender, double w) {
-		renderItemIn2d(stackToRender, w, null);
+		renderItemIn2d(stackToRender, w, null, false);
 	}
 
 	/**
 	 * Render an item in default preference. However you can specify the special icon or item width.
 	 */
-	public static void renderItemIn2d(ItemStack stackToRender, double w, IIcon specialIcon) {
+	public static void renderItemIn2d(ItemStack stackToRender, double w, IIcon specialIcon, boolean faceOnly) {
 		IIcon icon = stackToRender.getIconIndex();
 		if (specialIcon != null)
 			icon = specialIcon;
@@ -80,17 +80,22 @@ public class RenderUtils {
 		mc.renderEngine.bindTexture(mc.renderEngine.getResourceLocation(stackToRender.getItemSpriteNumber()));
 		ResourceLocation tex = mc.renderEngine.getResourceLocation(stackToRender.getItemSpriteNumber());
 		
-		renderItemIn2d(w, tex, tex, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV());
+		renderItemIn2d(w, tex, tex, icon.getMinU(), icon.getMinV(), icon.getMaxU(), icon.getMaxV(), faceOnly);
+	}
+	
+	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back) {
+		renderItemIn2d(w, front, back, 0, 0, 1, 1, false);
 	}
 	
 	/**
 	 * Render an item with different textures on each side.
 	 */
-	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back) {
-		renderItemIn2d(w, front, back, 0, 0, 1, 1);
+	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back, boolean faceOnly) {
+		renderItemIn2d(w, front, back, 0, 0, 1, 1, faceOnly);
 	}
 	
-	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back, double u1, double v1, double u2, double v2) {
+	public static void renderItemIn2d(double w, ResourceLocation front, ResourceLocation back, 
+			double u1, double v1, double u2, double v2, boolean faceOnly) {
 		Vec3 a1 = newV3(0, 0, w), a2 = newV3(1, 0, w), a3 = newV3(1, 1, w), a4 = newV3(
 				0, 1, w), a5 = newV3(0, 0, -w), a6 = newV3(1, 0, -w), a7 = newV3(
 				1, 1, -w), a8 = newV3(0, 1, -w);
@@ -130,23 +135,25 @@ public class RenderUtils {
 		float tx = 1.0f / (32 * tileSize);
 		float tz = 1.0f / tileSize;
 
-		t.startDrawingQuads();
-		t.setNormal(-1.0F, 0.0F, 0.0F);
-		for (var7 = 0; var7 < tileSize; ++var7) {
-			var8 = (float) var7 / tileSize;
-			var9 = u2 - (u2 - u1) * var8 - tx;
-			var10 = 1.0F * var8;
-			t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
-			t.addVertexWithUV(var10, 0.0D, w, var9, v2);
-			t.addVertexWithUV(var10, 1.0D, w, var9, v1);
-			t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
-
-			t.addVertexWithUV(var10, 1.0D, w, var9, v1);
-			t.addVertexWithUV(var10, 0.0D, w, var9, v2);
-			t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
-			t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
+		if(!faceOnly) {
+			t.startDrawingQuads();
+			t.setNormal(-1.0F, 0.0F, 0.0F);
+			for (var7 = 0; var7 < tileSize; ++var7) {
+				var8 = (float) var7 / tileSize;
+				var9 = u2 - (u2 - u1) * var8 - tx;
+				var10 = 1.0F * var8;
+				t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
+				t.addVertexWithUV(var10, 0.0D, w, var9, v2);
+				t.addVertexWithUV(var10, 1.0D, w, var9, v1);
+				t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
+	
+				t.addVertexWithUV(var10, 1.0D, w, var9, v1);
+				t.addVertexWithUV(var10, 0.0D, w, var9, v2);
+				t.addVertexWithUV(var10, 0.0D, -w, var9, v2);
+				t.addVertexWithUV(var10, 1.0D, -w, var9, v1);
+			}
+			t.draw();
 		}
-		t.draw();
 
 		GL11.glPopMatrix();
 	}
