@@ -18,6 +18,7 @@ import java.util.List;
 import net.minecraft.block.Block;
 import cn.liutils.core.LIUtils;
 import cn.liutils.loading.Loader;
+import cn.liutils.render.material.Material;
 
 /**
  * @author WeAthFolD
@@ -50,9 +51,14 @@ public class BlockLoader extends Loader<Block> {
 		pass1 = true;
 		try {
 			String clazzName = ns.getString("blockType");
+			
+			String matName = ns.getString("material");
+			//TODO: Internal mapping
+			Material mat = (Material) Material.class.getField(matName).get(null);
+			
 			Class<? extends Block> clazz = (Class<? extends Block>) Class.forName(clazzName);
 			
-			Block block = clazz.newInstance();
+			Block block = clazz.getConstructor(Material.class).newInstance(mat);
 			doInit(block, ns, name);
 			
 			return block;
