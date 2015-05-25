@@ -88,6 +88,14 @@ public class CGUILang {
 		return local("cgui.command.filenotfound");
 	}
 	
+	public static String commSaveFailed() {
+		return local("cgui.command.savefailed");
+	}
+	
+	public static String commSaved() {
+		return local("cgui.command.saved");
+	}
+	
 	public static String commUsage() {
 		return local("cgui.command.usage");
 	}

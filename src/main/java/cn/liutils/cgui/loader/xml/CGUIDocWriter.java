@@ -63,7 +63,7 @@ public class CGUIDocWriter {
 		}
 	}
 	
-	public void saveToXml(File dest) {
+	public boolean saveToXml(File dest) {
 		try {
 			Document doc = db.newDocument();
 			
@@ -79,8 +79,11 @@ public class CGUIDocWriter {
 			DOMSource source = new DOMSource(doc);
 			StreamResult result =  new StreamResult(dest);
 			transformer.transform(source, result);
+			
+			return true;
 		} catch(Exception e) {
 			e.printStackTrace();
+			return false;
 		}
 	}
 	
@@ -117,10 +120,10 @@ public class CGUIDocWriter {
 		return root;
 	}
 	
-	public static void save(LIGui gui, File file) {
+	public static boolean save(LIGui gui, File file) {
 		instance.clearContent();
 		instance.feed(gui);
-		instance.saveToXml(file);
+		return instance.saveToXml(file);
 	}
 	
 }

@@ -12,6 +12,7 @@ import net.minecraftforge.common.config.Configuration;
 import org.lwjgl.opengl.GL11;
 
 import cn.annoreg.core.Registrant;
+import cn.liutils.cgui.client.CGUILang;
 import cn.liutils.cgui.gui.LIGui;
 import cn.liutils.cgui.gui.LIGuiScreen;
 import cn.liutils.cgui.gui.Widget;
@@ -126,12 +127,13 @@ public class GuiEdit extends LIGuiScreen {
     	if(path == null)
     		throw new IllegalStateException("Null path!");
     	File file;
-    	file = new File("cgui/" + path);
+    	file = new File(path);
     	if(file.isFile()) file.delete();
-    	if(!file.isDirectory()) file.mkdirs();
     	
-    	CGUIDocWriter.save(toEdit, file);
-    	Minecraft.getMinecraft().thePlayer.sendChatMessage("Sucessfully saved to " + file.getName());
+    	boolean res = CGUIDocWriter.save(toEdit, file);
+    	Minecraft.getMinecraft().thePlayer.sendChatMessage(res ? 
+    		CGUILang.commSaved() + file.getName() :
+    		CGUILang.commSaveFailed() + file.getName());
     }
     
     private void saveResult(String name) {
@@ -145,8 +147,10 @@ public class GuiEdit extends LIGuiScreen {
     		file = new File("cgui/" + name + (i++) + ".xml");
     	} while(file.canRead() || file.isDirectory());
     	
-    	CGUIDocWriter.save(toEdit, file);
-    	Minecraft.getMinecraft().thePlayer.sendChatMessage("Sucessfully saved to " + file.getName());
+    	if(CGUIDocWriter.save(toEdit, file))
+    		Minecraft.getMinecraft().thePlayer.sendChatMessage(CGUILang.commSaved() + file.getName());
+    	else
+    		Minecraft.getMinecraft().thePlayer.sendChatMessage(CGUILang.commSaveFailed() + file.getName());
     }
     
     public boolean doesGuiPauseGame() {

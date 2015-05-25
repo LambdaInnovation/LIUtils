@@ -5,6 +5,8 @@
 #CGUI
 cgui.command.usage=/cgui <filepath> or /cgui
 cgui.command.filenotfound=File doesnt exist.
+cgui.command.savefailed=Failed saving the xml file 
+cgui.command.saved=Successfully saved 
 
 cgui.text.selection=Current selection: 
 cgui.text.background=Background

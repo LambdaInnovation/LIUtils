@@ -79,7 +79,10 @@ public class SaveAsScreen extends Window {
 				if(file.exists()) {
 					lastWarningTime = Minecraft.getSystemTime();
 				} else {
-					CGUIDocWriter.save(guiEdit.toEdit, file);
+					if(!CGUIDocWriter.save(guiEdit.toEdit, file))
+						Minecraft.getMinecraft().thePlayer.sendChatMessage(CGUILang.commSaveFailed() + textBox.content);
+					else
+						Minecraft.getMinecraft().thePlayer.sendChatMessage(CGUILang.commSaved() + textBox.content);
 					guiEdit.path = textBox.content;
 					SaveAsScreen.this.dispose();
 				}

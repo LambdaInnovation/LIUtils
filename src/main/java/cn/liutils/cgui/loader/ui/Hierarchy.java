@@ -318,7 +318,7 @@ public class Hierarchy extends Window {
 						b = 0;
 					}
 					GL11.glColor4d(r, g, b, brightness);
-					HudUtils.rect(0, 0, w.transform.width, w.transform.height);
+					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 				}
 			});
 			

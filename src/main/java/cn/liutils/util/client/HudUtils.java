@@ -68,7 +68,13 @@ public class HudUtils {
 	
 	public static void colorRect(double x, double y, double width, double height) {
 		GL11.glDisable(GL11.GL_TEXTURE_2D);
-		rect(x, y, width, height);
+		Tessellator t = Tessellator.instance;
+        t.startDrawingQuads();
+        t.addVertex(x + 0, 	   y + height, zLevel);
+        t.addVertex(x + width, y + height, zLevel);
+        t.addVertex(x + width, y + 0,	   zLevel);
+        t.addVertex(x + 0, 	   y + 0, 	   zLevel);
+        t.draw();
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 	}
 	
