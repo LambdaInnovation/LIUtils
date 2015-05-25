@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.util.space.Motion3D;
+import cn.liutils.util.helper.Motion3D;
 
 public class RenderModelProjectile extends Render {
 

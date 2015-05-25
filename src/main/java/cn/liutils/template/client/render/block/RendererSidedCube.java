@@ -21,8 +21,8 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.util.RenderUtils;
-import cn.liutils.util.VecUtils;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.generic.VecUtils;
 
 
 /**
@@ -50,9 +50,6 @@ public abstract class RendererSidedCube extends TileEntitySpecialRenderer {
 	/** The maximum Z value for rendering (default 1.0). */
 	private double maxZ;
 
-	/**
-	 * 这货一定要在构造器里被加载。
-	 */
 	protected Block block;
 
 	public RendererSidedCube(Block blockType) {

@@ -12,8 +12,6 @@
  */
 package cn.liutils.cgui.loader.ui;
 
-import java.awt.Toolkit;
-import java.awt.datatransfer.DataFlavor;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -44,9 +42,9 @@ import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
 import cn.liutils.cgui.loader.ui.event.AddTargetEvent.AddTargetHandler;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.render.Font;
-import cn.liutils.util.render.Font.Align;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.Font.Align;
 
 
 /**
@@ -320,7 +318,7 @@ public class Hierarchy extends Window {
 						b = 0;
 					}
 					GL11.glColor4d(r, g, b, brightness);
-					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
+					HudUtils.rect(0, 0, w.transform.width, w.transform.height);
 				}
 			});
 			

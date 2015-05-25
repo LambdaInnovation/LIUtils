@@ -32,10 +32,10 @@ import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.CGUIEditor;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.Font;
-import cn.liutils.util.render.Font.Align;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.Font.Align;
 
 /**
  * @author WeAthFolD
@@ -120,7 +120,7 @@ public class SelectedWidgetBar extends Window {
 					public void handleEvent(Widget w, FrameEvent event) {
 						RenderUtils.loadTexture(tex);
 						GL11.glColor4d(1, 1, 1, 1);
-						HudUtils.drawRect(45, 0, 10, 10);
+						HudUtils.rect(45, 0, 10, 10);
 					}
 				});
 				

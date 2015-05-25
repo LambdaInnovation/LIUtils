@@ -19,9 +19,9 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Color;
 
 /**
  * @author WeAthFolD
@@ -45,7 +45,7 @@ public class DrawTexture extends Component {
 					RenderUtils.loadTexture(texture);
 				else
 					GL11.glDisable(GL11.GL_TEXTURE_2D);
-				HudUtils.drawRect(0, 0, w.transform.width, w.transform.height);
+				HudUtils.rect(0, 0, w.transform.width, w.transform.height);
 				GL11.glEnable(GL11.GL_TEXTURE_2D);
 			}
 		});

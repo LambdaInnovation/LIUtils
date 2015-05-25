@@ -28,8 +28,8 @@ import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.render.Font;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Font;
 
 /**
  * @author WeAthFolD
@@ -86,10 +86,10 @@ public class Window extends Widget {
 				final double bar_ht = 10;
 				
 				GuiEdit.bindColor(2);
-				HudUtils.drawModalRect(0, 0, t.width, bar_ht);
+				HudUtils.colorRect(0, 0, t.width, bar_ht);
 				
 				GuiEdit.bindColor(1);
-				HudUtils.drawModalRect(0, bar_ht, t.width, t.height - bar_ht);
+				HudUtils.colorRect(0, bar_ht, t.width, t.height - bar_ht);
 				
 				Font.font.draw(name, 10, 0, 10, 0x7fbeff);
 			}

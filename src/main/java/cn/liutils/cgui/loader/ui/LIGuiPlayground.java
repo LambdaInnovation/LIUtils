@@ -25,10 +25,9 @@ import cn.liutils.cgui.gui.event.GainFocusEvent.GainFocusHandler;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent.AddWidgetHandler;
 import cn.liutils.cgui.loader.ui.event.AddTargetEvent;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.Font;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.Font;
 
 /**
  * Handler of edit content also provides environment information for GuiEdit and other toolbars.

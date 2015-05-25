@@ -23,13 +23,11 @@ import cn.annoreg.core.RegistrationMod;
 import cn.annoreg.mc.RegMessageHandler;
 import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
-import cn.liutils.core.proxy.LICommonProxy;
 import cn.liutils.debug.CmdMineStatistics;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.SidedProxy;
 import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
@@ -70,9 +68,6 @@ public class LIUtils {
 	@Instance("LIutils")
 	public static LIUtils instance;
 	
-	@SidedProxy(serverSide = "cn.liutils.core.proxy.LICommonProxy", clientSide = "cn.liutils.core.proxy.LIClientProxy")
-	public static LICommonProxy proxy;
-	
 	public static Logger log = FMLLog.getLogger();
 
 	@RegMessageHandler.WrapperInstance
@@ -85,37 +80,26 @@ public class LIUtils {
 		log.info("Copyright (c) Lambda Innovation, 2013-2015");
 		log.info("http://www.li-dev.cn/");
 		
-		//Initialize FMLGameEvent dispatcher
 		LIFMLGameEventDispatcher.init();
 		
 		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
-		
-		//netHandler.registerMessage(MsgTileDirMulti.Handler.class, MsgTileDirMulti.class, 0, Side.CLIENT);
-		//netHandler.registerMessage(MsgTileDirMulti.Request.Handler.class, MsgTileDirMulti.Request.class, 1, Side.SERVER);
-		
+	
 		MinecraftForge.EVENT_BUS.register(new LIEventListener());
-		//FMLCommonHandler.instance().bus().register(new LITickEvents());
-		proxy.preInit();
 	}
 	
 	@EventHandler()
 	public void init(FMLInitializationEvent Init) {
-		proxy.init();
-		
 		RegistrationManager.INSTANCE.registerAll(this, "Init");
 	}
 	
 	@EventHandler()
 	public void postInit(FMLPostInitializationEvent event) {
-		proxy.postInit();
-		
 		RegistrationManager.INSTANCE.registerAll(this, "PostInit");
 	}
 	
 	@EventHandler()
 	public void serverStarting(FMLServerStartingEvent event) {
 		CommandHandler cm = (CommandHandler) event.getServer().getCommandManager();
-		proxy.cmdInit(cm);
 		if(DEBUG) {
 		    cm.registerCommand(new CmdMineStatistics());
 		}

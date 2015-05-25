@@ -10,7 +10,7 @@ import net.minecraft.util.ResourceLocation;
 import org.apache.commons.io.IOUtils;
 
 import cn.liutils.core.LIUtils;
-import cn.liutils.util.GenericUtils;
+import cn.liutils.util.generic.RegistryUtils;
 
 import com.google.common.collect.HashBiMap;
 import com.google.gson.JsonElement;
@@ -33,14 +33,6 @@ public abstract class Loader<T> {
 	
 	public void feed(String json) {
 		feed(parser.parse(json).getAsJsonObject());
-	}
-	
-	public void feed(ResourceLocation res) {
-		try {
-			feed(IOUtils.toString(GenericUtils.getResourceStream(res)));
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
 	}
 	
 	public void feed(JsonObject root) {

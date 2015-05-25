@@ -15,8 +15,8 @@ package cn.liutils.cgui.gui.component;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.HudUtils;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Color;
 
 /**
  * @author WeAthFolD
@@ -35,7 +35,7 @@ public class Tint extends Component {
 			public void handleEvent(Widget w, FrameEvent event) {
 				if(event.hovering) hoverColor.bind();
 				else idleColor.bind();
-				HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
+				HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 			}
 		});
 	}

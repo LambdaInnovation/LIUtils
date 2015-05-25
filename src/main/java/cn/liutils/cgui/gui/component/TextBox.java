@@ -39,9 +39,9 @@ import cn.liutils.cgui.gui.event.KeyEvent;
 import cn.liutils.cgui.gui.event.KeyEvent.KeyEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.render.Font;
-import cn.liutils.util.render.Font.Align;
+import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.Font.Align;
 
 /**
  * 事实证明UI底层是十分蛋疼的……

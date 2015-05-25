@@ -23,9 +23,9 @@ import cn.liutils.cgui.gui.annotations.EditIgnore;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
-import cn.liutils.cgui.utils.Color;
 import cn.liutils.core.LIUtils;
-import cn.liutils.util.render.Font;
+import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.Font;
 
 /**
  * Editor for a single property type. Currently is generated each time it is queried.

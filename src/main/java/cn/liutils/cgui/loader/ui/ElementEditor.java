@@ -33,11 +33,11 @@ import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.cgui.utils.TypeHelper;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
-import cn.liutils.util.render.Font;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.TypeHelper;
 
 /**
  * @author WeAthFolD
@@ -155,11 +155,11 @@ public abstract class ElementEditor extends Widget {
 					}
 					GL11.glColor4d(1, 1, 1, .8);
 					RenderUtils.loadTexture(OUTLINE);
-					HudUtils.drawRect(0, 0, 10, 10);
+					HudUtils.rect(0, 0, 10, 10);
 					
 					if(state) {
 						RenderUtils.loadTexture(CHECK);
-						HudUtils.drawRect(0, 0, w.transform.width, w.transform.height);
+						HudUtils.rect(0, 0, w.transform.width, w.transform.height);
 					}
 				}
 			});
@@ -303,7 +303,7 @@ public abstract class ElementEditor extends Widget {
 					} else {
 						GL11.glColor4d(1, 1, 1, 0.3);
 					}
-					HudUtils.drawModalRect(0, 0, 
+					HudUtils.rect(0, 0, 
 						w.transform.width, w.transform.height);
 					GL11.glColor4d(1, 1, 1, 1);
 				}

@@ -26,8 +26,8 @@ import cn.liutils.cgui.gui.annotations.EditIgnore;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventBus;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
-import cn.liutils.cgui.utils.TypeHelper;
 import cn.liutils.core.LIUtils;
+import cn.liutils.util.helper.TypeHelper;
 
 /**
  * Component is the basic content of Widget. It can define a set of EventHandlers and store information itself.

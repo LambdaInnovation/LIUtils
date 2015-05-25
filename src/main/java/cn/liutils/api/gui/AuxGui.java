@@ -13,14 +13,7 @@
 package cn.liutils.api.gui;
 
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.settings.KeyBinding;
-import cn.liutils.api.key.IKeyHandler;
-import cn.liutils.api.key.LIKeyProcess;
 import cn.liutils.core.event.AuxGuiHandler;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 

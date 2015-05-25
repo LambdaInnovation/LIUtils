@@ -23,16 +23,15 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.DrawTexture;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
-import cn.liutils.cgui.gui.component.Transform.WidthAlign;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.xml.CGUIDocWriter;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.render.Font;
-import cn.liutils.util.render.Font.Align;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.Font.Align;
 
 /**
  * @author WeAthFolD
@@ -93,7 +92,7 @@ public class SaveAsScreen extends Window {
 				Font.font.draw(CGUILang.butSave(), 9, 1, 6, 0xffffff, Align.CENTER);
 				if(Minecraft.getSystemTime() - lastWarningTime < 1000L) {
 					GL11.glColor4d(1, .3, .3, .3);
-					HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
+					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 					GL11.glColor4d(1, 1, 1, 1);
 				}
 			}

@@ -14,13 +14,14 @@ package cn.liutils.template.client.render.block;
 
 import java.util.Random;
 
-import org.lwjgl.opengl.GL11;
-
-import cn.liutils.api.render.model.ITileEntityModel;
-import cn.liutils.util.RenderUtils;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+
+import cn.liutils.api.render.model.ITileEntityModel;
+import cn.liutils.util.client.RenderUtils;
 
 public class RenderTileEntityModel extends TileEntitySpecialRenderer {
 

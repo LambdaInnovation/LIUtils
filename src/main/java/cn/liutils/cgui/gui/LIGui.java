@@ -19,9 +19,6 @@ import net.minecraft.client.Minecraft;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
-import cn.liutils.api.key.IKeyHandler;
-import cn.liutils.api.key.LIKeyProcess;
-import cn.liutils.api.key.LIKeyProcess.Trigger;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.DragEvent;
 import cn.liutils.cgui.gui.event.FrameEvent;
@@ -35,9 +32,7 @@ import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
 import cn.liutils.core.LIUtils;
-import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
+import cn.liutils.util.client.HudUtils;
 
 /**
  * @author WeathFolD
@@ -426,8 +421,7 @@ public class LIGui extends WidgetContainer {
 		GL11.glLoadIdentity();
 		
 		GL11.glColor4d(0, 0, 0, 0.6);
-		HudUtils.setZLevel(-1);
-		HudUtils.drawModalRect(0, 0, 1, 1);
+		HudUtils.colorRect(0, 0, 1, 1);
 		
 		GL11.glPopMatrix();
 		

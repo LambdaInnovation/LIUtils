@@ -22,6 +22,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.annoreg.core.Registrant;
+import cn.annoreg.mc.RegEventHandler;
 import cn.liutils.api.gui.AuxGui;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -32,8 +34,14 @@ import cpw.mods.fml.relauncher.SideOnly;
  *
  */
 @SideOnly(Side.CLIENT)
+@Registrant
 public class AuxGuiHandler {
 
+	@RegEventHandler
+	public static AuxGuiHandler instance = new AuxGuiHandler();
+	
+	private AuxGuiHandler() {}
+	
 	private static Set<AuxGui> auxGuiList = new HashSet<AuxGui>();
 	
 	public static void registerAuxGui(AuxGui gui) {

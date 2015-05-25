@@ -12,6 +12,7 @@
  */
 package cn.liutils.cgui.loader.xml;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringReader;
 import java.util.HashMap;
@@ -23,6 +24,7 @@ import javax.xml.parsers.ParserConfigurationException;
 
 import net.minecraft.util.ResourceLocation;
 
+import org.apache.commons.io.IOUtils;
 import org.apache.commons.io.input.ReaderInputStream;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -36,7 +38,7 @@ import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.loader.EventLoader;
 import cn.liutils.core.LIUtils;
-import cn.liutils.util.GenericUtils;
+import cn.liutils.util.generic.RegistryUtils;
 
 /**
  * @author WeAthFolD
@@ -57,10 +59,6 @@ public class CGUIDocLoader {
 		} catch (ParserConfigurationException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public LIGui loadXml(ResourceLocation xmlPath) throws Exception {
-		return loadXml(GenericUtils.getResourceStream(xmlPath));
 	}
 	
 	public LIGui loadXml(String xml) throws Exception {
@@ -153,13 +151,13 @@ public class CGUIDocLoader {
 	}
 	
 	public static LIGui load(ResourceLocation xml) {
+		String str = null;
 		try {
-			return instance.loadXml(xml);
-		} catch (Exception e) {
-			System.err.println("An error occured when loading CGUI document.");
+			str = IOUtils.toString(RegistryUtils.getResourceStream(xml));
+		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		return null;
+		return load(str);
 	}
 	
 	public static LIGui load(String xml, Object callbackProvider) {

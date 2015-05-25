@@ -39,7 +39,7 @@ public class PlayerRenderHookRegistration
 	@Target({ElementType.TYPE, ElementType.FIELD})
 	@Retention(RetentionPolicy.RUNTIME)
 	public @interface RegPlayerRenderHook {
-		enum Pass { OPAQUE, ALPHA };
+		public enum Pass { OPAQUE, ALPHA };
 		Pass value() default Pass.OPAQUE;
 	}
 

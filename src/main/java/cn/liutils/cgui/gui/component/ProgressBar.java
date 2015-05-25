@@ -22,9 +22,9 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.RenderUtils;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Color;
 
 /**
  * @author WeAthFolD
@@ -71,7 +71,7 @@ public class ProgressBar extends Component {
 						//Buffering
 						double delta = progress - progressDisplay;
 						double sgn = Math.signum(delta);
-						delta = Math.min(Math.abs(delta), dt * maxFluctSpeed);
+						delta = Math.min(Math.abs(delta), dt * maxDelta);
 						progressDisplay += sgn * delta;
 					}
 					
@@ -149,7 +149,7 @@ public class ProgressBar extends Component {
 					} else {
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
 					}
-					HudUtils.rawDrawRect(x, y, u, v, w, h, tw, th);
+					HudUtils.rawRect(x, y, u, v, w, h, tw, th);
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 				}
 			}

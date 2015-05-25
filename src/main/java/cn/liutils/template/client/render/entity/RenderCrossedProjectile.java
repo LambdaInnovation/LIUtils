@@ -22,8 +22,8 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
-import cn.liutils.util.RenderUtils;
-import cn.liutils.util.space.Motion3D;
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Motion3D;
 
 /**
  * Render of 'projectile' type of renders. This renders a crossed square billboard at the entity position,

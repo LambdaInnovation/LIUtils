@@ -27,9 +27,9 @@ import cn.liutils.cgui.gui.event.LostFocusEvent.LostFocusHandler;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.cgui.loader.CGUIEditor;
-import cn.liutils.util.HudUtils;
-import cn.liutils.util.render.Font;
-import cn.liutils.util.render.Font.Align;
+import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.Font.Align;
 
 /**
  * @author WeAthFolD
@@ -83,7 +83,7 @@ public class Toolbar extends Window {
 				public void handleEvent(Widget widget, FrameEvent event) {
 					if(event.hovering && !isLocked) {
 						GL11.glColor4d(1, 1, 1, .5);
-						HudUtils.drawModalRect(0, 0, transform.width, transform.height);
+						HudUtils.colorRect(0, 0, transform.width, transform.height);
 						Font.font.draw(name, 9, 19, 10, 0x9fceff, Align.CENTER);
 					}
 				}
@@ -115,7 +115,7 @@ public class Toolbar extends Window {
 					@Override
 					public void handleEvent(Widget w, FrameEvent event) {
 						GL11.glColor4d(.3, .3, .3, event.hovering ? 0.8 : 0.5);
-						HudUtils.drawModalRect(0, 0, w.transform.width, w.transform.height);
+						HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 						
 						Font.font.draw(name, 25, 1.5, 10, 0x98b8e2, Align.CENTER);
 					}

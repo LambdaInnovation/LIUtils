@@ -12,13 +12,14 @@
  */
 package cn.liutils.render.particle;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
-import cn.liutils.cgui.utils.Color;
-import cn.liutils.util.RenderUtils;
+
+import org.lwjgl.opengl.GL11;
+
+import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.Color;
 
 /**
  * Represents an drawable sprite in origin. Always face (0, 0, -1).
