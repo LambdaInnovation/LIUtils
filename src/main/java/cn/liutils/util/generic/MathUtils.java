@@ -28,7 +28,7 @@ public class MathUtils {
 	 * @param lambda The weight of b
 	 * @return The lerp value
 	 */
-	public double lerp(double a, double b, double lambda) {
+	public static double lerp(double a, double b, double lambda) {
 		return a * (1 - lambda) + b * lambda;
 	}
 	
