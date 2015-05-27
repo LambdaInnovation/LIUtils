@@ -420,7 +420,8 @@ public class LIGui extends WidgetContainer {
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
 		
-		GL11.glColor4d(0, 0, 0, 0.6);
+		GL11.glColor4d(0, 0, 0, 0.7);
+		GL11.glTranslated(0, 0, 90);
 		HudUtils.colorRect(0, 0, 1, 1);
 		
 		GL11.glPopMatrix();

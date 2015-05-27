@@ -153,6 +153,7 @@ public class Widget extends WidgetContainer {
 		while(iter.hasNext()) {
 			Component c = iter.next();
 			if(c.name.equals(name)) {
+				c.onRemoved();
 				iter.remove();
 				return;
 			}
@@ -172,12 +173,17 @@ public class Widget extends WidgetContainer {
 		return this;
 	}
 	
+	public final Widget regEventHandlerAtBegin(GuiEventHandler h) {
+		eventBus.regAtBeginning(h);
+		return this;
+	}
+	
 	public final void postEvent(GuiEvent event) {
+		eventBus.postEvent(this, event);
 		for(Component c : components) {
 			if(c.enabled)
 				c.postEvent(this, event);
 		}
-		eventBus.postEvent(this, event);
 	}
 	
 	//Utils

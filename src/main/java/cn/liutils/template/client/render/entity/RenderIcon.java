@@ -12,7 +12,6 @@
  */
 package cn.liutils.template.client.render.entity;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.entity.Render;
@@ -23,6 +22,8 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 
 import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.client.ViewOptimize;
+import cn.liutils.util.helper.Color;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -32,36 +33,16 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public class RenderIcon extends Render {
 	
-	public double 
-		fpOffsetX = 0.0,
-		fpOffsetY = -0.2,
-		fpOffsetZ = -0.2;
-
-	public double 
-		tpOffsetX = 0.0,
-		tpOffsetY = -0.2,
-		tpOffsetZ = -0.4;
-	
-	
 	protected ResourceLocation icon;
-	private boolean renderBlend = false;
-	protected double alpha = 1.0F;
 	private float size = 0.5F;
-	protected boolean enableDepth = true;
 	protected boolean hasLight = false;
-	protected double r = 1.0F, g = 1.0F, b = 1.0f;
+	public Color color = Color.WHITE();
 	protected boolean viewOptimize = false;
 	
 	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
 
 	public RenderIcon(ResourceLocation ic) {
 		icon = ic;
-	}
-
-	public RenderIcon setBlend(float a) {
-		renderBlend = true;
-		alpha = a;
-		return this;
 	}
 	
 	public RenderIcon setViewOptimize() {
@@ -80,26 +61,6 @@ public class RenderIcon extends Render {
 		hasLight = b;
 		return this;
 	}
-	
-	public RenderIcon setEnableDepth(boolean b) {
-		enableDepth = b;
-		return this;
-	}
-	
-	public RenderIcon setColorRGB(double r, double g, double b) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		return this;
-	}
-	
-	public RenderIcon setColorRGBA(double r, double g, double b, double a) {
-		this.r = r;
-		this.g = g;
-		this.b = b;
-		this.alpha = a;
-		return this;
-	}
 
 	@Override
 	public void doRender(Entity par1Entity, double par2, double par4,
@@ -107,11 +68,9 @@ public class RenderIcon extends Render {
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glEnable(GL12.GL_RESCALE_NORMAL);
 			GL11.glDisable(GL11.GL_CULL_FACE);
-			if(!enableDepth) 
-				GL11.glDisable(GL11.GL_DEPTH_TEST);
 			if(!hasLight)
 				GL11.glDisable(GL11.GL_LIGHTING);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glAlphaFunc(GL11.GL_GREATER, minTolerateAlpha);
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef((float) par2, (float) par4, (float) par6);
@@ -119,12 +78,7 @@ public class RenderIcon extends Render {
 				postTranslate(par1Entity);
 				
 				if(this.viewOptimize) {
-					boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
-					if(firstPerson) {
-						GL11.glTranslated(fpOffsetX, fpOffsetY, fpOffsetZ);
-					} else {
-						GL11.glTranslated(tpOffsetX, tpOffsetY, tpOffsetZ);
-					}
+					ViewOptimize.fix();
 				}
 				
 				if(icon != null) RenderUtils.loadTexture(icon);
@@ -135,7 +89,6 @@ public class RenderIcon extends Render {
 			} GL11.glPopMatrix();
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
 			GL11.glDisable(GL11.GL_BLEND);
-			GL11.glEnable(GL11.GL_DEPTH_TEST);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_CULL_FACE);
 	}
@@ -153,7 +106,7 @@ public class RenderIcon extends Render {
 		if(!hasLight) 
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
 		firstTranslate(e);
-		GL11.glColor4d(r, g, b, alpha);
+		color.bind();
 		tessllator.startDrawingQuads();
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);

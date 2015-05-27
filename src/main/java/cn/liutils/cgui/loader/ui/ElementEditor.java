@@ -303,7 +303,7 @@ public abstract class ElementEditor extends Widget {
 					} else {
 						GL11.glColor4d(1, 1, 1, 0.3);
 					}
-					HudUtils.rect(0, 0, 
+					HudUtils.colorRect(0, 0, 
 						w.transform.width, w.transform.height);
 					GL11.glColor4d(1, 1, 1, 1);
 				}

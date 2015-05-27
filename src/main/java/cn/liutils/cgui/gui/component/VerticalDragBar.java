@@ -38,12 +38,12 @@ public class VerticalDragBar extends Component {
 				w.transform.x = originalX;
 				w.getGui().updateWidget(w);
 				
-				w.postEvent(new DraggedEvent());
 				if(w.transform.y > y1) {
 					w.transform.y = y1;
 				} else if(w.transform.y < y0) {
 					w.transform.y = y0;
 				}
+				w.postEvent(new DraggedEvent());
 				w.dirty = true;
 			}
 			

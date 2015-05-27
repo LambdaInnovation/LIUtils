@@ -41,12 +41,12 @@ public class DrawTexture extends Component {
 			public void handleEvent(Widget w, FrameEvent event) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				color.bind();
-				if(texture != null)
+				if(texture != null) {
 					RenderUtils.loadTexture(texture);
-				else
-					GL11.glDisable(GL11.GL_TEXTURE_2D);
-				HudUtils.rect(0, 0, w.transform.width, w.transform.height);
-				GL11.glEnable(GL11.GL_TEXTURE_2D);
+					HudUtils.rect(0, 0, w.transform.width, w.transform.height);
+				} else {
+					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
+				}
 			}
 		});
 	}

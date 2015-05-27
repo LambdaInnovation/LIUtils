@@ -86,6 +86,13 @@ public class ElementList extends Component {
 		
 	}
 	
+	@Override
+	public void onRemoved() {
+		for(Widget w : subWidgets) {
+			w.dispose();
+		}
+	}
+	
 	public static class ProgressChangedEvent implements GuiEvent  {}
 	
 	public abstract static class ProgressChangeHandler extends GuiEventHandler<ProgressChangedEvent> {

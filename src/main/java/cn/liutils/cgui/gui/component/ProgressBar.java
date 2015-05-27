@@ -36,7 +36,7 @@ public class ProgressBar extends Component {
 	
 	public boolean illustrating = false;
 	public ResourceLocation texture;
-	public double maxDelta = 0.1; //prog per sec
+	public double maxDelta = 0.5; //prog per sec
 	public double 
 		maxFluctSpeed = .8, //prog per sec
 		fluctRegion = 0.15; //fluct in (progress - 0.5*fluctRegion, progress + 0.5 * fluctRegion)

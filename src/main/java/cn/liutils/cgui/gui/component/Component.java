@@ -71,6 +71,10 @@ public class Component {
 		eventBus.regEventHandler(handler);
 	}
 	
+	public void onRemoved() {
+		
+	}
+	
 	public void postEvent(Widget w, GuiEvent event) {
 		eventBus.postEvent(w, event);
 	}
