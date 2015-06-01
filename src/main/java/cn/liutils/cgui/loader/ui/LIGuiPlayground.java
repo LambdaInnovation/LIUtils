@@ -72,9 +72,9 @@ public class LIGuiPlayground extends LIGui {
 			public void handleEvent(Widget w, FrameEvent event) {
 				if(getFocus() == w) {
 					c.bind();
-					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 3);
-				} else {
 					HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);
+				} else {
+					//HudUtils.drawRectOutline(0, 0, w.transform.width, w.transform.height, 1);
 				}
 			}
 		});

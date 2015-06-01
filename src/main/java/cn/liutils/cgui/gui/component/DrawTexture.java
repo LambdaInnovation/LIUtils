@@ -33,6 +33,8 @@ public class DrawTexture extends Component {
 	public ResourceLocation texture = MISSING;
 	
 	public Color color = new Color(1, 1, 1, 1);
+	
+	public double zLevel = 0;
 
 	public DrawTexture() {
 		super("DrawTexture");
@@ -41,12 +43,16 @@ public class DrawTexture extends Component {
 			public void handleEvent(Widget w, FrameEvent event) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				color.bind();
+				
+				double preLevel = HudUtils.zLevel;
+				HudUtils.zLevel = zLevel;
 				if(texture != null) {
 					RenderUtils.loadTexture(texture);
 					HudUtils.rect(0, 0, w.transform.width, w.transform.height);
 				} else {
 					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 				}
+				HudUtils.zLevel = preLevel;
 			}
 		});
 	}

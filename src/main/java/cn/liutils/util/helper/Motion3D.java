@@ -15,9 +15,9 @@ package cn.liutils.util.helper;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 import cn.liutils.util.generic.DebugUtils;
 
 /**
@@ -106,7 +106,9 @@ public class Motion3D {
 		if (dirFlag) {
 			float var3 = 1.0F, var4 = 0.0F;
 			
-			float rotationYaw = (float) (entity.getRotationYawHead() + 2 * (RNG.nextFloat() - 0.5F) * offset);
+			float rotationYaw = (float) (
+					(entity instanceof EntityLivingBase ? entity.getRotationYawHead() : entity.rotationYaw) 
+					+ 2 * (RNG.nextFloat() - 0.5F) * offset);
 			float rotationPitch = (float) (entity.rotationPitch + (RNG.nextFloat() - 0.5F) * offset);
 			//System.out.println(rotationYaw + " " + rotationPitch);
 			this.vx = -MathHelper.sin(rotationYaw / 180.0F
@@ -196,11 +198,11 @@ public class Motion3D {
 		return this;
 	}
 	
-	public Vec3 getPosVec(World world) {
+	public Vec3 getPosVec() {
 		return Vec3.createVectorHelper(px, py, pz);
 	}
 	
-	public Vec3 getMotionVec(World world) {
+	public Vec3 getMotionVec() {
 		return Vec3.createVectorHelper(vx, vy, vz);
 	}
 	

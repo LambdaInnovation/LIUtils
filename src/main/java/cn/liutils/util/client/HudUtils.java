@@ -28,7 +28,7 @@ import org.lwjgl.opengl.GL12;
  */
 public class HudUtils {
 
-	static double zLevel = -90;
+	public static double zLevel = -90;
 	
 	public static void rect(double width, double height) {
 		rect(0, 0, width, height);

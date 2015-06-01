@@ -20,6 +20,7 @@ import net.minecraft.util.Vec3;
  */
 public class MathUtils {
 
+	public static final float PI_F = (float) Math.PI;
 	
 	/**
 	 * Perform a simple linear lerp between a and b
@@ -29,6 +30,10 @@ public class MathUtils {
 	 * @return The lerp value
 	 */
 	public static double lerp(double a, double b, double lambda) {
+		return a * (1 - lambda) + b * lambda;
+	}
+	
+	public static float lerpf(float a, float b, float lambda) {
 		return a * (1 - lambda) + b * lambda;
 	}
 	

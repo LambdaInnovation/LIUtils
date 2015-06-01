@@ -25,6 +25,13 @@ public class Mesh {
 	
 	List<Mesh> sub = new ArrayList<Mesh>();
 	
+	/**
+	 * Determine whether this mesh needs to be buffered(Compiled into a display list).
+	 */
+	boolean doesBuffer = false;
+	
+	int listID = -1;
+	
 	public Mesh() {}
 	
 	public int addMesh(Mesh m) {
@@ -128,7 +135,14 @@ public class Mesh {
 		return this;
 	}
 	
-	public void draw(Material mat) {
+	private void redraw(Material mat, boolean execute) {
+		if(doesBuffer) {
+			if(listID == -1) {
+				listID = GL11.glGenLists(1);
+				GL11.glNewList(listID, execute ? GL11.GL_COMPILE_AND_EXECUTE : GL11.GL_COMPILE);
+			}
+		}
+		
 		mat.onRenderStage(RenderStage.START);
 		GL11.glPushMatrix();
 		
@@ -164,6 +178,26 @@ public class Mesh {
 		for(Mesh m : this.sub) {
 			m.draw(mat);
 		}
+		
+		if(doesBuffer) {
+			GL11.glEndList();
+		}
 	}
+	
+	public void redraw(Material mat) {
+		redraw(mat, true);
+	}
+	
+	public void draw(Material mat) {
+		if(doesBuffer) {
+			if(listID == -1) {
+				redraw(mat, true);
+			} else
+				GL11.glCallList(listID);
+		} else {
+			redraw(mat, true);
+		}
+	}
+	
 	
 }

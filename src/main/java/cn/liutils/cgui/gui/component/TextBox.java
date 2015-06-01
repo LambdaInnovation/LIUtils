@@ -63,6 +63,11 @@ public class TextBox extends Component {
 	
 	public Color color = new Color(0xffffff);
 	
+	/**
+	 * Whether this textBox doesn't draw chars that are out of bounds.
+	 */
+	public boolean emit = true;
+	
 	public double size = 5;
 	
 	public WidthAlign widthAlign = WidthAlign.LEFT;
@@ -240,7 +245,10 @@ public class TextBox extends Component {
 					}
 					str = sb.toString();
 				}
-				Font.font.drawTrimmed(str, offset[0], offset[1], size, color.asHexWithoutAlpha() & 0xFFFFFF, Align.LEFT, w.transform.width - 2, "...");
+				if(emit)
+					Font.font.drawTrimmed(str, offset[0], offset[1], size, color.asHexColor(), Align.LEFT, w.transform.width - 2, "...");
+				else
+					Font.font.draw(str, offset[0], offset[1], size, color.asHexColor(), Align.LEFT);
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);

@@ -40,12 +40,26 @@ public abstract class AuxGui {
 	}
 	
 	/**
+	 * Called when this AuxGui instance is literally removed from the draw list.
+	 */
+	public void onDisposed() {
+		
+	}
+	
+	/**
+	 * Called when this AuxGui instance is literally added into the draw list.
+	 */
+	public void onAdded() {
+		
+	}
+	
+	/**
 	 * Judge if this GUI is a foreground GUI and interrupts key listening.
 	 */
 	public abstract boolean isForeground();
 	public abstract void draw(ScaledResolution sr);
 	
 	public static void register(AuxGui gui) {
-		AuxGuiHandler.registerAuxGui(gui);
+		AuxGuiHandler.register(gui);
 	}
 }

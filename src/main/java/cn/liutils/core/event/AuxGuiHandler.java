@@ -44,15 +44,21 @@ public class AuxGuiHandler {
 	
 	private static Set<AuxGui> auxGuiList = new HashSet<AuxGui>();
 	
-	public static void registerAuxGui(AuxGui gui) {
+	public static void register(AuxGui gui) {
 		auxGuiList.add(gui);
 	}
 	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
 		//TODO: Maybe some hud need it?
-		if(Minecraft.getMinecraft().thePlayer.isDead)
+		if(Minecraft.getMinecraft().thePlayer.isDead) {
+			if(!auxGuiList.isEmpty()) {
+				for(AuxGui gui : auxGuiList)
+					gui.onDisposed();
+				auxGuiList.clear();
+			}
 			return;
+		}
 		
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
@@ -62,6 +68,7 @@ public class AuxGuiHandler {
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
 				if(gui.isDisposed()) {
+					gui.onDisposed();
 					iter.remove();
 				} else {
 					gui.draw(event.resolution);

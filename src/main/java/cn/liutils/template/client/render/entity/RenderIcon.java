@@ -23,6 +23,7 @@ import org.lwjgl.opengl.GL12;
 
 import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.client.ViewOptimize;
+import cn.liutils.util.client.ViewOptimize.IAssociatePlayer;
 import cn.liutils.util.helper.Color;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -34,10 +35,9 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class RenderIcon extends Render {
 	
 	protected ResourceLocation icon;
-	private float size = 0.5F;
+	protected float size = 0.5F;
 	protected boolean hasLight = false;
 	public Color color = Color.WHITE();
-	protected boolean viewOptimize = false;
 	
 	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
 
@@ -45,15 +45,8 @@ public class RenderIcon extends Render {
 		icon = ic;
 	}
 	
-	public RenderIcon setViewOptimize() {
-		viewOptimize = true;
-		return this;
-	}
-	
 	public RenderIcon setSize(float s) {
 		size = s;
-		if(size <= 0.0F)
-			size = 1.0F;
 		return this;
 	}
 	
@@ -77,8 +70,8 @@ public class RenderIcon extends Render {
 				GL11.glScalef(size, size, size);
 				postTranslate(par1Entity);
 				
-				if(this.viewOptimize) {
-					ViewOptimize.fix();
+				if(par1Entity instanceof IAssociatePlayer) {
+					ViewOptimize.fix((IAssociatePlayer) par1Entity);
 				}
 				
 				if(icon != null) RenderUtils.loadTexture(icon);

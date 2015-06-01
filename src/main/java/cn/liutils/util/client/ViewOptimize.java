@@ -13,15 +13,21 @@
 package cn.liutils.util.client;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
 /**
+ * This class essentially transforms the origin to the player's hand in thirdPerson or firstPerson.
  * @author WeAthFolD
- *
  */
 public class ViewOptimize {
+	
+	public interface IAssociatePlayer {
+		EntityPlayer getPlayer();
+	}
+	
 	private static final double 
 		fpOffsetX = -0.05,
 		fpOffsetY = -0.25,
@@ -40,20 +46,26 @@ public class ViewOptimize {
 		GL11.glTranslated(tpOffsetX, tpOffsetY, tpOffsetZ);
 	}
 	
-	public static void fix() {
-		if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+	public static void fix(IAssociatePlayer entity) {
+		if(shouldFix(entity)) {
 			fixFirstPerson();
 		} else {
 			fixThirdPerson();
 		}
 	}
 	
-	public static Vec3 getFixVector() {
-		if(Minecraft.getMinecraft().gameSettings.thirdPersonView == 0) {
+	public static Vec3 getFixVector(IAssociatePlayer entity) {
+		if(shouldFix(entity)) {
 			return Vec3.createVectorHelper(fpOffsetX, fpOffsetY, fpOffsetZ);
 		} else {
 			return Vec3.createVectorHelper(tpOffsetX, tpOffsetY, tpOffsetZ);
 		}
+	}
+	
+	public static boolean shouldFix(IAssociatePlayer entity) {
+		Minecraft mc = Minecraft.getMinecraft();
+		EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
+		return mc.gameSettings.thirdPersonView == 0 && clientPlayer == entity.getPlayer();
 	}
 	
 }
