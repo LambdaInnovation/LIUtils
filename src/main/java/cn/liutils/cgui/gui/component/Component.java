@@ -47,6 +47,13 @@ public class Component {
 	@EditIgnore
 	public boolean canEdit = true;
 	
+	/**
+	 * This SHOULD NOT be edited after creation, represents the widget instance this component is in.
+	 */
+	@EditIgnore
+	@CopyIgnore
+	public Widget widget;
+	
 	public Component(String _name) {
 		name = _name;
 		checkCopyFields();

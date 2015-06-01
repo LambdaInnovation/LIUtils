@@ -17,6 +17,8 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.ImmutableList;
+
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.GuiEvent;
@@ -134,18 +136,23 @@ public class Widget extends WidgetContainer {
 	}
 	
 	public Widget addComponent(Component c) {
+		if(c.widget != null)
+			throw new RuntimeException("Can't add one component into multiple widgets!");
+		
 		for(Component cc : components) {
 			if(cc.name.equals(c.name)) {
 				throw new RuntimeException("Duplicate component!");
 			}
 		}
 		
+		c.widget = this;
 		components.add(c);
 		return this;
 	}
 	
 	public void removeComponent(Component c) {
 		removeComponent(c.name);
+		
 	}
 	
 	public void removeComponent(String name) {
@@ -154,6 +161,7 @@ public class Widget extends WidgetContainer {
 			Component c = iter.next();
 			if(c.name.equals(name)) {
 				c.onRemoved();
+				c.widget = null;
 				iter.remove();
 				return;
 			}
@@ -161,10 +169,10 @@ public class Widget extends WidgetContainer {
 	}
 	
 	/**
-	 * Return the raw component list. Any modification on the list will directly change the behavior of the widget.
+	 * Return the raw component list.
 	 */
 	public List<Component> getComponentList() {
-		return components;
+		return (components);
 	}
 	
 	//Event dispatch

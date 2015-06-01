@@ -26,6 +26,7 @@ import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.StatCollector;
 
 import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.annotations.CopyIgnore;
@@ -69,6 +70,8 @@ public class TextBox extends Component {
 	public boolean emit = true;
 	
 	public double size = 5;
+	
+	public double zLevel = 0;
 	
 	public WidthAlign widthAlign = WidthAlign.LEFT;
 	
@@ -245,10 +248,15 @@ public class TextBox extends Component {
 					}
 					str = sb.toString();
 				}
+				GL11.glPushMatrix();
+				GL11.glTranslated(0, 0, zLevel);
+				
 				if(emit)
 					Font.font.drawTrimmed(str, offset[0], offset[1], size, color.asHexColor(), Align.LEFT, w.transform.width - 2, "...");
 				else
 					Font.font.draw(str, offset[0], offset[1], size, color.asHexColor(), Align.LEFT);
+				
+				GL11.glPopMatrix();
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);

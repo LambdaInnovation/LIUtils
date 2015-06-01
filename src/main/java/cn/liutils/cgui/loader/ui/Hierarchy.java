@@ -206,7 +206,7 @@ public class Hierarchy extends Window {
 			tmp.regEventHandler(new DraggedHandler() {
 				@Override
 				public void handleEvent(Widget w, DraggedEvent event) {
-					double p = bar.getProgress(w);
+					double p = bar.getProgress();
 					if(hList != null) {
 						ElementList list = ElementList.get(hList);
 						list.setProgress(hList, (int) Math.round(p * list.getMaxProgress()));

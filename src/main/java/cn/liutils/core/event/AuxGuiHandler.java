@@ -12,9 +12,9 @@
  */
 package cn.liutils.core.event;
 
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -42,10 +42,11 @@ public class AuxGuiHandler {
 	
 	private AuxGuiHandler() {}
 	
-	private static Set<AuxGui> auxGuiList = new HashSet<AuxGui>();
+	private static List<AuxGui> auxGuiList = new ArrayList<AuxGui>();
 	
 	public static void register(AuxGui gui) {
 		auxGuiList.add(gui);
+		gui.onAdded();
 	}
 	
 	@SubscribeEvent	
