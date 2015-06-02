@@ -43,7 +43,7 @@ import cpw.mods.fml.common.registry.EntityRegistry;
  * <code>cn.liutils.core</code> is core registration module, and should not be modified or invoked normally.
  * @author WeAthFolD
  */
-@Mod(modid = "LIUtils", name = "LIUtils")
+@Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
 @RegistrationMod(pkg = "cn.liutils.", res = "liutils", prefix = "liu_")
 public class LIUtils {
 	
@@ -53,6 +53,8 @@ public class LIUtils {
 		REGISTER_TYPE_AUXGUI = "liu_auxgui",
 		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook",
 		REGISTER_TYPE_CONFIGURABLE = "liu_configurable";
+	
+	public static final String VERSION = "2.0a1";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.

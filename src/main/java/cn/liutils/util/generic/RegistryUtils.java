@@ -15,10 +15,10 @@ import cpw.mods.fml.relauncher.SideOnly;
 
 public class RegistryUtils {
 	
-	@SideOnly(Side.CLIENT)
 	public static InputStream getResourceStream(ResourceLocation res) {
 		try {
-			return Minecraft.getMinecraft().getResourceManager().getResource(res).getInputStream();
+			String domain = res.getResourceDomain(), path = res.getResourcePath();
+			return RegistryUtils.class.getResourceAsStream("/assets/" + domain + "/" + path);
 		} catch(Exception e) {
 			e.printStackTrace();
 			return null;

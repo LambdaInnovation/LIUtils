@@ -31,6 +31,14 @@ public abstract class Loader<T> {
 	
 	public Loader() {}
 	
+	public void feed(ResourceLocation loc) {
+		try {
+			feed(IOUtils.toString(RegistryUtils.getResourceStream(loc)));
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	public void feed(String json) {
 		feed(parser.parse(json).getAsJsonObject());
 	}

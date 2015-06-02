@@ -23,7 +23,6 @@ import net.minecraftforge.common.config.Property;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cn.academy.core.AcademyCraft;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.core.event.eventhandler.LIHandler;
 import cn.liutils.util.client.ClientUtils;

@@ -347,34 +347,35 @@ public class LIFMLGameEventDispatcher {
 
 	@SubscribeEvent
 	public void onClientDisconnectionFromServer(ClientDisconnectionFromServerEvent event) {
-		hMouseInput.clear();
-		addMouseInput.clear();
-		hKeyInput.clear();
-		addKeyInput.clear();
-		hItemPickup.clear();
-		addItemPickup.clear();
-		hItemCrafted.clear();
-		addItemCrafted.clear();
-		hItemSmelted.clear();
-		addItemSmelted.clear();
-		hPlayerLoggedIn.clear();
-		addPlayerLoggedIn.clear();
-		hPlayerLoggedOut.clear();
-		addPlayerLoggedOut.clear();
-		hPlayerRespawn.clear();
-		addPlayerRespawn.clear();
-		hPlayerChangedDimension.clear();
-		addPlayerChangedDimension.clear();
-		hServerTick.clear();
-		addServerTick.clear();
-		hClientTick.clear();
-		addClientTick.clear();
-		hWorldTick.clear();
-		addWorldTick.clear();
-		hPlayerTick.clear();
-		addPlayerTick.clear();
-		hRenderTick.clear();
-		addRenderTick.clear();
+		// FIXME some of these shouldn't be cleared, we might need to treat them differently
+//		hMouseInput.clear();
+//		addMouseInput.clear();
+//		hKeyInput.clear();
+//		addKeyInput.clear();
+//		hItemPickup.clear();
+//		addItemPickup.clear();
+//		hItemCrafted.clear();
+//		addItemCrafted.clear();
+//		hItemSmelted.clear();
+//		addItemSmelted.clear();
+//		hPlayerLoggedIn.clear();
+//		addPlayerLoggedIn.clear();
+//		hPlayerLoggedOut.clear();
+//		addPlayerLoggedOut.clear();
+//		hPlayerRespawn.clear();
+//		addPlayerRespawn.clear();
+//		hPlayerChangedDimension.clear();
+//		addPlayerChangedDimension.clear();
+//		hServerTick.clear();
+//		addServerTick.clear();
+//		hClientTick.clear();
+//		addClientTick.clear();
+//		hWorldTick.clear();
+//		addWorldTick.clear();
+//		hPlayerTick.clear();
+//		addPlayerTick.clear();
+//		hRenderTick.clear();
+//		addRenderTick.clear();
 	}
 	
 }

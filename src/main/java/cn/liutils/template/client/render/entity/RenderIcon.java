@@ -37,7 +37,7 @@ public class RenderIcon extends Render {
 	protected ResourceLocation icon;
 	protected float size = 0.5F;
 	protected boolean hasLight = false;
-	public Color color = Color.WHITE();
+	public final  Color color = Color.WHITE();
 	
 	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
 
