@@ -12,6 +12,8 @@ public class Transform extends Component {
 	
 	public double x = 0, y = 0;
 	
+	public double pivotX = 0, pivotY = 0;
+	
 	public double scale = 1.0;
 	
 	public boolean doesDraw = true, doesListenKey = true;

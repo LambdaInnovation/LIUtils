@@ -276,12 +276,14 @@ public class LIGui extends WidgetContainer {
 		
 		double tx, ty;
 		double tw, th;
+		double parentScale;
 		if(widget.isWidgetParent()) {
 			Widget p = widget.getWidgetParent();
 			tx = p.x;
 			ty = p.y;
 			tw = p.transform.width * p.scale;
 			th = p.transform.height * p.scale;
+			parentScale = p.scale;
 			
 			widget.scale = transform.scale * p.scale;
 		} else {
@@ -289,19 +291,20 @@ public class LIGui extends WidgetContainer {
 			tw = width;
 			th = height;
 			
+			parentScale = 1;
 			widget.scale = transform.scale;
 		}
 		
 		double x0 = 0;
 		switch(transform.alignWidth) {
 		case CENTER:
-			x0 = tx + (tw - transform.width * widget.scale) / 2 + transform.x * widget.scale;
+			x0 = tx + (tw - transform.width * widget.scale) / 2 + transform.x * parentScale;
 			break;
 		case LEFT:
-			x0 = tx + transform.x * widget.scale;
+			x0 = tx + transform.x * parentScale;
 			break;
 		case RIGHT:
-			x0 = tx + (tw - transform.width * widget.scale) + transform.x * widget.scale;
+			x0 = tx + (tw - transform.width * widget.scale) + transform.x * parentScale;
 			break;
 		}
 		widget.x = x0;
@@ -309,13 +312,13 @@ public class LIGui extends WidgetContainer {
 		double y0 = 0;
 		switch(transform.alignHeight) {
 		case CENTER:
-			y0 = ty + (th - transform.height * widget.scale) / 2 + transform.y * widget.scale;
+			y0 = ty + (th - transform.height * widget.scale) / 2 + transform.y * parentScale;
 			break;
 		case TOP:
-			y0 = ty + transform.y * widget.scale;
+			y0 = ty + transform.y * parentScale;
 			break;
 		case BOTTOM:
-			y0 = ty + (th - transform.height * widget.scale) + transform.y * widget.scale;
+			y0 = ty + (th - transform.height * widget.scale) + transform.y * parentScale;
 			break;
 		}
 		widget.y = y0;
@@ -365,7 +368,13 @@ public class LIGui extends WidgetContainer {
 			if(cur != null && cur.isVisible()) {
 				GL11.glPushMatrix();
 				GL11.glTranslated(cur.x, cur.y, 0);
+				
+				double px = cur.transform.pivotX * cur.scale, py = cur.transform.pivotY * cur.scale;
+				
+
 				GL11.glScaled(cur.scale, cur.scale, 1);
+				GL11.glTranslated(-cur.transform.pivotX, -cur.transform.pivotY, 0);
+				
 				GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
 				cur.postEvent(new FrameEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
 				//System.out.println("drawing " + cur);

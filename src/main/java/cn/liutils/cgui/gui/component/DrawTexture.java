@@ -42,8 +42,8 @@ public class DrawTexture extends Component {
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+				GL11.glDisable(GL11.GL_ALPHA_TEST);
 				color.bind();
-				
 				double preLevel = HudUtils.zLevel;
 				HudUtils.zLevel = zLevel;
 				if(texture != null) {
