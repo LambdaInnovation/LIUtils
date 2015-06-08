@@ -1,54 +1,87 @@
 package cn.liutils.cgui.gui.event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.stream.Collectors;
 
 import cn.liutils.cgui.gui.Widget;
 
 public final class GuiEventBus {
 	
-	public GuiEventBus() {
-	}
+	public GuiEventBus() {}
 	
-	Map< Class<? extends GuiEvent>, LinkedList<GuiEventHandler> > eventHandlers = new HashMap();
+	Map< Class<? extends GuiEvent>, LinkedList<GuiHandlerNode> > eventHandlers = new HashMap();
 	
 	public final void postEvent(Widget widget, GuiEvent event) {
-		for(GuiEventHandler h : getEventHandlers(event.getClass())) {
-			if(h.enabled)
+		getEventHandlers(event.getClass()).forEach(
+			(IGuiEventHandler h) -> {
 				h.handleEvent(widget, event);
-		}
+			}
+		);
 	}
 	
+	@Deprecated
 	public void regEventHandler(GuiEventHandler handler) {
-		getEventHandlers(handler.getEventClass()).add(handler);
+		reg(handler.getEventClass(), handler);
 	}
 	
+	@Deprecated
 	public void regAtBeginning(GuiEventHandler handler) {
-		getEventHandlers(handler.getEventClass()).addFirst(handler);
+		regAtBeginning(handler.getEventClass(), handler);
+	}
+	
+	public void reg(Class<? extends GuiEvent> clazz, IGuiEventHandler handler) {
+		getRawList(clazz).add(new GuiHandlerNode(handler));
+	}
+	
+	public void regAtBeginning(Class<? extends GuiEvent> clazz, IGuiEventHandler handler) {
+		getRawList(clazz).addFirst(new GuiHandlerNode(handler));
 	}
 	
 	/**
 	 * Get the event handlers for a specified event type. Modification to this list 
-	 * will have effect instantly.
+	 * will have NO effect.
 	 */
-	public LinkedList<GuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
-		LinkedList<GuiEventHandler> ret = eventHandlers.get(clazz);
+	public List<IGuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
+		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
 		if(ret == null) {
 			eventHandlers.put(clazz, ret = new LinkedList());
 		}
+		
+		return ret.stream().map((GuiHandlerNode n)->n.handler).collect(Collectors.toList());
+	}
+	
+	private LinkedList<GuiHandlerNode> getRawList(Class<? extends GuiEvent> clazz) {
+		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
+		if(ret == null) {
+			eventHandlers.put(clazz, ret = new LinkedList());
+		}
+		
 		return ret;
 	}
 	
 	public GuiEventBus copy() {
 		GuiEventBus ret = new GuiEventBus();
-		for(Entry<Class<? extends GuiEvent>, LinkedList<GuiEventHandler>> ent : eventHandlers.entrySet()) {
-			//Light copy, but as long as GuiEventHandler is stateless, this is just fine.
-			ret.getEventHandlers(ent.getKey()).addAll(ent.getValue()); 
-		}
+		
+		eventHandlers.entrySet().forEach(
+			(Entry< Class<? extends GuiEvent>, LinkedList<GuiHandlerNode>> ent) -> {
+				ret.getRawList(ent.getKey()).addAll(ent.getValue());
+			}
+		);
 		return ret;
+	}
+	
+	private class GuiHandlerNode {
+		IGuiEventHandler handler;
+		public boolean enabled = true;
+		
+		public GuiHandlerNode(IGuiEventHandler handler) {
+			this.handler = handler;
+		}
 	}
 	
 }

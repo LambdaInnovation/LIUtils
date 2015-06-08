@@ -12,9 +12,6 @@
  */
 package cn.liutils.cgui.gui.event;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import cn.liutils.cgui.gui.Widget;
 
 /**
@@ -22,14 +19,14 @@ import cn.liutils.cgui.gui.Widget;
  * A GuiEventHandler should be stateless. Otherwise, use Component.
  * @author WeAthFolD
  */
-public abstract class GuiEventHandler<T extends GuiEvent> {
-	
-	public boolean enabled = true;
+@Deprecated
+public abstract class GuiEventHandler<T extends GuiEvent> implements IGuiEventHandler<T> {
 	
 	private final Class<? extends GuiEvent> eventClass;
 	
 	public GuiEventHandler(Class<? extends GuiEvent> _eventClass) {
 		eventClass = _eventClass;
+		Widget w;
 	}
 	
 	public abstract void handleEvent(Widget w, T event);

@@ -12,6 +12,8 @@
  */
 package cn.liutils.fsm;
 
+import cn.liutils.api.annotation.Experimental;
+
 import com.google.common.collect.HashBiMap;
 
 /**
@@ -23,6 +25,7 @@ import com.google.common.collect.HashBiMap;
  * This FSM DOESNT permit null states.
  * @author WeAthFolD
  */
+@Experimental
 public class StateMachine<T extends State> {
 	
 	private HashBiMap<String, T> states = HashBiMap.create();

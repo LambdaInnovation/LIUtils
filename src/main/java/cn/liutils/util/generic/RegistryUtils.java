@@ -52,6 +52,10 @@ public class RegistryUtils {
 		}
 	}
 	
+	public static <T> T getFieldInstance(Class cl, Object instance, String name) {
+		return getFieldInstance(cl, instance, name, name);
+	}
+	
 	public static <T> T getFieldInstance(Class cl, Object instance, String normName, String obfName) {
 		Field f = getObfField(cl, normName, obfName);
 		try {
