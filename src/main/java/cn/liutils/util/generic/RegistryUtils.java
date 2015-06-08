@@ -6,12 +6,10 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import cn.liutils.util.helper.TypeHelper;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 public class RegistryUtils {
 	
@@ -42,11 +40,31 @@ public class RegistryUtils {
 	public static Field getObfField(Class cl, String normName, String obfName) {
 		Field f = null;
 		try {
-			f = cl.getDeclaredField(normName);
+			try {
+				f = cl.getDeclaredField(normName);
+			} catch(Exception e) {}
+			
 			if(f == null)
 				f = cl.getDeclaredField(obfName);
 			f.setAccessible(true);
 			return f;
+		} catch(Exception e) {
+			return null;
+		}
+	}
+	
+	public static Method getMethod(Class cl, String methodName, String obfName, Class ...parameterTypes) {
+		Method m = null;
+		try {
+			try {
+				m = cl.getDeclaredMethod(methodName, parameterTypes);
+			} catch(Exception e) {}
+			
+			if(m == null)
+				m = cl.getDeclaredMethod(obfName, parameterTypes);
+			
+			m.setAccessible(true);
+			return m;
 		} catch(Exception e) {
 			return null;
 		}
