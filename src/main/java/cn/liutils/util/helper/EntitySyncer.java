@@ -38,7 +38,18 @@ import cn.liutils.util.generic.RegistryUtils;
  * <br> The direction is always server -> client.
  * <br> The registered fields should be symmetric in two sides so that we can track the ID correctly.
  * 
- * TODO Support some other types, e.g. Entities
+ * <br> Currently EntitySyncer supports the following types:
+ * <code>
+ * <br>  * int, Integer
+ * <br>  * float, Float
+ * <br>  * short, Short
+ * <br>  * byte, Byte
+ * <br>  * String
+ * <br>  * Entity
+ * <br>  * ChunkCoordinates
+ * <br>  * ItemStack
+ * </code>
+ * <br> More commonly used types will be added soon.
  * @author WeAthFolD
  */
 @Experimental
@@ -228,7 +239,12 @@ public class EntitySyncer {
 			int tid = idMap.get(clazz);
 			
 			dataWatcher.addObjectByDataType(id, tid);
-			dataWatcher.updateObject(id, t.defaultValue);
+			
+			Object val = convert();
+			if(val == null)
+				val = t.defaultValue;
+			
+			dataWatcher.updateObject(id, val);
 		}
 		
 		void init() {
@@ -239,7 +255,7 @@ public class EntitySyncer {
 			try {
 				return c.supply(field.get(entity));
 			} catch (Exception e) {
-				throw new RuntimeException(e);
+				return null;
 			}
 		}
 		
