@@ -51,12 +51,14 @@ public class AuxGuiHandler {
 	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
-		//TODO: Maybe some hud need it?
 		if(Minecraft.getMinecraft().thePlayer.isDead) {
-			if(!auxGuiList.isEmpty()) {
-				for(AuxGui gui : auxGuiList)
+			Iterator<AuxGui> iter = auxGuiList.iterator();
+			while(iter.hasNext()) {
+				AuxGui gui = iter.next();
+				if(!gui.isConsistent()) {
 					gui.onDisposed();
-				auxGuiList.clear();
+					iter.remove();
+				}
 			}
 			return;
 		}

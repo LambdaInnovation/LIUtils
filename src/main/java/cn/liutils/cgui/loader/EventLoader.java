@@ -28,8 +28,9 @@ import cn.liutils.core.LIUtils;
 public class EventLoader {
 
 	public static void load(WidgetContainer widget, Object callbackProvider) {
-		for(Method m : callbackProvider.getClass().getMethods()) {
+		for(Method m : callbackProvider.getClass().getDeclaredMethods()) {
 			if(m.isAnnotationPresent(GuiCallback.class)) {
+				
 				//Check signature
 				Class<?>[] pars = m.getParameterTypes();
 				if(pars.length != 2) {

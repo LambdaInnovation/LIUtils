@@ -40,6 +40,13 @@ public abstract class AuxGui {
 	}
 	
 	/**
+	 * Consistent GUI won't get removed when player is dead.
+	 */
+	public boolean isConsistent() {
+		return true;
+	}
+	
+	/**
 	 * Called when this AuxGui instance is literally removed from the draw list.
 	 */
 	public void onDisposed() {

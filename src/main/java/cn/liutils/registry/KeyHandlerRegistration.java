@@ -12,6 +12,11 @@
  */
 package cn.liutils.registry;
 
+import java.lang.annotation.ElementType;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
+
 import cn.annoreg.base.RegistrationFieldSimple;
 import cn.annoreg.core.LoadStage;
 import cn.annoreg.core.RegistryTypeDecl;
@@ -29,7 +34,9 @@ public class KeyHandlerRegistration extends RegistrationFieldSimple<RegKeyHandle
 		super(RegKeyHandler.class, "KeyHandler");
 		setLoadStage(LoadStage.INIT);
 	}
-
+	
+	@Target(ElementType.FIELD)
+	@Retention(RetentionPolicy.RUNTIME)
 	public @interface RegKeyHandler {
 		String name();
 		int keyID();

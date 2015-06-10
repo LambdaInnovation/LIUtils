@@ -32,7 +32,14 @@ public class EntitySelectors {
 	
 	public static IEntitySelector player = new SelectorOfType(EntityPlayer.class);
 	
-	public static IEntitySelector survivalPlayer = (Entity e) -> (e instanceof EntityPlayer && !((EntityPlayer)e).capabilities.isCreativeMode);
+	public static IEntitySelector survivalPlayer = new IEntitySelector() {
+
+		@Override
+		public boolean isEntityApplicable(Entity e) {
+			return (e instanceof EntityPlayer && !((EntityPlayer)e).capabilities.isCreativeMode);
+		}
+		
+	};
 	
 	public static class SelectorOfType implements IEntitySelector {
 		
@@ -112,6 +119,7 @@ public class EntitySelectors {
 
 		@Override
 		public boolean isEntityApplicable(Entity entity) {
+			
 			for(IEntitySelector i : list)
 				if(!i.isEntityApplicable(entity))
 					return false;
