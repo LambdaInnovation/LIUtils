@@ -23,9 +23,9 @@ import net.minecraftforge.common.config.Property;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 
-import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
-import cn.liutils.core.event.eventhandler.LIHandler;
 import cn.liutils.util.client.ClientUtils;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
@@ -42,20 +42,19 @@ public class KeyManager {
 		MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99,
 		MWHEELDOWN = -50, MWHEELUP = -49;
 	
-	Dispatcher dispatcher;
+	private boolean activated = true;
 	
 	public KeyManager() {
-		dispatcher = new Dispatcher();
 		activate();
+		FMLCommonHandler.instance().bus().register(this);
 	}
 	
 	public void deactivate() {
-		dispatcher.setDead();
+		activated = false;
 	}
 	
 	public void activate() {
-		dispatcher.setAlive();
-		LIFMLGameEventDispatcher.INSTANCE.registerClientTick(dispatcher);
+		activated = true;
 	}
 	
 	Map<String, KeyBinding> nameMap = new HashMap();
@@ -193,16 +192,11 @@ public class KeyManager {
 		}
 	}
 	
-	private class Dispatcher extends LIHandler<ClientTickEvent> {
-
-		@Override
-		protected boolean onEvent(ClientTickEvent event) {
-			if(event.phase == Phase.START) {
-				tick();
-			}
-			return true;
+	@SubscribeEvent
+	public void onEvent(ClientTickEvent event) {
+		if(event.phase == Phase.START && activated) {
+			tick();
 		}
-		
 	}
 	
 	protected Configuration getConfig() {
