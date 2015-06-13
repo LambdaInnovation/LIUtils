@@ -24,6 +24,7 @@ import cn.liutils.cgui.gui.component.Transform;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventBus;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.cgui.gui.event.IGuiEventHandler;
 
 
 /**
@@ -183,6 +184,16 @@ public class Widget extends WidgetContainer {
 	
 	public final Widget regEventHandlerAtBegin(GuiEventHandler h) {
 		eventBus.regAtBeginning(h);
+		return this;
+	}
+	
+	public final Widget regEventHandler(Class<? extends GuiEvent> clazz, IGuiEventHandler handler) {
+		eventBus.reg(clazz, handler);
+		return this;
+	}
+
+	public final <T extends GuiEvent> Widget regEventHandlerAtBegin(Class<? extends GuiEvent> clazz, IGuiEventHandler<T> handler) {
+		eventBus.regAtBeginning(clazz, handler);
 		return this;
 	}
 	

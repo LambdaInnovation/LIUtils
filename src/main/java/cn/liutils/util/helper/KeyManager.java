@@ -30,13 +30,16 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
 
 /**
- * The singleton instance of this class handles a set of KeyHandlers, and restore their key bindings
+ * The instance of this class handles a set of KeyHandlers, and restore their key bindings
  * from a configuration. (If any)
  * @author WeAthFolD
  */
 public class KeyManager {
 	
-	public static KeyManager dynamic = new KeyManager();
+	/**
+	 * The most commonly used KeyManager. Use this if you don't want to use any config on keys.
+	 */
+	public static final KeyManager dynamic = new KeyManager();
 	
 	public static final int 
 		MOUSE_LEFT = -100, MOUSE_MIDDLE = -98, MOUSE_RIGHT = -99,
