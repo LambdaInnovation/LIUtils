@@ -18,6 +18,7 @@ import javax.vecmath.Vector2d;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
 
@@ -29,11 +30,17 @@ public class Font {
     
     public static Font font = new Font();
 
-    public enum Align { LEFT, CENTER, RIGHT };
+    private static FontRenderer theFont;
     
     FontRenderer mcFont() {
-    	return Minecraft.getMinecraft().fontRenderer;
+    	if(theFont == null) {
+    		Minecraft mc = Minecraft.getMinecraft();
+    		theFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, true);
+    	}
+    	return theFont;
     }
+    
+    public enum Align { LEFT, CENTER, RIGHT };
     
     private Font() {}
     
