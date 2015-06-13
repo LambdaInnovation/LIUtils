@@ -28,7 +28,22 @@ import org.lwjgl.opengl.GL12;
  */
 public class HudUtils {
 
-	public static double zLevel = -90;
+	public static double zLevel = 0;
+	
+	static double stack = Double.NEGATIVE_INFINITY;
+	
+	public static void pushZLevel() {
+		if(stack != Double.NEGATIVE_INFINITY)
+			throw new RuntimeException("Stack overflow");
+		stack = zLevel;
+	}
+	
+	public static void popZLevel() {
+		if(stack == Double.NEGATIVE_INFINITY)
+			throw new RuntimeException("Stack underflow");
+		zLevel = stack;
+		stack = Double.NEGATIVE_INFINITY;
+	}
 	
 	public static void rect(double width, double height) {
 		rect(0, 0, width, height);

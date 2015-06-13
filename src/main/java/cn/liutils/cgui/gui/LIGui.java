@@ -87,14 +87,14 @@ public class LIGui extends WidgetContainer {
 		//System.out.println("draw " + this);
 		
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		GL11.glDepthFunc(GL11.GL_ALWAYS);
+		//GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		GL11.glDepthMask(false);
+		//GL11.glDepthMask(false);
 		drawTraverse(mx, my, null, this, getTopWidget(mx, my));
 		
-		GL11.glDepthMask(true);
-		GL11.glDepthFunc(GL11.GL_LEQUAL);
+		//GL11.glDepthMask(true);
+		//GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 	}
 	
@@ -421,6 +421,7 @@ public class LIGui extends WidgetContainer {
 	public static void drawBlackout() {
 		GL11.glMatrixMode(GL11.GL_PROJECTION);
 		GL11.glDisable(GL11.GL_CULL_FACE);
+		GL11.glDisable(GL11.GL_DEPTH_TEST);
 		GL11.glPushMatrix();
 		GL11.glLoadIdentity();
 		GLU.gluOrtho2D(1, 0, 1, 0);
@@ -441,6 +442,7 @@ public class LIGui extends WidgetContainer {
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
 		GL11.glColor4d(1, 1, 1, 1);
 		
+		GL11.glEnable(GL11.GL_DEPTH_TEST);
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glMatrixMode(GL11.GL_MODELVIEW);
 	}

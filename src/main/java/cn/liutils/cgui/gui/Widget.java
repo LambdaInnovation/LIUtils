@@ -187,7 +187,7 @@ public class Widget extends WidgetContainer {
 		return this;
 	}
 	
-	public final Widget regEventHandler(Class<? extends GuiEvent> clazz, IGuiEventHandler handler) {
+	public final <T extends GuiEvent> Widget regEventHandler(Class<? extends T> clazz, IGuiEventHandler<T> handler) {
 		eventBus.reg(clazz, handler);
 		return this;
 	}
