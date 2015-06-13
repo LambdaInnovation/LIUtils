@@ -20,21 +20,23 @@ import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.cgui.gui.event.GuiEvent;
 import cn.liutils.cgui.gui.event.GuiEventHandler;
+import cn.liutils.util.generic.MathUtils;
 
 /**
  * Component that can hold widgets itself and display them as a list. Only Widgets fully in the area will be shown.
- * Currently you can only setup the list before it was first drawn.
+ * You MUST specify the widgets BEFORE the component was added into the Widget.
  * @author WeAthFolD
  */
 public class ElementList extends Component {
 	
 	List<Widget> subWidgets = new ArrayList();
 	
+	/**
+	 * The fixed vertical spacing between widgets.
+	 */
 	public double spacing = 0.0;
 	
-	double elementHt;
-	
-	int progress, maxProgress, showPerPage;
+	private int progress;
 	
 	private boolean loaded = false;
 
@@ -46,11 +48,10 @@ public class ElementList extends Component {
 			public void handleEvent(Widget w, FrameEvent event) {
 				if(!loaded) {
 					loaded = true;
-					setup(w);
-					updateList();
 					for(Widget ww : subWidgets) {
 						w.addWidget(ww);
 					}
+					updateList();
 				}
 			}
 		});
@@ -65,26 +66,44 @@ public class ElementList extends Component {
 	}
 	
 	public int getMaxProgress() {
-		return maxProgress;
+		return subWidgets.size() - 1;
 	}
 	
-	public void disposeAll() {
-		for(Widget w : subWidgets)
-			w.disposed = true;
-		subWidgets.clear();
-		loaded = false;
-		progress = maxProgress = showPerPage = 0;
+	public void progressNext() {
+		setProgress(progress + 1);
 	}
 	
-	public void setProgress(Widget w, int prog) {
-		if(progress == prog)
-			return;
-		progress = prog;
-		if(progress < 0) progress = 0;
-		if(progress > maxProgress) progress = maxProgress;
-		updateList();
+	public void progressLast() {
+		setProgress(progress - 1);
+	}
+	
+	public void setProgress(int p) {
+		p = MathUtils.wrapi(0, getMaxProgress(), p);
+		boolean u = progress != p;
+		progress = p;
+		if(u)
+			updateList();
+	}
+	
+	private void updateList() {
+		double sum = 0.0;
+		for(Widget w : subWidgets) {
+			w.transform.doesDraw = false;
+		}
 		
+		for(int i = progress; i < subWidgets.size() && sum <= this.widget.transform.height; ++i) {
+			Widget w = subWidgets.get(i);
+			
+			w.transform.doesDraw = true;
+			w.transform.x = 0;
+			w.transform.y = sum;
+			w.dirty = true;
+			
+			sum += w.transform.height + spacing;
+		}
 	}
+	
+	public void disposeAll() {}
 	
 	@Override
 	public void onRemoved() {
@@ -95,7 +114,8 @@ public class ElementList extends Component {
 	
 	public static class ProgressChangedEvent implements GuiEvent  {}
 	
-	public abstract static class ProgressChangeHandler extends GuiEventHandler<ProgressChangedEvent> {
+	public abstract static class ProgressChangeHandler 
+		extends GuiEventHandler<ProgressChangedEvent> {
 
 		public ProgressChangeHandler() {
 			super(ProgressChangedEvent.class);
@@ -103,49 +123,25 @@ public class ElementList extends Component {
 		
 	}
 	
-	private void setup(Widget w) {
-		if(elementHt == 0) {
-			maxProgress = 0;
-			return;
-		}
-		double ht = w.transform.height;
-		showPerPage = (int) Math.max(1, ht / (elementHt + spacing));
-		maxProgress = Math.max(0, subWidgets.size() - showPerPage);
-	}
-	
-	private void updateList() {
-		for(Widget w : subWidgets) {
-			w.transform.doesDraw = false;
-		}
-		for(int i = progress; i < progress + showPerPage && i < subWidgets.size(); ++i) {
-			int in = i - progress;
-			Widget w = subWidgets.get(i);
-			w.transform.doesDraw = true;
-			w.transform.x = 0;
-			w.transform.y = in * (elementHt + spacing);
-			w.dirty = true;
-		}
-	}
-	
-	public void progressNext(Widget w) { 
-		++progress;
-		if(progress > maxProgress) progress = maxProgress;
-		updateList();
-		w.postEvent(new ProgressChangedEvent());
-	}
-	
-	public void progressLast(Widget w) {
-		--progress;
-		if(progress < 0) progress = 0;
-		updateList();
-		w.postEvent(new ProgressChangedEvent());
-	}
-	
 	public void addWidget(Widget w) {
 		if(loaded) return;
 		w.needCopy = false;
-		elementHt = Math.max(elementHt, w.transform.height);
 		subWidgets.add(w);
+	}
+	
+	public double getFullHeight() {
+		return sumHeight(0, subWidgets.size());
+	}
+	
+	/**
+	 * from inclusive, to exclusive
+	 */
+	private double sumHeight(int from, int to) {
+		double ret = 0.0;
+		for(int i = from; i < to; ++i) {
+			ret += subWidgets.get(i).transform.height;
+		}
+		return ret;
 	}
 	
 	public ElementList copy() {

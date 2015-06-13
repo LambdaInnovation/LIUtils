@@ -174,7 +174,7 @@ public class Hierarchy extends Window {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
 					ElementList list = ElementList.get(hList);
-					list.progressLast(hList);
+					list.progressLast();
 				}
 			}
 		});
@@ -186,7 +186,7 @@ public class Hierarchy extends Window {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				if(hList != null) {
 					ElementList list = ElementList.get(hList);
-					list.progressNext(hList);
+					list.progressNext();
 				}
 			}
 		});
@@ -209,7 +209,7 @@ public class Hierarchy extends Window {
 					double p = bar.getProgress();
 					if(hList != null) {
 						ElementList list = ElementList.get(hList);
-						list.setProgress(hList, (int) Math.round(p * list.getMaxProgress()));
+						list.setProgress((int) Math.round(p * list.getMaxProgress()));
 					}
 				}
 			});

@@ -37,6 +37,14 @@ public class MathUtils {
 		return a * (1 - lambda) + b * lambda;
 	}
 	
+	public static int wrapi(int min, int max, int val) {
+		return Math.max(min, Math.min(max, val));
+	}
+	
+	public static double wrapd(double min, double max, double val) {
+		return Math.max(min, Math.min(max, val));
+	}
+	
 	public static double distanceSq(double[] vec1, double[] vec2) {
 		if(vec1.length != vec2.length) {
 			throw new RuntimeException("Inconsistent length");
