@@ -41,8 +41,32 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 	public boolean hasLight = false;
 
 	long creationTime;
+	
+	int fadeTime;
+	int life = 10000000;
+	double startAlpha;
+	
 	public Particle() {
 		super(null);
+	}
+	
+	public void fadeAfter(int life, int fadeTime) {
+		this.life = life;
+		this.fadeTime = fadeTime;
+	}
+	
+	@Override
+	public void onUpdate() {
+		super.onUpdate();
+		if(ticksExisted > life) {
+			int dt = ticksExisted - life;
+			double alpha = 1 - (double) dt / fadeTime;
+			if(alpha < 0) {
+				setDead();
+				alpha = 0;
+			}
+			color.a = alpha * startAlpha;
+		}
 	}
 	
 	public void fromTemplate(Particle template) {
@@ -50,11 +74,15 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 		this.color = template.color.copy();
 		this.size = template.size;
 		this.hasLight = template.hasLight;
+		this.fadeTime = template.fadeTime;
+		this.life = template.life;
 	}
 	
 	@Override
 	protected void onFirstUpdate() {
+		this.addMotionHandler(new Rigidbody());
 		creationTime = Minecraft.getSystemTime();
+		startAlpha = color.a;
 	}
 	
 	public long getParticleLife() {

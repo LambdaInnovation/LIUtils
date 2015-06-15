@@ -17,6 +17,7 @@ import java.util.List;
 
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
@@ -25,6 +26,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import cn.liutils.util.helper.BlockPos;
 import cn.liutils.util.helper.IBlockFilter;
+import cn.liutils.util.helper.Motion3D;
 import cn.liutils.util.mc.EntitySelectors.SelectorList;
 
 /**
@@ -57,6 +59,20 @@ public class WorldUtils {
 			maxZ = vec1.zCoord;
 		}
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+	}
+	
+	public static MovingObjectPosition tracePlayer(EntityPlayer player, double dist) {
+		Motion3D mo = new Motion3D(player, true);
+		Vec3 v1 = mo.getPosVec(),
+				v2 = mo.move(dist).getPosVec();
+		return player.worldObj.rayTraceBlocks(v1, v2);
+	}
+	
+	public static MovingObjectPosition tracePlayerWithEntities(EntityPlayer player, double dist, IEntitySelector ies) {
+		Motion3D mo = new Motion3D(player, true);
+		Vec3 v1 = mo.getPosVec(),
+			v2 = mo.move(dist).getPosVec();
+		return WorldUtils.rayTraceBlocksAndEntities(player.worldObj, v1, v2, ies, player);
 	}
 	
 	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {

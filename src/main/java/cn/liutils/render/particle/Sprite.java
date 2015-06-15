@@ -84,13 +84,15 @@ public final class Sprite {
 		
 		color.bind();
 		Tessellator t = Tessellator.instance;
-		if(hasLight) 
+		if(!hasLight) {
 			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.defaultTexUnit, 240f, 240f);
+			GL11.glDisable(GL11.GL_LIGHTING);
+		}
 		float hw = width / 2, hh = height / 2;
 		t.startDrawingQuads();
 		//t.setNormal(0, 0, -1);
 		if(!hasLight)
-			t.setBrightness(15728886);
+			t.setBrightness(15728880);
 		t.addVertexWithUV(-hw, hh, 0, 0, 0);
 		t.addVertexWithUV(-hw, -hh, 0, 1, 0);
 		t.addVertexWithUV(hw, -hh, 0, 1, 1);
@@ -99,6 +101,7 @@ public final class Sprite {
 		
 		GL11.glEnable(GL11.GL_CULL_FACE);
 		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		GL11.glEnable(GL11.GL_LIGHTING);
 	}
 	
 }
