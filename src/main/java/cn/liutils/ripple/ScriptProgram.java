@@ -1,13 +1,15 @@
 package cn.liutils.ripple;
 
+import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.liutils.ripple.impl.compiler.FunctionClassLoader;
+import net.minecraft.util.ResourceLocation;
+import cn.liutils.ripple.RippleException.RippleRuntimeException;
 import cn.liutils.ripple.impl.compiler.Parser;
 import cn.liutils.ripple.impl.compiler.Parser.ScriptObject;
-import cn.liutils.ripple.RippleException.RippleRuntimeException;
+import cn.liutils.util.generic.RegistryUtils;
 
 /**
  * The global object of a ripple program.
@@ -35,6 +37,13 @@ public final class ScriptProgram {
         }
     }
     
+    /**
+     * Fast alias to load the script from a ResourceLocation.
+     */
+    public void loadScript(ResourceLocation location) {
+    	loadScript(new InputStreamReader(RegistryUtils.getResourceStream(location)));
+    }
+    
     public void setNativeFunction(Path path, NativeFunction func) {
         this.mergeFunctionAt(path, func, func.getParamterCount());
         func.bind(this, path);
@@ -42,6 +51,10 @@ public final class ScriptProgram {
     
     public ScriptNamespace at(Path path) {
         return new ScriptNamespace(this, path);
+    }
+    
+    public ScriptNamespace at(String path) {
+    	return new ScriptNamespace(this, new Path(path));
     }
     
     //may return an FunctionWrapper, Integer, Double, Boolean or null.

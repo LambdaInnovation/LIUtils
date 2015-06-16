@@ -1,21 +1,16 @@
 package cn.liutils.ripple.impl.compiler;
 
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.LineNumberReader;
 import java.io.PushbackReader;
 import java.io.Reader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-
-import com.google.common.collect.Lists;
 
 import cn.liutils.ripple.IFunction;
 import cn.liutils.ripple.Path;
-import cn.liutils.ripple.ScriptProgram;
 import cn.liutils.ripple.RippleException.RippleCompilerException;
+import cn.liutils.ripple.ScriptProgram;
 import cn.liutils.ripple.impl.compiler.Token.MultiCharSymbol;
 
 public class Parser {
@@ -89,8 +84,12 @@ public class Parser {
                 this.parseNamespace();
                 
                 this.currentPath = parentPath;
+                
+                if(currentToken.isInteger() || currentToken.isDouble()) {
+                	this.parseValue(new Path(currentPath, path));
+                }
                 if (!currentToken.isSingleChar('}')) {
-                    throw new RippleCompilerException("Invalid token. Should be '}'", this);
+                    throw new RippleCompilerException("Invalid token. Should be '}' but got " + currentToken, this);
                 }
                 this.readToken();
             } else if (currentToken.isSingleChar('(')) {
@@ -143,6 +142,20 @@ public class Parser {
         obj.func = f;
         obj.funcArgNum = nargs;
         this.parsedObject.add(obj);
+    }
+    
+    private void parseValue(Path valuePath) throws IOException {
+    	ScriptObject obj = new ScriptObject();
+    	obj.path = valuePath.path;
+    	if(currentToken.isDouble())
+    		obj.value = currentToken.doubleValue;
+    	else if(currentToken.isInteger())
+    		obj.value = currentToken.integerValue;
+    	else
+    		throw new RippleCompilerException("Invalid value when parsing value: " + currentToken, this);
+    	this.readToken();
+    	
+    	this.parsedObject.add(obj);
     }
     
     private void parseExpression(CodeGenerator gen) throws IOException {
@@ -298,6 +311,7 @@ public class Parser {
             }
             //double
             currentToken.setDouble(Double.parseDouble(resultStr));
+            return;
         }
         //integer
         currentToken.setInteger(Integer.parseInt(sb.toString()));

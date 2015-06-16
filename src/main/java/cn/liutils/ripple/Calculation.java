@@ -28,12 +28,16 @@ public final class Calculation {
     public static int castInt(Object value) {
         if (value instanceof Integer)
             return (Integer) value;
+        if (value instanceof Double)
+        	return (int) (double) value;
         throw new RippleRuntimeException("Cannot cast to integer");
     }
     
     public static double castDouble(Object value) {
         if (value instanceof Double)
             return (Double) value;
+        if(value instanceof Integer)
+        	return (Integer) value;
         throw new RippleRuntimeException("Cannot cast to double");
     }
     

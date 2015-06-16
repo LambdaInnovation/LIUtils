@@ -143,4 +143,9 @@ public final class Token {
         }
         return UnaryOperator.UNKNOWN;
     }
+    
+    @Override
+    public String toString() {
+    	return "[" + type + " " + sSymbol + " " + str + "]";
+    }
 }
