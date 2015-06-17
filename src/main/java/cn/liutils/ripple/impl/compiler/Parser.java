@@ -48,7 +48,7 @@ public class Parser {
         this.readToken();
         this.parseNamespace();
         if (!this.currentToken.isEOS()) {
-            throw new RippleCompilerException("Invalid token. Should be end of stream", this);
+            throw new RippleCompilerException("Invalid token. Should be end of stream but got" + currentToken, this);
         }
         this.reader.close();
         this.lineNumberReader.close();
@@ -141,6 +141,8 @@ public class Parser {
         obj.path = functionPath.path;
         obj.func = f;
         obj.funcArgNum = nargs;
+        
+        System.out.println("Parsed function " + functionPath.path);
         this.parsedObject.add(obj);
     }
     
@@ -155,6 +157,7 @@ public class Parser {
     		throw new RippleCompilerException("Invalid value when parsing value: " + currentToken, this);
     	this.readToken();
     	
+    	System.out.println("Parsed value " + valuePath.path);
     	this.parsedObject.add(obj);
     }
     
@@ -245,6 +248,8 @@ public class Parser {
             if (!currentToken.isSingleChar('}')) {
                 throw new RippleCompilerException("Invalid token. Should be '}'", this);
             }
+            
+            this.readToken();
             gen.popSwitchBlock();
         } else if (currentToken.isIdentifier()) {
             String name = currentToken.str;

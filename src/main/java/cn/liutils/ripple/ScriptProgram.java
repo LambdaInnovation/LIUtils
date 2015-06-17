@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import net.minecraft.util.ResourceLocation;
+import cn.liutils.core.LIUtils;
 import cn.liutils.ripple.RippleException.RippleRuntimeException;
 import cn.liutils.ripple.impl.compiler.Parser;
 import cn.liutils.ripple.impl.compiler.Parser.ScriptObject;
@@ -41,6 +42,7 @@ public final class ScriptProgram {
      * Fast alias to load the script from a ResourceLocation.
      */
     public void loadScript(ResourceLocation location) {
+    	//LIUtils.log.info("loading script " + location + " ....");
     	loadScript(new InputStreamReader(RegistryUtils.getResourceStream(location)));
     }
     

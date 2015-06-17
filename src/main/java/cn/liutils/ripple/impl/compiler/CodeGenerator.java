@@ -153,7 +153,7 @@ public final class CodeGenerator {
         this.newTemp();
         Integer id = paramMap.get(name);
         if (id == null) {
-            throw new RippleCompilerException("Parameter not found", this.parser);
+            throw new RippleCompilerException("Parameter not found: " + name, this.parser);
         }
         methodVisitor.visitVarInsn(Opcodes.ALOAD, 1);
         methodVisitor.visitIntInsn(Opcodes.BIPUSH, id);
