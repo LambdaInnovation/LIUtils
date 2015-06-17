@@ -88,6 +88,10 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 	public long getParticleLife() {
 		return Minecraft.getSystemTime() - creationTime;
 	}
+	
+	public long getMaxLife() {
+		return life;
+	}
 
 	@Override
 	protected void readEntityFromNBT(NBTTagCompound nbt) {

@@ -10,26 +10,15 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.render.material;
+package cn.liutils.render.particle.decorators;
 
-import net.minecraft.util.ResourceLocation;
-import cn.liutils.render.mesh.RenderStage;
-import cn.liutils.util.helper.Color;
+import cn.liutils.render.particle.Particle;
 
 /**
  * @author WeAthFolD
- *
  */
-public abstract class Material {
-	
-	public ResourceLocation mainTexture;
-	public final Color color = new Color();
+public interface ParticleDecorator {
 
-	public abstract void onRenderStage(RenderStage stage);
-	
-	public Material setTexture(ResourceLocation tex) {
-		mainTexture = tex;
-		return this;
-	}
-	
+	void decorate(Particle particle);
+
 }

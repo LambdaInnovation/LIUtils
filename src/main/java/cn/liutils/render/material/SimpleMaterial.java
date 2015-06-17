@@ -23,18 +23,17 @@ import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.Color;
 
 /**
+ * Most commonly used material that can almost handle all the situations within MC.
+ * Supports light disabling, default alpha blending and pure-colored drawing.
  * @author WeAthFolD
- *
  */
 public class SimpleMaterial extends Material {
 	
 	public boolean ignoreLight = false;
 	public Color color = Color.WHITE();
 	
-	public ResourceLocation texture;
-	
 	public SimpleMaterial(ResourceLocation _texture) {
-		texture = _texture;
+		setTexture(_texture);
 	}
 	
 	public SimpleMaterial setIgnoreLight() {
@@ -50,8 +49,8 @@ public class SimpleMaterial extends Material {
 			
 			color.bind();
 			
-			if(texture != null) {
-				RenderUtils.loadTexture(texture);
+			if(mainTexture != null) {
+				RenderUtils.loadTexture(mainTexture);
 			} else {
 				GL11.glDisable(GL11.GL_TEXTURE_2D);
 			}

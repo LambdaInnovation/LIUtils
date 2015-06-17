@@ -58,6 +58,10 @@ public abstract class EntityAdvanced extends Entity {
 		entityX.addMotionHandler(mh);
 	}
 	
+	public <U extends MotionHandler> U getMotionHandler(Class<? extends U> klass) {
+		return (U) entityX.getMotionHandler(klass);
+	}
+	
 	public void execute(EntityCallback c) {
 		entityX.execute(c);
 	}

@@ -28,13 +28,13 @@ import cpw.mods.fml.common.gameevent.TickEvent.Phase;
  * @author WeAthFolD
  */
 @Registrant
-public abstract class AbstractParticleFactory {
+public abstract class ParticleFactoryBase {
 	
 	static final int MAX_POOL_SIZE = 1000;
 	
 	static List<Particle> alive = new ArrayList(), dead = new ArrayList();
 	
-	public abstract Particle next();
+	public abstract Particle next(World world);
 	
 	protected final Particle queryParticle() {
 		Particle ret;

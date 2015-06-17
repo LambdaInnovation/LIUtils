@@ -82,6 +82,14 @@ public class EntityX<T extends Entity> {
 		return ret;
 	}
 	
+	public <U extends MotionHandler> U getMotionHandler(Class<? extends U> klass) {
+		for(MotionHandler mo : motionHandlers.values()) {
+			if(klass.isAssignableFrom(mo.getClass()))
+				return (U) mo;
+		}
+		return null;
+	}
+	
 	public void execute(EntityCallback c) {
 		c.execute(target);
 	}
