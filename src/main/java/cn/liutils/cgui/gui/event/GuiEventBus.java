@@ -43,20 +43,6 @@ public final class GuiEventBus {
 		getRawList(clazz).addFirst(new GuiHandlerNode(handler));
 	}
 	
-	/**
-	 * Get the event handlers for a specified event type. Modification to this list 
-	 * will have NO effect.
-	 */
-	private List<IGuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
-		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
-		if(ret == null) {
-			eventHandlers.put(clazz, ret = new LinkedList());
-		}
-		
-		
-		return ret.stream().map((GuiHandlerNode n)->n.handler).collect(Collectors.toList());
-	}
-	
 	private LinkedList<GuiHandlerNode> getRawList(Class<? extends GuiEvent> clazz) {
 		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
 		if(ret == null) {
