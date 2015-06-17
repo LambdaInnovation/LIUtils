@@ -65,6 +65,10 @@ public final class ScriptFunction {
         return Calculation.castInt(callObject(args));
     }
     
+    public float callFloat(Object ...args) {
+    	return (float) callDouble(args);
+    }
+    
     public double callDouble(Object... args) {
         return Calculation.castDouble(callObject(args));
     }
