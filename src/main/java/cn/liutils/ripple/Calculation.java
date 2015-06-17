@@ -106,7 +106,7 @@ public final class Calculation {
         if (a instanceof Integer) {
             if (b instanceof Integer) {
                 return (Integer) a * (Integer) b;
-            } else if (b instanceof Integer) {
+            } else if (b instanceof Double) {
                 return ((Integer) a).doubleValue() * ((Double) b);
             }
         } else if (a instanceof Double) {
@@ -116,7 +116,7 @@ public final class Calculation {
                 return (Double) a * ((Integer) b).doubleValue();
             }
         }
-        throw new RippleRuntimeException("Unsupported operand type in binary multiply");
+        throw new RippleRuntimeException("Unsupported operand type in binary multiply " + a.getClass() + " " + b.getClass());
     }
     
     public static Object binDivide(Object a, Object b) {
