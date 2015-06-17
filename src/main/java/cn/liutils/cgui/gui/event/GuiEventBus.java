@@ -17,11 +17,12 @@ public final class GuiEventBus {
 	Map< Class<? extends GuiEvent>, LinkedList<GuiHandlerNode> > eventHandlers = new HashMap();
 	
 	public final void postEvent(Widget widget, GuiEvent event) {
-		getEventHandlers(event.getClass()).forEach(
-			(IGuiEventHandler h) -> {
-				h.handleEvent(widget, event);
+		List<GuiHandlerNode> list = eventHandlers.get(event.getClass());
+		if(list != null) {
+			for(GuiHandlerNode n : list) {
+				n.handler.handleEvent(widget, event);
 			}
-		);
+		}
 	}
 	
 	@Deprecated
@@ -46,11 +47,12 @@ public final class GuiEventBus {
 	 * Get the event handlers for a specified event type. Modification to this list 
 	 * will have NO effect.
 	 */
-	public List<IGuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
+	private List<IGuiEventHandler> getEventHandlers(Class<? extends GuiEvent> clazz) {
 		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
 		if(ret == null) {
 			eventHandlers.put(clazz, ret = new LinkedList());
 		}
+		
 		
 		return ret.stream().map((GuiHandlerNode n)->n.handler).collect(Collectors.toList());
 	}
@@ -67,11 +69,9 @@ public final class GuiEventBus {
 	public GuiEventBus copy() {
 		GuiEventBus ret = new GuiEventBus();
 		
-		eventHandlers.entrySet().forEach(
-			(Entry< Class<? extends GuiEvent>, LinkedList<GuiHandlerNode>> ent) -> {
-				ret.getRawList(ent.getKey()).addAll(ent.getValue());
-			}
-		);
+		for(Entry< Class<? extends GuiEvent>, LinkedList<GuiHandlerNode>> ent : eventHandlers.entrySet()) {
+			ret.getRawList(ent.getKey()).addAll(ent.getValue());
+		}
 		return ret;
 	}
 	
