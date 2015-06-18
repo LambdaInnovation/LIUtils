@@ -88,6 +88,14 @@ public final class ScriptNamespace {
         return Calculation.castDouble(getValue(key));
     }
     
+    public float getFloat(Path path) {
+        return (float) Calculation.castDouble(getValue(path));
+    }
+    
+    public float getFloat(String key) {
+        return (float) Calculation.castDouble(getValue(key));
+    }
+    
     public boolean getBoolean(Path path) {
         return Calculation.castBoolean(getValue(path));
     }
