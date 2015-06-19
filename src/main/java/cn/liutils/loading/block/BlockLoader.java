@@ -53,7 +53,7 @@ public class BlockLoader extends Loader<Block> {
 			String clazzName = ns.getString("blockType");
 			
 			String matName = ns.getString("material");
-			//TODO: Internal mapping
+			//TODO: Internal mapping!
 			Material mat = (Material) Material.class.getField(matName).get(null);
 			
 			Class<? extends Block> clazz = (Class<? extends Block>) Class.forName(clazzName);

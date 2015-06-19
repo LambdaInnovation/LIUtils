@@ -10,7 +10,6 @@ import org.lwjgl.opengl.GL11;
 import cn.liutils.render.material.Material;
 
 /**
- * TODO: We can use list call to tweak it to be faster!
  * @author WeAthFolD
  */
 public class Mesh {

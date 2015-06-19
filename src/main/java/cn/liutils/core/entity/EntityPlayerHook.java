@@ -90,7 +90,6 @@ public class EntityPlayerHook extends Entity {
 			if(!player.worldObj.isRemote)
 				return;
 			//Check if instance is out of date
-			//TODO:Low efficiency
 			Iterator<EntityPlayer> iter = initTable.iterator();
 			while(iter.hasNext()) {
 				EntityPlayer p = iter.next();
@@ -99,6 +98,7 @@ public class EntityPlayerHook extends Entity {
 					break;
 				}
 			}
+			
 			
 			if(!initTable.contains(player)) {
 				initTable.add(player);
