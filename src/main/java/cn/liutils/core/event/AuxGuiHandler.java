@@ -19,11 +19,13 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
 import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegEventHandler;
+import cn.liutils.api.event.OpenAuxGuiEvent;
 import cn.liutils.api.gui.AuxGui;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
@@ -46,6 +48,7 @@ public class AuxGuiHandler {
 	
 	public static void register(AuxGui gui) {
 		auxGuiList.add(gui);
+		MinecraftForge.EVENT_BUS.post(new OpenAuxGuiEvent(gui));
 		gui.onAdded();
 	}
 	
