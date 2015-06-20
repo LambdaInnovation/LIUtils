@@ -15,7 +15,9 @@ package cn.liutils.util.mc;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import cn.liutils.util.helper.Motion3D;
 
 /**
  * Utils that are built around a player.

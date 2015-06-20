@@ -84,9 +84,7 @@ public class WorldUtils {
 			mop1 = rayTraceEntities(world, vec1, vec2, ef, excls),
 			mop2 = world.rayTraceBlocks(vec1, vec2);
 		if(mop1 != null && mop2 != null) {
-			double d1 = mop1.hitVec.distanceTo(vec1);
-			double d2 = mop2.hitVec.distanceTo(vec1);
-			return d1 <= d2 ? mop1 : mop2;
+			return mop1;
 		}
 		if(mop1 != null)
 			return mop1;
