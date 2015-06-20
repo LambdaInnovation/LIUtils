@@ -27,15 +27,24 @@ public class Tint extends Component {
 		idleColor = new Color(0, 0, 0, 0), 
 		hoverColor = new Color(1, 1, 1, 0.4);
 	
+	public boolean affectTexture = false;
+	
 	public Tint() {
 		super("Tint");
 		
 		addEventHandler(new FrameEventHandler() {
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				if(event.hovering) hoverColor.bind();
-				else idleColor.bind();
-				HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
+				if(affectTexture) {
+					DrawTexture dt = DrawTexture.get(w);
+					if(dt != null) {
+						dt.color = event.hovering ? hoverColor : idleColor;
+					}
+				} else {
+					if(event.hovering) hoverColor.bind();
+					else idleColor.bind();
+					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
+				}
 			}
 		});
 	}

@@ -46,8 +46,8 @@ public class Window extends Widget {
 		name = _name;
 		canClose = _canClose;
 		guiEdit = _guiEdit;
-		Vector2d pos = guiEdit.getDefaultPosition(name, defaultPos);
-		transform.setPos(pos.x, pos.y);
+		//Vector2d pos = guiEdit.getDefaultPosition(name, defaultPos);
+		transform.setPos(defaultPos[0], defaultPos[1]);
 	}
 	
 	public Window(GuiEdit _guiEdit, final String _name, boolean _canClose) {

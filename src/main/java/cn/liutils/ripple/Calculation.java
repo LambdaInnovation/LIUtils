@@ -54,7 +54,7 @@ public final class Calculation {
     public static boolean checkType(Object value) {
         if (value == null) return false;
         return value instanceof Integer || 
-                value instanceof Double || value instanceof Boolean;
+                value instanceof Double || value instanceof Boolean || value instanceof Float;
     }
     
     public static IFunction getFunctionOverload(ScriptProgram program, String path, int nargs) {
