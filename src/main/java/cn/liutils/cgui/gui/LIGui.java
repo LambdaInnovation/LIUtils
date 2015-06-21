@@ -193,6 +193,10 @@ public class LIGui extends WidgetContainer {
 		return gtnTraverse(x, y, null, this);
 	}
 	
+	public Widget getHoveringWidget() {
+		return getTopWidget(mouseX, mouseY);
+	}
+	
     public void updateDragWidget() {
     	if(draggingNode != null) {
     		moveWidgetToAbsPos(draggingNode, mouseX - xOffset, mouseY - yOffset);
