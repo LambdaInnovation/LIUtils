@@ -149,6 +149,7 @@ public class ProgressBar extends Component {
 					} else {
 						GL11.glDisable(GL11.GL_TEXTURE_2D);
 					}
+					color.bind();
 					HudUtils.rawRect(x, y, u, v, w, h, tw, th);
 					GL11.glEnable(GL11.GL_TEXTURE_2D);
 				}

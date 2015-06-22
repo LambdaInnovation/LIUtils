@@ -69,7 +69,7 @@ public class AuxGuiHandler {
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		if(event.type == ElementType.CROSSHAIRS) {
+		if(event.type == ElementType.EXPERIENCE) {
 			Iterator<AuxGui> iter = auxGuiList.iterator();
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
