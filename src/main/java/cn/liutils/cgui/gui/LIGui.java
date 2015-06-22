@@ -78,6 +78,10 @@ public class LIGui extends WidgetContainer {
 	
 	//---Event callback---
 	
+	public void draw() {
+		draw(-1, -1);
+	}
+	
 	/**
 	 * Go down the hierarchy tree and draw each widget node.
 	 */
