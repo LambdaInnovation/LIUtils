@@ -25,7 +25,6 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import cn.liutils.util.helper.BlockPos;
-import cn.liutils.util.helper.IBlockFilter;
 import cn.liutils.util.helper.Motion3D;
 import cn.liutils.util.mc.EntitySelectors.SelectorList;
 
@@ -59,83 +58,6 @@ public class WorldUtils {
 			maxZ = vec1.zCoord;
 		}
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
-	}
-	
-	public static MovingObjectPosition tracePlayer(EntityPlayer player, double dist) {
-		Motion3D mo = new Motion3D(player, true);
-		Vec3 v1 = mo.getPosVec(),
-				v2 = mo.move(dist).getPosVec();
-		return player.worldObj.rayTraceBlocks(v1, v2);
-	}
-	
-	public static MovingObjectPosition tracePlayerWithEntities(EntityPlayer player, double dist, IEntitySelector ies) {
-		Motion3D mo = new Motion3D(player, true);
-		Vec3 v1 = mo.getPosVec(),
-			v2 = mo.move(dist).getPosVec();
-		return WorldUtils.rayTraceBlocksAndEntities(player.worldObj, v1, v2, ies, player);
-	}
-	
-	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2) {
-		return rayTraceBlocksAndEntities(world, vec1, vec2, null);
-	}
-
-	public static MovingObjectPosition rayTraceBlocksAndEntities(World world, Vec3 vec1, Vec3 vec2, IEntitySelector ef, Entity ...excls) {
-		MovingObjectPosition 
-			mop1 = rayTraceEntities(world, vec1, vec2, ef, excls),
-			mop2 = world.rayTraceBlocks(vec1, vec2);
-		if(mop1 != null && mop2 != null) {
-			return mop1;
-		}
-		if(mop1 != null)
-			return mop1;
-		
-		return mop2;
-	}
-	
-	public static MovingObjectPosition rayTraceEntities(World world, Vec3 vec1, Vec3 vec2) {
-		return rayTraceEntities(world, vec1, vec2, null);
-	}
-	
-	public static MovingObjectPosition rayTraceEntities(World world, Vec3 vec1, Vec3 vec2, IEntitySelector selector, Entity... exclusion) {
-        Entity entity = null;
-        AxisAlignedBB boundingBox = getBoundingBox(vec1, vec2);
-        List list = world.getEntitiesWithinAABBExcludingEntity(null, boundingBox.expand(1.0D, 1.0D, 1.0D), selector);
-        double d0 = 0.0D;
-
-        for (int j = 0; j < list.size(); ++j) {
-            Entity entity1 = (Entity)list.get(j);
-
-            if(!entity1.canBeCollidedWith() || (selector != null && !selector.isEntityApplicable(entity1)))
-            	continue;
-            
-            boolean b = true;
-            for(Entity e : exclusion) {
-            	if(entity1.equals(e)) {
-            		b = false;
-            		break;
-            	}
-            }
-            if(!b) continue;
-            
-            float f = 0.3F;
-            AxisAlignedBB axisalignedbb = entity1.boundingBox.expand(f, f, f);
-            MovingObjectPosition movingobjectposition1 = axisalignedbb.calculateIntercept(vec1, vec2);
-
-            if (movingobjectposition1 != null) {
-                double d1 = vec1.distanceTo(movingobjectposition1.hitVec);
-
-                if (d1 < d0 || d0 == 0.0D)
-                {
-                    entity = entity1;
-                    d0 = d1;
-                }
-            }
-        }
-
-        if (entity != null) {
-            return new MovingObjectPosition(entity);
-        }
-        return null;
 	}
 	
 	public static List<BlockPos> getBlocksWithin(Entity entity, double range, int max, IBlockFilter ...filters) {

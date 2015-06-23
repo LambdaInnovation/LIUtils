@@ -12,14 +12,15 @@
  */
 package cn.liutils.entityx.handlers;
 
+import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import cn.liutils.entityx.MotionHandler;
 import cn.liutils.entityx.event.CollideEvent;
-import cn.liutils.util.mc.WorldUtils;
+import cn.liutils.util.mc.BlockFilters;
+import cn.liutils.util.mc.IBlockFilter;
 import cn.liutils.util.raytrace.Raytrace;
-import cn.liutils.util.raytrace.TraceOption;
 
 /**
  * Rigidbody will update velocity and apply gravity and do simple collision.
@@ -28,7 +29,10 @@ import cn.liutils.util.raytrace.TraceOption;
 public class Rigidbody extends MotionHandler {
 	
 	public double gravity = 0.00; //block/tick^2
-	public TraceOption option = new TraceOption();
+	public double linearDrag = 1.0;
+	
+	public IEntitySelector entitySel;
+	public IBlockFilter blockFil = BlockFilters.filNormal;
 
 	@Override
 	public String getID() {
@@ -45,7 +49,7 @@ public class Rigidbody extends MotionHandler {
 		//Collision detection
 		Vec3 cur = Vec3.createVectorHelper(target.posX, target.posY, target.posZ),
 			next = Vec3.createVectorHelper(target.posX + target.motionX, target.posY + target.motionY, target.posZ + target.motionZ);
-		MovingObjectPosition mop = Raytrace.perform(target.worldObj, cur, next, option);
+		MovingObjectPosition mop = Raytrace.perform(target.worldObj, cur, next, entitySel, blockFil);
 		
 		if(mop != null) {
 			getEntityX().postEvent(new CollideEvent(mop)); //Let the event handlers do the actual job.
@@ -53,6 +57,10 @@ public class Rigidbody extends MotionHandler {
 		
 		//Velocity update
 		target.motionY -= gravity;
+		
+		target.motionX *= linearDrag;
+		target.motionY *= linearDrag;
+		target.motionZ *= linearDrag;
 		
 		target.lastTickPosX = target.posX;
 		target.lastTickPosY = target.posY;

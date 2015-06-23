@@ -39,6 +39,7 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 	public Color color = Color.WHITE();
 	public float size = 1.0f;
 	public boolean hasLight = false;
+	public double gravity = 0.0;
 
 	long creationTime;
 	
@@ -67,6 +68,8 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 			}
 			color.a = alpha * startAlpha;
 		}
+		
+		motionY -= gravity;
 	}
 	
 	public void fromTemplate(Particle template) {
@@ -76,6 +79,7 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 		this.hasLight = template.hasLight;
 		this.fadeTime = template.fadeTime;
 		this.life = template.life;
+		this.gravity = template.gravity;
 	}
 	
 	@Override

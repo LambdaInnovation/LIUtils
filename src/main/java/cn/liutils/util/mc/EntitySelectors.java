@@ -41,6 +41,15 @@ public class EntitySelectors {
 		
 	};
 	
+	public static IEntitySelector nothing = new IEntitySelector() {
+
+		@Override
+		public boolean isEntityApplicable(Entity p_82704_1_) {
+			return false;
+		}
+		
+	};
+	
 	public static class SelectorOfType implements IEntitySelector {
 		
 		final Class<? extends Entity> klass;
@@ -126,6 +135,20 @@ public class EntitySelectors {
 			return true;
 		}
 		
+	}
+	
+	/**
+	 * Combine a set of entitySelectors (logical AND) to create a new EntitySelector.
+	 */
+	public static IEntitySelector combine(IEntitySelector ...sels) {
+		return new SelectorList(sels);
+	}
+	
+	/**
+	 * Create an EntitySelector that excludes the passed in entities.
+	 */
+	public static IEntitySelector excludeOf(Entity ...ents) {
+		return new Exclusion(ents);
 	}
 	
 }
