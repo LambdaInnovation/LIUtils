@@ -65,6 +65,21 @@ public class EntitySelectors {
 		
 	}
 	
+	public static class ExcludeType implements IEntitySelector {
+		
+		final Class<? extends Entity> klass;
+
+		public ExcludeType(Class<? extends Entity> _klass) {
+			klass = _klass;
+		}
+		
+		@Override
+		public boolean isEntityApplicable(Entity entity) {
+			return !klass.isInstance(entity);
+		}
+		
+	}
+	
 	public static class RestrictRange implements IEntitySelector {
 		
 		final double x, y, z;
@@ -149,6 +164,10 @@ public class EntitySelectors {
 	 */
 	public static IEntitySelector excludeOf(Entity ...ents) {
 		return new Exclusion(ents);
+	}
+	
+	public static IEntitySelector excludeType(Class<? extends Entity> klass) {
+		return new ExcludeType(klass);
 	}
 	
 }

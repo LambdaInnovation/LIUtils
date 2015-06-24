@@ -60,6 +60,37 @@ public class WorldUtils {
 		return AxisAlignedBB.getBoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
 	}
 	
+	/**
+	 * Return a minimum AABB that can hold the points given.
+	 */
+	public static AxisAlignedBB ofPoints(Vec3 ...points) {
+		if(points.length == 0) {
+			throw new RuntimeException("Invalid call: too few vectors");
+		}
+		AxisAlignedBB ret = AxisAlignedBB.getBoundingBox(
+			points[0].xCoord, points[0].yCoord, points[0].zCoord, 
+			points[0].xCoord, points[0].yCoord, points[0].zCoord);
+		
+		for(int i = 1; i < points.length; ++i) {
+			if(ret.minX > points[i].xCoord)
+				ret.minX = points[i].xCoord;
+			if(ret.maxX < points[i].xCoord)
+				ret.maxX = points[i].xCoord;
+			
+			if(ret.minY > points[i].yCoord)
+				ret.minY = points[i].yCoord;
+			if(ret.maxY < points[i].yCoord)
+				ret.maxY = points[i].yCoord;
+			
+			if(ret.minZ > points[i].zCoord)
+				ret.minZ = points[i].zCoord;
+			if(ret.maxZ < points[i].zCoord)
+				ret.maxZ = points[i].zCoord;
+		}
+		
+		return ret;
+	}
+	
 	public static List<BlockPos> getBlocksWithin(Entity entity, double range, int max, IBlockFilter ...filters) {
 		return getBlocksWithin(entity.worldObj, entity.posX, entity.posY, entity.posZ, range, max, filters);
 	}

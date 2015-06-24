@@ -22,6 +22,32 @@ public class MathUtils {
 
 	public static final float PI_F = (float) Math.PI;
 	
+	public static float wrapYawAngle(float a) {
+		float ret = a % 360f;
+		return ret < 0 ? ret + 360f : ret;
+	}
+	
+	/**
+	 * Return whether a -180~180 wrapped yaw angle is in the range denoted by [start, end].
+	 * Note that this is not a simple range comparison. If the arc of the angle is in the
+	 * range sweeped from start to end clockwisely, then the result is true.
+	 */
+	public static boolean angleYawinRange(float start, float end, float angle) {
+		if(end < start)
+			return false;
+		if(end - start >= 360f)
+			return true;
+		
+		float ss = wrapYawAngle(start), se = wrapYawAngle(end), sa = wrapYawAngle(angle);
+		
+		if(ss > se) {
+			return ss <= sa || sa <= se;
+		}
+		
+		System.out.println(ss + " " + se + " " + sa);
+		return ss <= sa && sa <= se;
+	}
+	
 	/**
 	 * Perform a simple linear lerp between a and b
 	 * @param a

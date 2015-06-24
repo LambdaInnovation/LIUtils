@@ -46,6 +46,12 @@ public class Motion3D {
 		this(posVec.xCoord, posVec.yCoord, posVec.zCoord, moX, moY, moZ);
 	}
 	
+	public Motion3D(double x, double y, double z) {
+		px = x;
+		py = y;
+		pz = z;
+	}
+	
 	public Motion3D() {
 		this(0, 0, 0, 0, 0, 0);
 	}
@@ -104,25 +110,13 @@ public class Motion3D {
 		this.pz = entity.posZ;
 
 		if (dirFlag) {
-			float var3 = 1.0F, var4 = 0.0F;
 			
 			float rotationYaw = (float) (
 					(entity instanceof EntityLivingBase ? entity.getRotationYawHead() : entity.rotationYaw) 
 					+ 2 * (RNG.nextFloat() - 0.5F) * offset);
 			float rotationPitch = (float) (entity.rotationPitch + (RNG.nextFloat() - 0.5F) * offset);
-			//System.out.println(rotationYaw + " " + rotationPitch);
-			this.vx = -MathHelper.sin(rotationYaw / 180.0F
-					* (float) Math.PI)
-					* MathHelper.cos(rotationPitch / 180.0F
-							* (float) Math.PI) * var3;
-			this.vz = MathHelper.cos(rotationYaw / 180.0F
-					* (float) Math.PI)
-					* MathHelper.cos(rotationPitch / 180.0F
-							* (float) Math.PI) * var3;
-			this.vy = -MathHelper.sin((rotationPitch + var4)
-					/ 180.0F * (float) Math.PI)
-					* var3;
 			
+			fromRotation(rotationYaw, rotationPitch);
 			
 		} else {
 			vx = entity.motionX;
@@ -133,10 +127,39 @@ public class Motion3D {
 		this.normalize();
 	}
 	
+	public Motion3D fromRotation(float rotationYaw, float rotationPitch) {
+		this.vx = -MathHelper.sin(rotationYaw / 180.0F
+				* (float) Math.PI)
+				* MathHelper.cos(rotationPitch / 180.0F
+						* (float) Math.PI);
+		this.vz = MathHelper.cos(rotationYaw / 180.0F
+				* (float) Math.PI)
+				* MathHelper.cos(rotationPitch / 180.0F
+						* (float) Math.PI);
+		this.vy = -MathHelper.sin((rotationPitch) / 180.0F * (float) Math.PI);
+		
+		return this;
+	}
+	
+	public float getRotationYaw() {
+		return -(float)(Math.atan2(vx, vz) * 180.0D / Math.PI);
+	}
+	
+	public float getRotationPitch() {
+		return -(float)(Math.atan2(vy, Math.sqrt(vx * vx + vz * vz)) * 180.0D / Math.PI);
+	}
+	
 	public Motion3D setPosition(double x, double y, double z) {
 		px = x;
 		py = y;
 		pz = z;
+		return this;
+	}
+	
+	public Motion3D setMotion(double x, double y, double z) {
+		vx = x;
+		vy = y;
+		vz = z;
 		return this;
 	}
 	
@@ -169,9 +192,8 @@ public class Motion3D {
 		e.motionX = this.vx;
 		e.motionY = this.vy;
 		e.motionZ = this.vz;
-		double tmp = Math.sqrt(vx * vx + vz * vz);
-		e.prevRotationYaw = e.rotationYaw = -(float)(Math.atan2(vx, vz) * 180.0D / Math.PI);
-        e.prevRotationPitch = e.rotationPitch = -(float)(Math.atan2(vy, tmp) * 180.0D / Math.PI);
+		e.prevRotationYaw = e.rotationYaw = getRotationYaw();
+        e.prevRotationPitch = e.rotationPitch = getRotationPitch();
 	}
 	
 	/**
