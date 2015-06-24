@@ -33,6 +33,13 @@ public class Color {
 		fromHexColor(hex);
 	}
 	
+	public void from(Color c) {
+		this.r = c.r;
+		this.g = c.g;
+		this.b = c.b;
+		this.a = c.a;
+	}
+	
 	public Color setColor4i(int r, int g, int b, int a) {
 		setColor4d(r / 255.0, g / 255.0, b / 255.0, a / 255.0);
 		return this;

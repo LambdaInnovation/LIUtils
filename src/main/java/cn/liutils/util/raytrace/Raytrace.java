@@ -116,7 +116,7 @@ public class Raytrace {
         
         int k1 = world.getBlockMetadata(l, i1, j1);
 
-        if (filter.accepts(world, l, i1, j1) && block.canCollideCheck(k1, false))
+        if (filter.accepts(world, l, i1, j1, block) && block.canCollideCheck(k1, false))
         {
             MovingObjectPosition movingobjectposition = block.collisionRayTrace(world, l, i1, j1, v1, v2);
 
@@ -285,10 +285,8 @@ public class Raytrace {
 
             Block block1 = world.getBlock(l, i1, j1);
             int l1 = world.getBlockMetadata(l, i1, j1);
-            if(!filter.accepts(world, l, i1, j1))
-            	block1 = Blocks.air;
 
-            if (filter.accepts(world, l, i1, j1))
+            if (filter.accepts(world, l, i1, j1, block1))
             {
                 if (block1.canCollideCheck(l1, false))
                 {

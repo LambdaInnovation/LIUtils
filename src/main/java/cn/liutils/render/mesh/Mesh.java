@@ -151,22 +151,26 @@ public class Mesh {
 		mat.onRenderStage(RenderStage.START_TESSELLATE);
 		
 		if(uvs != null) {
-			for(int i : triangles) {
-				double[] vert = vertices[i];
-				double[] uv = uvs[i];
-				if(normals != null) {
-					t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+			if(triangles != null) {
+				for(int i : triangles) {
+					double[] vert = vertices[i];
+					double[] uv = uvs[i];
+					if(normals != null) {
+						t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+					}
+					t.addVertexWithUV(vert[0], vert[1], vert[2], uv[0], uv[1]);
+					
 				}
-				t.addVertexWithUV(vert[0], vert[1], vert[2], uv[0], uv[1]);
-				
 			}
 		} else {
-			for(int i : triangles) {
-				double[] vert = vertices[i];
-				if(normals != null) {
-					t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+			if(triangles != null) {
+				for(int i : triangles) {
+					double[] vert = vertices[i];
+					if(normals != null) {
+						t.setNormal(normals[i][0], normals[i][1], normals[i][2]);
+					}
+					t.addVertex(vert[0], vert[1], vert[2]);
 				}
-				t.addVertex(vert[0], vert[1], vert[2]);
 			}
 		}
 		t.draw();

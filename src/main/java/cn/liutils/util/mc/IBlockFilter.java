@@ -12,6 +12,7 @@
  */
 package cn.liutils.util.mc;
 
+import net.minecraft.block.Block;
 import net.minecraft.world.World;
 
 /**
@@ -20,6 +21,6 @@ import net.minecraft.world.World;
  */
 public interface IBlockFilter {
 	
-	boolean accepts(World world, int x, int y, int z);
+	boolean accepts(World world, int x, int y, int z, Block block);
 	
 }

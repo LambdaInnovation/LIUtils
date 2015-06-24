@@ -23,7 +23,7 @@ import cn.liutils.util.helper.Color;
 public abstract class Material {
 	
 	public ResourceLocation mainTexture;
-	public final Color color = new Color();
+	public Color color = new Color();
 
 	public abstract void onRenderStage(RenderStage stage);
 	

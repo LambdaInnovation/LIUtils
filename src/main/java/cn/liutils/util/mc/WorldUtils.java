@@ -15,6 +15,7 @@ package cn.liutils.util.mc;
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.block.Block;
 import net.minecraft.command.IEntitySelector;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -113,7 +114,7 @@ public class WorldUtils {
 		fs[filter.length] = new IBlockFilter() {
 
 			@Override
-			public boolean accepts(World world, int xx, int yy, int zz) {
+			public boolean accepts(World world, int xx, int yy, int zz, Block block) {
 				double dx = xx - x, dy = yy - y, dz = zz - z;
 				return dx * dx + dy * dy + dz * dz <= rangeSq;
 			}
@@ -143,7 +144,7 @@ public class WorldUtils {
 				for(int z = minZ; z <= maxZ; ++z) {
 					boolean match = true;
 					for(IBlockFilter f : filter) {
-						if(!f.accepts(world, x, y, z)) {
+						if(!f.accepts(world, x, y, z, world.getBlock(x, y, z))) {
 							match = false;
 							break;
 						}
