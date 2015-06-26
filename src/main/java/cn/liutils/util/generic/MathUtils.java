@@ -105,4 +105,8 @@ public class MathUtils {
 		return Math.sqrt(dx * dx + dy * dy + dz * dz);
 	}
 	
+	public static double lengthSq(double dx, double dy, double dz) {
+		return dx * dx + dy * dy + dz * dz;
+	}
+	
 }
