@@ -33,6 +33,32 @@ public class RenderUtils {
 	
 	private static Tessellator t = Tessellator.instance;
 	
+	private static int textureState = -1;
+	
+	//-----------------Quick aliases-----------------------------
+	/**
+	 * Stores the current texture state. stack depth: 1
+	 */
+	public static void pushTextureState() {
+		if(textureState != -1) {
+			System.err.println("RenderUtils:Texture State Overflow");
+			return;
+		}
+		textureState = GL11.glGetInteger(GL11.GL_TEXTURE_BINDING_2D);
+	}
+	
+	/**
+	 * Restores the stored texture state. stack depth: 1
+	 */
+	public static void popTextureState() {
+		if(textureState == -1) {
+			System.err.println("RenderUtils:Texture State Underflow");
+			return;
+		}
+		GL11.glBindTexture(GL11.GL_TEXTURE_2D, textureState);
+		textureState = -1;
+	}
+	
 	public static void addVertex(Vec3 vertex, double u, double v) {
 		t.addVertexWithUV(vertex.xCoord, vertex.yCoord, vertex.zCoord, u, v);
 	}

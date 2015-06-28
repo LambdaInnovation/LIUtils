@@ -27,6 +27,7 @@ import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegEventHandler;
 import cn.liutils.api.event.OpenAuxGuiEvent;
 import cn.liutils.api.gui.AuxGui;
+import cn.liutils.util.client.RenderUtils;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -69,6 +70,8 @@ public class AuxGuiHandler {
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		RenderUtils.pushTextureState();
+		
 		if(event.type == ElementType.EXPERIENCE) {
 			Iterator<AuxGui> iter = auxGuiList.iterator();
 			while(iter.hasNext()) {
@@ -81,6 +84,8 @@ public class AuxGuiHandler {
 				}
 			}
 		}
+		
+		RenderUtils.popTextureState();
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glDepthMask(true);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
