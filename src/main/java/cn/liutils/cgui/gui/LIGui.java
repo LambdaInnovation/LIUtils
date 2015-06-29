@@ -155,6 +155,7 @@ public class LIGui extends WidgetContainer {
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
 			if(node != null) {
+				System.out.println(node);
 				gainFocus(node);
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 				//TODO: Need further filtering

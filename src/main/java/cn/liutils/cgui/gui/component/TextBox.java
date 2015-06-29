@@ -95,6 +95,23 @@ public class TextBox extends Component {
 		return this;
 	}
 	
+	private String getProcessedContent() {
+		String str = content;
+		if(!allowEdit && localized) {
+			str = StatCollector.translateToLocal(str);
+		}
+		
+		if(doesEcho) {
+			StringBuilder sb = new StringBuilder();
+			for(int i = 0; i < str.length(); ++i) {
+				sb.append('*');
+			}
+			str = sb.toString();
+		}
+		
+		return str;
+	}
+	
 	private String getClipboardContent() {
 		Clipboard cb = Toolkit.getDefaultToolkit().getSystemClipboard();
 		if(cb.isDataFlavorAvailable(DataFlavor.stringFlavor)) {
@@ -117,7 +134,7 @@ public class TextBox extends Component {
 	
 	private double[] getOffset(Widget w) {
 		double x = 0, y = 0;
-		Vector2d v = Font.font.simDrawWrapped(content, size, w.transform.width);
+		Vector2d v = Font.font.simDrawWrapped(getProcessedContent(), size, w.transform.width);
 		
 		switch(widthAlign) {
 		case LEFT:
@@ -236,18 +253,8 @@ public class TextBox extends Component {
 				
 				checkCaret();
 				
-				String str = content;
-				if(!allowEdit && localized) {
-					str = StatCollector.translateToLocal(str);
-				}
+				String str = getProcessedContent();
 				
-				if(doesEcho) {
-					StringBuilder sb = new StringBuilder();
-					for(int i = 0; i < str.length(); ++i) {
-						sb.append('*');
-					}
-					str = sb.toString();
-				}
 				GL11.glPushMatrix();
 				GL11.glTranslated(0, 0, zLevel);
 				

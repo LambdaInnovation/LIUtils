@@ -92,6 +92,26 @@ public final class Library {
         	
         });
         
+        root.setNativeFunction("max", new NativeFunction(new String[] { "a", "b" }) {
+
+			@Override
+			protected Object call(NativeFunctionFrame frame) {
+				double a = frame.getDoubleArgument(0), b = frame.getDoubleArgument(1);
+				return Math.max(a, b);
+			}
+        	
+        });
+        
+        root.setNativeFunction("min", new NativeFunction(new String[] { "a", "b" }) {
+
+			@Override
+			protected Object call(NativeFunctionFrame frame) {
+				double a = frame.getDoubleArgument(0), b = frame.getDoubleArgument(1);
+				return Math.min(a, b);
+			}
+        	
+        });
+        
         root.setConst("PI", Math.PI);
     }
 }

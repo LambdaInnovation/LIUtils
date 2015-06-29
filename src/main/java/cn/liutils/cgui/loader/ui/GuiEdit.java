@@ -65,7 +65,6 @@ public class GuiEdit extends LIGuiScreen {
 	public GuiEdit() {
 		this.drawBack = false;
 		
-		//TODO: File IO in client thread.....
 		File f = new File(CONFIG_PATH);
 		if(!f.isFile()) {
 			if(f.isDirectory()) {

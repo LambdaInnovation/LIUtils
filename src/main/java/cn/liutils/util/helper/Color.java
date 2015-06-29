@@ -68,6 +68,7 @@ public class Color {
 	}
 	
 	public void bind() {
+		//System.out.println("BIND " + r + " " + g + " " + b + " " + a);
 		GL11.glColor4d(r, g, b, a);
 	}
 	

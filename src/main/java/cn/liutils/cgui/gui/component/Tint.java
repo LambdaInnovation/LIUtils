@@ -12,6 +12,8 @@
  */
 package cn.liutils.cgui.gui.component;
 
+import org.lwjgl.opengl.GL11;
+
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
 import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
@@ -43,7 +45,10 @@ public class Tint extends Component {
 				} else {
 					if(event.hovering) hoverColor.bind();
 					else idleColor.bind();
+					
+					GL11.glDisable(GL11.GL_ALPHA_TEST);
 					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
+					//GL11.glEnable(GL11.GL_ALPHA_TEST);
 				}
 			}
 		});
