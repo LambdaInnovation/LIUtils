@@ -46,7 +46,7 @@ public enum GameTimer {
 		if(Minecraft.getMinecraft().isGamePaused()) {
 			timeLag = time - storedTime;
 		} else {
-			storedTime = Minecraft.getSystemTime();
+			storedTime = time;
 		}
 		return time - timeLag;
 	}
