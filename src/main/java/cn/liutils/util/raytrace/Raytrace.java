@@ -94,31 +94,36 @@ public class Raytrace {
 	
 	/**
 	 * Mojang code with minor changes to support block filtering.
+	 * @param world world
+	 * @param vec1 startPoint
+	 * @param vec2 endPoint
+	 * @param filter BlockFilter
+	 * @return MovingObjectPosition
 	 */
-    public static MovingObjectPosition rayTraceBlocks(World world, Vec3 v1, Vec3 v2, IBlockFilter filter) {
-        if(Double.isNaN(v1.xCoord) || Double.isNaN(v1.yCoord) || Double.isNaN(v1.zCoord) ||
-        		Double.isNaN(v2.xCoord) || Double.isNaN(v2.yCoord) || Double.isNaN(v2.zCoord)) {
+    public static MovingObjectPosition rayTraceBlocks(World world, Vec3 vec1, Vec3 vec2, IBlockFilter filter) {
+        if(Double.isNaN(vec1.xCoord) || Double.isNaN(vec1.yCoord) || Double.isNaN(vec1.zCoord) ||
+        		Double.isNaN(vec2.xCoord) || Double.isNaN(vec2.yCoord) || Double.isNaN(vec2.zCoord)) {
         	return null;
         }
         
     	//HACKHACK: copy the vec to prevent modifying the parameter
-    	v1 = VecUtils.copy(v1);
+    	vec1 = VecUtils.copy(vec1);
     	if(filter == null)
     		filter = BlockFilters.filNormal;
         
-        int i = MathHelper.floor_double(v2.xCoord);
-        int j = MathHelper.floor_double(v2.yCoord);
-        int k = MathHelper.floor_double(v2.zCoord);
-        int l = MathHelper.floor_double(v1.xCoord);
-        int i1 = MathHelper.floor_double(v1.yCoord);
-        int j1 = MathHelper.floor_double(v1.zCoord);
-        Block block = world.getBlock(l, i1, j1);
+        int x2 = MathHelper.floor_double(vec2.xCoord);
+        int y2 = MathHelper.floor_double(vec2.yCoord);
+        int z2 = MathHelper.floor_double(vec2.zCoord);
+        int x1 = MathHelper.floor_double(vec1.xCoord);
+        int y1 = MathHelper.floor_double(vec1.yCoord);
+        int z1 = MathHelper.floor_double(vec1.zCoord);
+        Block block = world.getBlock(x1, y1, z1);
         
-        int k1 = world.getBlockMetadata(l, i1, j1);
+        int k1 = world.getBlockMetadata(x1, y1, z1);
 
-        if (filter.accepts(world, l, i1, j1, block) && block.canCollideCheck(k1, false))
+        if (filter.accepts(world, x1, y1, z1, block) && block.canCollideCheck(k1, false))
         {
-            MovingObjectPosition movingobjectposition = block.collisionRayTrace(world, l, i1, j1, v1, v2);
+            MovingObjectPosition movingobjectposition = block.collisionRayTrace(world, x1, y1, z1, vec1, vec2);
 
             if (movingobjectposition != null)
             {
@@ -131,12 +136,12 @@ public class Raytrace {
 
         while (k1-- >= 0)
         {
-            if (Double.isNaN(v1.xCoord) || Double.isNaN(v1.yCoord) || Double.isNaN(v1.zCoord))
+            if (Double.isNaN(vec1.xCoord) || Double.isNaN(vec1.yCoord) || Double.isNaN(vec1.zCoord))
             {
                 return null;
             }
 
-            if (l == i && i1 == j && j1 == k)
+            if (x1 == x2 && y1 == y2 && z1 == z2)
             {
                 return null;
             }
@@ -148,39 +153,39 @@ public class Raytrace {
             double d1 = 999.0D;
             double d2 = 999.0D;
 
-            if (i > l)
+            if (x2 > x1)
             {
-                d0 = (double)l + 1.0D;
+                d0 = (double)x1 + 1.0D;
             }
-            else if (i < l)
+            else if (x2 < x1)
             {
-                d0 = (double)l + 0.0D;
+                d0 = (double)x1 + 0.0D;
             }
             else
             {
                 flag6 = false;
             }
 
-            if (j > i1)
+            if (y2 > y1)
             {
-                d1 = (double)i1 + 1.0D;
+                d1 = (double)y1 + 1.0D;
             }
-            else if (j < i1)
+            else if (y2 < y1)
             {
-                d1 = (double)i1 + 0.0D;
+                d1 = (double)y1 + 0.0D;
             }
             else
             {
                 flag3 = false;
             }
 
-            if (k > j1)
+            if (z2 > z1)
             {
-                d2 = (double)j1 + 1.0D;
+                d2 = (double)z1 + 1.0D;
             }
-            else if (k < j1)
+            else if (z2 < z1)
             {
-                d2 = (double)j1 + 0.0D;
+                d2 = (double)z1 + 0.0D;
             }
             else
             {
@@ -190,23 +195,23 @@ public class Raytrace {
             double d3 = 999.0D;
             double d4 = 999.0D;
             double d5 = 999.0D;
-            double d6 = v2.xCoord - v1.xCoord;
-            double d7 = v2.yCoord - v1.yCoord;
-            double d8 = v2.zCoord - v1.zCoord;
+            double d6 = vec2.xCoord - vec1.xCoord;
+            double d7 = vec2.yCoord - vec1.yCoord;
+            double d8 = vec2.zCoord - vec1.zCoord;
 
             if (flag6)
             {
-                d3 = (d0 - v1.xCoord) / d6;
+                d3 = (d0 - vec1.xCoord) / d6;
             }
 
             if (flag3)
             {
-                d4 = (d1 - v1.yCoord) / d7;
+                d4 = (d1 - vec1.yCoord) / d7;
             }
 
             if (flag4)
             {
-                d5 = (d2 - v1.zCoord) / d8;
+                d5 = (d2 - vec1.zCoord) / d8;
             }
 
             boolean flag5 = false;
@@ -214,7 +219,7 @@ public class Raytrace {
 
             if (d3 < d4 && d3 < d5)
             {
-                if (i > l)
+                if (x2 > x1)
                 {
                     b0 = 4;
                 }
@@ -223,13 +228,13 @@ public class Raytrace {
                     b0 = 5;
                 }
 
-                v1.xCoord = d0;
-                v1.yCoord += d7 * d3;
-                v1.zCoord += d8 * d3;
+                vec1.xCoord = d0;
+                vec1.yCoord += d7 * d3;
+                vec1.zCoord += d8 * d3;
             }
             else if (d4 < d5)
             {
-                if (j > i1)
+                if (y2 > y1)
                 {
                     b0 = 0;
                 }
@@ -238,13 +243,13 @@ public class Raytrace {
                     b0 = 1;
                 }
 
-                v1.xCoord += d6 * d4;
-                v1.yCoord = d1;
-                v1.zCoord += d8 * d4;
+                vec1.xCoord += d6 * d4;
+                vec1.yCoord = d1;
+                vec1.zCoord += d8 * d4;
             }
             else
             {
-                if (k > j1)
+                if (z2 > z1)
                 {
                     b0 = 2;
                 }
@@ -253,44 +258,44 @@ public class Raytrace {
                     b0 = 3;
                 }
 
-                v1.xCoord += d6 * d5;
-                v1.yCoord += d7 * d5;
-                v1.zCoord = d2;
+                vec1.xCoord += d6 * d5;
+                vec1.yCoord += d7 * d5;
+                vec1.zCoord = d2;
             }
 
-            Vec3 vec32 = Vec3.createVectorHelper(v1.xCoord, v1.yCoord, v1.zCoord);
-            l = (int)(vec32.xCoord = (double)MathHelper.floor_double(v1.xCoord));
+            Vec3 vec32 = Vec3.createVectorHelper(vec1.xCoord, vec1.yCoord, vec1.zCoord);
+            x1 = (int)(vec32.xCoord = (double)MathHelper.floor_double(vec1.xCoord));
 
             if (b0 == 5)
             {
-                --l;
+                --x1;
                 ++vec32.xCoord;
             }
 
-            i1 = (int)(vec32.yCoord = (double)MathHelper.floor_double(v1.yCoord));
+            y1 = (int)(vec32.yCoord = (double)MathHelper.floor_double(vec1.yCoord));
 
             if (b0 == 1)
             {
-                --i1;
+                --y1;
                 ++vec32.yCoord;
             }
 
-            j1 = (int)(vec32.zCoord = (double)MathHelper.floor_double(v1.zCoord));
+            z1 = (int)(vec32.zCoord = (double)MathHelper.floor_double(vec1.zCoord));
 
             if (b0 == 3)
             {
-                --j1;
+                --z1;
                 ++vec32.zCoord;
             }
 
-            Block block1 = world.getBlock(l, i1, j1);
-            int l1 = world.getBlockMetadata(l, i1, j1);
+            Block block1 = world.getBlock(x1, y1, z1);
+            int l1 = world.getBlockMetadata(x1, y1, z1);
 
-            if (filter.accepts(world, l, i1, j1, block1))
+            if (filter.accepts(world, x1, y1, z1, block1))
             {
                 if (block1.canCollideCheck(l1, false))
                 {
-                    MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(world, l, i1, j1, v1, v2);
+                    MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(world, x1, y1, z1, vec1, vec2);
 
                     if (movingobjectposition1 != null)
                     {
@@ -299,7 +304,7 @@ public class Raytrace {
                 }
                 else
                 {
-                    movingobjectposition2 = new MovingObjectPosition(l, i1, j1, b0, v1, false);
+                    movingobjectposition2 = new MovingObjectPosition(x1, y1, z1, b0, vec1, false);
                 }
             }
         }
