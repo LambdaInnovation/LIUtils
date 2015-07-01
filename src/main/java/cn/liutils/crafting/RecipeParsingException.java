@@ -1,5 +1,8 @@
 package cn.liutils.crafting;
 
+/**
+ * @author EAirPeter
+ */
 public class RecipeParsingException extends Exception {
 	
 	public RecipeParsingException() {

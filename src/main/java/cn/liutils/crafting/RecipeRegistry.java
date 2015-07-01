@@ -39,6 +39,7 @@ public class RecipeRegistry {
 		RecipeParser parser = null;
 		try {
 			parser = new RecipeParser(file);
+			addRecipe(parser);
 		}
 		catch (Throwable e) {
 			LIUtils.log.error("Failed to load recipes from file: " + file, e);
@@ -56,6 +57,7 @@ public class RecipeRegistry {
 		RecipeParser parser = null;
 		try {
 			parser = new RecipeParser(recipes);
+			addRecipe(parser);
 		}
 		catch (Throwable e) {
 			LIUtils.log.error("Failed to load recipes from String: " + recipes, e);
@@ -67,17 +69,21 @@ public class RecipeRegistry {
 	
 	private void addRecipe(RecipeParser parser) {
 		while (parser.parseNext()) {
-			IRecipeRegistry registry = map.get(parser.getType());
+			String type = parser.getType();
+			IRecipeRegistry registry = map.get(type);
 			if (registry != null)
-				registry.register(parser.getOutput(), parser.getInput(), parser.getWidth(), parser.getHeight());
+				registry.register(type, parser.getOutput(), parser.getInput(), parser.getWidth(), parser.getHeight());
 			else
-				LIUtils.log.error("Failed to register a recipe because the type \"" + parser.getType() + "\" doesn't have its registry");
+				LIUtils.log.error("Failed to register a recipe because the type \"" + type + "\" doesn't have its registry");
 		}
 	}
 	
 	private HashMap<String, IRecipeRegistry> map = new HashMap<String, IRecipeRegistry>();
 	
 	private RecipeRegistry() {
+		registerRecipeType("shaped", ShapedOreRegistry.INSTANCE);
+		registerRecipeType("shaped_s", ShapedOreRegistry.INSTANCE);
+		registerRecipeType("shapeless", ShapelessOreRegistry.INSTANCE);
 	}
 	
 }

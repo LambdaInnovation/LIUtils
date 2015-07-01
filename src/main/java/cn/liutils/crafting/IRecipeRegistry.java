@@ -5,6 +5,6 @@ package cn.liutils.crafting;
  */
 public interface IRecipeRegistry {
 
-	public void register(RecipeElement output, RecipeElement[] input, int width, int height);
+	public void register(String type, RecipeElement output, RecipeElement[] input, int width, int height);
 	
 }
