@@ -41,6 +41,7 @@ public class GuiEdit extends LIGuiScreen {
 		this();
 		toEdit.addAll(gui);
 		path = _path;
+		this.drawBack = false;
 	}
 	
 	public static double[] COLOR_STYLE = new double[] { .3, .56, 1 };
@@ -92,7 +93,7 @@ public class GuiEdit extends LIGuiScreen {
 	
 	@Override
     public void drawScreen(int mx, int my, float w) {
-		LIGui.drawBlackout();
+		//LIGui.drawBlackout();
 		
 		toEdit.resize(width, height);
 		toEdit.draw(mx, my);
