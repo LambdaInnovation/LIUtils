@@ -1,6 +1,7 @@
 package cn.liutils.ripple;
 
 import cn.liutils.util.generic.MathUtils;
+import cn.liutils.util.generic.RandUtils;
 
 
 /**
@@ -108,6 +109,37 @@ public final class Library {
 			protected Object call(NativeFunctionFrame frame) {
 				double a = frame.getDoubleArgument(0), b = frame.getDoubleArgument(1);
 				return Math.min(a, b);
+			}
+        	
+        });
+        
+        
+        root.setNativeFunction("range_double", new NativeFunction(new String[] { "a", "b" }) {
+
+			@Override
+			protected Object call(NativeFunctionFrame frame) {
+				double a = frame.getDoubleArgument(0), b = frame.getDoubleArgument(1);
+				return RandUtils.ranged(a, b);
+			}
+        	
+        });
+        
+        root.setNativeFunction("range_int", new NativeFunction(new String[] { "a", "b" }) {
+
+			@Override
+			protected Object call(NativeFunctionFrame frame) {
+				int a = frame.getIntArgument(0), b = frame.getIntArgument(1);
+				return RandUtils.rangei(a, b);
+			}
+        	
+        });
+        
+        root.setNativeFunction("floor", new NativeFunction(new String[] { "a" }) {
+
+			@Override
+			protected Object call(NativeFunctionFrame frame) {
+				double a = frame.getDoubleArgument(0);
+				return (int) a;
 			}
         	
         });

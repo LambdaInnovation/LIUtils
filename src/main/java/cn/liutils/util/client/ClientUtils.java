@@ -6,7 +6,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ResourceLocation;
-import cn.liutils.core.event.AuxGuiHandler;
+import cn.liutils.api.gui.AuxGuiHandler;
 
 /**
  * Client-Side judgement helper and other stuffs.

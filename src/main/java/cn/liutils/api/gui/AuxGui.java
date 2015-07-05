@@ -13,7 +13,7 @@
 package cn.liutils.api.gui;
 
 import net.minecraft.client.gui.ScaledResolution;
-import cn.liutils.core.event.AuxGuiHandler;
+import cn.liutils.util.helper.GameTimer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -27,7 +27,21 @@ import cpw.mods.fml.relauncher.SideOnly;
 @SideOnly(Side.CLIENT)
 public abstract class AuxGui {
 	
+	// Intrusive states
+	boolean lastFrameActive = false;
+	long lastActivateTime;
+	
+	// Parameters
+	/**
+	 * Whether this AuxGui needs fixed timestep update (ticking). If set to true tick() method will get called each tick.
+	 */
+	protected boolean requireTicking = false;
+	
 	public AuxGui() {}
+	
+	protected long getTimeActive() {
+		return GameTimer.getTime() - lastActivateTime;
+	}
 	
 	private boolean disposed;
 	
@@ -65,6 +79,7 @@ public abstract class AuxGui {
 	 */
 	public abstract boolean isForeground();
 	public abstract void draw(ScaledResolution sr);
+	public void tick() {}
 	
 	public static void register(AuxGui gui) {
 		AuxGuiHandler.register(gui);

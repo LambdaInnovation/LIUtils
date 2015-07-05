@@ -14,14 +14,12 @@ package cn.liutils.core;
 
 import net.minecraft.command.CommandHandler;
 import net.minecraft.entity.Entity;
-import net.minecraftforge.common.MinecraftForge;
 
 import org.apache.logging.log4j.Logger;
 
 import cn.annoreg.core.RegistrationManager;
 import cn.annoreg.core.RegistrationMod;
 import cn.annoreg.mc.RegMessageHandler;
-import cn.liutils.core.event.LIEventListener;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.debug.CmdMineStatistics;
 import cpw.mods.fml.common.FMLLog;
@@ -36,13 +34,6 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-/**
- * LIUtils is a core support mod, written by Lambda Innovation. <br/>
- * It's contents involve rendering, key listening, debugging and other many stuffs. <br/>
- * <code>cn.liutils.api</code> is what user should invoke. It contains all the main functions.
- * <code>cn.liutils.core</code> is core registration module, and should not be modified or invoked normally.
- * @author WeAthFolD
- */
 @Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
 @RegistrationMod(pkg = "cn.liutils.", res = "liutils", prefix = "liu_")
 public class LIUtils {
@@ -85,8 +76,6 @@ public class LIUtils {
 		LIFMLGameEventDispatcher.init();
 		
 		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
-	
-		MinecraftForge.EVENT_BUS.register(new LIEventListener());
 	}
 	
 	@EventHandler()

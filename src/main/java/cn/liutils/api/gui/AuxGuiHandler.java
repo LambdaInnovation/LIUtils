@@ -10,7 +10,7 @@
  * 在遵照该协议的情况下，您可以自由传播和修改。
  * http://www.gnu.org/licenses/gpl.html
  */
-package cn.liutils.core.event;
+package cn.liutils.api.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -26,9 +26,10 @@ import org.lwjgl.opengl.GL11;
 import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegEventHandler;
 import cn.liutils.api.event.OpenAuxGuiEvent;
-import cn.liutils.api.gui.AuxGui;
 import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.GameTimer;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -77,10 +78,18 @@ public class AuxGuiHandler {
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
 				if(gui.isDisposed()) {
+					
 					gui.onDisposed();
 					iter.remove();
+					gui.lastFrameActive = false;
+					
 				} else {
+					
+					if(!gui.lastFrameActive)
+						gui.lastActivateTime = GameTimer.getTime();
 					gui.draw(event.resolution);
+					gui.lastFrameActive = true;
+					
 				}
 			}
 		}
@@ -89,6 +98,22 @@ public class AuxGuiHandler {
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 		GL11.glDepthMask(true);
 		GL11.glDepthFunc(GL11.GL_LEQUAL);
+	}
+	
+	@SubscribeEvent
+	public void clientTick(ClientTickEvent event) {
+		if(!Minecraft.getMinecraft().isGamePaused()) {
+			Iterator<AuxGui> iter = auxGuiList.iterator();
+			while(iter.hasNext()) {
+				AuxGui gui = iter.next();
+				if(!gui.isDisposed() && gui.requireTicking) {
+					if(!gui.lastFrameActive)
+						gui.lastActivateTime = GameTimer.getTime();
+					gui.tick();
+					gui.lastFrameActive = true;
+				}
+			}
+		}
 	}
 	
 	public static boolean hasForegroundGui() {
