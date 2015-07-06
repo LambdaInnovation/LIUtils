@@ -30,6 +30,7 @@ import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.GameTimer;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -46,28 +47,33 @@ public class AuxGuiHandler {
 	
 	private AuxGuiHandler() {}
 	
+	private static boolean iterating;
 	private static List<AuxGui> auxGuiList = new ArrayList<AuxGui>();
+	private static List<AuxGui> toAddList = new ArrayList();
 	
 	public static void register(AuxGui gui) {
+		if(!iterating)
+			doAdd(gui);
+		else
+			toAddList.add(gui);
+	}
+	
+	private static void doAdd(AuxGui gui) {
 		auxGuiList.add(gui);
 		MinecraftForge.EVENT_BUS.post(new OpenAuxGuiEvent(gui));
 		gui.onAdded();
 	}
 	
+	private static void startIterating() {
+		iterating = true;
+	}
+	
+	private static void endIterating() {
+		iterating = false;
+	}
+	
 	@SubscribeEvent	
 	public void drawHudEvent(RenderGameOverlayEvent event) {
-		if(Minecraft.getMinecraft().thePlayer.isDead) {
-			Iterator<AuxGui> iter = auxGuiList.iterator();
-			while(iter.hasNext()) {
-				AuxGui gui = iter.next();
-				if(!gui.isConsistent()) {
-					gui.onDisposed();
-					iter.remove();
-				}
-			}
-			return;
-		}
-		
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
@@ -75,6 +81,7 @@ public class AuxGuiHandler {
 		
 		if(event.type == ElementType.EXPERIENCE) {
 			Iterator<AuxGui> iter = auxGuiList.iterator();
+			startIterating();
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
 				if(gui.isDisposed()) {
@@ -92,6 +99,7 @@ public class AuxGuiHandler {
 					
 				}
 			}
+			endIterating();
 		}
 		
 		RenderUtils.popTextureState();
@@ -103,7 +111,12 @@ public class AuxGuiHandler {
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
 		if(!Minecraft.getMinecraft().isGamePaused()) {
+			for(AuxGui gui : toAddList)
+				doAdd(gui);
+			toAddList.clear();
+			
 			Iterator<AuxGui> iter = auxGuiList.iterator();
+			startIterating();
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
 				if(!gui.isDisposed() && gui.requireTicking) {
@@ -113,14 +126,31 @@ public class AuxGuiHandler {
 					gui.lastFrameActive = true;
 				}
 			}
+			endIterating();
 		}
 	}
 	
+	@SubscribeEvent
+	public void disconnected(ClientDisconnectionFromServerEvent event) {
+		startIterating();
+		Iterator<AuxGui> iter = auxGuiList.iterator();
+		while(iter.hasNext()) {
+			AuxGui gui = iter.next();
+			if(!gui.isConsistent()) {
+				gui.onDisposed();
+				iter.remove();
+			}
+		}
+		endIterating();
+	}
+	
 	public static boolean hasForegroundGui() {
+		startIterating();
 		for(AuxGui ag : auxGuiList) {
 			if(!ag.isDisposed() && ag.isForeground())
 				return true;
 		}
+		endIterating();
 		return false;
 	}
 	

@@ -267,7 +267,7 @@ public class TextBox extends Component {
 				
 				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
-					Font.font.draw("|", len + offset[0], offset[1], size, color.asHexWithoutAlpha());
+					Font.font.draw("|", len + offset[0], offset[1], size, color.asHexColor());
 				}
 			}
 			
