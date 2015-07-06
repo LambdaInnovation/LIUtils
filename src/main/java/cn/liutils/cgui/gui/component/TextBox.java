@@ -21,7 +21,6 @@ import java.io.IOException;
 
 import javax.vecmath.Vector2d;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.StatCollector;
 
@@ -43,6 +42,7 @@ import cn.liutils.cgui.gui.event.MouseDownEvent.MouseDownHandler;
 import cn.liutils.util.helper.Color;
 import cn.liutils.util.helper.Font;
 import cn.liutils.util.helper.Font.Align;
+import cn.liutils.util.helper.GameTimer;
 
 /**
  * 事实证明UI底层是十分蛋疼的……
@@ -265,7 +265,7 @@ public class TextBox extends Component {
 				
 				GL11.glPopMatrix();
 				
-				if(allowEdit && w.isFocused() && Minecraft.getSystemTime() % 1000 < 500) {
+				if(allowEdit && w.isFocused() && GameTimer.getAbsTime() % 1000 < 500) {
 					double len = Font.font.strLen(content.substring(0, caretPos), size);
 					Font.font.draw("|", len + offset[0], offset[1], size, color.asHexColor());
 				}

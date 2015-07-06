@@ -14,8 +14,6 @@ package cn.liutils.cgui.gui;
 
 import java.util.Iterator;
 
-import net.minecraft.client.Minecraft;
-
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.util.glu.GLU;
 
@@ -33,6 +31,7 @@ import cn.liutils.cgui.gui.event.RefreshEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.client.HudUtils;
+import cn.liutils.util.helper.GameTimer;
 
 /**
  * @author WeathFolD
@@ -125,7 +124,7 @@ public class LIGui extends WidgetContainer {
     public boolean mouseClickMove(int mx, int my, int btn, long dt) {
     	updateMouse(mx, my);
     	if(btn == 0) {
-    		long time = Minecraft.getSystemTime();
+    		long time = GameTimer.getAbsTime();
         	if(Math.abs(time - dt - lastStartTime) > DRAG_TIME_TOLE) {
         		lastStartTime = time;
         		draggingNode = getTopWidget(mx, my);
@@ -268,7 +267,7 @@ public class LIGui extends WidgetContainer {
     }
     
     public Widget getDraggingWidget() {
-        return Math.abs(Minecraft.getSystemTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode;
+        return Math.abs(GameTimer.getAbsTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode;
     }
 	
 	public Widget getFocus() {

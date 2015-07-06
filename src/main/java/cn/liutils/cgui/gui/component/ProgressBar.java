@@ -14,7 +14,6 @@ package cn.liutils.cgui.gui.component;
 
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -25,6 +24,7 @@ import cn.liutils.cgui.gui.event.FrameEvent.FrameEventHandler;
 import cn.liutils.util.client.HudUtils;
 import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.GameTimer;
 
 /**
  * @author WeAthFolD
@@ -56,11 +56,11 @@ public class ProgressBar extends Component {
 			public void handleEvent(Widget wi, FrameEvent event) {
 				
 				if(illustrating) {
-					progress = 0.5 * (1 + Math.sin(Minecraft.getSystemTime() / 1000.0));
+					progress = 0.5 * (1 + Math.sin(GameTimer.getAbsTime() / 1000.0));
 				}
 				
 				{
-					long time = Minecraft.getSystemTime();
+					long time = GameTimer.getAbsTime();
 					if(lastDrawTime == 0) lastDrawTime = time;
 					
 					double dt = Math.min((time - lastDrawTime) * 0.001, 10); //convert to seconds

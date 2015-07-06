@@ -31,6 +31,7 @@ import org.lwjgl.opengl.GL11;
 
 import cn.liutils.api.render.model.IItemModel;
 import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.helper.GameTimer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -269,7 +270,7 @@ public class RenderModelItem implements IItemRenderer {
 			GL11.glTranslated(8.0F + invOffset.x, 8.0F + invOffset.y, 0.0F);
 			GL11.glScaled(16F * invScale, 16F * invScale, 16F * invScale);
 			float rotation = 145F;
-			if(inventorySpin) rotation = Minecraft.getSystemTime() / 100F;
+			if(inventorySpin) rotation = GameTimer.getAbsTime() / 100F;
 			GL11.glRotatef(rotation, 0, 1, 0);
 			this.doRotation(invRotation);
 			GL11.glScalef(-1F, -1F, 1F);

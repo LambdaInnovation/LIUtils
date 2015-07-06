@@ -32,6 +32,7 @@ import cn.liutils.util.client.HudUtils;
 import cn.liutils.util.helper.Color;
 import cn.liutils.util.helper.Font;
 import cn.liutils.util.helper.Font.Align;
+import cn.liutils.util.helper.GameTimer;
 
 /**
  * @author WeAthFolD
@@ -77,7 +78,7 @@ public class SaveAsScreen extends Window {
 			public void handleEvent(Widget w, MouseDownEvent event) {
 				File file = new File(textBox.content);
 				if(file.exists()) {
-					lastWarningTime = Minecraft.getSystemTime();
+					lastWarningTime = GameTimer.getAbsTime();
 				} else {
 					if(!CGUIDocWriter.save(guiEdit.toEdit, file))
 						Minecraft.getMinecraft().thePlayer.sendChatMessage(CGUILang.commSaveFailed() + textBox.content);
@@ -93,7 +94,7 @@ public class SaveAsScreen extends Window {
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
 				Font.font.draw(CGUILang.butSave(), 9, 1, 6, 0xffffff, Align.CENTER);
-				if(Minecraft.getSystemTime() - lastWarningTime < 1000L) {
+				if(GameTimer.getAbsTime() - lastWarningTime < 1000L) {
 					GL11.glColor4d(1, .3, .3, .3);
 					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 					GL11.glColor4d(1, 1, 1, 1);

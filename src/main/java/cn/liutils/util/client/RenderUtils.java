@@ -23,6 +23,8 @@ import net.minecraft.util.Vec3;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.util.helper.GameTimer;
+
 /**
  * @author WeAthFolD
  *
@@ -188,7 +190,7 @@ public class RenderUtils {
     	GL11.glPushMatrix();
         float f8 = 0.125F;
         GL11.glScalef(f8, f8, f8);
-        float f9 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
+        float f9 = GameTimer.getAbsTime() % 3000L / 3000.0F * 8.0F;
         GL11.glTranslatef(f9, 0.0F, 0.0F); //xOffset loops between 0.0 and 8.0
         GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
         ItemRenderer.renderItemIn2D(t, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
@@ -197,7 +199,7 @@ public class RenderUtils {
         //Second pass
         GL11.glPushMatrix();
         GL11.glScalef(f8, f8, f8);
-        f9 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F; //Loop between 0 and 8, longer loop
+        f9 = GameTimer.getAbsTime() % 4873L / 4873.0F * 8.0F; //Loop between 0 and 8, longer loop
         GL11.glTranslatef(-f9, 0.0F, 0.0F); //Still xOffset
         GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F); //However, different rotation!
         ItemRenderer.renderItemIn2D(t, 0.0F, 0.0F, 1.0F, 1.0F, 256, 256, 0.0625F);
@@ -226,7 +228,7 @@ public class RenderUtils {
     	GL11.glPushMatrix();
         float f8 = 0.125F;
         GL11.glScalef(f8, f8, f8);
-        float f9 = Minecraft.getSystemTime() % 3000L / 3000.0F * 8.0F;
+        float f9 = GameTimer.getAbsTime() % 3000L / 3000.0F * 8.0F;
         GL11.glTranslatef(f9, 0.0F, 0.0F);
         GL11.glRotatef(-50.0F, 0.0F, 0.0F, 1.0F);
         t.startDrawingQuads();
@@ -238,7 +240,7 @@ public class RenderUtils {
         GL11.glPopMatrix();
         GL11.glPushMatrix();
         GL11.glScalef(f8, f8, f8);
-        f9 = Minecraft.getSystemTime() % 4873L / 4873.0F * 8.0F;
+        f9 = GameTimer.getAbsTime() % 4873L / 4873.0F * 8.0F;
         GL11.glTranslatef(-f9, 0.0F, 0.0F);
         GL11.glRotatef(10.0F, 0.0F, 0.0F, 1.0F);
         t.startDrawingQuads();

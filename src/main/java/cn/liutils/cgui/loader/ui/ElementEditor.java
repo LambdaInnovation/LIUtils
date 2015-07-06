@@ -14,7 +14,6 @@ package cn.liutils.cgui.loader.ui;
 
 import java.lang.reflect.Field;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
@@ -37,6 +36,7 @@ import cn.liutils.util.client.HudUtils;
 import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.Color;
 import cn.liutils.util.helper.Font;
+import cn.liutils.util.helper.GameTimer;
 import cn.liutils.util.helper.TypeHelper;
 
 /**
@@ -296,8 +296,8 @@ public abstract class ElementEditor extends Widget {
 			regEventHandler(new FrameEventHandler() {
 				@Override
 				public void handleEvent(Widget w, FrameEvent event) {
-					if(lastErrorTime != -1 && Minecraft.getSystemTime() - lastErrorTime < 1000) {
-						GL11.glColor4d(1, 0, 0, Minecraft.getSystemTime() % 500 < 250 ? 0.6 : 0.3);
+					if(lastErrorTime != -1 && GameTimer.getAbsTime() - lastErrorTime < 1000) {
+						GL11.glColor4d(1, 0, 0, GameTimer.getAbsTime() % 500 < 250 ? 0.6 : 0.3);
 					} else if(inputDirty) {
 						GL11.glColor4d(1, 0.6, 0, 0.3);
 					} else {
@@ -320,7 +320,7 @@ public abstract class ElementEditor extends Widget {
 					if(inputDirty) {
 						//Try to edit the edit target. if not successful, show error.
 						if(!setValue()) {
-							lastErrorTime = Minecraft.getSystemTime();
+							lastErrorTime = GameTimer.getAbsTime();
 						} else {
 							updateTargetWidget();
 							inputDirty = false;
