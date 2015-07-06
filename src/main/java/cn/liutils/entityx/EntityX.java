@@ -19,6 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.entity.Entity;
+import cn.liutils.core.LIUtils;
 
 /**
  * Compared to the old API, this class is designed to be delegated. Entities should create EntityX by themselves and delegate event&calls.
@@ -66,8 +67,10 @@ public class EntityX<T extends Entity> {
 	}
 	
 	public void addMotionHandler(MotionHandler mh) {
-		if(motionHandlers.containsKey(mh.getID()))
-			throw new IllegalStateException("Duplicate MotionHandler ID");
+		if(motionHandlers.containsKey(mh.getID())) {
+			LIUtils.log.error("Duplicate MotionHandler ID");
+			return;
+		}
 		
 		mh.target = target;
 		mh.entityX = this;

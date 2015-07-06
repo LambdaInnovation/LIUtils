@@ -24,13 +24,16 @@ import net.minecraft.util.Vec3;
  * A delegator renderer for Sprite and Entities that implements ISpriteEntity.
  * @author WeAthFolD
  */
-public class RenderIcon extends Render {
+public class RenderParticle extends Render {
 	
 	static Sprite sprite = new Sprite();
 
 	@Override
 	public void doRender(Entity ent, double x, double y, double z, float a, float b) {
-		ISpriteEntity ish = (ISpriteEntity) ent;
+		Particle ish = (Particle) ent;
+		if(!ish.updated)
+			return;
+		
 		ish.updateSprite(sprite);
 		
 		GL11.glDisable(GL11.GL_ALPHA_TEST);

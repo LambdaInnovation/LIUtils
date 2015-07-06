@@ -75,12 +75,20 @@ public class RenderModelItem implements IItemRenderer {
 	/**
 	 * Standard Scale.
 	 */
-	public double scale = 1.0F;
+	public double scale = 1.0;
+	
+	public double equipScale = 1.0;
+	
+	public double thirdPersonScale = 1.0;
+	
+	public double entityItemScale = 1.0;
 	
 	/**
 	 * Equip Offset
 	 */
 	public Vec3 equipOffset = initVec();
+	
+	public Vec3 thirdPersonOffset = initVec();
 	
 	/**
 	 * Equip Rotation
@@ -232,6 +240,8 @@ public class RenderModelItem implements IItemRenderer {
 
 	@Override
 	public void renderItem(ItemRenderType type, ItemStack item, Object... data) {
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		switch (type) {
 		case EQUIPPED:
 		case EQUIPPED_FIRST_PERSON:
@@ -275,6 +285,7 @@ public class RenderModelItem implements IItemRenderer {
 		GL11.glPushMatrix(); {
 			RenderUtils.loadTexture(texturePath);
 			this.doRotation(entityItemRotation);
+			GL11.glScaled(entityItemScale, entityItemScale, entityItemScale);
 			renderAtStdPosition();
 		} GL11.glPopMatrix();
 	}
@@ -290,9 +301,14 @@ public class RenderModelItem implements IItemRenderer {
 			RenderUtils.loadTexture(texturePath);
 			float sc2 = 0.0625F;
 			GL11.glRotatef(40F, 0, 0, 1);
+			if(type == ItemRenderType.EQUIPPED)
+				this.doTransformation(thirdPersonOffset);
 			this.doTransformation(equipOffset);
 			this.doRotation(equipRotation);
 			GL11.glRotatef(90, 0, -1, 0);
+			GL11.glScaled(equipScale, equipScale, equipScale);
+			if(type == ItemRenderType.EQUIPPED)
+				GL11.glScaled(thirdPersonScale, thirdPersonScale, thirdPersonScale);
 			renderAtStdPosition(getModelAttribute(item, entity));
 		} GL11.glPopMatrix();
 		

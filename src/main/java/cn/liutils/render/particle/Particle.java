@@ -20,6 +20,7 @@ import cn.annoreg.mc.RegEntity;
 import cn.liutils.entityx.EntityAdvanced;
 import cn.liutils.entityx.handlers.Rigidbody;
 import cn.liutils.util.helper.Color;
+import cn.liutils.util.helper.GameTimer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 
@@ -33,19 +34,23 @@ import cpw.mods.fml.relauncher.SideOnly;
 public final class Particle extends EntityAdvanced implements ISpriteEntity {
 	
 	@RegEntity.Render
-	public static RenderIcon render;
+	public static RenderParticle render;
 	
 	public ResourceLocation texture = null;
 	public Color color = Color.WHITE();
 	public float size = 1.0f;
 	public boolean hasLight = false;
 	public double gravity = 0.0;
+	public boolean needRigidbody = true;
 
 	long creationTime;
 	
-	int fadeTime;
-	int life = 10000000;
+	public int fadeInTime = 5;
+	public int fadeTime;
+	public int life = 10000000;
 	double startAlpha;
+	
+	boolean updated;
 	
 	public Particle() {
 		super(null);
@@ -67,6 +72,10 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 				alpha = 0;
 			}
 			color.a = alpha * startAlpha;
+		} else if(ticksExisted < fadeInTime) {
+			color.a = startAlpha * ((double) ticksExisted / fadeInTime);
+		} else {
+			color.a = startAlpha;
 		}
 		
 		motionY -= gravity;
@@ -80,17 +89,22 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 		this.fadeTime = template.fadeTime;
 		this.life = template.life;
 		this.gravity = template.gravity;
+		this.needRigidbody = template.needRigidbody;
+		this.fadeInTime = template.fadeInTime;
+		this.updated = false;
 	}
 	
 	@Override
 	protected void onFirstUpdate() {
-		this.addMotionHandler(new Rigidbody());
-		creationTime = Minecraft.getSystemTime();
+		updated = true;
+		if(needRigidbody)
+			this.addMotionHandler(new Rigidbody());
+		creationTime = GameTimer.getTime();
 		startAlpha = color.a;
 	}
 	
 	public long getParticleLife() {
-		return Minecraft.getSystemTime() - creationTime;
+		return GameTimer.getTime() - creationTime;
 	}
 	
 	public long getMaxLife() {
