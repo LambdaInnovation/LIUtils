@@ -45,7 +45,7 @@ public class LIUtils {
 		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook",
 		REGISTER_TYPE_CONFIGURABLE = "liu_configurable";
 	
-	public static final String VERSION = "2.0a3";
+	public static final String VERSION = "2.0a4";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.
@@ -56,7 +56,7 @@ public class LIUtils {
 	/**
 	 * Does open debug mode. turn to false when compiling.
 	 */
-	public static final boolean DEBUG = true;
+	public static final boolean DEBUG = false;
 	
 	@Instance("LIutils")
 	public static LIUtils instance;
