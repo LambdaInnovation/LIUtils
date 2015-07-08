@@ -23,10 +23,8 @@ import net.minecraft.nbt.NBTTagIntArray;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
-import cn.academy.core.AcademyCraft;
-import cn.academy.core.proxy.ProxyHelper;
-import cn.academy.core.proxy.ThreadProxy;
 import cn.annoreg.core.Registrant;
+import cn.annoreg.mc.ProxyHelper;
 import cn.annoreg.mc.RegEventHandler;
 import cn.annoreg.mc.SideHelper;
 import cn.annoreg.mc.network.RegNetworkCall;
@@ -35,11 +33,13 @@ import cn.annoreg.mc.s11n.RegSerializable;
 import cn.annoreg.mc.s11n.StorageOption;
 import cn.annoreg.mc.s11n.StorageOption.Data;
 import cn.annoreg.mc.s11n.StorageOption.Target;
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.client.ClientUtils;
 
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.gameevent.TickEvent.Phase;
@@ -78,7 +78,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 		try {
 			constructData();
 		} catch(Exception e) {
-			AcademyCraft.log.error("Error constructing DataPart");
+			LIUtils.log.error("Error constructing DataPart");
 			e.printStackTrace();
 		}
 	}
@@ -119,7 +119,19 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	}
 	
 	public static PlayerData get(EntityPlayer player) {
-		return ProxyHelper.get().getPlayerData(player);
+		PlayerData data = (PlayerData) player.getExtendedProperties(IDENTIFIER);
+		if(data == null) {
+			if(FMLCommonHandler.instance().getSide() == Side.CLIENT) {
+				data = new PlayerData.Client(player);
+			} else {
+				data = new PlayerData.Server(player);
+				data.loadNBTData(player.getEntityData());
+			}
+			player.registerExtendedProperties(IDENTIFIER, data);
+			
+		}
+		
+		return data;
 	}
 	
 	@Override
@@ -203,7 +215,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 					NBTTagCompound ret = p.toNBT();
 					tag.setTag(getName(p), ret);
 				} else {
-					AcademyCraft.log.warn("Ignored saving of " + p.getName());
+					LIUtils.log.warn("Ignored saving of " + p.getName());
 				}
 			}
 			
@@ -237,7 +249,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 		public void onClientTick(ClientTickEvent event) {
 			if(event.phase == Phase.END && ClientUtils.isPlayerInGame()) {
 				EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
-				PlayerData data = ProxyHelper.get().getPlayerData(thePlayer);
+				PlayerData data = PlayerData.get(thePlayer);
 				if(data != null)
 					data.tick();
 			}
@@ -246,10 +258,9 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 		@SubscribeEvent
 		public void onServerTick(ServerTickEvent event) {
 			if(event.phase == Phase.END) {
-				ThreadProxy proxy = ProxyHelper.get();
 				for(Object p : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
 					EntityPlayer player = (EntityPlayer) p;
-					PlayerData data = proxy.getPlayerData(player);
+					PlayerData data = PlayerData.get(player);
 					if(data != null)
 						data.tick();
 				}
@@ -267,7 +278,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 			if (world != null) {
 				Entity ent = world.getEntityByID(ids[1]);
 				if(ent instanceof EntityPlayer) {
-					return ProxyHelper.get().getPlayerData((EntityPlayer) ent);
+					return PlayerData.get((EntityPlayer) ent);
 				}
 			}
 			return null;
