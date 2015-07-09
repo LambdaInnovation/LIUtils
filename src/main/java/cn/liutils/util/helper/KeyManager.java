@@ -206,4 +206,14 @@ public class KeyManager {
 		return null;
 	}
 
+	public static String getKeyName(int keyid) {
+		if(keyid >= 0) {
+			String ret = Keyboard.getKeyName(keyid);
+			return ret == null ? "undefined" : ret;
+		} else {
+			String ret = Mouse.getButtonName(keyid + 100);
+			return ret == null ? "undefined" : ret;
+		}
+	}
+	
 }
