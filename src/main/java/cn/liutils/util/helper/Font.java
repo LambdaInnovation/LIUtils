@@ -48,22 +48,19 @@ public class Font {
         draw(str, x, y, size, color, Align.LEFT);
     }
     
-    /**
-     * @return Rectangle size
-     */
     public void drawWrapped(String str, double x, double y, double size, int color, double limit) {
         double scale = size / mcFont().FONT_HEIGHT;
         GL11.glPushMatrix();
         GL11.glTranslated(x, y, 0);
         GL11.glScaled(scale, scale, 1);
-        mcFont().drawSplitString(str, 0, 0, 0xFFFFFF, (int) (limit * scale));
+        mcFont().drawSplitString(str, 0, 0, (int) (limit * scale), color);
         GL11.glPopMatrix();
     }
     
     public Vector2d simDrawWrapped(String str, double size, double limit) {
     	double scale = size / mcFont().FONT_HEIGHT;
         List<String> lst = mcFont().listFormattedStringToWidth(str, (int) (limit * scale));
-        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size);
+        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size * lst.size());
     }
     
     public void draw(String str, double x, double y, double size, int color, Align align) {
