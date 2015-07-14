@@ -78,6 +78,13 @@ public class Component {
 		eventBus.regEventHandler(handler);
 	}
 	
+	/**
+	 * Called when the component is added into a widget, and the widget field is correctly set.
+	 */
+	public void onAdded() {
+		
+	}
+	
 	public void onRemoved() {
 		
 	}

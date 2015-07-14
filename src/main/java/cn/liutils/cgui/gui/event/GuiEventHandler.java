@@ -19,7 +19,6 @@ import cn.liutils.cgui.gui.Widget;
  * A GuiEventHandler should be stateless. Otherwise, use Component.
  * @author WeAthFolD
  */
-@Deprecated
 public abstract class GuiEventHandler<T extends GuiEvent> implements IGuiEventHandler<T> {
 	
 	private final Class<? extends GuiEvent> eventClass;

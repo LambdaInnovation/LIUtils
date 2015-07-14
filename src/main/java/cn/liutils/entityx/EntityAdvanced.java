@@ -43,6 +43,10 @@ public abstract class EntityAdvanced extends Entity {
 		entityX.update();
 	}
 	
+	public boolean firstUpdated() {
+		return !firstUpdate;
+	}
+	
 	protected void onFirstUpdate() {
 		
 	}

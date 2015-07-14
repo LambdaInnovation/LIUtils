@@ -71,6 +71,10 @@ public class MathUtils {
 		return Math.max(min, Math.min(max, val));
 	}
 	
+	public static float wrapf(float min, float max, float val) {
+		return Math.max(min, Math.min(max, val));
+	}
+	
 	public static double distanceSq(double[] vec1, double[] vec2) {
 		if(vec1.length != vec2.length) {
 			throw new RuntimeException("Inconsistent length");

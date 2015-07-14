@@ -148,6 +148,7 @@ public class Widget extends WidgetContainer {
 		
 		c.widget = this;
 		components.add(c);
+		c.onAdded();
 		return this;
 	}
 	

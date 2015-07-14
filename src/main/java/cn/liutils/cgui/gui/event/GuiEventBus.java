@@ -25,12 +25,10 @@ public final class GuiEventBus {
 		}
 	}
 	
-	@Deprecated
 	public void regEventHandler(GuiEventHandler handler) {
 		reg(handler.getEventClass(), handler);
 	}
 	
-	@Deprecated
 	public void regAtBeginning(GuiEventHandler handler) {
 		regAtBeginning(handler.getEventClass(), handler);
 	}
