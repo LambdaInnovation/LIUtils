@@ -6,7 +6,7 @@ import net.minecraftforge.oredict.OreDictionary;
  * In a recipe file, use "NAME#DATA*AMOUNT" to specify an element.
  * @author EAirPeter
  */
-public class RecipeElement {
+public class ParsedRecipeElement {
 
 	public String name = null;
 	public int data = OreDictionary.WILDCARD_VALUE;

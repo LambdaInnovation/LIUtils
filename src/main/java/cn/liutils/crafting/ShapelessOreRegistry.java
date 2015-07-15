@@ -2,10 +2,10 @@ package cn.liutils.crafting;
 
 import java.lang.reflect.Constructor;
 
-import cn.liutils.core.LIUtils;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.OreDictionary;
 import net.minecraftforge.oredict.ShapelessOreRecipe;
+import cn.liutils.core.LIUtils;
 import cpw.mods.fml.common.registry.GameRegistry;
 
 /**
@@ -26,15 +26,12 @@ public class ShapelessOreRegistry implements IRecipeRegistry {
 	}
 	
 	@Override
-	public void register(String type, RecipeElement output, RecipeElement[] input, int width, int height) {
+	public void register(String type, ItemStack output, Object[] input, int width, int height) {
 		try {
-			ItemStack isOutput = OreDictionary.getOres(output.name).get(0);
-			isOutput.setItemDamage(output.data);
-			isOutput.stackSize = output.amount;
 			Object[] recipe = new Object[input.length];
 			for (int i = 0; i < input.length; ++i)
-				recipe[i] = input[i].name;
-			GameRegistry.addRecipe(ctor.newInstance(new Object[] {isOutput, recipe}));
+				recipe[i] = input[i];
+			GameRegistry.addRecipe(ctor.newInstance(output, recipe));
 		} catch (Throwable e) {
 			LIUtils.log.error("Failed to register a recipe", e);
 		}

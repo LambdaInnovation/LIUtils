@@ -2,15 +2,85 @@ package cn.liutils.crafting;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.block.Block;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.oredict.OreDictionary;
+
+import org.apache.commons.io.IOUtils;
 
 import cn.liutils.core.LIUtils;
+import cn.liutils.util.generic.DebugUtils;
+import cn.liutils.util.generic.RegistryUtils;
 
 /**
- * @author EAirPeter
+ * @author EAirPeter, WeAthFolD
  */
 public class RecipeRegistry {
 	
-	public static final RecipeRegistry INSTANCE = new RecipeRegistry();
+	Map<String, Object> nameMapping = new HashMap();
+	
+	public RecipeRegistry() {
+		registerRecipeType("shaped", ShapedOreRegistry.INSTANCE);
+		registerRecipeType("shaped_s", ShapedOreRegistry.INSTANCE);
+		registerRecipeType("shapeless", ShapelessOreRegistry.INSTANCE);
+	}
+	
+	/**
+	 * Map a custom string specified in the recipe file to be a specific type of object.
+	 * The object can be an Item, a Block or a String (in oreDict).
+	 */
+	public void map(String key, Object obj) {
+		if(!(obj instanceof Item) && !(obj instanceof Block) && !(obj instanceof String))
+			throw new RuntimeException("Invalid object to map");
+		
+		nameMapping.put(key, obj);
+	}
+	
+	private Object getNamedObject(String key) {
+		if(key.equals("nil"))
+			return null;
+		
+		Object o = nameMapping.get(key);
+		if(o != null)
+			return o;
+		
+		if(OreDictionary.doesOreNameExist(key))
+			return key;
+		if(Item.itemRegistry.containsKey(key))
+			return Item.itemRegistry.getObject(key);
+		
+		throw new RuntimeException("Registry object " + key + " doesn't exist");
+	}
+	
+	private Object getRegistryObject(ParsedRecipeElement element) {
+		Object o = getNamedObject(element.name);
+		if(o == null)
+			return o;
+		if(o instanceof Item) {
+			return new ItemStack((Item) o, element.amount, element.data);
+		} else if(o instanceof Block) {
+			return new ItemStack((Block) o, element.amount, element.data);
+		} else {
+			return (String) o;
+		}
+	}
+	
+	private ItemStack getOutput(ParsedRecipeElement element) {
+		Object o = getNamedObject(element.name);
+		if(o == null)
+			throw new RuntimeException("Registry object " + element.name + " can't be nil");
+		if(o instanceof Item) {
+			return new ItemStack((Item) o, element.amount, element.data);
+		} else if(o instanceof Block) {
+			return new ItemStack((Block) o, element.amount, element.data);
+		} else {
+			return OreDictionary.getOres(element.name).get(0);
+		}
+	}
 	
 	/**
 	 * Assign a registry to the type given
@@ -49,6 +119,15 @@ public class RecipeRegistry {
 		}
 	}
 	
+	public void addRecipeFromResourceLocation(ResourceLocation src) {
+		try {
+			addRecipeFromString(IOUtils.toString(RegistryUtils.getResourceStream(src)));
+		} catch(Throwable e) {
+			LIUtils.log.error("Failed to load recipes from file: " + src, e);
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * Add all recipes from a string. The recipe's type must be registered before.
 	 * @param recipes The string specifying recipes
@@ -71,19 +150,21 @@ public class RecipeRegistry {
 		while (parser.parseNext()) {
 			String type = parser.getType();
 			IRecipeRegistry registry = map.get(type);
-			if (registry != null)
-				registry.register(type, parser.getOutput(), parser.getInput(), parser.getWidth(), parser.getHeight());
+			if (registry != null) {
+				ParsedRecipeElement[] parsed = parser.getInput();
+				Object[] input = new Object[parsed.length];
+				for(int i = 0; i < input.length; ++i) {
+					input[i] = getRegistryObject(parsed[i]);
+				}
+				System.out.println(DebugUtils.formatArray(input));
+				
+				registry.register(type, getOutput(parser.getOutput()), input, parser.getWidth(), parser.getHeight());
+			}
 			else
 				LIUtils.log.error("Failed to register a recipe because the type \"" + type + "\" doesn't have its registry");
 		}
 	}
 	
 	private HashMap<String, IRecipeRegistry> map = new HashMap<String, IRecipeRegistry>();
-	
-	private RecipeRegistry() {
-		registerRecipeType("shaped", ShapedOreRegistry.INSTANCE);
-		registerRecipeType("shaped_s", ShapedOreRegistry.INSTANCE);
-		registerRecipeType("shapeless", ShapelessOreRegistry.INSTANCE);
-	}
 	
 }

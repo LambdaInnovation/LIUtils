@@ -17,8 +17,8 @@ public class RecipeParser {
 	private int cur = 0;
 	
 	private String type = null;
-	private RecipeElement output = null;
-	private RecipeElement[] input = null;
+	private ParsedRecipeElement output = null;
+	private ParsedRecipeElement[] input = null;
 	private int width = -1;
 	private int height = -1;
 	
@@ -44,11 +44,11 @@ public class RecipeParser {
 		return type;
 	}
 	
-	public RecipeElement getOutput() {
+	public ParsedRecipeElement getOutput() {
 		return output;
 	}
 	
-	public RecipeElement[] getInput() {
+	public ParsedRecipeElement[] getInput() {
 		return input;
 	}
 	
@@ -120,7 +120,7 @@ public class RecipeParser {
 	}
 	
 	private void parseInput() {
-		List<List<RecipeElement>> rows = new ArrayList<List<RecipeElement>>();
+		List<List<ParsedRecipeElement>> rows = new ArrayList<List<ParsedRecipeElement>>();
 		for (;;) {
 			try {
 				rows.add(parseList());
@@ -129,7 +129,7 @@ public class RecipeParser {
 				break;
 			}
 		}
-		for (List<RecipeElement> row : rows) {
+		for (List<ParsedRecipeElement> row : rows) {
 			if (width == -1)
 				width = row.size();
 			if (width != row.size())
@@ -140,16 +140,16 @@ public class RecipeParser {
 			error("Width must greater than zero");
 		if (height < 1)
 			error("Height must greater than zero");
-		input = new RecipeElement[width * height];
+		input = new ParsedRecipeElement[width * height];
 		int index = 0;
-		for (List<RecipeElement> row : rows)
-			for (RecipeElement element : row)
+		for (List<ParsedRecipeElement> row : rows)
+			for (ParsedRecipeElement element : row)
 				input[index++] = element;
 	}
 	
-	private List<RecipeElement> parseList() {
+	private List<ParsedRecipeElement> parseList() {
 		parseChar('[');
-		ArrayList<RecipeElement> list = new ArrayList<RecipeElement>();
+		ArrayList<ParsedRecipeElement> list = new ArrayList<ParsedRecipeElement>();
 		for (;;) {
 			list.add(parseElement());
 			parseNull();
@@ -162,9 +162,9 @@ public class RecipeParser {
 		return list;
 	}
 	
-	private RecipeElement parseElement() {
+	private ParsedRecipeElement parseElement() {
 		parseNull();
-		RecipeElement res = new RecipeElement();
+		ParsedRecipeElement res = new ParsedRecipeElement();
 		StringBuilder sb = new StringBuilder();
 		while (read != -1 && (Character.isUnicodeIdentifierPart(read) || read == ':')) {
 			sb.append(Character.toChars(read));

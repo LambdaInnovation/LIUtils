@@ -13,13 +13,10 @@ public class ShapedOreRegistry implements IRecipeRegistry {
 	public static final ShapedOreRegistry INSTANCE  = new ShapedOreRegistry();
 	
 	@Override
-	public void register(String type, RecipeElement output, RecipeElement[] input, int width, int height) {
+	public void register(String type, ItemStack output, Object[] input, int width, int height) {
 		boolean mirrored = !type.equals("shaped_s");
-		ItemStack isOutput = OreDictionary.getOres(output.name).get(0);
-		isOutput.setItemDamage(output.data);
-		isOutput.stackSize = output.amount;
 		int pairs = 0;
-		for (RecipeElement elem : input)
+		for (Object elem : input)
 			if (elem != null)
 				++pairs;
 		Object[] recipe = new Object[height + pairs * 2];
@@ -31,13 +28,13 @@ public class ShapedOreRegistry implements IRecipeRegistry {
 				if (input[index] != null) {
 					spec += (char) (index + 'A');
 					recipe[_i++] = Character.valueOf((char) (index + 'A'));
-					recipe[_i++] = input[index].name;
+					recipe[_i++] = input[index];
 				}
 				else
 					spec += ' ';
 			recipe[y] = spec;
 		}
-		GameRegistry.addRecipe(new ShapedOreRecipe(isOutput, mirrored, recipe));
+		GameRegistry.addRecipe(new ShapedOreRecipe(output, mirrored, recipe));
 	}
 	
 	private ShapedOreRegistry() {
