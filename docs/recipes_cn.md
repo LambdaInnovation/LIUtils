@@ -130,8 +130,8 @@ RecipeRegistry.registerRecipeType(String, IRecipeRegistry);
 以下是一个合成表的样例，我们假设它的环境在前面的样例已经声明。
 ```
 shaped(jinkela) {
-	[diamond, dirt, diamond],
-	[dirt, glass, dirt],
+	[diamond, dirt, diamond]
+	[dirt, glass, dirt]
 	[diamond, dirt, diamond]
 }
 
@@ -140,8 +140,8 @@ shapeless(ks) {
 }
 
 shaped(schrodinger_cat_box) {
-	[glass, nil, glass],
-	[ks, fish, ks],
+	[glass, nil, glass]
+	[ks, fish, ks]
 	[glass, jinkela, glass]
 }
 ```
