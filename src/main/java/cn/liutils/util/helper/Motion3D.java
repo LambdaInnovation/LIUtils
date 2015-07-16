@@ -145,8 +145,16 @@ public class Motion3D {
 		return -(float)(Math.atan2(vx, vz) * 180.0D / Math.PI);
 	}
 	
+	public float getRotationYawRadians() {
+		return -(float)(Math.atan2(vx, vz));
+	}
+	
 	public float getRotationPitch() {
 		return -(float)(Math.atan2(vy, Math.sqrt(vx * vx + vz * vz)) * 180.0D / Math.PI);
+	}
+	
+	public float getRotationPitchRadians() {
+		return -(float)(Math.atan2(vy, Math.sqrt(vx * vx + vz * vz)));
 	}
 	
 	public Motion3D setPosition(double x, double y, double z) {

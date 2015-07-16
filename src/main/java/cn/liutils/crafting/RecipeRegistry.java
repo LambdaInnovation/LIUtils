@@ -21,7 +21,10 @@ import cn.liutils.util.generic.RegistryUtils;
  */
 public class RecipeRegistry {
 	
-	Map<String, Object> nameMapping = new HashMap();
+	/**
+	 * This should only be visited for debug purpose.
+	 */
+	public final Map<String, Object> nameMapping = new HashMap();
 	
 	public RecipeRegistry() {
 		registerRecipeType("shaped", ShapedOreRegistry.INSTANCE);
