@@ -28,7 +28,8 @@ public class RenderBlockMultiModel extends RenderBlockMulti {
 	
 	protected ITileEntityModel mdl;
 	protected ResourceLocation tex;
-	protected double scale;
+	protected double scale = 1.0;
+	protected double rotateY = 0.0;
 	
 	public RenderBlockMultiModel(ITileEntityModel _mdl, ResourceLocation _tex) {
 		mdl = _mdl;
@@ -48,6 +49,7 @@ public class RenderBlockMultiModel extends RenderBlockMulti {
 		if(tex != null) {
 			RenderUtils.loadTexture(tex);
 		}
+		GL11.glRotated(rotateY, 0, 1, 0);
 		GL11.glScaled(scale, scale, scale);
 		mdl.render(te, 0, 0);
 	}
