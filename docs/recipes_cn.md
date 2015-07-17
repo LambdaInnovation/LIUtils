@@ -2,11 +2,11 @@
 ## 合成表配置文件
 
 为了实现方便的修改和定义合成表，我们实现了一套自定义的专门用来解析合成表的配置文件格式。
-代码实现可以在cn.liutils.crafting.*找到。
+代码实现可以在`cn.liutils.crafting.*`找到。
 
 RecipeRegistry
 ---
-RecipeRegistry是注册表脚本的核心系统。它负责处理以下事务：
+``RecipeRegistry`是注册表脚本的核心系统。它负责处理以下事务：
 
 * 载入默认的合成类型和自定义合成类型
 * 加载对mod中物品/方块实例的名称映射
@@ -19,7 +19,7 @@ RecipeRegistry是注册表脚本的核心系统。它负责处理以下事务：
 
 合成表文件
 ---
-合成表文件通常应该放置在assets/<modid>/中，后缀名为.recipe。
+合成表文件通常应该放置在``assets/<modid>/``中，后缀名为.recipe。
 合成表由一系列的RecipeElement(合成对象)组成。每个RecipeElement指定了一个单独的合成，例如从泥土熔炼得到金坷垃（雾）。
 每一个合成对象之间不需要明确的分隔符。但是你应该用回车来分开不同的合成对象。
 每一个合成对象的语法如下：
@@ -31,13 +31,13 @@ recipe_type(<recipe_output>) {
 }
 ```
 
-其中，用<>包裹的字段代表一个ItemStack或oreDict字段，在之后会详细说明。
+其中，用`<>`包裹的字段代表一个ItemStack或oreDict字段，在之后会详细说明。
 
 各部分解释如下：
 
-* recipe_type： 该合成表的合成表类型。所能指定的类型由RecipeRegistry对象的信息所限定。默认拥有的类型有shaped, shapeless, shaped_s。
-* <recipe_output>： 该合成表的输出。
-* { [...] }: 该合成表的合成网格。每个网格应该由一系列的列表( [ elem, elem, elem, ... ] )所组成，并且每个列表的长度必须一致。列表之间无需分隔符。
+* `recipe_type`： 该合成表的合成表类型。所能指定的类型由RecipeRegistry对象的信息所限定。默认拥有的类型有shaped, shapeless, shaped_s。
+* `<recipe_output>`： 该合成表的输出。
+* `{ [...] }`: 该合成表的合成网格。每个网格应该由一系列的列表( [ elem, elem, elem, ... ] )所组成，并且每个列表的长度必须一致。列表之间无需分隔符。
 
 在设置好RecipeRegistry的状态以后，使用```RecipeRegistry.addRecipeFromXXX```系列方法来解析并且添加合成表文件
 
@@ -47,9 +47,9 @@ recipe_type(<recipe_output>) {
 ---
 可以用以下方法声明一个ItemStack或oreDict字段：
 
-* name#data*amount
-* name#data
-* name
+* `name#data*amount`
+* `name#data`
+* `name`
 
 如果省略data，data默认为0; 如果省略amount, amount默认为1。
 每一个声明所对应的对象由RecipeRegistry的环境所决定。在解析一个name时，RecipeRegistry会顺序做如下搜索：
@@ -61,7 +61,7 @@ recipe_type(<recipe_output>) {
 
 如果返回的结果是一个oredict名称，data和amount会被忽略。
 
-在输出位置不能够指定一个oredict名称。如果你这么做，将会得到一个错误。
+在合成表的输出处不能够指定一个oredict名称。如果你这么做，将会得到一个错误。
 
 **nil**是一个保留字符，用来说明该位置的内容为空。它也只能在输入部分被使用。
 
@@ -80,7 +80,7 @@ RecipeRegistry.map(String key, String obj);
 
 * Item: 从一个物品创建ItemStack
 * Block: 从一个方块创建ItemStack
-* String: oredict的键
+* String: oredict名称
 
 关于名称的搜索方法详见**声明ItemStack或oredict**一节。
 
@@ -130,8 +130,8 @@ RecipeRegistry.registerRecipeType(String, IRecipeRegistry);
 以下是一个合成表的样例，我们假设它的环境在前面的样例已经声明。
 ```
 shaped(jinkela) {
-	[diamond, dirt, diamond],
-	[dirt, glass, dirt],
+	[diamond, dirt, diamond]
+	[dirt, glass, dirt]
 	[diamond, dirt, diamond]
 }
 
@@ -140,8 +140,8 @@ shapeless(ks) {
 }
 
 shaped(schrodinger_cat_box) {
-	[glass, nil, glass],
-	[ks, fish, ks],
+	[glass, nil, glass]
+	[ks, fish, ks]
 	[glass, jinkela, glass]
 }
 ```
