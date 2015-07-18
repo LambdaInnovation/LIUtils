@@ -58,6 +58,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	
 	private static String IDENTIFIER = "ac_playerData";
 	
+	// TODO: We usually just use class-wise lookup.
 	static BiMap<String, Class<? extends DataPart> > staticParts = HashBiMap.create();
 	
 	BiMap<String, DataPart> constructed = HashBiMap.create();

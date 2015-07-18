@@ -53,8 +53,9 @@ public class Color {
 		return this;
 	}
 	
-	public void fromHexColor(int hex) {
+	public Color fromHexColor(int hex) {
 		setColor4i((hex >> 16) & 0xFF, (hex >> 8) & 0xFF, hex & 0xFF, (hex >> 24) & 0xFF);
+		return this;
 	}
 	
 	public int asHexColor() {
