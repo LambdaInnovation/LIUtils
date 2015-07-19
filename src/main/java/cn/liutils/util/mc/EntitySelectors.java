@@ -50,6 +50,15 @@ public class EntitySelectors {
 		
 	};
 	
+	public static IEntitySelector everything = new IEntitySelector() {
+
+		@Override
+		public boolean isEntityApplicable(Entity p_82704_1_) {
+			return true;
+		}
+		
+	};
+	
 	public static class SelectorOfType implements IEntitySelector {
 		
 		final Class<? extends Entity> klass;

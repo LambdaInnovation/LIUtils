@@ -56,12 +56,11 @@ import cpw.mods.fml.relauncher.SideOnly;
 @RegSerializable(instance = PlayerData.Serializer.class)
 public abstract class PlayerData implements IExtendedEntityProperties {
 	
-	private static String IDENTIFIER = "ac_playerData";
+	private static String IDENTIFIER = "liu_playerData";
 	
-	// TODO: We usually just use class-wise lookup.
 	static BiMap<String, Class<? extends DataPart> > staticParts = HashBiMap.create();
 	
-	BiMap<String, DataPart> constructed = HashBiMap.create();
+	BiMap<Class<?> , DataPart> constructed = HashBiMap.create();
 	
 	public static void register(String name, Class<? extends DataPart> clazz) {
 		staticParts.put(name, clazz);
@@ -90,7 +89,7 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 			
 			DataPart dp = clazz.newInstance();
 			dp.data = this;
-			constructed.put(name, dp);
+			constructed.put(clazz, dp);
 		}
 	}
 	
@@ -106,16 +105,15 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	}
 	
 	public String getName(DataPart part) {
-		return constructed.inverse().get(part);
+		return staticParts.inverse().get(part.getClass());
 	}
 	
 	public <T extends DataPart> T getPart(String name) {
-		return (T) constructed.get(name);
+		return (T) constructed.get(staticParts.get(name));
 	}
 	
 	public <T extends DataPart> T getPart(Class<T> clazz) {
-		String id = staticParts.inverse().get(clazz);
-		return (T) constructed.get(id);
+		return (T) constructed.get(clazz);
 	}
 	
 	public static PlayerData get(EntityPlayer player) {
