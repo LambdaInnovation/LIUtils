@@ -84,7 +84,7 @@ public class VecUtils {
 		return lerp(a, b, lambda);
 	}
 	
-	public static Vec3 scalarMultiply(Vec3 v, double scale) {
+	public static Vec3 multiply(Vec3 v, double scale) {
 		return Vec3.createVectorHelper(v.xCoord * scale, v.yCoord * scale, v.zCoord * scale);
 	}
 	
