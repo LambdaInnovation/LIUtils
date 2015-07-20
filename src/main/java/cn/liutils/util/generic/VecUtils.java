@@ -14,13 +14,9 @@ package cn.liutils.util.generic;
 
 import java.util.Random;
 
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.entity.Entity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.util.vector.Vector3f;
 
 /**
  * Some commonly used vector calculation & generations.
@@ -134,6 +130,60 @@ public class VecUtils {
 			y0 * z1 - y1 * z0, 
 			x1 * z0 - x0 * z1, 
 			x0 * y1 - x1 * y0);
+	}
+
+	// CREDITS TO Greg S for the original code.
+	private static Vec3 getIntersection(double fDst1, double fDst2, Vec3 P1, Vec3 P2) {
+		if ( (fDst1 * fDst2) >= 0.0f) return null;
+		if ( fDst1 == fDst2) return null; 
+		return add(P1, multiply(subtract(P2, P1), ( -fDst1 / (fDst2-fDst1) )));
+	}
+	
+	private static boolean inBox(Vec3 Hit, Vec3 B1, Vec3 B2, int Axis) {
+		if ( Axis==1 && Hit.zCoord > B1.zCoord && Hit.zCoord < B2.zCoord && Hit.yCoord > B1.yCoord && Hit.yCoord < B2.yCoord) return true;
+		if ( Axis==2 && Hit.zCoord > B1.zCoord && Hit.zCoord < B2.zCoord && Hit.xCoord > B1.xCoord && Hit.xCoord < B2.xCoord) return true;
+		if ( Axis==3 && Hit.xCoord > B1.xCoord && Hit.xCoord < B2.xCoord && Hit.yCoord > B1.yCoord && Hit.yCoord < B2.yCoord) return true;
+		return false;
+	}
+
+	public static Vec3 checkLineAABB(Vec3 L1, Vec3 L2, AxisAlignedBB aabb) {
+		return checkLineBox(vec(aabb.minX, aabb.minY, aabb.minZ),
+				vec(aabb.maxX, aabb.maxY, aabb.maxZ),
+				L1, L2);
+	}
+	
+	/**
+	 * Check if the line segment (L1, L2) intersects with AABB represented by (B1, B2).
+	 * If intersected, return the a hit point of the segment to the line.
+	 * Else, return null.
+	 * @param B1 smallest point for AABB
+	 * @param B2 largest point for AABB
+	 * @param L1 start point of the line
+	 * @param L2 end point of the line
+	 */
+	public static Vec3 checkLineBox(Vec3 B1, Vec3 B2, Vec3 L1, Vec3 L2) {
+		if (L2.xCoord < B1.xCoord && L1.xCoord < B1.xCoord) return null;
+		if (L2.xCoord > B2.xCoord && L1.xCoord > B2.xCoord) return null;
+		if (L2.yCoord < B1.yCoord && L1.yCoord < B1.yCoord) return null;
+		if (L2.yCoord > B2.yCoord && L1.yCoord > B2.yCoord) return null;
+		if (L2.zCoord < B1.zCoord && L1.zCoord < B1.zCoord) return null;
+		if (L2.zCoord > B2.zCoord && L1.zCoord > B2.zCoord) return null;
+		
+		if (L1.xCoord > B1.xCoord && L1.xCoord < B2.xCoord &&
+		    L1.yCoord > B1.yCoord && L1.yCoord < B2.yCoord &&
+		    L1.zCoord > B1.zCoord && L1.zCoord < B2.zCoord) 
+			return L1;
+		
+		Vec3 Hit;
+		if ( ((Hit = getIntersection(L1.xCoord-B1.xCoord, L2.xCoord-B1.xCoord, L1, L2)) != null && inBox( Hit, B1, B2, 1 ))
+		  || ((Hit = getIntersection( L1.yCoord-B1.yCoord, L2.yCoord-B1.yCoord, L1, L2)) != null && inBox( Hit, B1, B2, 2 )) 
+		  || ((Hit = getIntersection( L1.zCoord-B1.zCoord, L2.zCoord-B1.zCoord, L1, L2)) != null && inBox( Hit, B1, B2, 3 )) 
+		  || ((Hit = getIntersection( L1.xCoord-B2.xCoord, L2.xCoord-B2.xCoord, L1, L2)) != null && inBox( Hit, B1, B2, 1 )) 
+		  || ((Hit = getIntersection( L1.yCoord-B2.yCoord, L2.yCoord-B2.yCoord, L1, L2)) != null && inBox( Hit, B1, B2, 2 )) 
+		  || ((Hit = getIntersection( L1.zCoord-B2.zCoord, L2.zCoord-B2.zCoord, L1, L2)) != null && inBox( Hit, B1, B2, 3 )))
+			return Hit;
+
+		return null;
 	}
 	
 }

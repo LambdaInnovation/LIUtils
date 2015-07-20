@@ -23,8 +23,8 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.opengl.GL11;
 
 /**
+ * A wrapper for better font drawing of mc fonts.
  * @author WeathFolD
- *
  */
 public class Font {
     
@@ -44,10 +44,27 @@ public class Font {
     
     private Font() {}
     
+    /**
+     * Draw a string at given position with given color.
+     * @param str
+     * @param x
+     * @param y
+     * @param size
+     * @param color
+     */
     public void draw(String str, double x, double y, double size, int color) {
         draw(str, x, y, size, color, Align.LEFT);
     }
     
+    /**
+     * Draw a string with line wrapping. Every line's length should not exceed [limit].
+     * @param str
+     * @param x
+     * @param y
+     * @param size
+     * @param color
+     * @param limit
+     */
     public void drawWrapped(String str, double x, double y, double size, int color, double limit) {
         double scale = size / mcFont().FONT_HEIGHT;
         GL11.glPushMatrix();
@@ -57,12 +74,28 @@ public class Font {
         GL11.glPopMatrix();
     }
     
+    /**
+     * The drawing simulation of drawWrapped, you can get the drawing area of the string through this.
+     * @param str
+     * @param size
+     * @param limit
+     * @return
+     */
     public Vector2d simDrawWrapped(String str, double size, double limit) {
     	double scale = size / mcFont().FONT_HEIGHT;
         List<String> lst = mcFont().listFormattedStringToWidth(str, (int) (limit * scale));
         return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size * lst.size());
     }
     
+    /**
+     * Draw a string with alignment.
+     * @param str
+     * @param x
+     * @param y
+     * @param size
+     * @param color
+     * @param align
+     */
     public void draw(String str, double x, double y, double size, int color, Align align) {
         GL11.glEnable(GL11.GL_BLEND);
         //GL11.glDepthMask(false);
@@ -81,6 +114,10 @@ public class Font {
         } GL11.glPopMatrix();
     }
     
+    /**
+     * Draw a string with trimming. Every character when length longer than limit will be ignored, 
+     * and the postfix string will be appended to the drawing string if trimming actually happened.
+     */
     public void drawTrimmed(String str, double x, double y, double size, int color, Align align, double limit, String postfix) {
         double cur = 0.0, scale = size / mcFont().FONT_HEIGHT;
         for(int i = 0; i < str.length(); ++i) {
@@ -114,6 +151,9 @@ public class Font {
         GL11.glPopMatrix();
     }
     
+    /**
+     * Get the length of the string on the screen when ordinarily drawn.
+     */
     public double strLen(String str, double size) {
     	return mcFont().getStringWidth(str) * size / mcFont().FONT_HEIGHT;
     }
