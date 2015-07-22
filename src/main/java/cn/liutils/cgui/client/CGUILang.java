@@ -20,6 +20,10 @@ import net.minecraft.util.StatCollector;
  */
 public class CGUILang {
 	
+	public static String butBackground() {
+		return local("cgui.gui.background");
+	}
+	
 	public static String guiComeditor() {
 		return local("cgui.gui.componentEditor");
 	}

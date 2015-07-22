@@ -38,7 +38,7 @@ public class RecipeRegistry {
 	 */
 	public void map(String key, Object obj) {
 		if(!(obj instanceof Item) && !(obj instanceof Block) && !(obj instanceof String))
-			throw new RuntimeException("Invalid object to map");
+			throw new RuntimeException("Invalid object to map " + key + "=>" + obj);
 		
 		nameMapping.put(key, obj);
 	}

@@ -32,6 +32,8 @@ public class GuiEdit extends LIGuiScreen {
 	
 	private Widget selectedEditor;
 	
+	public boolean toggleBlack = true;
+	
 	public static double
 		COLOR[] = { 0.2, 0.4, 0.65, .9 };
 	
@@ -93,7 +95,8 @@ public class GuiEdit extends LIGuiScreen {
 	
 	@Override
     public void drawScreen(int mx, int my, float w) {
-		//LIGui.drawBlackout();
+		if(toggleBlack)
+			LIGui.drawBlackout();
 		
 		toEdit.resize(width, height);
 		toEdit.draw(mx, my);

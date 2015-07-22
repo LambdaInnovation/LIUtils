@@ -72,6 +72,11 @@ public class Toolbar extends Window {
 				}
 			}
 		});
+		addWidget(new Button(4, "background", CGUILang.butBackground()) {
+			@Override public void triggerEvent() {
+				guiEdit.toggleBlack = !guiEdit.toggleBlack;
+			}
+		});
 	}
 	
 	class Button extends Widget {
