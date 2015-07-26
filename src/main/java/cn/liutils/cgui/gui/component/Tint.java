@@ -26,7 +26,7 @@ import cn.liutils.util.helper.Color;
 public class Tint extends Component {
 	
 	public Color 
-		idleColor = new Color(0, 0, 0, 0), 
+		idleColor = new Color(1, 1, 1, 0), 
 		hoverColor = new Color(1, 1, 1, 0.4);
 	
 	public boolean affectTexture = false;

@@ -160,6 +160,7 @@ public class LIGui extends WidgetContainer {
 				//TODO: Need further filtering
 				return true;
 			} else {
+				System.out.println("WTF THis is null?!");
 				removeFocus();
 			}
 		}
@@ -177,12 +178,17 @@ public class LIGui extends WidgetContainer {
 	 * Gain a widget's focus with force.
 	 */
 	public void gainFocus(Widget node) {
-		if(node == focus)
+		System.out.println("GainFocus0 " + node);
+		if(node == focus) {
+			System.out.println("GainFocus1 " + node);
 			return;
+		}
 		if(focus != null) {
+			System.out.println("GainFocus2 " + node);
 			removeFocus();
 		}
 		focus = node;
+		System.out.println("GainFocus " + node + "/" + node.getName());
 		focus.postEvent(new GainFocusEvent());
 	}
 	
@@ -404,12 +410,14 @@ public class LIGui extends WidgetContainer {
 	
 	protected Widget gtnTraverse(double x, double y, Widget node, WidgetContainer set) {
 		Widget res = null;
-		boolean sub = node == null || (node.transform.doesDraw && node.transform.doesListenKey);
-		if(sub && node != null && node.isPointWithin(x, y)) {
+		boolean checkSub = node == null || node.transform.doesDraw;
+		if(node != null && node.transform.doesDraw
+			&& node.transform.doesListenKey 
+			&& node.isPointWithin(x, y)) {
 			res = node;
 		}
 		
-		if(!sub) return res;
+		if(!checkSub) return res;
 		
 		Widget next = null;
 		for(Widget wn : set) {

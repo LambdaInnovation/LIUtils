@@ -1,11 +1,43 @@
 package cn.liutils.util.mc;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.entity.player.InventoryPlayer;
+import java.util.Random;
+
+import net.minecraft.entity.item.EntityItem;
+import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.world.World;
 
 public class StackUtils {
+	
+	public static void dropItems(World world, int x, int y, int z,
+			IInventory inv) {
+		Random rand = new Random();
+
+		for (int i = 0; i < inv.getSizeInventory(); ++i) {
+			ItemStack stack = inv.getStackInSlot(i);
+			if (stack != null && stack.stackSize > 0) {
+				float rx = rand.nextFloat() * 0.8F + 0.1F;
+				float ry = rand.nextFloat() * 0.8F + 0.1F;
+				float rz = rand.nextFloat() * 0.8F + 0.1F;
+
+				EntityItem entityItem = new EntityItem(world, x + rx, y + ry, z
+						+ rz, stack.copy());
+
+				if (stack.hasTagCompound()) {
+					entityItem.getEntityItem().setTagCompound(
+							(NBTTagCompound) stack.getTagCompound().copy());
+				}
+
+				float factor = 0.05F;
+				entityItem.motionX = rand.nextGaussian() * factor;
+				entityItem.motionY = rand.nextGaussian() * factor + 0.2F;
+				entityItem.motionZ = rand.nextGaussian() * factor;
+				world.spawnEntityInWorld(entityItem);
+				stack.stackSize = 0;
+			}
+		}
+	}
 
 	/**
 	 * Return whether two stack's item instance and data are equal.

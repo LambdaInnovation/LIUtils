@@ -53,7 +53,6 @@ public class LIGuiScreen extends GuiScreen {
     @Override
     public void onGuiClosed() {
     	gui.dispose();
-    	
     }
     
     @Override
