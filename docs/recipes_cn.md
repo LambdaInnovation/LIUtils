@@ -135,13 +135,13 @@ shaped(jinkela) {
 	[diamond, dirt, diamond]
 }
 
-shapeless(ks) {
-	[jinkela, jinkela, jinkela, jinkela]
+shapeless(KS) {
+	[jinkela, futa, jinkela, futa]
 }
 
-shaped(schrodinger_cat_box) {
+shaped(schrodinger_cat_box#0*5) {
 	[glass, nil, glass]
-	[ks, fish, ks]
+	[KS, fish, KS]
 	[glass, jinkela, glass]
 }
 ```
