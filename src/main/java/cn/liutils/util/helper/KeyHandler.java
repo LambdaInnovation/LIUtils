@@ -2,6 +2,8 @@ package cn.liutils.util.helper;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 public abstract class KeyHandler {
 
@@ -17,10 +19,12 @@ public abstract class KeyHandler {
 	
 	public void onKeyTick() {}
 	
+	@SideOnly(Side.CLIENT)
 	protected Minecraft getMC() {
 		return Minecraft.getMinecraft();
 	}
 	
+	@SideOnly(Side.CLIENT)
 	protected EntityPlayer getPlayer() {
 		return getMC().thePlayer;
 	}

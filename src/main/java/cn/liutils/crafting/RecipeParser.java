@@ -21,6 +21,7 @@ public class RecipeParser {
 	private ParsedRecipeElement[] input = null;
 	private int width = -1;
 	private int height = -1;
+	private float exp = 0;
 	
 	RecipeParser(String str) throws Throwable {
 		reader = new StringReader(str);
@@ -60,6 +61,10 @@ public class RecipeParser {
 		return height;
 	}
 	
+	public float getExperience() {
+		return exp;
+	}
+	
 	private void error(String message) {
 		error(message, null);
 	}
@@ -71,7 +76,12 @@ public class RecipeParser {
 	private int getchar() {
 		try {
 			++cur;
-			return read = reader.read();
+			read = reader.read();
+			if(read == ';') {
+				while(read != '\n' && read != '\r' && read != -1)
+					read = reader.read();
+			}
+			return read;
 		} catch (IOException e) {
 			error("Caught unexpected IOException", e);
 			return -1;
@@ -88,6 +98,7 @@ public class RecipeParser {
 		if (read != -1) {
 			parseType();
 			parseOutput();
+			parseExp();
 			parseChar('{');
 			parseInput();
 			parseChar('}');
@@ -188,11 +199,19 @@ public class RecipeParser {
 	}
 	
 	private void parseChar(char c) {
+		if(!tryParseChar(c))
+			error("Expecting " + c);
+	}
+	
+	private boolean tryParseChar(char c) {
 		parseNull();
-		if (read == c)
+		
+		if (read == c) {
 			getchar();
-		else
-			error("\'" + c + "\' is expected");
+			return true;
+		} else {
+			return false;
+		}
 	}
 	
 	private int parseInteger() {
@@ -203,6 +222,31 @@ public class RecipeParser {
 			getchar();
 		}
 		return Integer.valueOf(sb.toString());
+	}
+	
+	private void parseExp() {
+		if(tryParseChar('[')) {
+			float val = parseFloat();
+			parseNull();
+			parseChar(']');
+			exp = val;
+		}
+		exp = 0;
+	}
+	
+	private float parseFloat() {
+		parseNull();
+		StringBuilder sb = new StringBuilder();
+		
+		boolean hasDot = false;
+		while(read != -1 && Character.isDigit(read) || (!hasDot && read == '.')) {
+			sb.append(Character.toChars(read));
+			if(read == '.') {
+				hasDot = true;
+			}
+			getchar();
+		}
+		return Float.valueOf(sb.toString());
 	}
 	
 }

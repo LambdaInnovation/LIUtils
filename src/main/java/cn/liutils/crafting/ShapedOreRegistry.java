@@ -13,7 +13,7 @@ public class ShapedOreRegistry implements IRecipeRegistry {
 	public static final ShapedOreRegistry INSTANCE  = new ShapedOreRegistry();
 	
 	@Override
-	public void register(String type, ItemStack output, Object[] input, int width, int height) {
+	public void register(String type, ItemStack output, Object[] input, int width, int height, float experience) {
 		boolean mirrored = !type.equals("shaped_s");
 		int pairs = 0;
 		for (Object elem : input)

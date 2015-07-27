@@ -26,7 +26,7 @@ public class ShapelessOreRegistry implements IRecipeRegistry {
 	}
 	
 	@Override
-	public void register(String type, ItemStack output, Object[] input, int width, int height) {
+	public void register(String type, ItemStack output, Object[] input, int width, int height, float experience) {
 		try {
 			Object[] recipe = new Object[input.length];
 			for (int i = 0; i < input.length; ++i)

@@ -30,6 +30,7 @@ public class RecipeRegistry {
 		registerRecipeType("shaped", ShapedOreRegistry.INSTANCE);
 		registerRecipeType("shaped_s", ShapedOreRegistry.INSTANCE);
 		registerRecipeType("shapeless", ShapelessOreRegistry.INSTANCE);
+		registerRecipeType("smelting", SmeltingRegistry.INSTANCE);
 	}
 	
 	/**
@@ -161,7 +162,8 @@ public class RecipeRegistry {
 				}
 				System.out.println(DebugUtils.formatArray(input));
 				
-				registry.register(type, getOutput(parser.getOutput()), input, parser.getWidth(), parser.getHeight());
+				registry.register(type, getOutput(parser.getOutput()), input,
+					parser.getWidth(), parser.getHeight(), parser.getExperience());
 			}
 			else
 				LIUtils.log.error("Failed to register a recipe because the type \"" + type + "\" doesn't have its registry");
