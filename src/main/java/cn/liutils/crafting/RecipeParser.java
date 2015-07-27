@@ -230,8 +230,8 @@ public class RecipeParser {
 			parseNull();
 			parseChar(']');
 			exp = val;
-		}
-		exp = 0;
+		} else
+			exp = 0;
 	}
 	
 	private float parseFloat() {
