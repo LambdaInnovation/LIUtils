@@ -101,8 +101,8 @@ public class ModItemRegistry {
 	@RecipeName("jinkela")
 	public static Item itemJinkela = new ItemJinkela();
 	
-	@RecipeName("ks")
-	public static Item itemKS = new ItemKS();
+	@RecipeName("iron_plate")
+	public static Item itemIronPlate = new ItemIronPlate();
 	
 	@RecipeName("schrodinger_cat_box")
 	public static Block blockCatbox = new BlockSchrodingerCatBox();
@@ -140,13 +140,13 @@ shaped(jinkela) {
 	[diamond, dirt, diamond]
 }
 
-shapeless(KS) {
-	[jinkela, futa, jinkela, futa]
+shapeless(iron_plate) {
+	[iron_ingot, iron_ingot, iron_ingot]
 }
 
 shaped(schrodinger_cat_box#0*5) {
 	[glass, nil, glass]
-	[KS, fish, KS]
+	[iron_plate, fish, iron_plate]
 	[glass, jinkela, glass]
 }
 ```
