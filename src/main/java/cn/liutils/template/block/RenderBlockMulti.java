@@ -28,6 +28,9 @@ public abstract class RenderBlockMulti extends TileEntitySpecialRenderer {
 
 	@Override
 	public void renderTileEntityAt(TileEntity te, double x, double y, double z, float f) {
+		if(!(te.getBlockType() instanceof BlockMulti))
+			return;
+		
 		BlockMulti bm = (BlockMulti) te.getBlockType();
 		InfoBlockMulti inf = ((IMultiTile)te).getBlockInfo();
 		

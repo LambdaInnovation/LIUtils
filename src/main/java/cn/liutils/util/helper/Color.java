@@ -14,6 +14,9 @@ package cn.liutils.util.helper;
 
 import org.lwjgl.opengl.GL11;
 
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+
 /**
  * @author WeAthFolD
  */
@@ -68,6 +71,7 @@ public class Color {
 		return (ir << 16) | (ig << 8) | ib;
 	}
 	
+	@SideOnly(Side.CLIENT)
 	public void bind() {
 		//System.out.println("BIND " + r + " " + g + " " + b + " " + a);
 		GL11.glColor4d(r, g, b, a);

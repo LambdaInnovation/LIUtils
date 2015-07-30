@@ -26,11 +26,15 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraftforge.common.util.ForgeDirection;
 import cn.liutils.core.LIUtils;
 import cn.liutils.template.client.render.block.RenderEmptyBlock;
+import cn.liutils.util.generic.VecUtils;
+import cn.liutils.util.mc.WorldUtils;
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -42,6 +46,8 @@ public abstract class BlockMulti extends BlockContainer {
 	
 	List<SubBlockPos> subList = new ArrayList();
 	List<SubBlockPos>[] buffer;
+	
+	private AxisAlignedBB[] renderBB = new AxisAlignedBB[8];
 	
 	@SideOnly(Side.CLIENT)
 	double[][] rotCenters;
@@ -57,6 +63,9 @@ public abstract class BlockMulti extends BlockContainer {
 		}
 	}
 
+	/**
+	 * notice that you must call finishInit() in your own subclass ctor.
+	 */
 	public BlockMulti(Material p_i45386_1_) {
 		super(p_i45386_1_);
 		addSubBlock(0, 0, 0);
@@ -76,6 +85,28 @@ public abstract class BlockMulti extends BlockContainer {
 		for(int[] s : data) {
 			addSubBlock(s[0], s[1], s[2]);
 		}
+	}
+	
+	/**
+	 * Get the render bounding box of this BlockMulti at the given block position (as origin block)
+	 * Usually used on TileEntity rendering.
+	 */
+	public AxisAlignedBB getRenderBB(int x, int y, int z, ForgeDirection dir) {
+		// Lazy init
+		if(renderBB[dir.ordinal()] == null) {
+			Vec3[] vecs = new Vec3[subList.size() * 2];
+			for(int i = 0; i < subList.size(); ++i) {
+				SubBlockPos rot = rotate(subList.get(i), dir);
+				vecs[i * 2] = VecUtils.vec(rot.dx, rot.dy, rot.dz);
+				vecs[i * 2 + 1] = VecUtils.vec(rot.dx + 1, rot.dy + 1, rot.dz + 1);
+			}
+			
+			renderBB[dir.ordinal()] = WorldUtils.ofPoints(vecs);
+		}
+		
+		AxisAlignedBB box = renderBB[dir.ordinal()];
+		return AxisAlignedBB.getBoundingBox(box.minX + x, box.minY + y, box.minZ + z, 
+				box.maxX + x, box.maxY + y, box.maxZ + z);
 	}
 	
 	/**
@@ -103,6 +134,7 @@ public abstract class BlockMulti extends BlockContainer {
 					{-arr[2], arr[1], arr[0]}
 			};
 		}
+		
 		//Finished, set the flag and encapsulate the instance.
 		init = true;
 	}

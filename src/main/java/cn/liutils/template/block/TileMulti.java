@@ -12,10 +12,14 @@
  */
 package cn.liutils.template.block;
 
+import net.minecraft.block.Block;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.AxisAlignedBB;
 import cn.annoreg.core.Registrant;
 import cn.annoreg.mc.RegTileEntity;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * @author WeathFolD
@@ -53,6 +57,17 @@ public class TileMulti extends TileEntity implements IMultiTile {
     public void writeToNBT(NBTTagCompound nbt) {
     	super.writeToNBT(nbt);
     	info.save(nbt);
+    }
+	
+    @SideOnly(Side.CLIENT)
+    @Override
+    public AxisAlignedBB getRenderBoundingBox() {
+    	Block block = getBlockType();
+    	if(block instanceof BlockMulti) {
+    		return ((BlockMulti) block).getRenderBB(xCoord, yCoord, zCoord, info.getDir());
+    	} else {
+    		return super.getRenderBoundingBox();
+    	}
     }
 	
 }
