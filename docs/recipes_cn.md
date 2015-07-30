@@ -24,11 +24,13 @@ RecipeRegistry
 每一个合成对象之间不需要明确的分隔符。但是你应该用回车来分开不同的合成对象。
 每一个合成对象的语法如下：
 ```
-recipe_type(<recipe_output>) {
+recipe_type(<recipe_output>)[experience] {
 	[<element>, <element>, <element>]
 	[<element>, <element>, <element>]
 	....
-}
+} ; a comment
+
+; some comments
 ```
 
 其中，用`<>`包裹的字段代表一个ItemStack或oreDict字段，在之后会详细说明。
@@ -36,8 +38,10 @@ recipe_type(<recipe_output>) {
 各部分解释如下：
 
 * `recipe_type`： 该合成表的合成表类型。所能指定的类型由RecipeRegistry对象的信息所限定。默认拥有的类型有shaped, shapeless, shaped_s。
+* `experience`: 该合成表执行时所给予玩家的经验值。可以忽略。仅对特定类型的合成有效（如熔炼）
 * `<recipe_output>`： 该合成表的输出。
 * `{ [...] }`: 该合成表的合成网格。每个网格应该由一系列的列表( [ elem, elem, elem, ... ] )所组成，并且每个列表的长度必须一致。列表之间无需分隔符。
+* `; comment`: 注♀释
 
 在设置好RecipeRegistry的状态以后，使用```RecipeRegistry.addRecipeFromXXX```系列方法来解析并且添加合成表文件
 
@@ -49,6 +53,7 @@ recipe_type(<recipe_output>) {
 
 * `name#data*amount`
 * `name#data`
+* `name*amount`
 * `name`
 
 如果省略data，data默认为0; 如果省略amount, amount默认为1。
@@ -96,8 +101,8 @@ public class ModItemRegistry {
 	@RecipeName("jinkela")
 	public static Item itemJinkela = new ItemJinkela();
 	
-	@RecipeName("ks")
-	public static Item itemKS = new ItemKS();
+	@RecipeName("iron_plate")
+	public static Item itemIronPlate = new ItemIronPlate();
 	
 	@RecipeName("schrodinger_cat_box")
 	public static Block blockCatbox = new BlockSchrodingerCatBox();
@@ -135,13 +140,13 @@ shaped(jinkela) {
 	[diamond, dirt, diamond]
 }
 
-shapeless(KS) {
-	[jinkela, futa, jinkela, futa]
+shapeless(iron_plate) {
+	[iron_ingot, iron_ingot, iron_ingot]
 }
 
 shaped(schrodinger_cat_box#0*5) {
 	[glass, nil, glass]
-	[KS, fish, KS]
+	[iron_plate, fish, iron_plate]
 	[glass, jinkela, glass]
 }
 ```
