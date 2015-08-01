@@ -27,7 +27,7 @@ public final class ScriptNamespace {
                 throw new RippleRuntimeException("Try to convert a value to function");
             }
         }
-        throw new RippleRuntimeException("Function not found");
+        throw new RippleRuntimeException("Function " + path + "." + key + " not found");
     }
 
     public ScriptFunction getFunction(Path path) {
@@ -54,7 +54,7 @@ public final class ScriptNamespace {
                 throw new RippleRuntimeException("Try to convert a function to value");
             }
         }
-        throw new RippleRuntimeException("Value not found");
+        throw new RippleRuntimeException("Value " + path + "." + key + " not found");
     }
     
     public Object getValue(Path path) {
@@ -69,7 +69,7 @@ public final class ScriptNamespace {
         if (this.path.hasParent()) {
             return program.at(this.path.getParent()).getValue(path);
         }
-        throw new RippleRuntimeException("Value not found");
+        throw new RippleRuntimeException("Value " + path + " not found");
     }
     
     public int getInteger(Path path) {

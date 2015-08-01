@@ -29,6 +29,7 @@ import cn.liutils.cgui.gui.event.LostFocusEvent;
 import cn.liutils.cgui.gui.event.MouseDownEvent;
 import cn.liutils.cgui.gui.event.RefreshEvent;
 import cn.liutils.cgui.gui.event.global.AddWidgetEvent;
+import cn.liutils.cgui.gui.event.global.GlobalMouseEvent;
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.client.HudUtils;
 import cn.liutils.util.helper.GameTimer;
@@ -151,19 +152,21 @@ public class LIGui extends WidgetContainer {
 	 */
 	public boolean mouseClicked(int mx, int my, int bid) {
 		updateMouse(mx, my);
+		eventBus.postEvent(null, new GlobalMouseEvent(mx, my, bid));
+		
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
 			if(node != null) {
 				System.out.println(node);
 				gainFocus(node);
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
-				//TODO: Need further filtering
 				return true;
 			} else {
 				System.out.println("WTF THis is null?!");
 				removeFocus();
 			}
 		}
+		
 		return false;
 	}
 	
@@ -475,6 +478,10 @@ public class LIGui extends WidgetContainer {
 	
 	public void regEventHandler(GuiEventHandler geh) {
 		eventBus.regEventHandler(geh);
+	}
+	
+	public void removeEventHandler(GuiEventHandler geh) {
+		eventBus.remove(geh);
 	}
 	
 	private void hierPostEvent(Widget w, GuiEvent event) {

@@ -41,6 +41,14 @@ public final class GuiEventBus {
 		getRawList(clazz).addFirst(new GuiHandlerNode(handler));
 	}
 	
+	public void remove(GuiEventHandler handler) {
+		getRawList(handler.getEventClass()).remove(new GuiHandlerNode(handler));
+	}
+	
+	public void remove(Class<? extends GuiEvent> clazz, IGuiEventHandler handler) {
+		getRawList(clazz).remove(new GuiHandlerNode(handler));
+	}
+	
 	private LinkedList<GuiHandlerNode> getRawList(Class<? extends GuiEvent> clazz) {
 		LinkedList<GuiHandlerNode> ret = eventHandlers.get(clazz);
 		if(ret == null) {
@@ -61,10 +69,19 @@ public final class GuiEventBus {
 	
 	private class GuiHandlerNode {
 		IGuiEventHandler handler;
-		public boolean enabled = true;
 		
 		public GuiHandlerNode(IGuiEventHandler handler) {
 			this.handler = handler;
+		}
+		
+		@Override
+		public boolean equals(Object another) {
+			return another instanceof GuiHandlerNode && ((GuiHandlerNode) another).handler == handler;
+		}
+		
+		@Override
+		public int hashCode() {
+			return handler.hashCode();
 		}
 	}
 	
