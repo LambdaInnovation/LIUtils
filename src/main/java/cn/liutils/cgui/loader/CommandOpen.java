@@ -52,7 +52,7 @@ public class CommandOpen extends LICommandBase {
 	@Override
 	public void processCommand(ICommandSender ics, String[] args) {
 		if(args.length >= 1) {
-			String path = args[0];
+			String path = "cgui/" + args[0];
 			File file = new File(path);
 			String xml = "";
 			try {
