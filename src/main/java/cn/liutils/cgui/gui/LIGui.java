@@ -224,6 +224,7 @@ public class LIGui extends WidgetContainer {
     	Transform transform = widget.transform;
 		double tx, ty;
 		double tw, th;
+		double parentScale;
 		
 		if(widget.isWidgetParent()) {
 			Widget p = widget.getWidgetParent();
@@ -231,12 +232,14 @@ public class LIGui extends WidgetContainer {
 			ty = p.y;
 			tw = p.transform.width * p.scale;
 			th = p.transform.height * p.scale;
+			parentScale = p.scale;
 			
 			widget.scale = transform.scale * p.scale;
 		} else {
 			tx = ty = 0;
 			tw = width;
 			th = height;
+			parentScale = 1;
 			
 			widget.scale = transform.scale;
 		}
@@ -244,13 +247,13 @@ public class LIGui extends WidgetContainer {
 		double xx = 0;
 		switch(transform.alignWidth) {
 		case CENTER:
-			xx = x0 - (tx + (tw - transform.width * widget.scale) / 2) / widget.scale;
+			xx = (x0 - tx  - (tw - transform.width * transform.scale) / 2) / parentScale;
 			break;
 		case LEFT:
-			xx = (x0 - tx) / widget.scale;
+			xx = (x0 - tx) / parentScale;
 			break;
 		case RIGHT:
-			xx = (x0 - (tx + (tw - transform.width * widget.scale))) / widget.scale;
+			xx = (x0 - tx  - (tw - transform.width * transform.scale)) / widget.scale;
 			break;
 		}
 		transform.x = xx;
@@ -258,13 +261,13 @@ public class LIGui extends WidgetContainer {
 		double yy = 0;
 		switch(transform.alignHeight) {
 		case CENTER:
-			yy = y0 - (ty + (th - transform.height * widget.scale) / 2) / widget.scale;
+			yy = (y0 - ty  - (tw - transform.width * transform.scale) / 2) / parentScale;
 			break;
 		case TOP:
-			yy = (y0 - ty) / widget.scale;
+			yy = (y0 - ty) / parentScale;
 			break;
 		case BOTTOM:
-			yy = (y0- (ty + (th - transform.height * widget.scale))) / widget.scale;
+			yy = (y0 - ty  - (tw - transform.width * transform.scale)) / parentScale;
 			break;
 		}
 		transform.y = yy;
@@ -276,7 +279,8 @@ public class LIGui extends WidgetContainer {
     }
     
     public Widget getDraggingWidget() {
-        return Math.abs(GameTimer.getAbsTime() - lastDragTime) > DRAG_TIME_TOLE || draggingNode == null ? null : draggingNode;
+        return Math.abs(GameTimer.getAbsTime() - lastDragTime) > DRAG_TIME_TOLE || 
+        		draggingNode == null ? null : draggingNode;
     }
 	
 	public Widget getFocus() {
