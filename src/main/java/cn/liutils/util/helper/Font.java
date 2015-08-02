@@ -12,6 +12,7 @@
  */
 package cn.liutils.util.helper;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.vecmath.Vector2d;
@@ -45,7 +46,7 @@ public class Font {
     private Font() {}
     
     /**
-     * Draw a string at given position with given color.
+     * Draw a string at given position with given color. This just process a single line.
      * @param str
      * @param x
      * @param y
@@ -67,11 +68,45 @@ public class Font {
      */
     public void drawWrapped(String str, double x, double y, double size, int color, double limit) {
         double scale = size / mcFont().FONT_HEIGHT;
-        GL11.glPushMatrix();
-        GL11.glTranslated(x, y, 0);
-        GL11.glScaled(scale, scale, 1);
-        mcFont().drawSplitString(str, 0, 0, (int) (limit * scale), color);
-        GL11.glPopMatrix();
+        FontRenderer font = mcFont();
+        List<String> list = split(str, limit * font.FONT_HEIGHT / size);
+        //System.out.println("---{" + list.size());
+        for(String s : list) {
+        	//System.out.println(str);
+        	draw(s, x, y, size, color);
+        	y += size;
+        } 
+        //System.out.println("---}");
+    }
+    
+    private List<String> split(final String str, double limit) {
+    	List<String> ret = new ArrayList();
+    	
+    	FontRenderer font = mcFont();
+    	int begin = 0;
+    	int lastword = 0;
+    	
+    	double len = 0;
+    	for(int i = 0; i != str.length(); ++i) {
+    		char ch = str.charAt(i);
+    		if(ch == ' ')
+    			lastword = i;
+    		len += font.getCharWidth(ch);
+    		
+    		if(len > limit || i == str.length() - 1) {
+    			if(begin == lastword) {
+    				;
+    			} else {
+    				i = lastword;
+    			}
+    			ret.add(str.substring(begin, i + 1).trim());
+    			
+    			len = 0;
+    			begin = lastword = i;
+    		}
+    	}
+    	
+    	return ret;
     }
     
     /**
@@ -82,9 +117,8 @@ public class Font {
      * @return
      */
     public Vector2d simDrawWrapped(String str, double size, double limit) {
-    	double scale = size / mcFont().FONT_HEIGHT;
-        List<String> lst = mcFont().listFormattedStringToWidth(str, (int) (limit * scale));
-        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size);
+        List<String> lst = split(str, limit * mcFont().FONT_HEIGHT / size);
+        return new Vector2d(lst.size() == 1 ? strLen(str, size) : limit, size * lst.size());
     }
     
     /**

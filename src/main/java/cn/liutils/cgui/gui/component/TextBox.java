@@ -134,7 +134,7 @@ public class TextBox extends Component {
 	
 	private double[] getOffset(Widget w) {
 		double x = 0, y = 0;
-		Vector2d v = Font.font.simDrawWrapped(getProcessedContent(), size, w.transform.width);
+		Vector2d v = new Vector2d(Font.font.strLen(getProcessedContent(), size), size);
 		
 		switch(widthAlign) {
 		case LEFT:
