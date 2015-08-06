@@ -62,16 +62,10 @@ public class KeyManager {
 	
 	Map<String, KeyBinding> nameMap = new HashMap();
 	
-	/**
-	 * See comment of another addKeyHandler.
-	 */
 	public void addKeyHandler(String name, int defKeyID, KeyHandler handler) {
 		addKeyHandler(name, "", defKeyID, false, handler);
 	}
 	
-	/**
-	 * See comment of another addKeyHandler.
-	 */
 	public void addKeyHandler(String name, String keyDesc, int defKeyID, KeyHandler handler) {
 		addKeyHandler(name, keyDesc, defKeyID, false, handler);
 	}

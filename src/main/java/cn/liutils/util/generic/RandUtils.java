@@ -18,4 +18,16 @@ public class RandUtils {
 		return from + RNG.nextInt(to - from);
 	}
 	
+	public static float nextFloat() {
+		return RNG.nextFloat();
+	}
+	
+	public static double nextDouble() {
+		return RNG.nextDouble();
+	}
+	
+	public static int nextInt(int n) {
+		return RNG.nextInt(n);
+	}
+	
 }

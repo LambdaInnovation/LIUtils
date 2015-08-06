@@ -373,6 +373,7 @@ public class Parser {
         case '>':
             if (peekChar() == '=') {
                 currentToken.setMultiChar(MultiCharSymbol.S_GE);
+                reader.read();
             } else {
                 currentToken.setSingleChar(c);
             }
@@ -380,6 +381,7 @@ public class Parser {
         case '<':
             if (peekChar() == '=') {
                 currentToken.setMultiChar(MultiCharSymbol.S_LE);
+                reader.read();
             } else {
                 currentToken.setSingleChar(c);
             }
@@ -387,6 +389,7 @@ public class Parser {
         case '!':
             if (peekChar() == '=') {
                 currentToken.setMultiChar(MultiCharSymbol.S_NE);
+                reader.read();
             } else {
                 currentToken.setSingleChar(c);
             }

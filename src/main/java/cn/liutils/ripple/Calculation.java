@@ -42,7 +42,7 @@ public final class Calculation {
         	return (Integer) value;
         if(value instanceof Float)
         	return (Float) value;
-        throw new RippleRuntimeException("Cannot cast to double");
+        throw new RippleRuntimeException("Cannot cast " + value + " to double");
     }
     
     public static boolean castBoolean(Object value) {
