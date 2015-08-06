@@ -18,6 +18,7 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import cn.liutils.entityx.MotionHandler;
 import cn.liutils.entityx.event.CollideEvent;
+import cn.liutils.util.generic.VecUtils;
 import cn.liutils.util.mc.BlockFilters;
 import cn.liutils.util.mc.IBlockFilter;
 import cn.liutils.util.raytrace.Raytrace;
@@ -33,6 +34,8 @@ public class Rigidbody extends MotionHandler {
 	
 	public IEntitySelector entitySel;
 	public IBlockFilter blockFil = BlockFilters.filNormal;
+	
+	public boolean accurateCollision = false;
 
 	@Override
 	public String getID() {
@@ -47,9 +50,30 @@ public class Rigidbody extends MotionHandler {
 		Entity target = getTarget();
 		
 		//Collision detection
-		Vec3 cur = Vec3.createVectorHelper(target.posX, target.posY, target.posZ),
-			next = Vec3.createVectorHelper(target.posX + target.motionX, target.posY + target.motionY, target.posZ + target.motionZ);
-		MovingObjectPosition mop = Raytrace.perform(target.worldObj, cur, next, entitySel, blockFil);
+		MovingObjectPosition mop = null;
+		if(accurateCollision) {
+			float hw = target.width / 2, hh = target.height;
+			Vec3[] points = {
+				VecUtils.vec(target.posX - hw, target.posY, 	 target.posZ - hw),
+				VecUtils.vec(target.posX - hw, target.posY, 	 target.posZ + hw),
+				VecUtils.vec(target.posX + hw, target.posY, 	 target.posZ + hw),
+				VecUtils.vec(target.posX + hw, target.posY, 	 target.posZ - hw),
+				VecUtils.vec(target.posX - hw, target.posY + hh, target.posZ - hw),
+				VecUtils.vec(target.posX - hw, target.posY + hh, target.posZ + hw),
+				VecUtils.vec(target.posX + hw, target.posY + hh, target.posZ + hw),
+				VecUtils.vec(target.posX + hw, target.posY + hh, target.posZ - hw),
+			};
+			Vec3 motion = VecUtils.vec(target.motionX, target.motionY, target.motionZ);
+			for(Vec3 vec : points) {
+				Vec3 next = VecUtils.add(vec, motion);
+				if((mop = Raytrace.perform(target.worldObj, vec, next, entitySel, blockFil)) != null)
+					break;
+			}
+		} else {
+			Vec3 cur = Vec3.createVectorHelper(target.posX, target.posY, target.posZ),
+					next = Vec3.createVectorHelper(target.posX + target.motionX, target.posY + target.motionY, target.posZ + target.motionZ);
+			mop = Raytrace.perform(target.worldObj, cur, next, entitySel, blockFil);
+		}
 		
 		if(mop != null) {
 			getEntityX().postEvent(new CollideEvent(mop)); //Let the event handlers do the actual job.
