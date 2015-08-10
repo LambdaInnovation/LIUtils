@@ -96,7 +96,7 @@ public class Font {
     		if(len > limit || i == str.length() - 1) {
     			if(begin == lastword) {
     				;
-    			} else {
+    			} else if(len > limit){
     				i = lastword;
     			}
     			ret.add(str.substring(begin, i + 1).trim());

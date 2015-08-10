@@ -27,6 +27,14 @@ public class MathUtils {
 		return ret < 0 ? ret + 360f : ret;
 	}
 	
+	public static double toAngle(double rad) {
+		return rad * 180 / Math.PI;
+	}
+	
+	public static float toAngle(float rad) {
+		return rad * 180 / PI_F;
+	}
+	
 	/**
 	 * Return whether a -180~180 wrapped yaw angle is in the range denoted by [start, end].
 	 * Note that this is not a simple range comparison. If the arc of the angle is in the

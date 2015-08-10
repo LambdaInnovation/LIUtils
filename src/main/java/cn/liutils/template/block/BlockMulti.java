@@ -54,7 +54,7 @@ public abstract class BlockMulti extends BlockContainer {
 	
 	boolean init = false;
 	
-	public class SubBlockPos {
+	public static class SubBlockPos {
 		public final int dx, dy, dz;
 		public SubBlockPos(int _dx, int _dy, int _dz) {
 			dx = _dx;
@@ -271,7 +271,7 @@ public abstract class BlockMulti extends BlockContainer {
     }
 	
 	//Internal
-	private SubBlockPos rotate(SubBlockPos s, ForgeDirection dir) {
+	public static final SubBlockPos rotate(SubBlockPos s, ForgeDirection dir) {
 		switch(dir) {
 		case EAST:
 			return new SubBlockPos(-s.dz, s.dy, s.dx);
