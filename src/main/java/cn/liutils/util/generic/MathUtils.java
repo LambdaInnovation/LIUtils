@@ -27,6 +27,14 @@ public class MathUtils {
 		return ret < 0 ? ret + 360f : ret;
 	}
 	
+	public static double toRadians(double angle) {
+		return angle * Math.PI / 180;
+	}
+	
+	public static float toRadians(float angle) {
+		return angle * PI_F / 180;
+	}
+	
 	public static double toAngle(double rad) {
 		return rad * 180 / Math.PI;
 	}

@@ -275,9 +275,8 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 		public void onPlayerClone(PlayerEvent.Clone event) {
 			EntityPlayer player = event.entityPlayer;
 			PlayerData data = PlayerData.getNonCreate(event.original);
-			// if(event.original.isDead)
-			// 	 System.err.println("Human is dead. Mismatch. " + event.original.worldObj.isRemote);
 			if(data != null) {
+				data.player = player;
 				player.registerExtendedProperties(IDENTIFIER, data);
 			}
 		}
