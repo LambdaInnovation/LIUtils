@@ -77,6 +77,8 @@ public class AuxGuiHandler {
 		GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glDepthMask(false);
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glEnable(GL11.GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		RenderUtils.pushTextureState();
 		
 		if(event.type == ElementType.EXPERIENCE) {
