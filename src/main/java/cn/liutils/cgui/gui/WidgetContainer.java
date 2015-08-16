@@ -35,7 +35,7 @@ import cpw.mods.fml.relauncher.SideOnly;
 public class WidgetContainer implements Iterable<Widget> {
 	
 	HashBiMap<String, Widget> widgets = HashBiMap.create();
-	List<Widget> widgetList = new LinkedList(); //List sorted in non-descending widget zOrder.
+	LinkedList<Widget> widgetList = new LinkedList(); //List sorted in non-descending widget zOrder.
 	
 	private static final String UNNAMED_PRE = "Unnamed ";
 	
@@ -81,13 +81,22 @@ public class WidgetContainer implements Iterable<Widget> {
 		return addWidget(getNextName(), add);
 	}
 	
+	public boolean addWidget(String name, Widget add) {
+		return addWidget(name, add, false);
+	}
+	
+	public boolean addWidget(Widget add, boolean begin) {
+		return addWidget(getNextName(), add, begin);
+	}
+	
 	/**
 	 * Add a widget into the container.
 	 * @param name
 	 * @param add
+	 * @param begin If true the widget will be add at the begin of the draw list. (Draw first), otherwise the last.
 	 * @return if the operation is successful. (False for id duplication)
 	 */
-	public boolean addWidget(String name, Widget add) {
+	public boolean addWidget(String name, Widget add, boolean begin) {
 		//Check duplicate
 		if(widgets.containsKey(name)) {
 			Widget w = widgets.get(name);
@@ -97,7 +106,11 @@ public class WidgetContainer implements Iterable<Widget> {
 		}
 		
 		widgets.put(name, add);
-		widgetList.add(add);
+		
+		if(begin)
+			widgetList.addFirst(add);
+		else
+			widgetList.add(add);
 		
 		onWidgetAdded(name, add);
 		add.onAdded();
