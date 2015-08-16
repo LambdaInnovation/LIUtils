@@ -71,13 +71,12 @@ public class HudUtils {
 	}
 	
 	public static void rawRect(double x, double y, double u, double v, double width, double height, double texWidth, double texHeight) {
-		double f = 1.0, f1 = 1.0;
         Tessellator t = Tessellator.instance;
         t.startDrawingQuads();
-        t.addVertexWithUV(x + 0, 	 y + height, zLevel, (u + 0) * f, 		 (v + texHeight) * f1);
-        t.addVertexWithUV(x + width, y + height, zLevel, (u + texWidth) * f, (v + texHeight) * f1);
-        t.addVertexWithUV(x + width, y + 0,		 zLevel, (u + texWidth) * f, (v + 0) * f1);
-        t.addVertexWithUV(x + 0, 	 y + 0, 	 zLevel, (u + 0) * f, 		 (v + 0) * f1);
+        t.addVertexWithUV(x + 0, 	 y + height, zLevel, (u + 0), 		 (v + texHeight));
+        t.addVertexWithUV(x + width, y + height, zLevel, (u + texWidth), (v + texHeight));
+        t.addVertexWithUV(x + width, y + 0,		 zLevel, (u + texWidth), (v + 0));
+        t.addVertexWithUV(x + 0, 	 y + 0, 	 zLevel, (u + 0), 		 (v + 0));
         t.draw();
 	}
 	

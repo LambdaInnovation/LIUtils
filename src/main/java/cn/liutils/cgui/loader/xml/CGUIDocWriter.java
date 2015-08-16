@@ -113,8 +113,8 @@ public class CGUIDocWriter {
 		root.appendChild(element);
 		
 		//Write sub widgets
-		for(Map.Entry<String, Widget> entry : w.getEntries()) {
-			root.appendChild(createWidgetNode(doc, entry.getKey(), entry.getValue()));
+		for(Widget child : w.getDrawList()) {
+			root.appendChild(createWidgetNode(doc, child.getName(), child));
 		}
 		
 		return root;

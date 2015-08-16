@@ -84,7 +84,6 @@ public class Parser {
                 this.parseNamespace();
                 
                 this.currentPath = parentPath;
-                
                 if(currentToken.isInteger() || currentToken.isDouble()) {
                 	this.parseValue(new Path(currentPath, path));
                 }

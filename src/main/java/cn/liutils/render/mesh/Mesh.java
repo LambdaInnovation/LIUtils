@@ -14,20 +14,20 @@ import cn.liutils.render.material.Material;
  */
 public class Mesh {
 
-	private double[][] vertices;
+	protected double[][] vertices;
 	
-	private double[][] uvs;
+	protected double[][] uvs;
 	
-	private float[][] normals;
+	protected float[][] normals;
 	
-	private int[] triangles;
+	protected int[] triangles;
 	
-	List<Mesh> sub = new ArrayList<Mesh>();
+	protected List<Mesh> sub = new ArrayList<Mesh>();
 	
 	/**
 	 * Determine whether this mesh needs to be buffered(Compiled into a display list).
 	 */
-	boolean doesBuffer = false;
+	protected boolean doesBuffer = false;
 	
 	int listID = -1;
 	
