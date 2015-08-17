@@ -14,7 +14,7 @@ package cn.liutils.cgui.gui.component;
 
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.event.FrameEvent;
@@ -35,14 +35,17 @@ public class DrawTexture extends Component {
 	public Color color = new Color(1, 1, 1, 1);
 	
 	public double zLevel = 0;
+	
+	public boolean writeDepth = true;
 
 	public DrawTexture() {
 		super("DrawTexture");
 		this.addEventHandler(new FrameEventHandler() {
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				GL11.glDisable(GL11.GL_ALPHA_TEST);
+				glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+				glDisable(GL_ALPHA_TEST);
+				glDepthMask(writeDepth);
 				color.bind();
 				double preLevel = HudUtils.zLevel;
 				HudUtils.zLevel = zLevel;
@@ -53,6 +56,7 @@ public class DrawTexture extends Component {
 					HudUtils.colorRect(0, 0, w.transform.width, w.transform.height);
 				}
 				HudUtils.zLevel = preLevel;
+				glDepthMask(true);
 			}
 		});
 	}

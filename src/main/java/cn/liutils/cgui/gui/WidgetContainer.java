@@ -97,6 +97,43 @@ public class WidgetContainer implements Iterable<Widget> {
 	 * @return if the operation is successful. (False for id duplication)
 	 */
 	public boolean addWidget(String name, Widget add, boolean begin) {
+		if(!checkInit(name, add))
+			return false;
+		
+		if(begin)
+			widgetList.addFirst(add);
+		else
+			widgetList.add(add);
+		
+		checkAdded(name, add);
+		return true;
+	}
+	
+	public boolean addWidgetAfter(String name, Widget add, Widget pivot) {
+		int index = widgetList.indexOf(pivot);
+		if(index == -1)
+			return false;
+		if(!checkInit(name, add))
+			return false;
+		
+		widgetList.add(index + 1, add);
+		checkAdded(name, add);
+		return true;
+	}
+	
+	public boolean addWidgetBefore(String name, Widget add, Widget pivot) {
+		int index = widgetList.indexOf(pivot);
+		if(index == -1)
+			return false;
+		if(!checkInit(name, add))
+			return false;
+		
+		widgetList.add(index, add);
+		checkAdded(name, add);
+		return true;
+	}
+	
+	private boolean checkInit(String name, Widget add) {
 		//Check duplicate
 		if(widgets.containsKey(name)) {
 			Widget w = widgets.get(name);
@@ -106,15 +143,12 @@ public class WidgetContainer implements Iterable<Widget> {
 		}
 		
 		widgets.put(name, add);
-		
-		if(begin)
-			widgetList.addFirst(add);
-		else
-			widgetList.add(add);
-		
+		return true;
+	}
+	
+	private void checkAdded(String name, Widget add) {
 		onWidgetAdded(name, add);
 		add.onAdded();
-		return true;
 	}
 	
 	public void clear() {
@@ -215,7 +249,10 @@ public class WidgetContainer implements Iterable<Widget> {
 		return getDrawList().iterator();
 	}
 	
-	private String getNextName() {
+	/**
+	 * Get a next free, auto-generated name for the widget.
+	 */
+	public String getNextName() {
 		String res;
 		int nameCount = 0;
 		do {
