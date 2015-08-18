@@ -67,7 +67,7 @@ public class TextBox extends Component {
 	/**
 	 * Whether this textBox doesn't draw chars that are out of bounds.
 	 */
-	public boolean emit = true;
+	public boolean emit = false;
 	
 	public double size = 5;
 	
