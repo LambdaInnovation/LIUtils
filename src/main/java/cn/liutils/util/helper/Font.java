@@ -102,7 +102,7 @@ public class Font {
     			ret.add(str.substring(begin, i + 1).trim());
     			
     			len = 0;
-    			begin = lastword = i;
+    			begin = lastword = i + 1;
     		}
     	}
     	

@@ -22,6 +22,7 @@ import cn.liutils.cgui.gui.Widget;
 import cn.liutils.cgui.gui.component.Component;
 import cn.liutils.cgui.gui.component.Draggable;
 import cn.liutils.cgui.gui.component.DrawTexture;
+import cn.liutils.cgui.gui.component.Outline;
 import cn.liutils.cgui.gui.component.ProgressBar;
 import cn.liutils.cgui.gui.component.TextBox;
 import cn.liutils.cgui.gui.component.Tint;
@@ -30,7 +31,7 @@ import cn.liutils.cgui.gui.component.VerticalDragBar;
 
 /**
  * Main loading interface to provide templates&customized objects to CGUI.
- * Only Properties, Functions and Widget templates registered in this class are available
+ * Only Components and Widget templates registered in this class are available
  * for in-editor usage.
  * @author WeAthFolD
  */
@@ -49,6 +50,7 @@ public class CGUIEditor {
 		addComponent(new Tint());
 		addComponent(new ProgressBar());
 		addComponent(new VerticalDragBar());
+		addComponent(new Outline());
 		//addComponent(new ElementList());
 		
 		//Default templates
