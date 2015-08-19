@@ -34,7 +34,7 @@ import cpw.mods.fml.common.network.NetworkRegistry;
 import cpw.mods.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import cpw.mods.fml.common.registry.EntityRegistry;
 
-@Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION)
+@Mod(modid = "LIUtils", name = "LIUtils", version = LIUtils.VERSION, dependencies="required-after:AnnoReg")
 @RegistrationMod(pkg = "cn.liutils.", res = "liutils", prefix = "liu_")
 public class LIUtils {
 	
