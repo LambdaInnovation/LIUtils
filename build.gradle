@@ -29,14 +29,24 @@ buildscript {
             name = "lidev"
             url = "http://maven.li-dev.cn/"
         }
+		maven {
+            name = "lidev"
+            url = "http://maven.li-dev.cn/"
+        }
+		maven {
+            name = "lidev-dev"
+            url = "http://maven.li-dev.cn/dev/"
+        }
     }
     dependencies {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
 		classpath 'cn.lidev:LIteBuilder:1.0.0'
+//		classpath 'me.tatarka:gradle-retrolambda:3.2.2'
     }
 }
 
 apply plugin: 'litebuilder'
+//apply plugin: 'me.tatarka.retrolambda'
 
 litebuilder {
     name = "LIUtils"
@@ -48,7 +58,10 @@ litebuilder {
     //You can also put / into the string to upload to a child folder
     uploadDir = "dev"
 
-    forgeVersion = "1.7.2-10.12.2.1121"
+    forgeVersion = "1.7.10-10.13.4.1448-1.7.10"
+	
+	sourceCompatibility = 1.8
+	targetCompatibility = 1.8
 
     jarClasses {
         exclude 'cn/annoreg/**/*'
@@ -89,22 +102,16 @@ litebuilder {
 }
 
 repositories {
-    maven {
-        name = "ic2"
-        url = "http://maven.ic2.player.to/"
-    }
-    maven {
+	maven {
         name = "lidev"
+        url = "http://maven.li-dev.cn/"
+    }
+	maven {
+        name = "lidev-dev"
         url = "http://maven.li-dev.cn/dev/"
     }
 }
 
 dependencies {
-    //dependencies needed in compilation
-    modCompile 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:dev'
-    modCompile 'cn.annoreg:AnnotationRegistry:[1.7.2.1,1.7.3.0):sources'
-
-    //dependencies needed in the reobf jar
-    modReobf 'net.industrial-craft:industrialcraft-2:2.1.484-experimental:api'
+	compile 'cn.annoreg:AnnotationRegistry:d1.0b1:dev'
 }
-
