@@ -79,4 +79,9 @@ public final class Path {
         }
         return new Path(a.path.substring(0, matching) + b.path);
     }
+    
+    @Override
+    public String toString() {
+    	return path;
+    }
 }

@@ -130,4 +130,5 @@ public final class ScriptNamespace {
     public ScriptNamespace getSubNamespace(String path) {
         return getSubNamespace(new Path(path));
     }
+    
 }
