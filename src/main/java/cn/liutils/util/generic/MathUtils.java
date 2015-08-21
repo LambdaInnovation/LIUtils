@@ -84,11 +84,19 @@ public class MathUtils {
 	}
 	
 	public static double wrapd(double min, double max, double val) {
-		return Math.max(min, Math.min(max, val));
+		if(val > max)
+			return max;
+		if(val < min)
+			return min;
+		return val;
 	}
 	
 	public static float wrapf(float min, float max, float val) {
-		return Math.max(min, Math.min(max, val));
+		if(val > max)
+			return max;
+		if(val < min)
+			return min;
+		return val;
 	}
 	
 	public static double distanceSq(double[] vec1, double[] vec2) {

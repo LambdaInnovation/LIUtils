@@ -31,6 +31,10 @@ public class Tint extends Component {
 	
 	public boolean affectTexture = false;
 	
+	public static Tint get(Widget w) {
+		return w.getComponent("Tint");
+	}
+	
 	public Tint() {
 		super("Tint");
 		

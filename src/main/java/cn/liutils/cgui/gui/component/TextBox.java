@@ -62,7 +62,7 @@ public class TextBox extends Component {
 	public boolean doesEcho = false;
 	public char echoChar = '*';
 	
-	public Color color = new Color(0xffffff);
+	public Color color = new Color(0xffffffff);
 	
 	/**
 	 * Whether this textBox doesn't draw chars that are out of bounds.
@@ -249,6 +249,7 @@ public class TextBox extends Component {
 
 			@Override
 			public void handleEvent(Widget w, FrameEvent event) {
+				
 				double[] offset = getOffset(w);
 				
 				checkCaret();

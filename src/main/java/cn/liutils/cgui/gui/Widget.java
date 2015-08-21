@@ -154,7 +154,6 @@ public class Widget extends WidgetContainer {
 	
 	public void removeComponent(Component c) {
 		removeComponent(c.name);
-		
 	}
 	
 	public void removeComponent(String name) {
