@@ -47,7 +47,7 @@ public class ViewOptimize {
 	}
 	
 	public static void fix(IAssociatePlayer entity) {
-		if(shouldFix(entity)) {
+		if(isFirstPerson(entity)) {
 			fixFirstPerson();
 		} else {
 			fixThirdPerson();
@@ -55,14 +55,14 @@ public class ViewOptimize {
 	}
 	
 	public static Vec3 getFixVector(IAssociatePlayer entity) {
-		if(shouldFix(entity)) {
+		if(isFirstPerson(entity)) {
 			return Vec3.createVectorHelper(fpOffsetX, fpOffsetY, fpOffsetZ);
 		} else {
 			return Vec3.createVectorHelper(tpOffsetX, tpOffsetY, tpOffsetZ);
 		}
 	}
 	
-	public static boolean shouldFix(IAssociatePlayer entity) {
+	public static boolean isFirstPerson(IAssociatePlayer entity) {
 		Minecraft mc = Minecraft.getMinecraft();
 		EntityPlayer clientPlayer = Minecraft.getMinecraft().thePlayer;
 		return mc.gameSettings.thirdPersonView == 0 && clientPlayer == entity.getPlayer();

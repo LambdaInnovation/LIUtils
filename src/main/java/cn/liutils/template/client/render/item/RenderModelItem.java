@@ -129,7 +129,7 @@ public class RenderModelItem implements IItemRenderer {
 	/**
 	 * Spin item all the time insides the inventory?
 	 */
-	public boolean inventorySpin = true;
+	public boolean inventorySpin = false;
 	
 	public RenderModelItem(IItemModel mdl, ResourceLocation texture) {
 		model = mdl;

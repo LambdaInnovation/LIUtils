@@ -80,6 +80,10 @@ public class EntityX<T extends Entity> {
 		}
 	}
 	
+	public void removeMotionHandlers() {
+		motionHandlers.clear();
+	}
+	
 	public <T extends MotionHandler> T getMotionHandler(String id) {
 		T ret = (T) motionHandlers.get(id);
 		return ret;

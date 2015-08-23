@@ -44,7 +44,6 @@ import cpw.mods.fml.relauncher.Side;
  * process update stuffs within that method. <br/>
  * 
  * TODO If tick is too slow make selective ticking optimization <br/>
- * TODO Generalize this pattern if necessary <br/>
  * @author WeAthFolD
  */
 @Registrant
