@@ -30,7 +30,7 @@ public class VecUtils {
 	}
 	
 	public static Vec3 random() {
-		return vec(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+		return vec(-1 + 2 * rand.nextDouble(), -1 + 2 * rand.nextDouble(), -1 + 2 * rand.nextDouble());
 	}
 	
 	/**
