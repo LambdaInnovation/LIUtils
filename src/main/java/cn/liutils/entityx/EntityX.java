@@ -84,8 +84,8 @@ public class EntityX<T extends Entity> {
 		motionHandlers.clear();
 	}
 	
-	public <T extends MotionHandler> T getMotionHandler(String id) {
-		T ret = (T) motionHandlers.get(id);
+	public <U extends MotionHandler> U getMotionHandler(String id) {
+		U ret = (U) motionHandlers.get(id);
 		return ret;
 	}
 	

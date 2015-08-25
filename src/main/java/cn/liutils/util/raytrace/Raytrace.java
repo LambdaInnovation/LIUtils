@@ -100,7 +100,8 @@ public class Raytrace {
 	 * @param filter BlockFilter
 	 * @return MovingObjectPosition
 	 */
-    public static MovingObjectPosition rayTraceBlocks(World world, Vec3 vec1, Vec3 vec2, IBlockFilter filter) {
+    @SuppressWarnings("unused")
+	public static MovingObjectPosition rayTraceBlocks(World world, Vec3 vec1, Vec3 vec2, IBlockFilter filter) {
         if(Double.isNaN(vec1.xCoord) || Double.isNaN(vec1.yCoord) || Double.isNaN(vec1.zCoord) ||
         		Double.isNaN(vec2.xCoord) || Double.isNaN(vec2.yCoord) || Double.isNaN(vec2.zCoord)) {
         	return null;
