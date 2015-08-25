@@ -60,7 +60,7 @@ public class MathUtils {
 			return ss <= sa || sa <= se;
 		}
 		
-		System.out.println(ss + " " + se + " " + sa);
+		//System.out.println(ss + " " + se + " " + sa);
 		return ss <= sa && sa <= se;
 	}
 	

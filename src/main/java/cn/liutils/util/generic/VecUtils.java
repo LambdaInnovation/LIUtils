@@ -14,6 +14,7 @@ package cn.liutils.util.generic;
 
 import java.util.Random;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -30,7 +31,7 @@ public class VecUtils {
 	}
 	
 	public static Vec3 random() {
-		return vec(rand.nextDouble(), rand.nextDouble(), rand.nextDouble());
+		return vec(-1 + 2 * rand.nextDouble(), -1 + 2 * rand.nextDouble(), -1 + 2 * rand.nextDouble());
 	}
 	
 	/**
@@ -184,6 +185,14 @@ public class VecUtils {
 			return Hit;
 
 		return null;
+	}
+	
+	public static Vec3 entityPos(Entity e) {
+		return vec(e.posX, e.posY, e.posZ);
+	}
+	
+	public static Vec3 entityMotion(Entity e) {
+		return vec(e.motionX, e.motionY, e.motionZ);
 	}
 	
 }

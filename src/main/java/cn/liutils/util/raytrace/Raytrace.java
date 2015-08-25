@@ -2,26 +2,27 @@ package cn.liutils.util.raytrace;
 
 import java.util.List;
 
-import net.minecraft.block.Block;
-import net.minecraft.command.IEntitySelector;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.Blocks;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
+import org.apache.commons.lang3.tuple.Pair;
+
 import cn.liutils.util.generic.VecUtils;
 import cn.liutils.util.helper.Motion3D;
 import cn.liutils.util.mc.BlockFilters;
 import cn.liutils.util.mc.EntitySelectors;
 import cn.liutils.util.mc.IBlockFilter;
 import cn.liutils.util.mc.WorldUtils;
+import net.minecraft.block.Block;
+import net.minecraft.command.IEntitySelector;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
+import net.minecraft.world.World;
 
 /**
  * A better wrap up for ray trace routines, supporting entity filtering, block filtering, and combined RayTrace of
- * blocks and entities.
+ * blocks and entities. Also provided functions for fast implementation on entity looking traces.
  * @author WeAthFolD
  */
 public class Raytrace {
@@ -57,6 +58,28 @@ public class Raytrace {
 	
 	public static MovingObjectPosition perform(World world, Vec3 vec1, Vec3 vec2) {
 		return perform(world, vec1, vec2, null, null);
+	}
+	
+	public static Pair<Vec3, MovingObjectPosition> getLookingPos(EntityLivingBase living, double dist) {
+		return getLookingPos(living, dist, null, null);
+	}
+	
+	public static Pair<Vec3, MovingObjectPosition> getLookingPos(EntityLivingBase living, double dist, IEntitySelector esel) {
+		return getLookingPos(living, dist, esel, null);
+	}
+	
+	public static Pair<Vec3, MovingObjectPosition> getLookingPos(EntityLivingBase living, double dist, IEntitySelector esel, IBlockFilter bsel) {
+		MovingObjectPosition pos = traceLiving(living, dist, esel, bsel);
+		Vec3 end = null;
+		if(pos != null) {
+			end = pos.hitVec;
+			if(pos.entityHit != null)
+				end.yCoord += pos.entityHit.getEyeHeight() * 0.6;
+		}
+		if(end == null)
+			end = new Motion3D(living, true).move(dist).getPosVec();
+		
+		return Pair.of(end, pos);
 	}
 	
 	public static MovingObjectPosition rayTraceEntities(World world, Vec3 vec1, Vec3 vec2, IEntitySelector selector) {
