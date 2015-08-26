@@ -113,5 +113,5 @@ repositories {
 }
 
 dependencies {
-	compile 'cn.annoreg:AnnotationRegistry:d1.0b1:dev'
+	compile 'cn.annoreg:AnnotationRegistry:[1.0a-0001,1.0a-9999):dev'
 }
