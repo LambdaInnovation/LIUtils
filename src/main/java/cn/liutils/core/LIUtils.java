@@ -45,7 +45,7 @@ public class LIUtils {
 		REGISTER_TYPE_RENDER_HOOK = "liu_playerhook",
 		REGISTER_TYPE_CONFIGURABLE = "liu_configurable";
 	
-	public static final String VERSION = "2.0a4";
+	public static final String VERSION = "2.0a";
 	
 	/**
 	 * The mod dependency. put this in your mod's dependency if you want to use LIUtils.

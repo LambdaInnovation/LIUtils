@@ -3,13 +3,12 @@
   "modid": "LIUtils",
   "name": "LIUtils",
   "description": "An utility API mod that gives better modding experience for modders.",
-  "version": "1.7.10.100",
+  "version": "2.0a",
   "url": "https://github.com/LambdaInnovation",
   "updateUrl": "",
   "authorList": ["LambdaInnovation"],
   "credits": "",
   "logoFile": "",
   "screenshots": [],
-  "dependencies": ["IC2"]
 }
 ]
