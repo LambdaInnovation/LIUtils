@@ -88,17 +88,13 @@ public class LIGui extends WidgetContainer {
 	public void draw(double mx, double my) {
 		frameUpdate();
 		updateMouse(mx, my);
-		//System.out.println("draw " + this);
 		
 		GL11.glDisable(GL11.GL_ALPHA_TEST);
-		//GL11.glDepthFunc(GL11.GL_ALWAYS);
 		GL11.glEnable(GL11.GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-		//GL11.glDepthMask(false);
+		
 		drawTraverse(mx, my, null, this, getTopWidget(mx, my));
 		
-		//GL11.glDepthMask(true);
-		//GL11.glDepthFunc(GL11.GL_LEQUAL);
 		GL11.glEnable(GL11.GL_ALPHA_TEST);
 	}
 	
@@ -157,7 +153,6 @@ public class LIGui extends WidgetContainer {
 		if(bid == 0) {
 			Widget node = getTopWidget(mx, my);
 			if(node != null) {
-				System.out.println(node);
 				gainFocus(node);
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 				return true;
@@ -181,17 +176,13 @@ public class LIGui extends WidgetContainer {
 	 * Gain a widget's focus with force.
 	 */
 	public void gainFocus(Widget node) {
-		System.out.println("GainFocus0 " + node);
 		if(node == focus) {
-			System.out.println("GainFocus1 " + node);
 			return;
 		}
 		if(focus != null) {
-			System.out.println("GainFocus2 " + node);
 			removeFocus();
 		}
 		focus = node;
-		System.out.println("GainFocus " + node + "/" + node.getName());
 		focus.postEvent(new GainFocusEvent());
 	}
 	
@@ -365,7 +356,6 @@ public class LIGui extends WidgetContainer {
 			if(cur.dirty) {
 				cur.postEvent(new RefreshEvent());
 				this.updateWidget(cur);
-				//System.out.println("Ref " + cur);
 			}
 		}
 		
@@ -398,7 +388,6 @@ public class LIGui extends WidgetContainer {
 				
 				GL11.glColor4d(1, 1, 1, 1); //Force restore color for any widget
 				cur.postEvent(new FrameEvent((mx - cur.x) / cur.scale, (my - cur.y) / cur.scale, cur == top));
-				//System.out.println("drawing " + cur);
 				GL11.glPopMatrix();
 			}
 		} catch(Exception e) {

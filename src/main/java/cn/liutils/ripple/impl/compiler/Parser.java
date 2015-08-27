@@ -141,7 +141,7 @@ public class Parser {
         obj.func = f;
         obj.funcArgNum = nargs;
         
-        System.out.println("Parsed function " + functionPath.path);
+        // System.out.println("Parsed function " + functionPath.path);
         this.parsedObject.add(obj);
     }
     
@@ -156,7 +156,7 @@ public class Parser {
     		throw new RippleCompilerException("Invalid value when parsing value: " + currentToken, this);
     	this.readToken();
     	
-    	System.out.println("Parsed value " + valuePath.path);
+    	// System.out.println("Parsed value " + valuePath.path);
     	this.parsedObject.add(obj);
     }
     

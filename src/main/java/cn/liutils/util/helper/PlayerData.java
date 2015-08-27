@@ -235,7 +235,9 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	
 	@RegNetworkCall(side = Side.SERVER, thisStorage = StorageOption.Option.INSTANCE)
 	protected void query(@Data String pname) {
-		synced(player, pname, getPart(pname).toNBT());
+		DataPart part = getPart(pname);
+		if(part != null) // FIX for client-only DataParts.
+			synced(player, pname, getPart(pname).toNBT());
 	}
 	
 	@RegNetworkCall(side = Side.CLIENT, thisStorage = StorageOption.Option.INSTANCE)
