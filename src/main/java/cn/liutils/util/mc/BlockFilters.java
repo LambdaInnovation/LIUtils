@@ -6,9 +6,6 @@ import net.minecraft.world.World;
 
 public class BlockFilters {
 	
-	/**
-	 * This filter filters NO blocks, so it collides with water or grass blocks.
-	 */
 	public static final IBlockFilter filNothing = new IBlockFilter() {
 
 		@Override
@@ -25,6 +22,15 @@ public class BlockFilters {
 			Block b = world.getBlock(x, y, z);
 			return b.getCollisionBoundingBoxFromPool(world, x, y, z) != null && 
 					b.canCollideCheck(world.getBlockMetadata(x, y , z), false);
+		}
+		
+	},
+	
+	filEverything = new IBlockFilter() {
+		
+		@Override
+		public boolean accepts(World world, int x, int y, int z, Block block) {
+			return false;
 		}
 		
 	};
