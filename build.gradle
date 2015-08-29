@@ -23,6 +23,10 @@ configFile.withReader {
 	project.ext.config = new ConfigSlurper().parse prop
 }
 
+configurations {
+	deployerJars
+}
+
 apply plugin: 'forge'
 
 version				= config.mod_ver
@@ -38,11 +42,14 @@ minecraft {
 }
 
 repositories {
+	mavenCentral()
 	mavenLocal()
 }
 
 dependencies {
 	compile "cn.annoreg:AnnotationRegistry:${config.annoreg_ver}:dev"
+
+	deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
 
 processResources
@@ -64,6 +71,18 @@ tasks.withType(JavaCompile) {
 task deobfJar(type: Jar, dependsOn: 'jar') {
 	classifier 'dev'
 	from sourceSets.main.output
+}
+
+task uploadJars(type: Upload, dependsOn: 'install') {
+	configuration = configurations.archives
+	repositories {
+		mavenDeployer {
+			configuration = configurations.deployerJars
+			repository(url: config.upload_url) {
+				authentication(userName: config.upload_user, password: config.upload_pass)
+			}
+		}
+	}
 }
 
 artifacts {
