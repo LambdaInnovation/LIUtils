@@ -70,3 +70,5 @@ artifacts {
 	archives deobfJar
 }
 
+install.dependsOn build
+
