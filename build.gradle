@@ -1,117 +1,93 @@
-//This build script can upload built jars to a maven repo.
-//
-//Usage:
-//  Use task 'uploadModToOss'. It will build, generate jars and publish them.
-//  gradle params:
-//    -PnewMavenRepo=1
-//      Create a new maven repo.
-//    -PpublishVersion=<string>
-//      Use the given string as the project version.
-//    -PossKeyId=<string>
-//      The AccessKey ID in authentication to OSS Client.
-//    -PossKeySecret=<string>
-//      The AccessKey Secret in authentication to OSS Client.
-//    -PossEndpoint=<string>
-//      The Endpoint of Aliyun OSS to upload.
-
 buildscript {
-    repositories {
-        mavenCentral()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
-        maven {
-            name = "sonatype"
-            url = "https://oss.sonatype.org/content/repositories/snapshots/"
-        }
-        maven {
-            name = "lidev"
-            url = "http://maven.li-dev.cn/"
-        }
+	repositories {
+		mavenCentral()
 		maven {
-            name = "lidev"
-            url = "http://maven.li-dev.cn/"
-        }
+			name = "forge"
+			url = "http://files.minecraftforge.net/maven"
+		}
 		maven {
-            name = "lidev-dev"
-            url = "http://maven.li-dev.cn/dev/"
-        }
-    }
-    dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
-		classpath 'cn.lidev:LIteBuilder:1.0.4'
-//		classpath 'me.tatarka:gradle-retrolambda:3.2.2'
-    }
+			name = "sonatype"
+			url = "https://oss.sonatype.org/content/repositories/snapshots/"
+		}
+	}
+	dependencies {
+		classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
+	}
 }
 
-apply plugin: 'litebuilder'
-//apply plugin: 'me.tatarka.retrolambda'
+ext.configFile = file "build.properties"
 
-litebuilder {
-    name = "LIUtils"
-    group = "cn.liutils"
-    
-    //The bucket name of OSS to upload.
-    ossBucket = "libuild"
-    //The folder name of OSS to upload.
-    //You can also put / into the string to upload to a child folder
-    uploadDir = "dev"
+configFile.withReader {
+	def prop = new Properties()
+	prop.load(it)
+	project.ext.config = new ConfigSlurper().parse prop
+}
 
-    forgeVersion = "1.7.10-10.13.4.1448-1.7.10"
-	
-	sourceCompatibility = 1.8
-	targetCompatibility = 1.8
+configurations {
+	deployerJars
+}
 
-    jarClasses {
-        exclude 'cn/annoreg/**/*'
-    }
+apply plugin: 'forge'
 
-    pom {
-        groupId = project.group
-        version = project.version
-        artifactId = project.archivesBaseName
-        project {
-            name project.archivesBaseName
-            packaging 'jar'
-            description 'A minecraftforge based API mod providing many aspects of utils and templates for modder.'
-            url 'https://github.com/LambdaInnovation/LIUtils'
+version				= config.mod_ver
+group				= config.mod_group
+archivesBaseName	= config.mod_name
 
-            issueManagement {
-                system 'github'
-                url 'https://github.com/LambdaInnovation/LIUtils/issues'
-            }
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
-            licenses {
-                license {
-                    name 'GNU General Public License.'
-                    url 'http://www.gnu.org/licenses/gpl.html'
-                    distribution 'repo'
-                }
-            }
-
-            developers {
-                developer {
-                    id 'LambdaInnovation'
-                    name 'LambdaInnovation'
-                    roles { role 'developer' }
-                }
-            }
-        }
-    }
+minecraft {
+	version = "${config.mc_ver}-${config.forge_ver}"
+	runDir = "eclipse"
 }
 
 repositories {
-	maven {
-        name = "lidev"
-        url = "http://maven.li-dev.cn/"
-    }
-	maven {
-        name = "lidev-dev"
-        url = "http://maven.li-dev.cn/dev/"
-    }
+	mavenCentral()
+	mavenLocal()
 }
 
 dependencies {
-	compile 'cn.annoreg:AnnotationRegistry:[1.0a-0001,1.0a-9999):dev'
+	compile "cn.annoreg:AnnotationRegistry:${config.annoreg_ver}:dev"
+
+	deployerJars "org.apache.maven.wagon:wagon-ftp:2.2"
 }
+
+processResources
+{
+	from(sourceSets.main.resources.srcDirs) {
+		include 'mcmod.info'
+		expand 'version':project.version, 'mcversion':project.minecraft.version
+	}
+
+	from(sourceSets.main.resources.srcDirs) {
+		exclude 'mcmod.info'
+	}
+}
+
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+	classifier 'dev'
+	from sourceSets.main.output
+}
+
+task uploadJars(type: Upload, dependsOn: 'install') {
+	configuration = configurations.archives
+	repositories {
+		mavenDeployer {
+			configuration = configurations.deployerJars
+			repository(url: config.upload_url) {
+				authentication(userName: config.upload_user, password: config.upload_pass)
+			}
+		}
+	}
+}
+
+artifacts {
+	archives deobfJar
+}
+
+install.dependsOn build
+
