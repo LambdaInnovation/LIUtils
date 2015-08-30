@@ -14,12 +14,8 @@ package cn.liutils.api.gui;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 import org.lwjgl.opengl.GL11;
 
@@ -33,6 +29,10 @@ import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
 import cpw.mods.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 /**
  * @author WeathFolD
@@ -48,7 +48,7 @@ public class AuxGuiHandler {
 	private AuxGuiHandler() {}
 	
 	private static boolean iterating;
-	private static List<AuxGui> auxGuiList = new ArrayList<AuxGui>();
+	private static List<AuxGui> auxGuiList = new LinkedList<AuxGui>();
 	private static List<AuxGui> toAddList = new ArrayList();
 	
 	public static void register(AuxGui gui) {
@@ -86,19 +86,11 @@ public class AuxGuiHandler {
 			startIterating();
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
-				if(gui.isDisposed()) {
-					
-					gui.onDisposed();
-					iter.remove();
-					gui.lastFrameActive = false;
-					
-				} else {
-					
+				if(!gui.isDisposed()) {
 					if(!gui.lastFrameActive)
 						gui.lastActivateTime = GameTimer.getTime();
 					gui.draw(event.resolution);
 					gui.lastFrameActive = true;
-					
 				}
 			}
 			endIterating();
@@ -121,7 +113,12 @@ public class AuxGuiHandler {
 			startIterating();
 			while(iter.hasNext()) {
 				AuxGui gui = iter.next();
-				if(!gui.isDisposed() && gui.requireTicking) {
+				
+				if(gui.isDisposed()) {
+					gui.onDisposed();
+					gui.lastFrameActive = false;
+					iter.remove();
+				} else if(gui.requireTicking) {
 					if(!gui.lastFrameActive)
 						gui.lastActivateTime = GameTimer.getTime();
 					gui.tick();
@@ -147,13 +144,17 @@ public class AuxGuiHandler {
 	}
 	
 	public static boolean hasForegroundGui() {
+		boolean result = false;
+		
 		startIterating();
 		for(AuxGui ag : auxGuiList) {
-			if(!ag.isDisposed() && ag.isForeground())
-				return true;
+			if(!ag.isDisposed() && ag.isForeground()) {
+				result = true;
+				break;
+			}
 		}
 		endIterating();
-		return false;
+		return result;
 	}
 	
 }

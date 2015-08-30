@@ -267,7 +267,7 @@ public class TextBox extends Component {
 				GL11.glPopMatrix();
 				
 				if(allowEdit && w.isFocused() && GameTimer.getAbsTime() % 1000 < 500) {
-					double len = Font.font.strLen(content.substring(0, caretPos), size);
+					double len = Font.font.strLen(str.substring(0, caretPos), size);
 					Font.font.draw("|", len + offset[0], offset[1], size, color.asHexColor());
 				}
 			}

@@ -92,6 +92,9 @@ public class KeyManager {
 	 * @param handler 
 	 */
 	public void addKeyHandler(String name, String keyDesc, int defKeyID, boolean global, KeyHandler handler) {
+		if(nameMap.containsKey(name))
+			throw new RuntimeException("Duplicate key: " + name + " of object " + handler);
+		
 		Configuration conf = getConfig();
 		int keyID = defKeyID;
 		if(conf != null) {
@@ -119,11 +122,12 @@ public class KeyManager {
 	}
 	
 	/**
-	 * Removes a key handler from map.
+	 * Removes a key handler from map, if exists.
 	 */
 	public void removeKeyHandler(String name) {
 		KeyBinding kb = nameMap.get(name);
-		kb.dead = true;
+		if(kb != null)
+			kb.dead = true;
 	}
 	
 	private void tick() {
