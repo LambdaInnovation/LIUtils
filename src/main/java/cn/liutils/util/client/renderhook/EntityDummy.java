@@ -17,6 +17,8 @@ import cn.annoreg.mc.RegEntity;
 import cn.liutils.util.client.ViewOptimize.IAssociatePlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -33,16 +35,16 @@ public class EntityDummy extends Entity implements IAssociatePlayer {
 	@RegEntity.Render
 	public static RenderDummy renderer;
 	
-	EntityPlayer player;
+	EntityClientPlayerMP player;
 	DummyRenderData data;
 	
 	boolean set;
-	float lastRotationYaw;
+	float lastRotationYaw, lastRotationYawHead, rotationYawHead;
 	float lastRotationPitch;
 	
-	public EntityDummy(EntityPlayer _player) {
-		super(_player.worldObj);
-		player = _player;
+	public EntityDummy() {
+		super(Minecraft.getMinecraft().thePlayer.worldObj);
+		player = Minecraft.getMinecraft().thePlayer;
 		data = DummyRenderData.get(player);
 		ignoreFrustumCheck = true;
 	}
@@ -55,17 +57,21 @@ public class EntityDummy extends Entity implements IAssociatePlayer {
 	public void onUpdate() {
 		if(!set) {
 			set = true;
-			lastRotationYaw = player.rotationYawHead;
+			lastRotationYaw = player.renderYawOffset;
+			lastRotationYawHead = player.rotationYawHead;
 			lastRotationPitch = player.rotationPitch;
 		} else {
 			lastRotationYaw = rotationYaw;
+			lastRotationYawHead = rotationYawHead;
 			lastRotationPitch = rotationPitch;
 		}
 		
 		posX = player.posX;
 		posY = player.posY;
 		posZ = player.posZ;
-		rotationYaw = player.rotationYawHead;
+		
+		rotationYaw = player.renderYawOffset;
+		rotationYawHead = player.rotationYawHead;
 		rotationPitch = player.rotationPitch;
 	}
 	

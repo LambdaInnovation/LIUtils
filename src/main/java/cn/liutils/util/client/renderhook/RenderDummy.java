@@ -34,11 +34,22 @@ public class RenderDummy extends Render {
 		glPushMatrix();
 		glTranslated(x, y, z);
 		
-		float yaw = MathUtils.lerpf(entity.lastRotationYaw, entity.rotationYaw, b);
+		boolean fp = ViewOptimize.isFirstPerson(entity);
+		
+		float yy, ly;
+		if(fp) {
+			yy = entity.rotationYawHead;
+			ly = entity.lastRotationYawHead;
+		} else {
+			yy = entity.rotationYaw;
+			ly = entity.lastRotationYaw;
+		}
+		
+		float yaw = MathUtils.lerpf(ly, yy, b);
 		glRotated(180 - yaw, 0, 1, 0);
 		
 		// Render hand
-		boolean fp = ViewOptimize.isFirstPerson(entity);
+		
 		if(fp) {
 			glRotated(-entity.rotationPitch, 1, 0, 0);
 		} else {

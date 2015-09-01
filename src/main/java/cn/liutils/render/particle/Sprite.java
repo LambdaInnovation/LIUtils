@@ -94,9 +94,9 @@ public final class Sprite {
 		if(!hasLight)
 			t.setBrightness(15728880);
 		t.addVertexWithUV(-hw, hh, 0, 0, 0);
-		t.addVertexWithUV(-hw, -hh, 0, 1, 0);
+		t.addVertexWithUV(-hw, -hh, 0, 0, 1);
 		t.addVertexWithUV(hw, -hh, 0, 1, 1);
-		t.addVertexWithUV(hw, hh, 0, 0, 1);
+		t.addVertexWithUV(hw, hh, 0, 1, 0);
 		t.draw();
 		
 		GL11.glEnable(GL11.GL_CULL_FACE);

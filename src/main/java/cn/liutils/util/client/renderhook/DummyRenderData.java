@@ -22,6 +22,7 @@ import cn.liutils.util.helper.DataPart;
 import cn.liutils.util.helper.PlayerData;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.entity.EntityClientPlayerMP;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
 
@@ -43,7 +44,7 @@ public class DummyRenderData extends DataPart {
 	@Override
 	public void tick() {
 		if(entity != null) {
-			entity.player = getPlayer();
+			entity.player = (EntityClientPlayerMP) getPlayer();
 		}
 		
 		Iterator<PlayerRenderHook> iter = renderers.iterator();
@@ -66,7 +67,7 @@ public class DummyRenderData extends DataPart {
 		
 		if(entity == null) {
 			player.worldObj.spawnEntityInWorld(
-				entity = new EntityDummy(player));
+				entity = new EntityDummy());
 		}
 		
 		renderers.add(hook);
