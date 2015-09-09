@@ -20,6 +20,7 @@ import org.apache.logging.log4j.Logger;
 import cn.annoreg.core.RegistrationManager;
 import cn.annoreg.core.RegistrationMod;
 import cn.annoreg.mc.RegMessageHandler;
+import cn.liutils.check.ResourceCheck;
 import cn.liutils.core.event.eventhandler.LIFMLGameEventDispatcher;
 import cn.liutils.debug.CmdMineStatistics;
 import cpw.mods.fml.common.FMLLog;
@@ -73,6 +74,7 @@ public class LIUtils {
 		log.info("Copyright (c) Lambda Innovation, 2013-2015");
 		log.info("http://www.li-dev.cn/");
 		
+		ResourceCheck.init();
 		LIFMLGameEventDispatcher.init();
 		
 		RegistrationManager.INSTANCE.registerAll(this, "PreInit");
