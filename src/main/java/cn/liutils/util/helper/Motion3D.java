@@ -197,9 +197,9 @@ public class Motion3D {
 	 */
 	public void applyToEntity(Entity e) {
 		e.setPosition(this.px, this.py, this.pz);
-		e.motionX = this.vx;
-		e.motionY = this.vy;
-		e.motionZ = this.vz;
+		e.motionX = vx;
+		e.motionY = vy;
+		e.motionZ = vz;
 		e.prevRotationYaw = e.rotationYaw = getRotationYaw();
         e.prevRotationPitch = e.rotationPitch = getRotationPitch();
 	}

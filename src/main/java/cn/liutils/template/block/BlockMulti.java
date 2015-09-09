@@ -175,16 +175,6 @@ public abstract class BlockMulti extends BlockContainer {
 	@SideOnly(Side.CLIENT)
 	public abstract double[] getRotCenter();
 	
-	@SideOnly(Side.CLIENT)
-	public double[] getOffsetRotated(ForgeDirection dir) {
-		double arr[] = getRotCenter();
-		switch(dir) {
-		
-		default:
-			throw new RuntimeException("Invalid rotate direction");
-		}
-	}
-	
 	/**
 	 * Build a multiblock at the given coordinate.
 	 */

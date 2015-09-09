@@ -222,7 +222,6 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 		public void saveNBTDataCustom(NBTTagCompound tag) {
 			for(DataPart p : constructed.values()) {
 				if(p.isSynced()) {
-					p.preSaving();
 					NBTTagCompound ret = p.toNBT();
 					tag.setTag(getName(p), ret);
 				} else {

@@ -249,7 +249,6 @@ public abstract class ElementEditor extends Widget {
 			
 			public boolean setValue() {
 				try {
-					System.out.println("SetValue " + this.getEditInstance().getClass());
 					double val = Double.valueOf(((TextBox)getComponent("TextBox")).content) / 255.0;
 					targetField.set(getEditInstance(), val);
 					return true;
@@ -261,7 +260,6 @@ public abstract class ElementEditor extends Widget {
 			
 			@Override
 			public void updateValue() {
-				System.out.println("UpdateValue");
 				TextBox.get(this).content = String.valueOf( (int) (((double)TypeHelper.get(targetField, getEditInstance())) * 255) );
 			}
 		}

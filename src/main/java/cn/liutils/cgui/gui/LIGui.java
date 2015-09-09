@@ -157,7 +157,6 @@ public class LIGui extends WidgetContainer {
 				node.postEvent(new MouseDownEvent((mx - node.x) / node.scale, (my - node.y) / node.scale));
 				return true;
 			} else {
-				System.out.println("WTF THis is null?!");
 				removeFocus();
 			}
 		}

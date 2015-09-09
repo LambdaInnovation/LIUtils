@@ -14,6 +14,7 @@ package cn.liutils.template.block;
 
 /**
  * Mark on any TileEntity that supports an BlockMulti. Provide the InfoBlockMulti and handle the saving and loading (via loading from NBT)
+ * You can visit TileMulti for impl reference.
  * @author WeathFolD
  */
 public interface IMultiTile {

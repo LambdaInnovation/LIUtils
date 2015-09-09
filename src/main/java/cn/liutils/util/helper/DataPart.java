@@ -69,11 +69,6 @@ public abstract class DataPart {
 	 */
 	public void tick() {}
 	
-	/**
-	 * Invoked before the data is saved. Can do validation and cleanup.
-	 */
-	public void preSaving() {}
-	
 	public EntityPlayer getPlayer() {
 		return data.player;
 	}
@@ -100,25 +95,29 @@ public abstract class DataPart {
 	
 	protected void sync() {
 		if(isRemote()) {
-			syncFromClient(toNBT());
+			syncFromClient(toNBTSync());
 		} else {
-			syncFromServer(getPlayer(), toNBT());
+			syncFromServer(getPlayer(), toNBTSync());
 		}
 	}
 	
 	@RegNetworkCall(side = Side.SERVER)
 	private void syncFromClient(@Data NBTTagCompound tag) {
-		fromNBT(tag);
+		fromNBTSync(tag);
 	}
 	
 	@RegNetworkCall(side = Side.CLIENT)
 	private void syncFromServer(@Target EntityPlayer player, @Data NBTTagCompound tag) {
-		fromNBT(tag);
+		fromNBTSync(tag);
 	}
 	
 	public abstract void fromNBT(NBTTagCompound tag);
 	
 	public abstract NBTTagCompound toNBT();
+	
+	public void fromNBTSync(NBTTagCompound tag) { fromNBT(tag); }
+	
+	public NBTTagCompound toNBTSync() { return toNBT(); }
 	
 	protected void checkSide(boolean isRemote) {
 		if(isRemote ^ isRemote()) {
