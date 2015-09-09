@@ -34,14 +34,7 @@ public class Font {
     private static FontRenderer theFont;
     
     FontRenderer mcFont() {
-    	if(true)
-    		return Minecraft.getMinecraft().fontRenderer;
-    	
-    	if(theFont == null) {
-    		Minecraft mc = Minecraft.getMinecraft();
-    		theFont = new FontRenderer(mc.gameSettings, new ResourceLocation("textures/font/ascii.png"), mc.renderEngine, true);
-    	}
-    	return theFont;
+    	return Minecraft.getMinecraft().fontRenderer;
     }
     
     public enum Align { LEFT, CENTER, RIGHT };
