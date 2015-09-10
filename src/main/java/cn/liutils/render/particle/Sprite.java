@@ -12,14 +12,16 @@
  */
 package cn.liutils.render.particle;
 
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.util.ResourceLocation;
-
 import static org.lwjgl.opengl.GL11.*;
 
+import org.lwjgl.opengl.GL20;
+
 import cn.liutils.util.client.RenderUtils;
+import cn.liutils.util.client.shader.ShaderSimple;
 import cn.liutils.util.helper.Color;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.World;
 
 /**
  * Represents a drawable sprite in origin. Always face (0, 0, -1).
@@ -70,7 +72,7 @@ public final class Sprite {
 	
 	public void draw() {
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE);
 		
 		if(texture != null) {
 			RenderUtils.loadTexture(texture);
@@ -84,9 +86,6 @@ public final class Sprite {
 		
 		color.bind();
 		Tessellator t = Tessellator.instance;
-		if(!hasLight) {
-			
-		}
 		float hw = width / 2, hh = height / 2;
 		
 		if(hasLight) {
@@ -99,20 +98,18 @@ public final class Sprite {
 			t.draw();
 		} else {
 			// Use legacy routine to avoid ShaderMod to ruin the render
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
-			glDisable(GL_LIGHTING);
-			
+			ShaderSimple.instance().useProgram();
 			glBegin(GL_QUADS);
 			glTexCoord2f(0, 0); glVertex3f(-hw, hh, 0);
 			glTexCoord2f(0, 1); glVertex3f(-hw, -hh, 0);
 			glTexCoord2f(1, 1); glVertex3f(hw, -hh, 0);
 			glTexCoord2f(1, 0); glVertex3f(hw, hh, 0);
 			glEnd();
+			GL20.glUseProgram(0);
 		}
 		
 		glEnable(GL_CULL_FACE);
 		glEnable(GL_TEXTURE_2D);
-		glEnable(GL_LIGHTING);
 	}
 	
 }

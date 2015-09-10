@@ -160,7 +160,7 @@ public class RecipeRegistry {
 				for(int i = 0; i < input.length; ++i) {
 					input[i] = getRegistryObject(parsed[i]);
 				}
-				System.out.println(DebugUtils.formatArray(input));
+				//System.out.println(DebugUtils.formatArray(input));
 				
 				registry.register(type, getOutput(parser.getOutput()), input,
 					parser.getWidth(), parser.getHeight(), parser.getExperience());

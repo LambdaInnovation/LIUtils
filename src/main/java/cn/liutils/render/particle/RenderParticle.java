@@ -27,6 +27,10 @@ import net.minecraft.util.Vec3;
 public class RenderParticle extends Render {
 	
 	static Sprite sprite = new Sprite();
+	
+	public RenderParticle() {
+		this.shadowOpaque = 0;
+	}
 
 	@Override
 	public void doRender(Entity ent, double x, double y, double z, float a, float b) {
@@ -36,7 +40,7 @@ public class RenderParticle extends Render {
 		
 		ish.updateSprite(sprite);
 		
-		GL11.glDisable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GREATER, 0.05f);
 		GL11.glPushMatrix();
 		
 		if(ish.needViewOptimize()) {
@@ -49,7 +53,7 @@ public class RenderParticle extends Render {
 		sprite.draw();
 		
 		GL11.glPopMatrix();
-		GL11.glEnable(GL11.GL_ALPHA_TEST);
+		GL11.glAlphaFunc(GL11.GL_GEQUAL, 0.1f);
 	}
 
 	@Override

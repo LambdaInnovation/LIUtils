@@ -21,9 +21,9 @@ public class MeshUtils {
 	/**
 	 * Create a billboard mesh that maps to the whole texture in XOY plane. If mesh == null, create a new one.
 	 */
-	public static Mesh createBillboard(Mesh mesh, double x0, double y0, double x1, double y1) {
+	public static <T extends Mesh> T createBillboard(T mesh, double x0, double y0, double x1, double y1) {
 		if(mesh == null)
-			mesh = new Mesh();
+			mesh = (T) new Mesh();
 		mesh.setVertices(new double[][] {
 				{ x0, y0, 0 },
 				{ x1, y0, 0 },

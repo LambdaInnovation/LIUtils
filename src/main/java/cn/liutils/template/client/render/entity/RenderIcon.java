@@ -39,7 +39,7 @@ public class RenderIcon extends Render {
 	protected boolean hasLight = false;
 	public final  Color color = Color.WHITE();
 	
-	protected float minTolerateAlpha = 0.1F; //The minium filter value of alpha test. Used in transparent texture adjustments.
+	protected float minTolerateAlpha = 0.0F; //The minium filter value of alpha test. Used in transparent texture adjustments.
 
 	public RenderIcon(ResourceLocation ic) {
 		icon = ic;
@@ -81,7 +81,6 @@ public class RenderIcon extends Render {
 				
 			} GL11.glPopMatrix();
 			GL11.glDisable(GL12.GL_RESCALE_NORMAL);
-			GL11.glDisable(GL11.GL_BLEND);
 			GL11.glEnable(GL11.GL_LIGHTING);
 			GL11.glEnable(GL11.GL_CULL_FACE);
 	}
