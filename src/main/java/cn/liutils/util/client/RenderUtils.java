@@ -65,6 +65,11 @@ public class RenderUtils {
 		t.addVertexWithUV(vertex.xCoord, vertex.yCoord, vertex.zCoord, u, v);
 	}
 	
+	public static void addVertexLegacy(Vec3 vertex, double u, double v) {
+		GL11.glTexCoord2d(u, v);
+		GL11.glVertex3d(vertex.xCoord, vertex.yCoord, vertex.zCoord);
+	}
+	
 	public static void addVertex(Vec3 vertex) {
 		t.addVertex(vertex.xCoord, vertex.yCoord, vertex.zCoord);
 	}

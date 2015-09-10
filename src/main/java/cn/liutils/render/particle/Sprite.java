@@ -16,13 +16,14 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.util.ResourceLocation;
 
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
+import cn.academy.vanilla.electromaster.client.effect.ArcFactory.Arc;
 import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.Color;
 
 /**
- * Represents an drawable sprite in origin. Always face (0, 0, -1).
+ * Represents a drawable sprite in origin. Always face (0, 0, -1).
  * @author WeAthFolD
  */
 public final class Sprite {
@@ -69,39 +70,50 @@ public final class Sprite {
 	}
 	
 	public void draw() {
-		GL11.glEnable(GL11.GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		
 		if(texture != null) {
 			RenderUtils.loadTexture(texture);
 		} else {
-			GL11.glDisable(GL11.GL_TEXTURE_2D);
+			glDisable(GL_TEXTURE_2D);
 		}
 		
 		if(!cullFace) {
-			GL11.glDisable(GL11.GL_CULL_FACE);
+			glDisable(GL_CULL_FACE);
 		}
 		
 		color.bind();
 		Tessellator t = Tessellator.instance;
 		if(!hasLight) {
-			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.defaultTexUnit, 240f, 240f);
-			GL11.glDisable(GL11.GL_LIGHTING);
+			
 		}
 		float hw = width / 2, hh = height / 2;
-		t.startDrawingQuads();
-		//t.setNormal(0, 0, -1);
-		if(!hasLight)
-			t.setBrightness(15728880);
-		t.addVertexWithUV(-hw, hh, 0, 0, 0);
-		t.addVertexWithUV(-hw, -hh, 0, 0, 1);
-		t.addVertexWithUV(hw, -hh, 0, 1, 1);
-		t.addVertexWithUV(hw, hh, 0, 1, 0);
-		t.draw();
 		
-		GL11.glEnable(GL11.GL_CULL_FACE);
-		GL11.glEnable(GL11.GL_TEXTURE_2D);
-		GL11.glEnable(GL11.GL_LIGHTING);
+		if(hasLight) {
+			t.startDrawingQuads();
+			t.setNormal(0, 0, -1);
+			t.addVertexWithUV(-hw, hh, 0, 0, 0);
+			t.addVertexWithUV(-hw, -hh, 0, 0, 1);
+			t.addVertexWithUV(hw, -hh, 0, 1, 1);
+			t.addVertexWithUV(hw, hh, 0, 1, 0);
+			t.draw();
+		} else {
+			// Use legacy routine to avoid ShaderMod to ruin the render
+			OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, 240f, 240f);
+			glDisable(GL_LIGHTING);
+			
+			glBegin(GL_QUADS);
+			glTexCoord2f(0, 0); glVertex3f(-hw, hh, 0);
+			glTexCoord2f(0, 1); glVertex3f(-hw, -hh, 0);
+			glTexCoord2f(1, 1); glVertex3f(hw, -hh, 0);
+			glTexCoord2f(1, 0); glVertex3f(hw, hh, 0);
+			glEnd();
+		}
+		
+		glEnable(GL_CULL_FACE);
+		glEnable(GL_TEXTURE_2D);
+		glEnable(GL_LIGHTING);
 	}
 	
 }
