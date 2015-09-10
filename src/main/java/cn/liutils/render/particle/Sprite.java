@@ -18,7 +18,6 @@ import net.minecraft.util.ResourceLocation;
 
 import static org.lwjgl.opengl.GL11.*;
 
-import cn.academy.vanilla.electromaster.client.effect.ArcFactory.Arc;
 import cn.liutils.util.client.RenderUtils;
 import cn.liutils.util.helper.Color;
 
