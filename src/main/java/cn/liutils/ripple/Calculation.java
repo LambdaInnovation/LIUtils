@@ -57,13 +57,17 @@ public final class Calculation {
                 value instanceof Double || value instanceof Boolean || value instanceof Float;
     }
     
-    public static IFunction getFunctionOverload(ScriptProgram program, String path, int nargs) {
-        ScriptFunction sf = program.root.getFunction(new Path(path));
+    public static IFunction getFunctionOverload(ScriptProgram program, String path, String funcPath, int nargs) {
+    	ScriptFunction sf = program.root.getFunction(new Path(new Path(funcPath).getParent(), path));
         if (sf != null) {
             IFunction f = sf.cacheOverload(nargs);
-            if (f != null) {
-                return f;
-            }
+            if (f != null) return f;
+        }
+        
+        sf = program.root.getFunction(new Path(path));
+        if (sf != null) {
+            IFunction f = sf.cacheOverload(nargs);
+            if (f != null) return f;
         }
         throw new RippleRuntimeException("Function '" + path + "' not found");
     }

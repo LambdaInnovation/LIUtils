@@ -58,6 +58,7 @@ public final class CodeGenerator {
     
     private final ScriptProgram program;
     private final Parser parser;
+    private final Path path;
     
     private final HashMap<String, Integer> paramMap = new HashMap();
     
@@ -80,6 +81,7 @@ public final class CodeGenerator {
     CodeGenerator(Parser parser, Path functionPath) {
         this.parser = parser;
         this.program = parser.program;
+        this.path = functionPath;
     }
 
     void addParameter(String name) {
@@ -472,12 +474,14 @@ public final class CodeGenerator {
                 mv.visitFieldInsn(Opcodes.GETFIELD, classType.getInternalName(), 
                         "program", Type.getDescriptor(ScriptProgram.class)); //arg1
                 mv.visitLdcInsn(func.path);//arg2
-                mv.visitLdcInsn(func.nargs);//arg3
+                mv.visitLdcInsn(path.path);//arg3
+                mv.visitLdcInsn(func.nargs);//arg4
                 mv.visitMethodInsn(Opcodes.INVOKESTATIC, 
                         Type.getInternalName(Calculation.class), 
                         "getFunctionOverload", 
                         Type.getMethodDescriptor(Type.getType(IFunction.class), 
                                 Type.getType(ScriptProgram.class),
+                                Type.getType(String.class),
                                 Type.getType(String.class),
                                 Type.INT_TYPE));
                 mv.visitFieldInsn(Opcodes.PUTFIELD, classType.getInternalName(),

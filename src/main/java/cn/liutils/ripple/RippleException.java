@@ -28,15 +28,23 @@ public class RippleException extends RuntimeException {
         /* Parser instance here */
         
         public RippleCompilerException(String message, Parser parser) {
-            super(message);
+            super(errstr(message, parser));
         }
         
         public RippleCompilerException(String message, Parser parser, Throwable cause) {
-            super(message, cause);
+            super(errstr(message, parser), cause);
         }
 
         public RippleCompilerException(Throwable cause, Parser parser) {
-            super(cause);
+            super(errstr(parser), cause);
+        }
+        
+        private static String errstr(String msg, Parser parser) {
+        	return "at " + parser.getLineNumber() + ": " + msg;
+        }
+        
+        private static String errstr(Parser parser) {
+        	return "at " + parser.getLineNumber();
         }
     }
     

@@ -29,6 +29,9 @@ public class Parser {
     private PushbackReader reader;
     private Token currentToken;
     
+    // Used for debug
+    private int lineNumber = 0;
+    
     private ArrayList<ScriptObject> parsedObject = new ArrayList();
     private Path currentPath = new Path(null);
     
@@ -408,11 +411,14 @@ public class Parser {
             break;
         case '#':
             skipLine();
+            lineNumber++;
             readToken(); //read again
             return;
         default:
             if (Character.isWhitespace(c)) {
                 readToken(); //read again
+                if(c == '\n' || c == '\r')
+                	lineNumber++;
                 return;
             } else if (Character.isLetter(c) || c == '_') {
                 readIdentifier(c);
@@ -432,5 +438,9 @@ public class Parser {
             throw new RippleCompilerException(e, p);
         }
         return p.parsedObject;
+    }
+    
+    public int getLineNumber() {
+    	return lineNumber;
     }
 }
