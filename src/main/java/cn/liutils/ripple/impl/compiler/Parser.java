@@ -30,13 +30,15 @@ public class Parser {
     private Token currentToken;
     
     // Used for debug
+    private final String scriptName;
     private int lineNumber = 0;
     
     private ArrayList<ScriptObject> parsedObject = new ArrayList();
     private Path currentPath = new Path(null);
     
-    private Parser(ScriptProgram program, Reader input) {
+    private Parser(ScriptProgram program, Reader input, String scriptName) {
         this.program = program;
+        this.scriptName = scriptName;
         
         this.inputReader = input;
         this.lineNumberReader = new LineNumberReader(input);
@@ -411,7 +413,6 @@ public class Parser {
             break;
         case '#':
             skipLine();
-            lineNumber++;
             readToken(); //read again
             return;
         default:
@@ -430,8 +431,8 @@ public class Parser {
     }
     
     //api
-    public static List<ScriptObject> parse(ScriptProgram program, Reader input) {
-        Parser p = new Parser(program, input);
+    public static List<ScriptObject> parse(ScriptProgram program, Reader input, String scriptName) {
+        Parser p = new Parser(program, input, scriptName);
         try {
             p.parseProgram();
         } catch (IOException e) {
@@ -440,7 +441,12 @@ public class Parser {
         return p.parsedObject;
     }
     
+    //debug
     public int getLineNumber() {
     	return lineNumber;
+    }
+    
+    public String getScriptName() {
+    	return scriptName;
     }
 }

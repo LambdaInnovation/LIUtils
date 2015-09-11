@@ -40,11 +40,11 @@ public class RippleException extends RuntimeException {
         }
         
         private static String errstr(String msg, Parser parser) {
-        	return "at " + parser.getLineNumber() + ": " + msg;
+        	return errstr(parser) + ": " + msg;
         }
         
         private static String errstr(Parser parser) {
-        	return "at " + parser.getLineNumber();
+        	return "at " + parser.getScriptName() + ", line " + parser.getLineNumber();
         }
     }
     

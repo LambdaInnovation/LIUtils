@@ -28,7 +28,14 @@ public final class ScriptProgram {
     }
     
     public void loadScript(Reader input) {
-        List<ScriptObject> objects = Parser.parse(this, input);
+    	loadScript(input, "<stream>");
+    }
+    
+    /**
+     * Loads a script from the given reader. The fileName is just used for debug output.
+     */
+    public void loadScript(Reader input, String fileName) {
+        List<ScriptObject> objects = Parser.parse(this, input, fileName);
         for (ScriptObject object : objects) {
             if (object.value == null) {
                 this.mergeFunctionAt(new Path(object.path), object.func, object.funcArgNum);
@@ -39,11 +46,10 @@ public final class ScriptProgram {
     }
     
     /**
-     * Fast alias to load the script from a ResourceLocation.
+     * Load the script from a ResourceLocation.
      */
     public void loadScript(ResourceLocation location) {
-    	//LIUtils.log.info("loading script " + location + " ....");
-    	loadScript(new InputStreamReader(RegistryUtils.getResourceStream(location)));
+    	loadScript(new InputStreamReader(RegistryUtils.getResourceStream(location)), location.toString());
     }
     
     public void setNativeFunction(Path path, NativeFunction func) {
