@@ -26,6 +26,13 @@ Ripple现在在[AcademyCraft](https://github.com/LambdaInnovation/AcademyCraft)�
 ## 注释 (comment)
 通过`#`字符来开始一行注释。每行中，`#`字符之后的所有字符会被编译器忽略。
 
+例子：
+```
+ns {
+	niconiconi { 233 } # This is a comment that will be ignored!!
+}
+```
+
 ## 命名空间 (namespace)
 语法：
 ``` name { element-list } ```
@@ -78,8 +85,9 @@ test {
 语法：
 ```
 switch(name) {
-switchcase: expression;
-....
+	switchcase: expression;
+	switchcase: expression;
+	...
 }
 ```
 其中，__switchcase__是一个匹配标签。执行__switch__表达式时，会从上往下求值每一个标签。当匹配标签通过时，执行该匹配标签所对应的表达式。每个匹配语句之间用`;`分割。之后一个匹配语句无须书写`;`。
