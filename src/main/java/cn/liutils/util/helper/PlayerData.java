@@ -14,6 +14,28 @@ package cn.liutils.util.helper;
 
 import java.util.Map.Entry;
 
+import com.google.common.collect.BiMap;
+import com.google.common.collect.HashBiMap;
+
+import cn.annoreg.core.Registrant;
+import cn.annoreg.mc.RegEventHandler;
+import cn.annoreg.mc.SideHelper;
+import cn.annoreg.mc.network.RegNetworkCall;
+import cn.annoreg.mc.s11n.InstanceSerializer;
+import cn.annoreg.mc.s11n.RegSerializable;
+import cn.annoreg.mc.s11n.StorageOption;
+import cn.annoreg.mc.s11n.StorageOption.Data;
+import cn.annoreg.mc.s11n.StorageOption.Instance;
+import cn.annoreg.mc.s11n.StorageOption.RangedTarget;
+import cn.liutils.core.LIUtils;
+import cn.liutils.util.client.ClientUtils;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.Phase;
+import cpw.mods.fml.common.gameevent.TickEvent.PlayerTickEvent;
+import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,27 +46,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IExtendedEntityProperties;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import cn.annoreg.core.Registrant;
-import cn.annoreg.mc.RegEventHandler;
-import cn.annoreg.mc.SideHelper;
-import cn.annoreg.mc.network.RegNetworkCall;
-import cn.annoreg.mc.s11n.InstanceSerializer;
-import cn.annoreg.mc.s11n.RegSerializable;
-import cn.annoreg.mc.s11n.StorageOption;
-import cn.annoreg.mc.s11n.StorageOption.Data;
-import cn.annoreg.mc.s11n.StorageOption.Target;
-import cn.liutils.core.LIUtils;
-import cn.liutils.util.client.ClientUtils;
-
-import com.google.common.collect.BiMap;
-import com.google.common.collect.HashBiMap;
-
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.ClientTickEvent;
-import cpw.mods.fml.common.gameevent.TickEvent.Phase;
-import cpw.mods.fml.common.gameevent.TickEvent.ServerTickEvent;
-import cpw.mods.fml.relauncher.Side;
-import cpw.mods.fml.relauncher.SideOnly;
 
 /**
  * The environment provider and handler of DataPart. <br/>
@@ -152,34 +153,14 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	@Override
 	public void loadNBTData(NBTTagCompound tag) {
 		// HACKHACK
-		//System.out.println("LoadOnConstruct");
 		loadNBTDataCustom(tag.getCompoundTag("ForgeData"));
 	}
 	
 	@Override
 	public void saveNBTData(NBTTagCompound tag2) {
-		//System.out.println("SaveToDisk");
 		NBTTagCompound tag = tag2.getCompoundTag("ForgeData");
 		saveNBTDataCustom(tag);
 		tag2.setTag("ForgeData", tag);
-	}
-	
-	@RegNetworkCall(side = Side.SERVER, thisStorage = StorageOption.Option.INSTANCE)
-	protected void receivedSyncQuery() {
-		if(this != null) {
-			//System.out.println("ReceivedSyncQuery");
-			NBTTagCompound tag = new NBTTagCompound();
-			this.saveNBTDataCustom(tag);
-			this.receiveSync(tag);
-		}
-	}
-	
-	@RegNetworkCall(side = Side.CLIENT, thisStorage = StorageOption.Option.INSTANCE)
-	protected void receiveSync(@Data NBTTagCompound tagAll) {
-		if(this != null) {
-			//System.out.println("ReceivedSync");
-			this.loadNBTDataCustom(tagAll);
-		}
 	}
 	
 	public static class Client extends PlayerData {
@@ -236,11 +217,13 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	protected void query(@Data String pname) {
 		DataPart part = getPart(pname);
 		if(part != null) // FIX for client-only DataParts.
-			synced(player, pname, getPart(pname).toNBT());
+			synced(player, player, pname, getPart(pname).toNBT());
 	}
 	
 	@RegNetworkCall(side = Side.CLIENT, thisStorage = StorageOption.Option.INSTANCE)
-	protected void synced(@Target EntityPlayer player, @Data String pname, @Data NBTTagCompound tag) {
+	protected void synced(
+			@RangedTarget(range = 10) EntityPlayer _player, 
+			@Instance EntityPlayer player, @Data String pname, @Data NBTTagCompound tag) {
 		DataPart part = getPart(pname);
 		part.fromNBT(tag);
 		part.dirty = false;
@@ -250,25 +233,13 @@ public abstract class PlayerData implements IExtendedEntityProperties {
 	public static class Events {
 		
 		@SubscribeEvent
-		@SideOnly(Side.CLIENT)
-		public void onClientTick(ClientTickEvent event) {
-			if(event.phase == Phase.END && ClientUtils.isPlayerInGame()) {
-				EntityPlayer thePlayer = Minecraft.getMinecraft().thePlayer;
-				PlayerData data = PlayerData.get(thePlayer);
-				if(data != null)
-					data.tick();
-			}
-		}
-		
-		@SubscribeEvent
-		public void onServerTick(ServerTickEvent event) {
-			if(event.phase == Phase.END) {
-				for(Object p : MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
-					EntityPlayer player = (EntityPlayer) p;
-					PlayerData data = PlayerData.get(player);
-					if(data != null)
-						data.tick();
-				}
+		public void onPlayerTick(PlayerTickEvent event) {
+			if(event.phase == Phase.END)
+				return;
+			PlayerData data = PlayerData.get(event.player);
+			if(data != null) {
+				data.player = event.player;
+				data.tick();
 			}
 		}
 		

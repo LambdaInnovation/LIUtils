@@ -18,7 +18,7 @@ import cn.liutils.util.client.ViewOptimize.IAssociatePlayer;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityClientPlayerMP;
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
@@ -35,17 +35,17 @@ public class EntityDummy extends Entity implements IAssociatePlayer {
 	@RegEntity.Render
 	public static RenderDummy renderer;
 	
-	EntityClientPlayerMP player;
-	DummyRenderData data;
+	AbstractClientPlayer player;
+	final DummyRenderData data;
 	
 	boolean set;
 	float lastRotationYaw, lastRotationYawHead, rotationYawHead;
 	float lastRotationPitch;
 	
-	public EntityDummy() {
-		super(Minecraft.getMinecraft().thePlayer.worldObj);
-		player = Minecraft.getMinecraft().thePlayer;
-		data = DummyRenderData.get(player);
+	public EntityDummy(DummyRenderData _data) {
+		super(_data.getPlayer().worldObj);
+		data = _data;
+		player = (AbstractClientPlayer) _data.getPlayer();
 		ignoreFrustumCheck = true;
 	}
 
