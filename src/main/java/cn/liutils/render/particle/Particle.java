@@ -42,6 +42,10 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 	public boolean hasLight = false;
 	public double gravity = 0.0;
 	public boolean needRigidbody = true;
+	/**
+	 * When set to true this particle is rotated with rotationYaw and rotationPitch, else always faces the player.
+	 */
+	public boolean customRotation = false;
 
 	long creationTime;
 	
@@ -91,6 +95,7 @@ public final class Particle extends EntityAdvanced implements ISpriteEntity {
 		this.gravity = template.gravity;
 		this.needRigidbody = template.needRigidbody;
 		this.fadeInTime = template.fadeInTime;
+		this.customRotation = template.customRotation;
 		this.updated = false;
 	}
 	

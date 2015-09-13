@@ -48,8 +48,14 @@ public class RenderParticle extends Render {
 		}
 		
 		GL11.glTranslated(x, y, z);
-		GL11.glRotatef(180F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
-		GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		if(ish.customRotation) {
+			GL11.glRotatef(ish.rotationYaw, 0, 1, 0);
+			GL11.glRotatef(ish.rotationPitch, 0, 0, 1);
+		} else {
+			GL11.glRotatef(180F - this.renderManager.playerViewY, 0.0F, 1.0F, 0.0F);
+			GL11.glRotatef(-this.renderManager.playerViewX, 1.0F, 0.0F, 0.0F);
+		}
+		
 		sprite.draw();
 		
 		GL11.glPopMatrix();

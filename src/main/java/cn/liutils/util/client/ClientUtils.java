@@ -24,6 +24,11 @@ public class ClientUtils {
 		return player != null && Minecraft.getMinecraft().currentScreen == null && !AuxGuiHandler.hasForegroundGui();
 	}
 	
+	public static boolean isPlayerPlaying() {
+		Minecraft mc = Minecraft.getMinecraft();
+		return mc.thePlayer != null && !mc.isGamePaused();
+	}
+	
 	/**
 	 * Quick alias for playing static sound
 	 * @param src
