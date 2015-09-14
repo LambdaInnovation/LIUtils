@@ -14,6 +14,7 @@ package cn.liutils.render.particle;
 
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.util.client.RenderUtils;
 import net.minecraft.client.renderer.entity.Render;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.entity.Entity;
@@ -34,6 +35,9 @@ public class RenderParticle extends Render {
 
 	@Override
 	public void doRender(Entity ent, double x, double y, double z, float a, float b) {
+		if(RenderUtils.isInShadowPass())
+			return;
+		
 		Particle ish = (Particle) ent;
 		if(!ish.updated)
 			return;

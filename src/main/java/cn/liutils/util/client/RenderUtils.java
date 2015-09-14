@@ -14,11 +14,13 @@ package cn.liutils.util.client;
 
 import static cn.liutils.util.generic.VecUtils.vec;
 
+import java.lang.reflect.Field;
+
 import org.lwjgl.opengl.GL11;
 
+import cn.liutils.core.LIUtils;
 import cn.liutils.util.helper.GameTimer;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.particle.EntityFX;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
@@ -39,6 +41,7 @@ public class RenderUtils {
 	private static int textureState = -1;
 	
 	//-----------------Quick aliases-----------------------------
+	
 	/**
 	 * Stores the current texture state. stack depth: 1
 	 */
@@ -289,6 +292,45 @@ public class RenderUtils {
 			t.addVertexWithUV(16.0, 0.0, 0.0, icon.getMaxU(), icon.getMinV());
 			t.draw();
 		}
+	}
+	
+	//--- SMC Support
+	static final String _shadersClassName = "shadersmodcore.client.Shaders";
+	static boolean smcSupportInit = false;
+	static boolean smcPresent = false;
+	static Field fIsShadowPass, fisRenderingDfb, fIsRenderingSky;
+	
+	/**
+	 * Judge whether the current rendering context is in shadow pass.
+	 * @return If in vanilla Minecraft: always false; If ShaderMod is installed: as mentioned above.
+	 */
+	public static boolean isInShadowPass() {
+		if(!smcSupportInit) {
+			initSMCSupport();
+		}
+		
+		if(smcPresent) {
+			try {
+				return fIsShadowPass.getBoolean(null);
+			} catch(Exception e) {
+				LIUtils.log.error("Exception in isInShadowPass", e);
+			}
+		}
+		return false;
+	}
+	
+	private static void initSMCSupport() {
+		try {
+			Class shadersClass = Class.forName(_shadersClassName);
+			fIsShadowPass = shadersClass.getField("isShadowPass");
+			smcPresent = true;
+		} catch(Exception e) {
+			LIUtils.log.error("LIUtils SMC support isn't initialized.", e);
+			e.printStackTrace();
+			smcPresent = false;
+		}
+		
+		smcSupportInit = true;
 	}
 	
 }

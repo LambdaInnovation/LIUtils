@@ -12,25 +12,8 @@
  */
 package cn.liutils.util.client.shader;
 
-// WHY DO YOU SEPERATE VERSIONS IT'S NONSENSE LWJGL!
-import static org.lwjgl.opengl.GL11.GL_FALSE;
-import static org.lwjgl.opengl.GL20.GL_COMPILE_STATUS;
-import static org.lwjgl.opengl.GL20.GL_INFO_LOG_LENGTH;
-import static org.lwjgl.opengl.GL20.GL_LINK_STATUS;
-import static org.lwjgl.opengl.GL20.glAttachShader;
-import static org.lwjgl.opengl.GL20.glCompileShader;
-import static org.lwjgl.opengl.GL20.glCreateProgram;
-import static org.lwjgl.opengl.GL20.glCreateShader;
-import static org.lwjgl.opengl.GL20.glDeleteShader;
-import static org.lwjgl.opengl.GL20.glDetachShader;
-import static org.lwjgl.opengl.GL20.glGetProgramInfoLog;
-import static org.lwjgl.opengl.GL20.glGetProgrami;
-import static org.lwjgl.opengl.GL20.glGetShaderInfoLog;
-import static org.lwjgl.opengl.GL20.glGetShaderi;
-import static org.lwjgl.opengl.GL20.glLinkProgram;
-import static org.lwjgl.opengl.GL20.glShaderSource;
-import static org.lwjgl.opengl.GL20.glUseProgram;
-
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL20.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,12 +24,15 @@ import org.apache.commons.io.IOUtils;
 
 import cn.liutils.core.LIUtils;
 import cn.liutils.util.generic.RegistryUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * A simple GL Shader Program wrapper.
  * @author WeAthFolD
  */
+@SideOnly(Side.CLIENT)
 public class ShaderProgram {
 	
 	static Map<ResourceLocation, Integer> loadedShaders = new HashMap();
@@ -66,7 +52,6 @@ public class ShaderProgram {
 	
 	public void linkShader(ResourceLocation location, int type) {
 		try {
-			
 			int shaderID;
 			if(loadedShaders.containsKey(location)) {
 				shaderID = loadedShaders.get(location);
@@ -103,6 +88,10 @@ public class ShaderProgram {
 			LIUtils.log.error("Trying to use a uncompiled program");
 			throw new RuntimeException();
 		}
+	}
+	
+	public int getUniformLocation(String name) {
+		return glGetUniformLocation(getProgramID(), name);
 	}
 	
 	public void compile() {
