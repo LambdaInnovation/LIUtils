@@ -121,8 +121,7 @@ public class CGUIDocLoader {
 		try {
 			c = (Component) Class.forName(clazz).newInstance();
 		} catch(Exception e) {
-			LIUtils.log.error("An error occured trying to instantiate class " + clazz);
-			e.printStackTrace();
+			LIUtils.log.error("An error occured trying to instantiate class " + clazz, e);
 		}
 		
 		c.fromPropertyMap(propertyMap);
@@ -144,8 +143,7 @@ public class CGUIDocLoader {
 		try {
 			return instance.loadXml(xml);
 		} catch (Exception e) {
-			System.err.println("An error occured when loading CGUI document.");
-			e.printStackTrace();
+			LIUtils.log.error("An error occured when loading CGUI document.", e);
 		}
 		return null;
 	}
@@ -155,7 +153,7 @@ public class CGUIDocLoader {
 		try {
 			str = IOUtils.toString(RegistryUtils.getResourceStream(xml));
 		} catch (IOException e) {
-			e.printStackTrace();
+			LIUtils.log.error("An error occured when loading CGUI document.", e);
 		}
 		return load(str);
 	}

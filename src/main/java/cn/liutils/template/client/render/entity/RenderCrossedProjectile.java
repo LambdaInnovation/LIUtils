@@ -114,6 +114,7 @@ public class RenderCrossedProjectile extends Render {
 			
 			GL11.glRotatef(90 + entity.rotationYaw, 0.0F, -1.0F, 0.0F); // 左右旋转
 			GL11.glRotatef(-entity.rotationPitch, 0.0F, 0.0F, 1.0F); // 上下旋转
+			
 			if(this.playerViewOptm) {
 				boolean firstPerson = Minecraft.getMinecraft().gameSettings.thirdPersonView == 0;
 				if(firstPerson) {
@@ -122,8 +123,6 @@ public class RenderCrossedProjectile extends Render {
 					GL11.glTranslated(tpOffsetX, tpOffsetY, tpOffsetZ);
 				}
 			}
-			
-			
 			
 			t.startDrawingQuads();
 			if(ignoreLight) 

@@ -324,9 +324,9 @@ public class RenderUtils {
 			Class shadersClass = Class.forName(_shadersClassName);
 			fIsShadowPass = shadersClass.getField("isShadowPass");
 			smcPresent = true;
+			LIUtils.log.info("LIUtils SMC support successfully initialized.");
 		} catch(Exception e) {
-			LIUtils.log.error("LIUtils SMC support isn't initialized.", e);
-			e.printStackTrace();
+			LIUtils.log.info("LIUtils SMC support isn't initialized.");
 			smcPresent = false;
 		}
 		
