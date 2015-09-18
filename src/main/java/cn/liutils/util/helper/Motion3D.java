@@ -14,11 +14,15 @@ package cn.liutils.util.helper;
 
 import java.util.Random;
 
+import cn.liutils.util.generic.DebugUtils;
+import cpw.mods.fml.relauncher.Side;
+import cpw.mods.fml.relauncher.SideOnly;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import cn.liutils.util.generic.DebugUtils;
 
 /**
  * A entity that has its position and motion properties. used for all kinds of spacial calculations.
@@ -125,6 +129,16 @@ public class Motion3D {
 			setMotionOffset(offset);
 		}
 		this.normalize();
+		
+		if(entity instanceof EntityPlayer && entity.worldObj.isRemote) {
+			checkClientOffset((EntityPlayer) entity);
+		}
+	}
+	
+	@SideOnly(Side.CLIENT)
+	private void checkClientOffset(EntityPlayer entity) {
+		if(Minecraft.getMinecraft().thePlayer != entity)
+			px += 1.6;
 	}
 	
 	public Motion3D fromRotation(float rotationYaw, float rotationPitch) {

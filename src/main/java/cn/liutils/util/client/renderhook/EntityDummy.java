@@ -68,6 +68,8 @@ public class EntityDummy extends Entity implements IAssociatePlayer {
 		
 		posX = player.posX;
 		posY = player.posY;
+		if(!player.equals(Minecraft.getMinecraft().thePlayer))
+			posY += 1.6;
 		posZ = player.posZ;
 		
 		rotationYaw = player.renderYawOffset;
