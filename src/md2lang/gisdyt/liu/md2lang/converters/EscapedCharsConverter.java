@@ -10,7 +10,7 @@ public class EscapedCharsConverter {
 
 	private static final String replacable[][]=new String[][]{
 			{"&nbsp;", " "},
-			{"\n", "[ln]"}
+			{"  \n", "[ln]"}
 	}; 
 	
 	public static String convert(String s){
