@@ -12,4 +12,5 @@ import java.lang.annotation.Target;
 @Documented
 public @interface Converter {
 
+	public int priority() default 1; //the Converters will be called in order from priority 0 to priority infinity.
 }

@@ -2,7 +2,11 @@ package gisdyt.liu.md2lang.converters;
 
 import gisdyt.liu.md2lang.util.Converter;
 
-@Converter
+/*
+ * There isn't any tab like heading, so I make it as special.
+ * I know that's foolish. We need to decoupling.
+ */
+@Converter(priority=1)
 public class HeadingConverter {
 
 	public static String convert(String s){
@@ -28,9 +32,5 @@ public class HeadingConverter {
 			s=s.replaceAll(source, tab_content);
 		}
 		return s;
-	}
-	
-	public static void main(String[] args) {
-		System.out.println(convert("##     as  dfl;\n"));
 	}
 }
