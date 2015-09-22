@@ -10,6 +10,10 @@ public class EscapedCharsConverter {
 
 	private static final String replacable[][]=new String[][]{
 			{"&nbsp;", " "},
+			{"=", ""},
+			{"-", ""},
+			{"&equa;", "="},
+			{"&hyph;", "-"},
 			{"  \n", "[ln]"}
 	}; 
 	

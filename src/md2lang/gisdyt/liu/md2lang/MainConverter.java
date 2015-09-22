@@ -1,7 +1,13 @@
 package gisdyt.liu.md2lang;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.lang.reflect.InvocationTargetException;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import gisdyt.liu.md2lang.util.Converter;
@@ -9,6 +15,8 @@ import gisdyt.liu.md2lang.util.ConverterLoader;
 import gisdyt.liu.md2lang.util.Converters;
 
 //functions: 加粗 字体大小 图片及其大小控制
+//image: ![url](width, height)
+//图片把![url](width, height)改成[img src="xxxx" width=123 height=456][/img]
 public class MainConverter {
 
 	public static String convertMD2Lang(String md){
@@ -39,9 +47,52 @@ public class MainConverter {
 	}
 	
 	public static void main(String[] args) {
-		String test="# SPECIFICATION OF THE ENERGY SYSTEM OF ACADEMYCRAFT\n This Specification will introduce you the way you use energy system.";
-		System.out.println(test);
-		System.out.println("=====================================");
-		System.out.println(convertMD2Lang(test));
+		String testing_url="https://raw.githubusercontent.com/LambdaInnovation/AcademyCraft/master/docs_cn/README.md";
+		String testing_content=sendGet(testing_url, "");
+		System.out.println(convertMD2Lang(testing_content));
 	}
+	
+	 public static String sendGet(String url, String param) {
+	        String result = "";
+	        BufferedReader in = null;
+	        try {
+	            String urlNameString = url + "?" + param;
+	            URL realUrl = new URL(urlNameString);
+	            // 打开和URL之间的连接
+	            URLConnection connection = realUrl.openConnection();
+	            // 设置通用的请求属性
+	            connection.setRequestProperty("accept", "*/*");
+	            connection.setRequestProperty("connection", "Keep-Alive");
+	            connection.setRequestProperty("user-agent",
+	                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
+	            // 建立实际的连接
+	            connection.connect();
+	            // 获取所有响应头字段
+	            Map<String, List<String>> map = connection.getHeaderFields();
+	            // 遍历所有的响应头字段
+	            for (String key : map.keySet()) {
+	                System.out.println(key + "--->" + map.get(key));
+	            }
+	            // 定义 BufferedReader输入流来读取URL的响应
+	            in = new BufferedReader(new InputStreamReader(
+	                    connection.getInputStream()));
+	            String line;
+	            while ((line = in.readLine()) != null) {
+	                result += line;
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	        // 使用finally块来关闭输入流
+	        finally {
+	            try {
+	                if (in != null) {
+	                    in.close();
+	                }
+	            } catch (Exception e2) {
+	                e2.printStackTrace();
+	            }
+	        }
+	        return result;
+	    }
 }
