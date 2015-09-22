@@ -78,7 +78,7 @@ public class MainConverter {
 	                    connection.getInputStream()));
 	            String line;
 	            while ((line = in.readLine()) != null) {
-	                result += line;
+	                result += line+"\n";
 	            }
 	        } catch (Exception e) {
 	            e.printStackTrace();

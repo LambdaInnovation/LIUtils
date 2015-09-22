@@ -14,6 +14,7 @@ public class EscapedCharsConverter {
 			{"-", ""},
 			{"&equa;", "="},
 			{"&hyph;", "-"},
+			{"\n*\n", "[npar]"},
 			{"  \n", "[ln]"}
 	}; 
 	

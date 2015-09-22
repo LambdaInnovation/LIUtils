@@ -10,14 +10,10 @@ import gisdyt.liu.md2lang.util.Converter;
 public class WrapingConverter {
 
 	private static final String[][] wrapedLables=new String[][]{
-		{"\\*\\*", "\\*\\*", "[blod]", "[/blod]"},
-		{"\\*", "\\*", "[emph]", "[/emph]"},
 		{"~~", "~~", "[stth]", "[/stth]"},
-		{"```", "```", "[blodn]", "[/blodn]"},
+		{"```", "```", "[blod]", "[/blod]"},
 		{"`", "`", "[code]", "[/code]"},
 		{"==", "==", "[hili]", "[/hili]"},
-		{"\n", "\n=", "[t1]", "[/t1]"},
-		{"\n", "\n-", "[t2]", "[/t2]"}
 	};
 	
 	public static String convert(String s){
