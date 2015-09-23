@@ -50,6 +50,10 @@ public class Motion3D {
 		this(posVec.xCoord, posVec.yCoord, posVec.zCoord, moX, moY, moZ);
 	}
 	
+	public Motion3D(Vec3 pos, Vec3 vel) {
+		this(pos, vel.xCoord, vel.yCoord, vel.zCoord);
+	}
+	
 	public Motion3D(double x, double y, double z) {
 		px = x;
 		py = y;
