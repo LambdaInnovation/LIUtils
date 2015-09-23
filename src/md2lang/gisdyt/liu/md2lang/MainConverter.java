@@ -14,7 +14,7 @@ import gisdyt.liu.md2lang.util.Converter;
 import gisdyt.liu.md2lang.util.ConverterLoader;
 import gisdyt.liu.md2lang.util.Converters;
 
-//functions: 加粗 字体大小 图片及其大小控制
+//functions: 加粗 字体大小 图片及其大小控制 finished
 //image: ![url](width, height)
 //图片把![url](width, height)改成[img src="xxxx" width=123 height=456][/img]
 public class MainConverter {

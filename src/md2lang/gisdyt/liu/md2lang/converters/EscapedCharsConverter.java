@@ -15,7 +15,9 @@ public class EscapedCharsConverter {
 			{"&equa;", "="},
 			{"&hyph;", "-"},
 			{"\n*\n", "[npar]"},
-			{"  \n", "[ln]"}
+			{"\t", "&tab;"},
+			{"  \n", "[ln]"},
+			{" ", "&nbsp;"}
 	}; 
 	
 	public static String convert(String s){
