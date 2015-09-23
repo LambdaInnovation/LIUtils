@@ -43,7 +43,7 @@ public class ClassesSearcher {
                 if (url != null) {
                 	String protocol = url.getProtocol();
                 	String pkgPath = url.getPath();
-                	System.out.println("protocol:" + protocol +" path:" + pkgPath);
+                	Log.println("protocol:" + protocol +" path:" + pkgPath);
                     if ("file".equals(protocol)) {
                     	// 本地自己可见的代码
 						findClassName(classList, pkgName, pkgPath, isRecursive, annotation);
@@ -65,7 +65,7 @@ public class ClassesSearcher {
 			return;
 		}
 		File[] files = filterClassFiles(pkgPath);// 过滤出.class文件及文件夹
-		System.out.println("files:" +((files == null)?"null" : "length=" + files.length));
+		Log.println("files:" +((files == null)?"null" : "length=" + files.length));
 		if(files != null){
 			for (File f : files) {
 				String fileName = f.getName();
@@ -93,7 +93,7 @@ public class ClassesSearcher {
 	public static void findClassName(List<Class<?>> clazzList, String pkgName, URL url, boolean isRecursive, Class<? extends Annotation> annotation) throws IOException {
 		JarURLConnection jarURLConnection = (JarURLConnection) url.openConnection();
 		JarFile jarFile = jarURLConnection.getJarFile();
-		System.out.println("jarFile:" + jarFile.getName());
+		Log.println("jarFile:" + jarFile.getName());
 		Enumeration<JarEntry> jarEntries = jarFile.entries();
 		while (jarEntries.hasMoreElements()) {
 			JarEntry jarEntry = jarEntries.nextElement();
@@ -109,13 +109,13 @@ public class ClassesSearcher {
 				}
 			}
 			if (prefix != null && jarEntryName.endsWith(".class")) {
-//				System.out.println("prefix:" + prefix +" pkgName:" + pkgName);
+//				Log.println("prefix:" + prefix +" pkgName:" + pkgName);
 				if(prefix.equals(pkgName)){
-					System.out.println("jar entryName:" + jarEntryName);
+					Log.println("jar entryName:" + jarEntryName);
 					addClassName(clazzList, clazzName, annotation);
 				} else if(isRecursive && prefix.startsWith(pkgName)){
 					// 遍历子包名：子类
-					System.out.println("jar entryName:" + jarEntryName +" isRecursive:" + isRecursive);
+					Log.println("jar entryName:" + jarEntryName +" isRecursive:" + isRecursive);
 					addClassName(clazzList, clazzName, annotation);
 				}
 			}
@@ -156,15 +156,15 @@ public class ClassesSearcher {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-//			System.out.println("isAnnotation=" + clazz.isAnnotation() +" author:" + clazz.isAnnotationPresent(author.class));
+//			Log.println("isAnnotation=" + clazz.isAnnotation() +" author:" + clazz.isAnnotationPresent(author.class));
 			
 			if (clazz != null) {
 				if(annotation == null){
 					clazzList.add(clazz);
-					System.out.println("add:" + clazz);
+					Log.println("add:" + clazz);
 				} else if (clazz.isAnnotationPresent(annotation)){
 					clazzList.add(clazz);
-					System.out.println("add annotation:" + clazz);
+					Log.println("add annotation:" + clazz);
 				}
 			}
 		}

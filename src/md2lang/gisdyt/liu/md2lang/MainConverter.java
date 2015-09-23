@@ -1,7 +1,11 @@
 package gisdyt.liu.md2lang;
 
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.lang.reflect.InvocationTargetException;
 import java.net.URL;
 import java.net.URLConnection;
@@ -13,6 +17,7 @@ import java.util.Scanner;
 import gisdyt.liu.md2lang.util.Converter;
 import gisdyt.liu.md2lang.util.ConverterLoader;
 import gisdyt.liu.md2lang.util.Converters;
+import gisdyt.liu.md2lang.util.Log;
 
 //functions: 加粗 字体大小 图片及其大小控制 finished
 //image: ![url](width, height)
@@ -35,7 +40,7 @@ public class MainConverter {
 		for(int i=0;i<Converters.converters.size();++i){
 			try {
 				result=(String) Converters.converters.get(i).getMethod("convert", String.class).invoke(null, result);
-				System.out.println("Using converter ["+Converters.converters.get(i).getName()+"]");
+				Log.println("Using converter ["+Converters.converters.get(i).getName()+"]");
 			} catch (IllegalAccessException | IllegalArgumentException
 					| InvocationTargetException | NoSuchMethodException
 					| SecurityException e) {
@@ -46,53 +51,54 @@ public class MainConverter {
 		return result;
 	}
 	
-	public static void main(String[] args) {
-		String testing_url="https://raw.githubusercontent.com/LambdaInnovation/AcademyCraft/master/docs_cn/README.md";
-		String testing_content=sendGet(testing_url, "");
-		System.out.println(convertMD2Lang(testing_content));
+	private static void file_converting(String in, String out) throws Exception{
+		System.out.println("Converting is starting...");
+		File input=new File(in);
+		File output=new File(out);
+		if(input.exists()==false) System.err.println("Input file not found.");
+		if(output.exists()==true) {System.err.println("Output has already exists. I will delete it."); output.delete();}
+		output.createNewFile();
+		BufferedReader br=new BufferedReader(new FileReader(input));
+		StringBuffer buffer=new StringBuffer();
+		String temp;
+		while((temp=br.readLine())!=null){
+			buffer.append(temp);
+		}
+		br.close();
+		System.out.println("Reading input file finished...");
+		String md=buffer.toString();
+		String result=convertMD2Lang(md);
+		System.out.println("Converting finished...");
+		PrintWriter pw=new PrintWriter(output);
+		pw.print(result);
+		pw.flush();
+		pw.close();
+		System.out.println("Writing result finished...");
+		System.out.println("MD2Lang process finished successfully! Thanks for your using.");
 	}
 	
-	 public static String sendGet(String url, String param) {
-	        String result = "";
-	        BufferedReader in = null;
-	        try {
-	            String urlNameString = url + "?" + param;
-	            URL realUrl = new URL(urlNameString);
-	            // 打开和URL之间的连接
-	            URLConnection connection = realUrl.openConnection();
-	            // 设置通用的请求属性
-	            connection.setRequestProperty("accept", "*/*");
-	            connection.setRequestProperty("connection", "Keep-Alive");
-	            connection.setRequestProperty("user-agent",
-	                    "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1;SV1)");
-	            // 建立实际的连接
-	            connection.connect();
-	            // 获取所有响应头字段
-	            Map<String, List<String>> map = connection.getHeaderFields();
-	            // 遍历所有的响应头字段
-	            for (String key : map.keySet()) {
-	                System.out.println(key + "--->" + map.get(key));
-	            }
-	            // 定义 BufferedReader输入流来读取URL的响应
-	            in = new BufferedReader(new InputStreamReader(
-	                    connection.getInputStream()));
-	            String line;
-	            while ((line = in.readLine()) != null) {
-	                result += line+"\n";
-	            }
-	        } catch (Exception e) {
-	            e.printStackTrace();
-	        }
-	        // 使用finally块来关闭输入流
-	        finally {
-	            try {
-	                if (in != null) {
-	                    in.close();
-	                }
-	            } catch (Exception e2) {
-	                e2.printStackTrace();
-	            }
-	        }
-	        return result;
-	    }
+	private static void please_ask_WeAthFolD(){
+		System.out.println("There should be a helping documentation but it is omitted. If you have any questions, please ask the group leader of LI, WeAthFolD.");
+	}
+	
+	public static void main(String[] args) throws Exception{
+		if(args.length==0){
+			System.out.println("Welcome to the MD2Lang. It is writed by Gisdyt@LI.");
+			System.out.println("There should be a description but it is omitted.");
+			please_ask_WeAthFolD();
+			System.out.println("I just describe the calling grammar.");
+			System.out.println("java -jar md2lang.jar <input_file> <output_file> [--stacktrace]");
+			System.out.println("And now you can enjoy it.");
+		}else if(args.length==2){
+			file_converting(args[0], args[1]);
+		}else if(args.length==3 && args[2].equals("--stacktrace")){
+			Log.log=true;
+			file_converting(args[0], args[1]);
+		}else if(args[0].equals("-h") || args[0].equals("/?") || args[0].equals("--help") || args[0].equals("-?") || args[0].equals("/h")){
+			please_ask_WeAthFolD();
+		}else{
+			System.out.println("You use a wrong grammar.");
+			please_ask_WeAthFolD();
+		}
+	}
 }
