@@ -9,7 +9,7 @@ import net.minecraftforge.oredict.OreDictionary;
 public class ParsedRecipeElement {
 
 	public String name = null;
-	public int data = OreDictionary.WILDCARD_VALUE;
+	public int data = 0;
 	public int amount = 1;
 
 	@Override
