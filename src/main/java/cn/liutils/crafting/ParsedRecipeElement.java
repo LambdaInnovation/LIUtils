@@ -1,7 +1,5 @@
 package cn.liutils.crafting;
 
-import net.minecraftforge.oredict.OreDictionary;
-
 /**
  * In a recipe file, use "NAME#DATA*AMOUNT" to specify an element.
  * @author EAirPeter
