@@ -69,11 +69,6 @@ public class RenderIcon extends Render {
 				GL11.glTranslatef((float) par2, (float) par4, (float) par6);
 				GL11.glScalef(size, size, size);
 				postTranslate(par1Entity);
-				
-				if(par1Entity instanceof IAssociatePlayer) {
-					ViewOptimize.fix((IAssociatePlayer) par1Entity);
-				}
-				
 				if(icon != null) RenderUtils.loadTexture(icon);
 				
 				Tessellator t = Tessellator.instance;
@@ -102,6 +97,10 @@ public class RenderIcon extends Render {
 		tessllator.startDrawingQuads();
 		if(!hasLight) 
 			tessllator.setBrightness(15728880);
+		
+		if(e instanceof IAssociatePlayer) {
+			ViewOptimize.fix((IAssociatePlayer) e);
+		}
 		tessllator.addVertexWithUV(0.0F - f5, 0.0F - f6, 0.0D, 0, 1);
 		tessllator.addVertexWithUV(f4 - f5, 0.0F - f6, 0.0D, 1, 1);
 		tessllator.addVertexWithUV(f4 - f5, f4 - f6, 0.0D, 1, 0);
