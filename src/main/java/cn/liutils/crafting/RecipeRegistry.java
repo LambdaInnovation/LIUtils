@@ -52,7 +52,7 @@ public class RecipeRegistry {
 		if(o != null)
 			return o;
 		
-		if(OreDictionary.doesOreNameExist(key))
+		if(!OreDictionary.getOres(key).isEmpty())
 			return key;
 		if(Item.itemRegistry.containsKey(key))
 			return Item.itemRegistry.getObject(key);

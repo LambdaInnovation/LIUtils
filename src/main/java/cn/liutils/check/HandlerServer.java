@@ -61,7 +61,7 @@ public final class HandlerServer {
 				String name = i.next();
 				int timer = map.get(name);
 				if (--timer == 0) {
-					MinecraftServer.getServer().getConfigurationManager().func_152612_a(name).playerNetServerHandler.kickPlayerFromServer("Verification timeout");
+					MinecraftServer.getServer().getConfigurationManager().getPlayerForUsername(name).playerNetServerHandler.kickPlayerFromServer("Verification timeout");
 					i.remove();
 				}
 				else

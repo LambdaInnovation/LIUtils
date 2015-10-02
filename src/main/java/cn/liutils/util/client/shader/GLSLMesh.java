@@ -20,7 +20,6 @@ import static org.lwjgl.opengl.GL11.glTexCoord2d;
 import static org.lwjgl.opengl.GL11.glVertex3d;
 import static org.lwjgl.opengl.GL20.glUseProgram;
 
-import org.apache.commons.lang3.NotImplementedException;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
 
@@ -76,7 +75,7 @@ public class GLSLMesh extends Mesh {
 	
 	@Override
 	public void redraw(Material mat) {
-		throw new NotImplementedException("GLSLMesh doesn't handle tess drawing routine");
+		throw new RuntimeException("GLSLMesh doesn't handle tess drawing routine");
 	}
 	
 }
