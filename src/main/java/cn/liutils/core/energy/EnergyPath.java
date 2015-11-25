@@ -21,9 +21,9 @@ public class EnergyPath {
 	int maxZ = -2147483648;
 
 	double loss = 0.0D;
-	int minInsulationEnergyAbsorption = 2147483647;
-	int minInsulationBreakdownEnergy = 2147483647;
-	int minConductorBreakdownEnergy = 2147483647;
+	double minInsulationEnergyAbsorption = 2147483647;
+	double minInsulationBreakdownEnergy = 2147483647;
+	double minConductorBreakdownEnergy = 2147483647;
 	long totalEnergyConducted = 0L;
 
 }

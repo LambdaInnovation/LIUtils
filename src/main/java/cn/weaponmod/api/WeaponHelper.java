@@ -236,7 +236,7 @@ public class WeaponHelper {
 		if (additionalDamage <= 0)
 			return;
 
-		doRangeDamage(world, DamageSource.setExplosionSource(explosion), world.getWorldVec3Pool().getVecFromPool(posX, posY, posZ), additionalDamage, radius, entity);
+		doRangeDamage(world, DamageSource.setExplosionSource(explosion), Vec3.createVectorHelper(posX, posY, posZ), additionalDamage, radius, entity);
 		
 	}
 	
@@ -249,7 +249,7 @@ public class WeaponHelper {
 			for (int i = 0; i < entitylist.size(); i++) {
 				Entity ent = (Entity) entitylist.get(i);
 				if (ent instanceof EntityLivingBase) {
-					double distance = pos.distanceTo(world.getWorldVec3Pool().getVecFromPool(ent.posX, ent.posY, ent.posZ));
+					double distance = pos.distanceTo(Vec3.createVectorHelper(ent.posX, ent.posY, ent.posZ));
 					int damage = (int) ((1 - distance / 6.928) * strengh);
 //					System.out.println("Attacking " + ent + " " + damage);
 					ent.attackEntityFrom(src , damage);

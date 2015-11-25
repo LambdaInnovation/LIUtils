@@ -147,7 +147,7 @@ public final class EnergyNet {
 
 			IEnergySink energySink = (IEnergySink) energyPath.target;
 
-			if ((energySink.demandedEnergyUnits() > 0) && (energyPath.loss < amount)) {
+			if ((energySink.getDemandedEnergy() > 0) && (energyPath.loss < amount)) {
 				totalInvLoss += 1.0D / energyPath.loss;
 				activeEnergyPaths.add(energyPath);
 			}
@@ -164,7 +164,7 @@ public final class EnergyNet {
 			totalInvLoss -= 1.0D / removedEnergyPath.loss;
 		}
 
-		Map<EnergyPath, Double> suppliedEnergyPaths = new HashMap();
+		Map<EnergyPath, Double> suppliedEnergyPaths = new HashMap<>();
 		new Vector();
 
 		while ((!activeEnergyPaths.isEmpty()) && (amount > 0)) {
@@ -185,11 +185,11 @@ public final class EnergyNet {
 				int energyLoss = (int) Math.floor(energyPath.loss);
 
 				if (energyProvided > energyLoss) {
-					double energyReturned = energySink.injectEnergyUnits(energyPath.targetDirection, energyProvided
-									- energyLoss);
+					double energyReturned = energySink.injectEnergy(energyPath.targetDirection, energyProvided
+									- energyLoss, 128);
 
 					if ((energyReturned == 0)
-							&& (energySink.demandedEnergyUnits() > 0)) {
+							&& (energySink.getDemandedEnergy() > 0)) {
 						activeEnergyPaths.add(energyPath);
 						newTotalInvLoss += 1.0D / energyPath.loss;
 					} else if (energyReturned >= energyProvided - energyLoss) {

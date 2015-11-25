@@ -1,4 +1,8 @@
 *.class
+*.bat
+*.setting
+
+libs/
 
 # Mobile Tools for Java (J2ME)
 .mtj.tmp/
@@ -22,8 +26,7 @@ hs_err_pid*
 .LSOverride
 
 # Icon must ends with two \r.
-Icon
-
+Icon
 # Thumbnails
 ._*
 
@@ -49,3 +52,19 @@ $RECYCLE.BIN/
 *.msi
 *.msm
 *.msp
+
+# Gradle
+build/
+.gradle/
+/bin/
+
+# Eclipse
+.project
+.classpath
+.settings/
+
+eclipse/
+
+
+# Custom
+# src/main/resources/assets/academy/sounds/media/

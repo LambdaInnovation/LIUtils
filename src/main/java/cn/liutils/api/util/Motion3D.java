@@ -223,11 +223,11 @@ public class Motion3D {
 	 * @return
 	 */
 	public Vec3 getPosVec(World world) {
-		return world.getWorldVec3Pool().getVecFromPool(posX, posY, posZ);
+		return Vec3.createVectorHelper(posX, posY, posZ);
 	}
 	
 	public Vec3 getMotionVec(World world) {
-		return world.getWorldVec3Pool().getVecFromPool(motionX, motionY, motionZ);
+		return Vec3.createVectorHelper(motionX, motionY, motionZ);
 	}
 	
 	@Override

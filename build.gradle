@@ -14,48 +14,38 @@ buildscript {
         classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-SNAPSHOT'
     }
 }
+
 apply plugin: 'forge'
 
-version = "1.7.2.000dev"
-group= "cn.liutils.core.LIUtilsMod"
+sourceCompatibility = 1.7
+targetCompatibility = 1.7
+
+version = "1.7.10.000"
+group= "cn.liutils" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "LIUtils"
 
-processResources
-{
-	from(sourceSets.main.resources.srcDirs) 
-	{
-		include 'mcmod.info'
-		
-	}
-	from(sourceSets.main.resources.srcDirs)
-	{
-		exclude 'mcmod.info'
-	}
-}
 minecraft {
-    version = "1.7.2-10.12.2.1121"
-    assetDir = "eclipse/assets"
+    version = "1.7.10-10.13.4.1517-1.7.10"
+    runDir = "eclipse"
 }
 
-dependencies {
-    // you may put jars on which you depend on in ./libs
-    // or you may define them like so..
-    //compile "some.group:artifact:version:classifier"
-    //compile "some.group:artifact:version"
-      
-    // real examples
-    //compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
-    //compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+repositories {
+	mavenCentral()
+	mavenLocal()
+}
 
-    // for more info...
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+task sourcesJar(type: Jar) {
+    from sourceSets.main.java
+    from sourceSets.main.scala
+    classifier = 'sources'
+}
 
+tasks.withType(JavaCompile) {
+	options.encoding = "UTF-8"
 }
 
 processResources
 {
-    // this will ensure that this task is redone when the versions change.
     inputs.property "version", project.version
     inputs.property "mcversion", project.minecraft.version
 
@@ -72,5 +62,5 @@ processResources
         exclude 'mcmod.info'
     }
 }
-compileJava.options.encoding = 'UTF-8'
 
+install.dependsOn build
