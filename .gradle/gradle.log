@@ -17,18 +17,21 @@
 :genSrgs SKIPPED
 :deobfBinJar SKIPPED
 :compileApiJava UP-TO-DATE
-:compileApiScala UP-TO-DATE
 :processApiResources UP-TO-DATE
 :apiClasses UP-TO-DATE
 :sourceMainJava
-:compileJava UP-TO-DATE
-:sourceMainScala
-:compileScala
+:compileJavawarning: [options] bootstrap class path not set in conjunction with -source 1.7
+Note: Some input files use or override a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+1 warning
+
 :processResources
 :classes
 :jar
+:deobfJar
 :compileTestJava UP-TO-DATE
-:compileTestScala UP-TO-DATE
 :processTestResources UP-TO-DATE
 :testClasses UP-TO-DATE
 :test UP-TO-DATE
@@ -36,7 +39,8 @@
 :assemble
 :check UP-TO-DATE
 :build
+:install
 
 BUILD SUCCESSFUL
 
-Total time: 19.967 secs
+Total time: 43.703 secs

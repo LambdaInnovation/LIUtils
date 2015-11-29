@@ -32,12 +32,14 @@ minecraft {
 repositories {
 	mavenCentral()
 	mavenLocal()
+	maven {
+		name = "ic2"
+		url = "http://maven.ic2.player.to"
+	}
 }
 
-task sourcesJar(type: Jar) {
-    from sourceSets.main.java
-    from sourceSets.main.scala
-    classifier = 'sources'
+dependencies {
+	compile "net.industrial-craft:industrialcraft-2:2.2.717-experimental:dev"
 }
 
 tasks.withType(JavaCompile) {
@@ -61,6 +63,15 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+task deobfJar(type: Jar, dependsOn: 'jar') {
+	classifier 'dev'
+	from sourceSets.main.output
+}
+
+artifacts {
+	archives deobfJar
 }
 
 install.dependsOn build

@@ -52,7 +52,7 @@ public class WMClientProxy extends WMCommonProxy{
 	public void postInit() {
 		try {
 			RenderPlayer r = (RenderPlayer) RenderManager.instance.entityRenderMap.get(EntityPlayer.class);
-			ModelBipedHack mbh = new ModelBipedHack(1F);
+			ModelBipedHack mbh = new ModelBipedHack(0F);
 			RegUtils.getObfField(RendererLivingEntity.class, "mainModel", "field_77045_g").set(r, mbh);
 			r.modelBipedMain = mbh;
 			r.modelArmorChestplate = new ModelBipedHack(1F);
